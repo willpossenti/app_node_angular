@@ -3,6 +3,8 @@ import { Estado } from './Estado';
 import { Ocupacao } from './Ocupacao';
 import { Pais } from './Pais';
 import { TipoCertidao } from './TipoCertidao';
+import { Escolaridade } from './Escolaridade';
+import { SituacaoFamiliarConjugal } from './SituacaoFamiliarConjugal';
 
 
 export interface Pessoa  {
@@ -36,6 +38,8 @@ export interface Pessoa  {
   zona?: string;
   secao?: string;
   frequentaescola?: boolean;
+  Escolaridade?: Escolaridade;
+  SituacaoFamiliarConjugal?: SituacaoFamiliarConjugal;
   ativo?: boolean;
 
 

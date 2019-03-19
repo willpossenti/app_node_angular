@@ -277,106 +277,122 @@
 
                       <!--begin::Portlet 2-->
                       <div class="k-portlet">
-                        <!--
-                        <div class="k-portlet__head">
-                            <div class="k-portlet__head-label">
-                                <h3 class="k-portlet__head-title">
-                                    <a href="#box_dadosprof">Dados Profissionais</a>
-                                </h3>
-                            </div>
-                        </div>
-                        -->
+
+
+       
+                        
                         <div class="k-portlet__body p-1">
                           <div class="form-group row">
                             <div class="col-lg-2">
                               <label>Código</label>
-                              <input type="text" class="form-control" style="background:#E5E5E5 !important;" name="Prof_Codigo" id="Prof_Codigo" placeholder="" value="">
+                              <input type="text" class="form-control" style="background:#E5E5E5 !important;" name="Prof_Codigo" id="Prof_Codigo" placeholder="" disabled="disabled" ngModel>
                             </div>
                             <div class="col-lg-4">
                               <label>Login</label>
-                              <input type="text" class="form-control" style="text-transform:lowercase;" name="Prof_Login" placeholder="" value="">
+                              <input type="text" class="form-control" style="text-transform:lowercase;" name="DP_Prof_Login" maxlength="20" placeholder="" ngModel>
                             </div>
 
-                            <div class="col-lg-4">
-                              <label>Tipo de Profissional</label>
-                              <select class="form-control" name="Prof_Tipo">
-                                <option value="">- Selecione -</option>
-                              </select>
-                            </div>
+
                             <div class="col-lg-2">
                               <label class="d-block">&nbsp;</label>
                               <button type="button" class="btn btn-metal" data-toggle="popover" data-placement="top" data-trigger="hover" data-content="Gera uma Nova Senha temporária para o usuário"><i class="fa fa-unlock-alt"></i> Nova Senha</button>
                             </div>
                           </div>
+                          <div style="margin: 1.5rem 0; border-bottom: 1px dashed #c9cbce;"></div>
 
                           <div class="form-group row">
                             <div class="col-lg-4">
+                              <label>Tipo de Profissional</label>
+                              <select class="form-control" name="DP_ProfTipo" tabindex="17" [(ngModel)]="TipoProfissional">
+                                <option value="-1">-- Selecione --</option>
+                                <option *ngFor="let tipoProfissional of listaTipoProfissional | orderBy: orderDescricao" [ngValue]="tipoProfissional">{{tipoProfissional.descricao}}</option>
+                              </select>
+                            </div>
+                            <div class="col-lg-2">
                               <label>Número do Conselho</label>
-                              <input type="text" class="form-control" name="Prof_NumConselho" placeholder="" value="">
+                              <input type="text" class="form-control" name="Prof_NumConselho" placeholder="" maxlength="10">
                             </div>
                             <div class="col-lg-2">
                               <label>UF</label>
-                              <select class="form-control" name="Prof_UF">
-                                <option value="">- Selecione -</option>
-                              </select>
+                              <select class="form-control" name="DP_ProfUF" tabindex="17" [(ngModel)]="UfProfissional">
+                                <option value="-1">-- Selecione --</option>
+                                <option *ngFor="let ufProfissional of listaUFIdentidade| orderBy: orderUf" [ngValue]="ufProfissional">{{ufProfissional.uf}}</option>
+                                </select>
                             </div>
                             <div class="col-lg-4">
                               <label>Órgão Emissor</label>
-                              <select class="form-control" name="Prof_OrgaoEmissor">
-                                <option value="">- Selecione -</option>
+                              <select class="form-control" name="DP_Prof_OrgaoEmissor" tabindex="18" [(ngModel)]="OrgaoEmissorProfissional">
+                                <option value="-1">-- Selecione --</option>
+                                <option *ngFor="let OrgaoEmissorProfissional of listaOrgaoEmissor | orderBy: orderDescricao" [ngValue]="OrgaoEmissorProfissional">{{OrgaoEmissorProfissional.descricao}}</option>
                               </select>
                             </div>
-                            <div class="col-lg-2">
-                              <label class="d-block">&nbsp;</label>
-                              <button type="button" class="btn btn-metal" data-toggle="popover" data-placement="top" data-trigger="hover" data-content="Adicionar Novo Grid"><i class="fa fa-plus"></i> Adicionar</button>
+                       
+                          </div>
+                          <div class="form-group row">
+                            <div class="col-lg-10">
+                            </div>
+                            <div class="col-lg-2" >
+                              <button type="button" class="btn btn-metal" data-toggle="popover" data-placement="top" data-trigger="hover" data-content="Adicionar Novo Grid" style="float: right"><i class="fa fa-plus"></i> Adicionar</button>
                             </div>
                           </div>
-
-                          <!-- Grid -->
-                          <form action="" method="">
-                            <table class="table table-striped- table-bordered table-hover table-checkable" id="k_table_1">
-                              <thead>
-                                <tr class="text-center">
-                                  <th>Local Atend.</th>
-                                  <th>Tipo Prof.</th>
-                                  <th>Auditor</th>
-                                  <th>Cirúrgico</th>
-                                  <th>Ambulatório</th>
-                                  <th>Mov. Pront.</th>
-                                  <th>Perm. Ag.</th>
-                                  <th>Chef. Clínica</th>
-                                  <th>Atend. Clinico</th>
-                                  <th>Coordenador</th>
-                                  <th>Ativo</th>
-                                </tr>
-                              </thead>
-                              <tbody>
-                                <tr class="text-center">
-                                  <td>Odontologia</td>
-                                  <td>Cirugião Dentista</td>
-                                  <td>N</td>
-                                  <td>N</td>
-                                  <td>N</td>
-                                  <td>N</td>
-                                  <td>N</td>
-                                  <td>N</td>
-                                  <td>N</td>
-                                  <td>
-                                    <label class="k-checkbox k-checkbox--bold">
-                                      <input type="checkbox" class="form-control" name="Prof_Coord"> <span></span>
-                                    </label>
-                                  </td>
-                                  <td>
-                                    <label class="k-checkbox k-checkbox--bold">
-                                      <input type="checkbox" class="form-control" name="Prof_Ativo"> <span></span>
-                                    </label>
-                                  </td>
-                                </tr>
-                              </tbody>
-                            </table>
-                          </form>
+                            <!-- Grid -->
+               
+                              <table class="table table-striped- table-bordered table-hover table-checkable" id="k_table_1">
+                                <thead>
+                                  <tr class="text-center">
+                                    <th>Tipo Profissional.</th>
+                                    <th>Número Conselho</th>
+                                    <th>UF</th>
+                                    <th>Órgão Emissor</th>
+                                    <th>Coordenador</th>
+                                    <th>Ativo</th>
+                                    <th>&nbsp;</th>
+                                  </tr>
+                                </thead>
+                                <tbody>
+                                  <tr class="text-center">
+                                    <td>Cirugião Geral</td>
+                                    <td>345345345</td>
+                                    <td>RJ</td>
+                                    <td>CR Radiologia</td>
+                                    <td>
+                                      <label class="k-checkbox k-checkbox--bold">
+                                        <input type="checkbox" class="form-control" name="Prof_Coord"> <span></span>
+                                      </label>
+                                    </td>
+                                    <td>
+                                      <label class="k-checkbox k-checkbox--bold">
+                                        <input type="checkbox" class="form-control" name="Prof_Ativo"> <span></span>
+                                      </label>
+                                    </td>
+                                    <td>
+                                      <button class="btn btn-outline-secondary" type="button" title="Excluir"><i class="fa fa-trash fa-fw"></i></button>
+                                    </td>
+                                  </tr>
+                                  <tr class="text-center">
+                                    <td>Cirugião Dentista</td>
+                                    <td>123</td>
+                                    <td>RJ</td>
+                                    <td>CR Radiologia</td>
+                                    <td>
+                                      <label class="k-checkbox k-checkbox--bold">
+                                        <input type="checkbox" class="form-control" name="Prof_Coord"> <span></span>
+                                      </label>
+                                    </td>
+                                    <td>
+                                      <label class="k-checkbox k-checkbox--bold">
+                                        <input type="checkbox" class="form-control" name="Prof_Ativo"> <span></span>
+                                      </label>
+                                    </td>
+                                    <td>
+                                      <button class="btn btn-outline-secondary" type="button" title="Excluir"><i class="fa fa-trash fa-fw"></i></button>
+                                    </td>
+                                  </tr>
+                                </tbody>
+                              </table>
+                          
+                          </div>
                         </div>
-                      </div>
                       <!--end::Portlet 2-->
 
                     </div>
@@ -667,67 +683,25 @@
 
                           <div class="form-group row">
                             <div class="col-lg-3">
-                              <div class="k-radio-list">
+                              <div class="k-radio-list" id="divEscolaridadeColuna1">
                                 <div class="card-title mb-4"> <i class="flaticon-folder-1"></i> Escolaridade</div>
 
-                                <label class="k-radio k-radio--brand">
-                                  <input type="radio" name="DC_Escolaridade" tabindex="50">Não sabe ler/escrever<span></span>
-                                </label>
-                                <label class="k-radio k-radio--brand">
-                                  <input type="radio" name="DC_Escolaridade" tabindex="51">Alfabetizado<span></span>
-                                </label>
-                                <label class="k-radio k-radio--brand">
-                                  <input type="radio" name="DC_Escolaridade" tabindex="52">1º Grau Completo<span></span>
-                                </label>
-                                <label class="k-radio k-radio--brand">
-                                  <input type="radio" name="DC_Escolaridade" tabindex="53">2º Grau Completo<span></span>
-                                </label>
-                                <label class="k-radio k-radio--brand">
-                                  <input type="radio" name="DC_Escolaridade" tabindex="54">3º Grau Completo<span></span>
-                                </label>
+                           
                               </div>
                             </div>
 
                             <div class="col-lg-3">
-                              <div class="k-radio-list mb-4">
+                              <div class="k-radio-list mb-4" id="divEscolaridadeColuna2">
                                 <div class="card-title mb-3"> &nbsp;<!-- <i class="flaticon-folder-1"></i> Formação --></div>
 
-                                <label class="k-radio k-radio--brand">
-                                  <input type="radio" name="DC_Escolaridade" tabindex="55">Superior Incompleto<span></span>
-                                </label>
-                                <label class="k-radio k-radio--brand">
-                                  <input type="radio" name="DC_Escolaridade" tabindex="56">Superior Completo<span></span>
-                                </label>
-                                <label class="k-radio k-radio--brand">
-                                  <input type="radio" name="DC_Escolaridade" tabindex="57">Especialização/Residência<span></span>
-                                </label>
-                                <label class="k-radio k-radio--brand">
-                                  <input type="radio" name="DC_Escolaridade" tabindex="58">Mestrado<span></span>
-                                </label>
-                                <label class="k-radio k-radio--brand">
-                                  <input type="radio" name="DC_Escolaridade" tabindex="59">Doutorado<span></span>
-                                </label>
+                               
                               </div>
                             </div>
 
                             <div class="col-lg-6">
-                              <div class="k-radio-list">
+                              <div class="k-radio-list" id="divSituacaoFamiliarConjugal">
                                 <div class="card-title mb-4"> <i class="flaticon-users"></i> Situação Familiar / Conjugal</div>
-                                <label class="k-radio k-radio--brand">
-                                  <input type="radio" name="DC_SituacaoFamiliar" value="" tabindex="60">Convive com companheiro(a) e filho(s)<span></span>
-                                </label>
-                                <label class="k-radio k-radio--brand">
-                                  <input type="radio" name="DC_SituacaoFamiliar" value="" tabindex="61">Convive com companheiro(a) com laços conjugais e sem filho(s)<span></span>
-                                </label>
-                                <label class="k-radio k-radio--brand">
-                                  <input type="radio" name="DC_SituacaoFamiliar" value="" tabindex="62">Convive com companheiro(a) com filho(s) e/ou outro(s) familiar(es)<span></span>
-                                </label>
-                                <label class="k-radio k-radio--brand">
-                                  <input type="radio" name="DC_SituacaoFamiliar" value="" tabindex="63">Convive com familiar(es) sem companheiro(a)<span></span>
-                                </label>
-                                <label class="k-radio k-radio--brand">
-                                  <input type="radio" name="DC_SituacaoFamiliar" value="" tabindex="64">Convive com outra(s) pessoa(s) <span></span>
-                                </label>
+                           
                               </div>
                             </div>
 

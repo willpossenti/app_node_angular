@@ -47,28 +47,20 @@ export class PessoaService {
   BindPais() { return this.http.get<Return>(`${this.baseUrl}pais`, this.httpOptions); }
   BindTipoCertidao() { return this.http.get<Return>(`${this.baseUrl}tipocertidao`, this.httpOptions); }
   BindEscolaridade() { return this.http.get<Return>(`${this.baseUrl}escolaridade`, this.httpOptions); }
-
+  BindSituacaoFamiliarConjugal() { return this.http.get<Return>(`${this.baseUrl}situacaofamiliarconjugal`, this.httpOptions); }
+  BindTipoProfissional() { return this.http.get<Return>(`${this.baseUrl}tipoprofissional`, this.httpOptions); }
+  BuscarCep(cep: string) { return this.http.get<Cep>(`${this.cepUrl}` + cep + `/json/`);}
+  BuscarCidade(nomecidade: string) { return this.http.get<Return>(`${this.baseUrl}cidade/buscacidade/` + nomecidade, this.httpOptions); }
   Salvar(pessoapaciente: PessoaPaciente) {
 
     return this.http.post<Return>(`${this.baseUrl}pessoa/pessoapaciente/incluir`, pessoapaciente, this.httpOptions);
   }
-
   SalvarContato(pessoacontato: Array<PessoaContato>) {
 
     return this.http.post<Return>(`${this.baseUrl}pessoa/pessoacontato/incluir`, JSON.stringify(pessoacontato), this.httpOptions);
   }
 
-  BuscarCep(cep: string) {
 
-
-    return this.http.get<Cep>(`${this.cepUrl}` + cep + `/json/`);
-
-  }
-
-  BuscarCidade(nomecidade: string) {
-
-    return this.http.get<Return>(`${this.baseUrl}cidade/buscacidade/` + nomecidade, this.httpOptions);
-  }
 
 
 

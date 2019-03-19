@@ -1363,7 +1363,8 @@ pre {
     border-top: 1px solid #ebedf2; }
   .table thead th {
     vertical-align: bottom;
-    border-bottom: 2px solid #ebedf2; }
+    border-bottom: 2px solid #c9cbce;
+  }
   .table tbody + tbody {
     border-top: 2px solid #ebedf2; }
 
@@ -1375,7 +1376,8 @@ pre {
   border: 1px solid #ebedf2; }
   .table-bordered th,
   .table-bordered td {
-    border: 1px solid #ebedf2; }
+    border: 1px solid #c9cbce;
+  }
   .table-bordered thead th,
   .table-bordered thead td {
     border-bottom-width: 2px; }

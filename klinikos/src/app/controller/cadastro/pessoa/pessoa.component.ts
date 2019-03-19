@@ -9,16 +9,21 @@ import { Estado } from '../../../model/Estado';
 import { Cidade } from '../../../model/Cidade';
 import { Ocupacao } from '../../../model/Ocupacao';
 import { PessoaPaciente } from '../../../model/PessoaPaciente';
-import { OrgaoEmissor } from 'src/app/model/OrgaoEmissor';
-import { Escolaridade } from 'src/app/model/Escolaridade';
-import { PessoaService } from './pessoa.service';
+import { PessoaProfissional } from '../../../model/PessoaProfissional';
+import { OrgaoEmissor } from '../../../model/OrgaoEmissor';
+import { Escolaridade } from '../../../model/Escolaridade';
 import { PessoaContato } from '../../../model/PessoaContato';
 import { Pais } from '../../../model/Pais';
 import { TipoCertidao } from '../../../model/TipoCertidao';
+import { SituacaoFamiliarConjugal } from '../../../model/SituacaoFamiliarConjugal';
+import { TipoProfissional } from '../../../model/TipoProfissional';
+import { LotacaoProfissional } from '../../../model/LotacaoProfissional';
+import { PessoaService } from './pessoa.service';
 import * as RemoveAcentos from 'remove-accents';
 import * as toastr from 'toastr';
 import { HttpErrorResponse } from '@angular/common/http';
 import { Router } from '@angular/router';
+import { sortBy } from 'sort-by-typescript';
 
 
 
@@ -43,6 +48,10 @@ export class PessoaComponent implements OnInit {
   listaOcupacao: Array<Ocupacao>;
   listaPais: Array<Pais>;
   listaTipoCertidao: Array<TipoCertidao>;
+  listaEscolaridade: Array<Escolaridade>;
+  listaSituacaoFamiliarConjugal: Array<SituacaoFamiliarConjugal>;
+  listaTipoProfissional: Array<TipoProfissional>;
+  listaLotacaoProfissional: Array<LotacaoProfissional>;
 
   Raca: Raca;
   Etnia: Etnia;
@@ -61,6 +70,9 @@ export class PessoaComponent implements OnInit {
   Pais: Pais
   TipoCertidao: TipoCertidao;
   UfCtps: Estado;
+  UfProfissional: Estado;
+  OrgaoEmissorProfissional: OrgaoEmissor;
+  TipoProfissional: TipoProfissional;
 
   constructor(private pessoaService: PessoaService, private router: Router) {
     this.listaContatos = new Array<PessoaContato>();
@@ -131,6 +143,7 @@ export class PessoaComponent implements OnInit {
         $("select[name^=DP_IdentidadeUF]").val($("select[name^=DP_IdentidadeUF] option:first").val());
         $("select[name^=DP_Endereco_Estado]").val($("select[name^=DP_Endereco_Estado] option:first").val());
         $("select[name^=DP_UF_Ctps]").val($("select[name^=DP_UF_Ctps] option:first").val());
+        $("select[name^=DP_ProfUF]").val($("select[name^=DP_ProfUF] option:first").val());
       });
 
     }, (error: HttpErrorResponse) => {
@@ -141,7 +154,10 @@ export class PessoaComponent implements OnInit {
 
     this.pessoaService.BindOrgaoEmissor().subscribe(data => {
       this.listaOrgaoEmissor = data.result;
-      $(document).ready(function () { $("select[name^=DP_OrgaoEmissor]").val($("select[name^=DP_OrgaoEmissor] option:first").val()); });
+      $(document).ready(function () {
+        $("select[name^=DP_OrgaoEmissor]").val($("select[name^=DP_OrgaoEmissor] option:first").val());
+        $("select[name^=DP_Prof_OrgaoEmissor]").val($("select[name^=DP_Prof_OrgaoEmissor] option:first").val());
+      });
 
     }, (error: HttpErrorResponse) => {
       this.Mensagens("erro", "Falha ao carregar Orgãos Emissores na aba Dados Pessoais");
@@ -170,6 +186,51 @@ export class PessoaComponent implements OnInit {
       this.listaTipoCertidao = data.result;
 
       $(document).ready(function () { $("select[name^=DC_TipoCertidao]").val($("select[name^=DC_TipoCertidao] option:first").val()); });
+    }, (error: HttpErrorResponse) => {
+      this.Mensagens("erro", "Falha ao carregar Paises na aba Dados Complementares");
+      console.log(`Error. ${error.message}.`);
+    });
+
+    this.pessoaService.BindEscolaridade().subscribe(data => {
+      this.listaEscolaridade = data.result.sort(sortBy('codigoEscolaridade'));
+
+      for (let i = 0; i < this.listaEscolaridade.length; i++) {
+
+        if (i < 5)
+          $("#divEscolaridadeColuna1").append("<label class='k-radio k-radio--brand' id='radioEscolaridade" + i + "'></label>");
+        else
+          $("#divEscolaridadeColuna2").append("<label class='k-radio k-radio--brand' id='radioEscolaridade" + i + "'></label>");
+
+        $("#radioEscolaridade" + i).append("<input type='radio' name='DC_Escolaridade' tabindex='50' id='" + i + "'>" + this.listaEscolaridade[i].descricao + "<span></span>");
+
+      }
+
+
+    }, (error: HttpErrorResponse) => {
+      this.Mensagens("erro", "Falha ao carregar Paises na aba Dados Complementares");
+      console.log(`Error. ${error.message}.`);
+    });
+
+    this.pessoaService.BindSituacaoFamiliarConjugal().subscribe(data => {
+      this.listaSituacaoFamiliarConjugal = data.result.sort(sortBy('codigoSituacaoFamiliarConjugal'));
+      console.log(data.result.sort(sortBy('codigoSituacaoFamiliarConjugal')));
+
+      for (let i = 0; i < this.listaSituacaoFamiliarConjugal.length; i++) {
+
+        $("#divSituacaoFamiliarConjugal").append("<label class='k-radio k-radio--brand' id='radioSituacaoFamiliarConjugal" + i + "'></label>");
+        $("#radioSituacaoFamiliarConjugal" + i).append("<input type='radio' name='DC_SituacaoFamiliar' tabindex='50' id='" + i + "'>" + this.listaSituacaoFamiliarConjugal[i].descricao + "<span></span>");
+      }
+
+
+    }, (error: HttpErrorResponse) => {
+      this.Mensagens("erro", "Falha ao carregar Paises na aba Dados Complementares");
+      console.log(`Error. ${error.message}.`);
+    });
+
+    this.pessoaService.BindTipoProfissional().subscribe(data => {
+      this.listaTipoProfissional = data.result;
+
+      $(document).ready(function () { $("select[name^=DP_ProfTipo]").val($("select[name^=DP_ProfTipo] option:first").val()); });
     }, (error: HttpErrorResponse) => {
       this.Mensagens("erro", "Falha ao carregar Paises na aba Dados Complementares");
       console.log(`Error. ${error.message}.`);
@@ -344,6 +405,35 @@ export class PessoaComponent implements OnInit {
 
     $("#k_scrolltop").trigger("click");
 
+    let pessoa: any;
+
+
+
+
+
+    if (p.value.DP_Prof_Login === "") {
+
+      var pessoapaciente: PessoaPaciente = {
+
+        recemnascido: recemnascido,
+        ativo: true
+      }
+
+      pessoa: pessoapaciente;
+
+    } else {
+
+      var pessoaprofissional: PessoaProfissional = {
+
+        login: p.value.DP_Prof_Login,
+        ativo: true
+      }
+
+      pessoa: pessoapaciente;
+    }
+
+
+
     var recemnascido = p.value.DP_RecemNascido === "" ? false : true;
     var nascimento = $("input[name='DP_Nascimento']").val();
     var emissao = $("input[name='DP_OrgaoEmissorData']").val();
@@ -357,173 +447,180 @@ export class PessoaComponent implements OnInit {
     var dataemissaocertidao = $("input[name='DC_DataEmissao']").val();
     var dataemissaoctps = $("input[name='DC_DataEmissao_Ctps']").val();
     var tituloeleitor = $("input[name='DC_TituloEleitor']").val();
-
-    var pessoapaciente: PessoaPaciente = {
-      recemnascido: recemnascido,
-      ativo: true
-    }
+    var escolaridadeId = $('input[type=radio][name=DC_Escolaridade]:checked').attr('id');
+    var situacaoFamiliarConjugalId = $('input[type=radio][name=DC_SituacaoFamiliar]:checked').attr('id');
 
 
     if (p.value.DP_NaoIdentificado === true) {
 
-      pessoapaciente.nomecompleto = "NÃO IDENTIFICADO";
-      pessoapaciente.descricaonaoidentificado = p.value.DP_Descricao_Nao_Identificado.toUpperCase();
+      pessoa.nomecompleto = "NÃO IDENTIFICADO";
+      pessoa.descricaonaoidentificado = p.value.DP_Descricao_Nao_Identificado.toUpperCase();
 
     } else {
 
       if (p.value.DP_RecemNascido === true) {
 
-        pessoapaciente.nomecompleto = p.value.DP_NomeRN.toUpperCase();
-        pessoapaciente.numeroprontuario = p.value.DP_NumProntuarioMae;
+        pessoa.nomecompleto = p.value.DP_NomeRN.toUpperCase();
+        pessoa.numeroprontuario = p.value.DP_NumProntuarioMae;
 
       } else {
 
-        pessoapaciente.nomecompleto = p.value.DP_NomeCompleto.toUpperCase();
-        pessoapaciente.nomesocial = p.value.DP_NomeSocial.toUpperCase();
+        pessoa.nomecompleto = p.value.DP_NomeCompleto.toUpperCase();
+        pessoa.nomesocial = p.value.DP_NomeSocial.toUpperCase();
       }
     }
 
     if ($("label[for='DP_Sexo_Masculino']").hasClass("active"))
-      pessoapaciente.sexo = "M";
+      pessoa.sexo = "M";
 
     if ($("label[for='DP_Sexo_Feminino']").hasClass("active"))
-      pessoapaciente.sexo = "F";
+      pessoa.sexo = "F";
 
     if (nascimento !== "") {
 
       var data = nascimento.split("/");
-      pessoapaciente.nascimento = new Date(data[2] + '-' + data[1] + '-' + data[0]);
+      pessoa.nascimento = new Date(data[2] + '-' + data[1] + '-' + data[0]);
 
     }
 
     if (emissao !== "") {
       var data = emissao.split("/");
-      pessoapaciente.emissao = new Date(data[2] + '-' + data[1] + '-' + data[0]);
+      pessoa.emissao = new Date(data[2] + '-' + data[1] + '-' + data[0]);
     }
 
     if (cns !== "")
-      pessoapaciente.cns = cns.replace(' ', '').replace(' ', '').replace(' ', '').replace(' ', '');
+      pessoa.cns = cns.replace(' ', '').replace(' ', '').replace(' ', '').replace(' ', '');
 
     if (identidade !== "")
-      pessoapaciente.identidade = identidade.replace('.', '').replace('.', '').replace('-', '');
+      pessoa.identidade = identidade.replace('.', '').replace('.', '').replace('-', '');
 
     if (cpf !== "")
-      pessoapaciente.cpf = cpf.replace('.', '').replace('.', '').replace('-', '');
+      pessoa.cpf = cpf.replace('.', '').replace('.', '').replace('-', '');
 
     if (p.value.DP_NomeMae !== "")
-      pessoapaciente.nomemae = p.value.DP_NomeMae.toUpperCase();
+      pessoa.nomemae = p.value.DP_NomeMae.toUpperCase();
 
     if (p.value.DP_NomePai !== "")
-      pessoapaciente.nomepai = p.value.DP_NomePai.toUpperCase();
+      pessoa.nomepai = p.value.DP_NomePai.toUpperCase();
 
     if (p.value.DP_IdadeAparente !== "")
-      pessoapaciente.idadeaparente = p.value.DP_IdadeAparente.toUpperCase();
+      pessoa.idadeaparente = p.value.DP_IdadeAparente.toUpperCase();
 
     if (this.Raca !== undefined)
-      pessoapaciente.Raca = this.Raca;
+      pessoa.Raca = this.Raca;
 
     if (this.Etnia !== undefined)
-      pessoapaciente.Etnia = this.Etnia;
+      pessoa.Etnia = this.Etnia;
 
     if (this.Justificativa !== undefined)
-      pessoapaciente.Justificativa = this.Justificativa;
+      pessoa.Justificativa = this.Justificativa;
 
     if (this.Nacionalidade !== undefined)
-      pessoapaciente.Nacionalidade = this.Nacionalidade;
+      pessoa.Nacionalidade = this.Nacionalidade;
 
     if (this.Cidade !== undefined) {
       this.Cidade.Estado = this.Estado;
-      pessoapaciente.Naturalidade = this.Cidade;
+      pessoa.Naturalidade = this.Cidade;
 
     }
 
     if (this.OrgaoEmissor !== undefined)
-      pessoapaciente.OrgaoEmissor = this.OrgaoEmissor;
+      pessoa.OrgaoEmissor = this.OrgaoEmissor;
 
     if (this.UfIdentidade !== undefined)
-      pessoapaciente.uf = this.UfIdentidade.uf;
+      pessoa.uf = this.UfIdentidade.uf;
+
 
     if (cep !== "")
-      pessoapaciente.cep = cep.replace('-', '');
+      pessoa.cep = cep.replace('-', '');
 
     if (p.value.DP_Logradouro !== "")
-      pessoapaciente.logradouro = p.value.DP_Logradouro.toUpperCase();
+      pessoa.logradouro = p.value.DP_Logradouro.toUpperCase();
 
     if (p.value.DP_Numero !== "")
-      pessoapaciente.numero = p.value.DP_Numero.toUpperCase();
+      pessoa.numero = p.value.DP_Numero.toUpperCase();
 
     if (p.value.DP_Complemento !== "")
-      pessoapaciente.complemento = p.value.DP_Complemento.toUpperCase();
+      pessoa.complemento = p.value.DP_Complemento.toUpperCase();
 
     if (bairro !== "")
-      pessoapaciente.bairro = bairro;
+      pessoa.bairro = bairro;
 
     if (this.EstadoEndereco !== undefined)
-      pessoapaciente.Estado = this.EstadoEndereco;
+      pessoa.Estado = this.EstadoEndereco;
 
     if (this.CidadeEndereco !== undefined)
-      pessoapaciente.Cidade = this.CidadeEndereco;
+      pessoa.Cidade = this.CidadeEndereco;
 
     if (pispasep !== "")
-      pessoapaciente.pispasep = pispasep.replace('.', '').replace('.', '').replace('-', '');
+      pessoa.pispasep = pispasep.replace('.', '').replace('.', '').replace('-', '');
 
     if (this.Ocupacao !== undefined)
-      pessoapaciente.Ocupacao = this.Ocupacao;
+      pessoa.Ocupacao = this.Ocupacao;
 
     if (this.Pais !== undefined)
-      pessoapaciente.PaisOrigem = this.Pais;
+      pessoa.PaisOrigem = this.Pais;
 
     if (dataentradapis !== "")
-      pessoapaciente.dataentradapis = dataentradapis;
+      pessoa.dataentradapis = dataentradapis;
 
     if (this.TipoCertidao !== undefined)
-      pessoapaciente.TipoCertidao = this.TipoCertidao;
+      pessoa.TipoCertidao = this.TipoCertidao;
 
     if (p.value.DC_NomeDoCartorio !== "")
-      pessoapaciente.nomecartorio = p.value.DC_NomeDoCartorio.toUpperCase();
+      pessoa.nomecartorio = p.value.DC_NomeDoCartorio.toUpperCase();
 
     if (p.value.DC_NumeroDoLivro !== "")
-      pessoapaciente.numerolivro = p.value.DC_NumeroDoLivro.toUpperCase();
+      pessoa.numerolivro = p.value.DC_NumeroDoLivro.toUpperCase();
 
     if (p.value.DC_NumeroDaFolha !== "")
-      pessoapaciente.numerofolha = p.value.DC_NumeroDaFolha.toUpperCase();
+      pessoa.numerofolha = p.value.DC_NumeroDaFolha.toUpperCase();
 
     if (p.value.DC_NumeroDoTermo !== "")
-      pessoapaciente.numerotermo = p.value.DC_NumeroDoTermo.toUpperCase();
+      pessoa.numerotermo = p.value.DC_NumeroDoTermo.toUpperCase();
 
     if (dataemissaocertidao !== "")
-      pessoapaciente.dataemissaocertidao = dataemissaocertidao;
+      pessoa.dataemissaocertidao = dataemissaocertidao;
 
     if (p.value.DC_NumeroCTPS !== "")
-      pessoapaciente.numeroctps = p.value.DC_NumeroCTPS.toUpperCase();
+      pessoa.numeroctps = p.value.DC_NumeroCTPS.toUpperCase();
 
     if (p.value.DC_SerieCTPS !== "")
-      pessoapaciente.seriectps = p.value.DC_SerieCTPS.toUpperCase();
+      pessoa.seriectps = p.value.DC_SerieCTPS.toUpperCase();
 
     if (this.UfCtps !== undefined)
-      pessoapaciente.ufctps = this.UfCtps.uf;
+      pessoa.ufctps = this.UfCtps.uf;
 
     if (dataemissaoctps !== "")
-      pessoapaciente.dataemissaoctps = dataemissaoctps;
+      pessoa.dataemissaoctps = dataemissaoctps;
 
     if (tituloeleitor !== "")
-      pessoapaciente.tituloeleitor = tituloeleitor;
+      pessoa.tituloeleitor = tituloeleitor;
 
     if (p.value.DC_Zona !== "")
-      pessoapaciente.zona = p.value.DC_Zona.toUpperCase();
+      pessoa.zona = p.value.DC_Zona.toUpperCase();
 
     if (p.value.DC_Secao !== "")
-      pessoapaciente.secao = p.value.DC_Secao.toUpperCase();
+      pessoa.secao = p.value.DC_Secao.toUpperCase();
 
     if ($("label[for='FreqEsc1']").hasClass("active"))
-      pessoapaciente.frequentaescola = true;
+      pessoa.frequentaescola = true;
 
     if ($("label[for='FreqEsc2']").hasClass("active"))
-      pessoapaciente.frequentaescola = false;
+      pessoa.frequentaescola = false;
 
-    this.pessoaService.Salvar(pessoapaciente).subscribe(data => {
+
+    if (escolaridadeId !== undefined)
+      pessoa.Escolaridade = this.listaEscolaridade[escolaridadeId];
+
+    if (situacaoFamiliarConjugalId !== undefined)
+      pessoa.SituacaoFamiliarConjugal = this.listaSituacaoFamiliarConjugal[situacaoFamiliarConjugalId];
+
+    this.pessoaService.Salvar(pessoa).subscribe(data => {
 
       var pessoapacientecomid = data.result as PessoaPaciente;
+
+
       var novalistaContatos = new Array<PessoaContato>();
 
 
@@ -630,6 +727,8 @@ export class PessoaComponent implements OnInit {
     $("div").find("#box_newcontact4").remove();
     $("div").find("#box_newcontact5").remove();
   }
+
+
 
 }
 
