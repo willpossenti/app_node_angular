@@ -26,8 +26,6 @@ import { Router } from '@angular/router';
 import { sortBy } from 'sort-by-typescript';
 
 
-
-
 @Component({
   selector: 'app-pessoa',
   templateUrl: './pessoa.component.html',
@@ -76,13 +74,18 @@ export class PessoaComponent implements OnInit {
 
   constructor(private pessoaService: PessoaService, private router: Router) {
     this.listaContatos = new Array<PessoaContato>();
-
+    this.listaLotacaoProfissional = new Array<LotacaoProfissional>();
+    this.listaOcupacao = new Array<Ocupacao>();
+    this.listaPais = new Array<Pais>();
+    this.listaTipoCertidao = new Array<TipoCertidao>();
+    this.listaEstado = new Array<Estado>();
+    this.listaEscolaridade = new Array<Escolaridade>();
+    this.listaSituacaoFamiliarConjugal = new Array<SituacaoFamiliarConjugal>();
   }
 
 
   public ngOnInit() {
-
-
+    
     toastr.options = {
       "closeButton": true,
       "debug": false,
@@ -144,6 +147,8 @@ export class PessoaComponent implements OnInit {
         $("select[name^=DP_Endereco_Estado]").val($("select[name^=DP_Endereco_Estado] option:first").val());
         $("select[name^=DP_UF_Ctps]").val($("select[name^=DP_UF_Ctps] option:first").val());
         $("select[name^=DP_ProfUF]").val($("select[name^=DP_ProfUF] option:first").val());
+        $("select[name^=DP_Endereco_Cidade]").val($("select[name^=DP_Endereco_Cidade] option:first").val());
+        
       });
 
     }, (error: HttpErrorResponse) => {
@@ -163,79 +168,6 @@ export class PessoaComponent implements OnInit {
       this.Mensagens("erro", "Falha ao carregar Orgãos Emissores na aba Dados Pessoais");
       console.log(`Error. ${error.message}.`);
     });
-
-    this.pessoaService.BindOcupacao().subscribe(data => {
-      this.listaOcupacao = data.result;
-
-      $(document).ready(function () { $("select[name^=DC_Ocupacao]").val($("select[name^=DC_Ocupacao] option:first").val()); });
-    }, (error: HttpErrorResponse) => {
-      this.Mensagens("erro", "Falha ao carregar Ocupações na aba Dados Complementares");
-      console.log(`Error. ${error.message}.`);
-    });
-
-    this.pessoaService.BindPais().subscribe(data => {
-      this.listaPais = data.result;
-
-      $(document).ready(function () { $("select[name^=DC_PaisDeOrigem]").val($("select[name^=DC_PaisDeOrigem] option:first").val()); });
-    }, (error: HttpErrorResponse) => {
-      this.Mensagens("erro", "Falha ao carregar Paises na aba Dados Complementares");
-      console.log(`Error. ${error.message}.`);
-    });
-
-    this.pessoaService.BindTipoCertidao().subscribe(data => {
-      this.listaTipoCertidao = data.result;
-
-      $(document).ready(function () { $("select[name^=DC_TipoCertidao]").val($("select[name^=DC_TipoCertidao] option:first").val()); });
-    }, (error: HttpErrorResponse) => {
-      this.Mensagens("erro", "Falha ao carregar Paises na aba Dados Complementares");
-      console.log(`Error. ${error.message}.`);
-    });
-
-    this.pessoaService.BindEscolaridade().subscribe(data => {
-      this.listaEscolaridade = data.result.sort(sortBy('codigoEscolaridade'));
-
-      for (let i = 0; i < this.listaEscolaridade.length; i++) {
-
-        if (i < 5)
-          $("#divEscolaridadeColuna1").append("<label class='k-radio k-radio--brand' id='radioEscolaridade" + i + "'></label>");
-        else
-          $("#divEscolaridadeColuna2").append("<label class='k-radio k-radio--brand' id='radioEscolaridade" + i + "'></label>");
-
-        $("#radioEscolaridade" + i).append("<input type='radio' name='DC_Escolaridade' tabindex='50' id='" + i + "'>" + this.listaEscolaridade[i].descricao + "<span></span>");
-
-      }
-
-
-    }, (error: HttpErrorResponse) => {
-      this.Mensagens("erro", "Falha ao carregar Paises na aba Dados Complementares");
-      console.log(`Error. ${error.message}.`);
-    });
-
-    this.pessoaService.BindSituacaoFamiliarConjugal().subscribe(data => {
-      this.listaSituacaoFamiliarConjugal = data.result.sort(sortBy('codigoSituacaoFamiliarConjugal'));
-      console.log(data.result.sort(sortBy('codigoSituacaoFamiliarConjugal')));
-
-      for (let i = 0; i < this.listaSituacaoFamiliarConjugal.length; i++) {
-
-        $("#divSituacaoFamiliarConjugal").append("<label class='k-radio k-radio--brand' id='radioSituacaoFamiliarConjugal" + i + "'></label>");
-        $("#radioSituacaoFamiliarConjugal" + i).append("<input type='radio' name='DC_SituacaoFamiliar' tabindex='50' id='" + i + "'>" + this.listaSituacaoFamiliarConjugal[i].descricao + "<span></span>");
-      }
-
-
-    }, (error: HttpErrorResponse) => {
-      this.Mensagens("erro", "Falha ao carregar Paises na aba Dados Complementares");
-      console.log(`Error. ${error.message}.`);
-    });
-
-    this.pessoaService.BindTipoProfissional().subscribe(data => {
-      this.listaTipoProfissional = data.result;
-
-      $(document).ready(function () { $("select[name^=DP_ProfTipo]").val($("select[name^=DP_ProfTipo] option:first").val()); });
-    }, (error: HttpErrorResponse) => {
-      this.Mensagens("erro", "Falha ao carregar Paises na aba Dados Complementares");
-      console.log(`Error. ${error.message}.`);
-    });
-
 
 
     $(document).ready(function () {
@@ -261,6 +193,7 @@ export class PessoaComponent implements OnInit {
       });
 
 
+      
     });
   }
 
@@ -314,7 +247,119 @@ export class PessoaComponent implements OnInit {
 
 
   }
+  onHabilitaProfissional() {
 
+    var code = "<script> $(document).ready(function () {  $('#k_table_1').on('click', 'input[name^=Prof_Coord]', function() { var id = '#'+$(this).attr('id')+'';  if($(this).prop('checked') === true){     $(this).prop('checked',false);        swal({title: 'Deseja torná-lo como coordenador?', text: '', type: 'warning', showCancelButton: true, cancelButtonText:'Não', confirmButtonText: 'Sim' }).then(function(result) {   if (result.value) { $(id).prop('checked',true);  }   });    }else{   $(id).prop('checked',true);        swal({title: 'Deseja tirá-lo como coordenador?', text: '', type: 'warning', showCancelButton: true, cancelButtonText:'Não', confirmButtonText: 'Sim' }).then(function(result) {      if (result.value) {  $(id).prop('checked',false);  }    });      }    }); $('#k_table_1').on('click', 'input[name^=Prof_Ativo]', function() { var id = '#'+$(this).attr('id')+'';  if($(this).prop('checked') === true){     $(this).prop('checked',false);        swal({title: 'Deseja ativar a lotação?', text: '', type: 'warning', showCancelButton: true, cancelButtonText:'Não', confirmButtonText: 'Sim' }).then(function(result) {   if (result.value) { $(id).prop('checked',true);  }   });    }else{   $(id).prop('checked',true);        swal({title: 'Deseja desativar a lotação?', text: '', type: 'warning', showCancelButton: true, cancelButtonText:'Não', confirmButtonText: 'Sim' }).then(function(result) {      if (result.value) {  $(id).prop('checked',false);  }    });      }    }); });</script>";
+
+     $("#k_table_1").append($(code)[0]);
+
+    this.pessoaService.BindTipoProfissional().subscribe(data => {
+      this.listaTipoProfissional = data.result;
+
+      $(document).ready(function () { $("select[name^=DP_ProfTipo]").val($("select[name^=DP_ProfTipo] option:first").val()); });
+    }, (error: HttpErrorResponse) => {
+      this.Mensagens("erro", "Falha ao carregar Paises na aba Dados Complementares");
+      console.log(`Error. ${error.message}.`);
+    });
+
+
+  }
+
+  onCarregaCamposDadosComplemenares() {
+
+    $(document).ready(function () {
+
+      $("select[name^=DC_Ocupacao]").val($("select[name^=DC_Ocupacao] option:first").val());
+      $("select[name^=DC_PaisDeOrigem]").val($("select[name^=DC_PaisDeOrigem] option:first").val());
+      $("select[name^=DC_TipoCertidao]").val($("select[name^=DC_TipoCertidao] option:first").val());
+    });
+
+
+    if (this.listaOcupacao.length === 0) {
+
+      this.pessoaService.BindOcupacao().subscribe(data => {
+        this.listaOcupacao = data.result;
+
+        $(document).ready(function () { $("select[name^=DC_Ocupacao]").val($("select[name^=DC_Ocupacao] option:first").val()); });
+      }, (error: HttpErrorResponse) => {
+        this.Mensagens("erro", "Falha ao carregar Ocupações na aba Dados Complementares");
+        console.log(`Error. ${error.message}.`);
+      });
+    }
+
+    if (this.listaPais.length === 0) {
+
+      this.pessoaService.BindPais().subscribe(data => {
+        this.listaPais = data.result;
+
+        $(document).ready(function () { $("select[name^=DC_PaisDeOrigem]").val($("select[name^=DC_PaisDeOrigem] option:first").val()); });
+      }, (error: HttpErrorResponse) => {
+        this.Mensagens("erro", "Falha ao carregar Paises na aba Dados Complementares");
+        console.log(`Error. ${error.message}.`);
+      });
+    }
+
+    if (this.listaTipoCertidao.length === 0) {
+
+
+      this.pessoaService.BindTipoCertidao().subscribe(data => {
+        this.listaTipoCertidao = data.result;
+
+        $(document).ready(function () { $("select[name^=DC_TipoCertidao]").val($("select[name^=DC_TipoCertidao] option:first").val()); });
+      }, (error: HttpErrorResponse) => {
+        this.Mensagens("erro", "Falha ao carregar Paises na aba Dados Complementares");
+        console.log(`Error. ${error.message}.`);
+      });
+
+    }
+
+    if (this.listaEscolaridade.length === 0) {
+
+
+      this.pessoaService.BindEscolaridade().subscribe(data => {
+        this.listaEscolaridade = data.result.sort(sortBy('codigoEscolaridade'));
+
+        for (let i = 0; i < this.listaEscolaridade.length; i++) {
+
+          if (i < 5)
+            $("#divEscolaridadeColuna1").append("<label class='k-radio k-radio--brand' id='radioEscolaridade" + i + "'></label>");
+          else
+            $("#divEscolaridadeColuna2").append("<label class='k-radio k-radio--brand' id='radioEscolaridade" + i + "'></label>");
+
+          $("#radioEscolaridade" + i).append("<input type='radio' name='DC_Escolaridade' tabindex='50' id='" + i + "'>" + this.listaEscolaridade[i].descricao + "<span></span>");
+
+        }
+
+
+      }, (error: HttpErrorResponse) => {
+        this.Mensagens("erro", "Falha ao carregar Paises na aba Dados Complementares");
+        console.log(`Error. ${error.message}.`);
+      });
+    }
+
+    if (this.listaSituacaoFamiliarConjugal.length === 0) {
+
+
+      this.pessoaService.BindSituacaoFamiliarConjugal().subscribe(data => {
+        this.listaSituacaoFamiliarConjugal = data.result.sort(sortBy('codigoSituacaoFamiliarConjugal'));
+
+
+        for (let i = 0; i < this.listaSituacaoFamiliarConjugal.length; i++) {
+
+          $("#divSituacaoFamiliarConjugal").append("<label class='k-radio k-radio--brand' id='radioSituacaoFamiliarConjugal" + i + "'></label>");
+          $("#radioSituacaoFamiliarConjugal" + i).append("<input type='radio' name='DC_SituacaoFamiliar' tabindex='50' id='" + i + "'>" + this.listaSituacaoFamiliarConjugal[i].descricao + "<span></span>");
+        }
+
+
+      }, (error: HttpErrorResponse) => {
+        this.Mensagens("erro", "Falha ao carregar Paises na aba Dados Complementares");
+        console.log(`Error. ${error.message}.`);
+      });
+
+    }
+
+
+  }
 
 
   onAdicionaNovosCamposContato() {
@@ -365,6 +410,57 @@ export class PessoaComponent implements OnInit {
     }
   }
 
+  onAdicionaLotacao() {
+
+
+    if (this.TipoProfissional !== undefined) {
+
+      alert(this.listaTipoProfissional.find(x => x.descricao == this.TipoProfissional.descricao));
+
+      if (this.listaTipoProfissional.find(x => x.descricao !== this.TipoProfissional.descricao)) {
+
+        var numeroconselho = $("input[name='Prof_NumConselho']").val();
+
+        var lotacaoProfissional: LotacaoProfissional = {
+
+          TipoProfissional: this.TipoProfissional,
+          coordenador: false,
+          ativo: true
+        }
+
+        if (numeroconselho !== "")
+          lotacaoProfissional.numeroConselho = numeroconselho;
+
+        if (this.UfProfissional !== undefined)
+          lotacaoProfissional.ufProfissional = this.UfProfissional.uf;
+
+        if (this.OrgaoEmissorProfissional !== undefined)
+          lotacaoProfissional.OrgaoEmissorProfissional = this.OrgaoEmissorProfissional;
+
+        this.listaLotacaoProfissional.push(lotacaoProfissional);
+        this.onLimparCamposProfissional();
+
+      } else {
+
+        alert('Já incluso');
+      }
+    }
+  }
+
+  onLimparCamposProfissional() {
+
+
+    $("input[name='Prof_NumConselho']").val("");
+    this.TipoProfissional = null;
+    this.UfProfissional = null;
+    this.OrgaoEmissorProfissional = null;
+
+    $(document).ready(function () {
+      $("select[name^=DP_ProfTipo]").val($("select[name^=DP_ProfTipo] option:first").val());
+      $("select[name^=DP_ProfUF]").val($("select[name^=DP_ProfUF] option:first").val());
+      $("select[name^=DP_Prof_OrgaoEmissor]").val($("select[name^=DP_Prof_OrgaoEmissor] option:first").val());
+    });
+  }
 
 
   onBuscaCep(cep: string) {
@@ -406,9 +502,6 @@ export class PessoaComponent implements OnInit {
     $("#k_scrolltop").trigger("click");
 
     let pessoa: any;
-
-
-
 
 
     if (p.value.DP_Prof_Login === "") {
