@@ -62,10 +62,6 @@ export class PessoaService {
     return this.http.post<Return>(`${this.baseUrl}pessoa/pessoaprofissional/incluir`, pessoaprofissional, this.httpOptions);
   }
 
-  SalvarContato(pessoacontato: Array<PessoaContato>) {
-
-    return this.http.post<Return>(`${this.baseUrl}pessoa/pessoacontato/incluir`, JSON.stringify(pessoacontato), this.httpOptions);
-  }
 
 
 

@@ -201,7 +201,7 @@ $(document).ready(function () {
       $('#box_dadosprof').addClass('oculta');
     }
   });
-
+  //confirmação na linha 0 para caso o usuário deseja excluir o contato, os demais são gerados dinamicamente
   $("#btnExcluirContato0").click(function () {
     swal({ title: 'Deseja excluir esse contato?', text: '', type: 'warning', showCancelButton: true, cancelButtonText: 'Não', confirmButtonText: 'Sim' })
       .then(function (result) {
@@ -213,9 +213,28 @@ $(document).ready(function () {
       });
   });
 
+  //Informa o usuário se já existe uma lotação para aquele cadastro
+  $("#btnAddNovaLotacao").click(function () {
 
+    var tipoprofissional = $("#idProfTipo option:selected").text(); 
 
+    $('#tableLotacaoProfissional1 tr').each(function () {
+      if ($(this).find('td').eq(0).text() === tipoprofissional && $('#btnCancelarLotacao').hasClass('oculta')) {
+        swal('Já existe esse tipo de profissional');
+      }
+    });
 
+  });
+
+  $("#btnExcluirLotacao").click(function () {
+    swal({ title: 'Deseja excluir essa lotação?', text: '', type: 'warning', showCancelButton: true, cancelButtonText: 'Não', confirmButtonText: 'Sim' })
+      .then(function (result) {
+        if (result.value) {
+          return;
+        }
+        return;
+      });
+  });
 
 
   /*=Acolhimento: ------------------------------------------- */

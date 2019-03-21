@@ -222,6 +222,8 @@ export class PessoaComponent implements OnInit {
 
       });
 
+
+
     });
   }
 
@@ -443,38 +445,60 @@ export class PessoaComponent implements OnInit {
 
     if (this.TipoProfissional !== undefined) {
 
-      if (this.listaTipoProfissional.find(x => x.descricao !== this.TipoProfissional.descricao)) {
+      var numeroconselho = $("input[name^='Prof_NumConselho']").val();
 
-        var numeroconselho = $("input[name='Prof_NumConselho']").val();
+      var lotacaoProfissional: LotacaoProfissional = {
 
-        var lotacaoProfissional: LotacaoProfissional = {
-
-          TipoProfissional: this.TipoProfissional,
-          coordenador: false,
-          ativo: true
-        }
-
-        if (numeroconselho !== "")
-          lotacaoProfissional.numeroConselho = numeroconselho;
-
-        if (this.UfProfissional !== undefined)
-          lotacaoProfissional.ufProfissional = this.UfProfissional.uf;
-
-        if (this.OrgaoEmissorProfissional !== undefined)
-          lotacaoProfissional.OrgaoEmissorProfissional = this.OrgaoEmissorProfissional;
-
-        this.listaLotacaoProfissional.push(lotacaoProfissional);
-        this.onLimparCamposProfissional();
-
-      } else {
-
-        alert('Já incluso');
+        TipoProfissional: this.TipoProfissional,
+        coordenador: false,
+        ativo: true
       }
+
+      if (numeroconselho !== "")
+        lotacaoProfissional.numeroConselho = numeroconselho;
+
+      if (this.UfProfissional !== undefined)
+        lotacaoProfissional.ufProfissional = this.UfProfissional.uf;
+
+      if (this.OrgaoEmissorProfissional !== undefined)
+        lotacaoProfissional.OrgaoEmissorProfissional = this.OrgaoEmissorProfissional;
+
+
+      if (this.listaLotacaoProfissional.find(x => x.TipoProfissional === this.TipoProfissional) === undefined)
+        this.listaLotacaoProfissional.push(lotacaoProfissional);
+      else {
+
+        var index = this.listaLotacaoProfissional.findIndex(x => x.TipoProfissional === this.TipoProfissional);
+        this.listaLotacaoProfissional[index] = lotacaoProfissional;
+      }
+
+      this.onLimparCamposProfissional();
+    } else {
+
+      $(document).ready(function () {
+
+        $('#msg_tipoprofissional').removeClass('oculta');
+      });
+
     }
   }
 
-  onLimparCamposProfissional() {
+  onEditarLotacao(lotacaoprofissional: LotacaoProfissional) {
+    this.TipoProfissional = lotacaoprofissional.TipoProfissional;
+    $("input[name='Prof_NumConselho']").val(lotacaoprofissional.numeroConselho);
+    this.UfProfissional = this.listaUFIdentidade.find(x => x.uf === lotacaoprofissional.ufProfissional);
+    this.OrgaoEmissorProfissional = lotacaoprofissional.OrgaoEmissorProfissional;
 
+    $("#btnAddNovaLotacao").html("<i class='fa fa-plus'></i>Salvar");
+    $('#btnCancelarLotacao').removeClass('oculta');
+
+  }
+
+  onExcluirLotacao(lotacaoprofissional: LotacaoProfissional) {
+
+  }
+
+  onLimparCamposProfissional() {
 
     $("input[name='Prof_NumConselho']").val("");
     this.TipoProfissional = null;
@@ -485,6 +509,9 @@ export class PessoaComponent implements OnInit {
       $("select[name^=DP_ProfTipo]").val($("select[name^=DP_ProfTipo] option:first").val());
       $("select[name^=DP_ProfUF]").val($("select[name^=DP_ProfUF] option:first").val());
       $("select[name^=DP_Prof_OrgaoEmissor]").val($("select[name^=DP_Prof_OrgaoEmissor] option:first").val());
+      $('#msg_tipoprofissional').addClass('oculta');
+      $('#btnCancelarLotacao').addClass('oculta');
+      $("#btnAddNovaLotacao").html('<i class="fa fa-plus"></i>Adicionar');
     });
   }
 
@@ -526,7 +553,7 @@ export class PessoaComponent implements OnInit {
 
     $("#k_scrolltop").trigger("click");
 
-    var pessoa: Pessoa = { };
+    var pessoa: Pessoa = {};
     var pessoaPaciente: PessoaPaciente;
     var pessoaProfissional: PessoaProfissional;
 
@@ -546,6 +573,32 @@ export class PessoaComponent implements OnInit {
     var tituloEleitor = $("input[name='DC_TituloEleitor']").val();
     var escolaridadeId = $('input[type=radio][name=DC_Escolaridade]:checked').attr('id');
     var situacaoFamiliarConjugalId = $('input[type=radio][name=DC_SituacaoFamiliar]:checked').attr('id');
+
+    if (p.value.DP_NaoIdentificado === true) {
+      pessoaPaciente = {};
+      pessoa.nomeCompleto = "NÃO IDENTIFICADO";
+
+      if (p.value.DP_Descricao_Nao_Identificado !== "")
+        pessoaPaciente.descricaoNaoIdentificado = p.value.DP_Descricao_Nao_Identificado.toUpperCase();
+
+    } else {
+
+      if (p.value.DP_RecemNascido === true) {
+        pessoaPaciente = {};
+        pessoa.nomeCompleto = p.value.DP_NomeRN.toUpperCase();
+
+        if (p.value.DP_NumProntuarioMae !== "")
+          pessoaPaciente.numeroProntuario = p.value.DP_NumProntuarioMae.toUpperCase();
+
+      } else {
+
+        pessoa.nomeCompleto = p.value.DP_NomeCompleto.toUpperCase();
+
+        if (p.value.DP_NomeSocial !== "")
+          pessoa.nomeSocial = p.value.DP_NomeSocial.toUpperCase();
+
+      }
+    }
 
 
     if ($("label[for='DP_Sexo_Masculino']").hasClass("active"))
@@ -694,20 +747,24 @@ export class PessoaComponent implements OnInit {
     if (situacaoFamiliarConjugalId !== undefined)
       pessoa.SituacaoFamiliarConjugal = this.listaSituacaoFamiliarConjugal[situacaoFamiliarConjugalId];
 
+
+
+    if (p.value.DP_Prof_Login !== "")
+      pessoa.login = p.value.DP_Prof_Login.toUpperCase();
+
+    pessoa.ativo = true;
+
+
     if (this.listaLotacaoProfissional.length > 0) {
 
       pessoaProfissional = {};
+      this.SalvarContato(pessoa);
       pessoaProfissional = pessoa;
-
-      //pessoaProfissional.lotacoesProfissional = this.listaLotacaoProfissional;
+      pessoaProfissional.lotacoesProfissional = this.listaLotacaoProfissional;
 
       this.pessoaService.SalvarPessoaProfissional(pessoaProfissional).subscribe(data => {
 
-        this.Mensagens("sucesso", "Salvo com sucesso");
-
-        var pessoacomid = data.result as PessoaProfissional;
-
-        this.SalvarContato(pessoacomid)
+        this.Mensagens("sucesso", "Profissional salvo com sucesso");
 
         this.LimparCampos(p);
 
@@ -721,36 +778,12 @@ export class PessoaComponent implements OnInit {
     } else {
 
       pessoaPaciente = {};
-
-      if (p.value.DP_NaoIdentificado === true) {
-
-        pessoa.nomeCompleto = "NÃO IDENTIFICADO";
-        pessoaPaciente.descricaoNaoIdentificado = p.value.DP_Descricao_Nao_Identificado.toUpperCase();
-
-      } else {
-
-        if (p.value.DP_RecemNascido === true) {
-
-          pessoa.nomeCompleto = p.value.DP_NomeRN.toUpperCase();
-          pessoaPaciente.numeroProntuario = p.value.DP_NumProntuarioMae;
-
-        } else {
-
-          pessoa.nomeCompleto = p.value.DP_NomeCompleto.toUpperCase();
-          pessoa.nomeSocial = p.value.DP_NomeSocial.toUpperCase();
-
-        }
-      }
-
+      this.SalvarContato(pessoa);
       pessoaPaciente = pessoa;
 
       this.pessoaService.SalvarPessoaPaciente(pessoaPaciente).subscribe(data => {
 
-        this.Mensagens("sucesso", "Salvo com sucesso");
-
-        var pessoacomid = data.result as PessoaPaciente;
-
-        this.SalvarContato(pessoacomid)
+        this.Mensagens("sucesso", "Paciente salvo com sucesso");
 
         this.LimparCampos(p);
 
@@ -762,10 +795,9 @@ export class PessoaComponent implements OnInit {
     }
   }
 
-  public SalvarContato(pessoa: object) {
+  public SalvarContato(pessoa: Pessoa) {
 
-    var novalistaContatos = new Array<PessoaContato>();
-
+    pessoa.pessoaContatos = [];
 
     for (let i = 0; i <= this.listaContatos.length; i++) {
 
@@ -776,7 +808,6 @@ export class PessoaComponent implements OnInit {
       if (telefone !== "" || celular !== "" || email !== "") {
 
         var pessoacontato: PessoaContato = {
-          Pessoa: pessoa,
           ativo: true
         }
 
@@ -789,24 +820,9 @@ export class PessoaComponent implements OnInit {
         if (email !== "")
           pessoacontato.email = email.replace('(', '').replace(')', '').replace('-', '');
 
-        novalistaContatos.push(pessoacontato);
+        pessoa.pessoaContatos.push(pessoacontato);
+
       }
-    }
-
-
-
-    if (novalistaContatos.length > 0) {
-
-
-      this.pessoaService.SalvarContato(novalistaContatos).subscribe(data => {
-
-        this.Mensagens("sucesso", "Contato salvo com sucesso");
-
-      }, (error: HttpErrorResponse) => {
-        this.Mensagens("erro", "Falha ao comunicar com API");
-        console.log(`Error. ${error.message}.`);
-      });
-
     }
 
   }
@@ -857,6 +873,7 @@ export class PessoaComponent implements OnInit {
     this.listaContatos = new Array<PessoaContato>();
     this.listaEtnia = new Array<Etnia>();
     this.listaCidade = new Array<Cidade>();
+    this.listaLotacaoProfissional = new Array<LotacaoProfissional>();
 
     $("div").find("#box_newcontact1").remove();
     $("div").find("#box_newcontact2").remove();

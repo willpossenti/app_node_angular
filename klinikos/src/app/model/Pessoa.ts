@@ -41,6 +41,7 @@ export interface Pessoa  {
   bairro?: string;
   Estado?: Estado;
   Cidade?: Cidade;
+  pessoaContatos?: Array<PessoaContato>;
   pisPasep?: string;
   Ocupacao?: Ocupacao;
   PaisOrigem?: Pais;
@@ -64,6 +65,7 @@ export interface Pessoa  {
   pacienteProfissional?: boolean;
   codigoLogin?: string;
   login?: string;
+  senha?: string;
   ativo?: boolean;
 
 
