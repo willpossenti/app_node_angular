@@ -9,6 +9,8 @@ import { Cidade } from '../../../model/Cidade';
 import { Cep } from '../../../model/Cep';
 import { PessoaPaciente } from '../../../model/PessoaPaciente';
 import { PessoaContato } from '../../../model/PessoaContato';
+import { PessoaProfissional } from 'src/app/model/PessoaProfissional';
+import { Pessoa } from 'src/app/model/Pessoa';
 
 
 @Injectable({
@@ -51,10 +53,15 @@ export class PessoaService {
   BindTipoProfissional() { return this.http.get<Return>(`${this.baseUrl}tipoprofissional`, this.httpOptions); }
   BuscarCep(cep: string) { return this.http.get<Cep>(`${this.cepUrl}` + cep + `/json/`);}
   BuscarCidade(nomecidade: string) { return this.http.get<Return>(`${this.baseUrl}cidade/buscacidade/` + nomecidade, this.httpOptions); }
-  Salvar(pessoapaciente: PessoaPaciente) {
+  SalvarPessoaPaciente(pessoapaciente: PessoaPaciente) {
 
     return this.http.post<Return>(`${this.baseUrl}pessoa/pessoapaciente/incluir`, pessoapaciente, this.httpOptions);
   }
+  SalvarPessoaProfissional(pessoaprofissional: PessoaProfissional) {
+
+    return this.http.post<Return>(`${this.baseUrl}pessoa/pessoaprofissional/incluir`, pessoaprofissional, this.httpOptions);
+  }
+
   SalvarContato(pessoacontato: Array<PessoaContato>) {
 
     return this.http.post<Return>(`${this.baseUrl}pessoa/pessoacontato/incluir`, JSON.stringify(pessoacontato), this.httpOptions);

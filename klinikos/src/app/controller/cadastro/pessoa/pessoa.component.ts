@@ -24,7 +24,10 @@ import * as toastr from 'toastr';
 import { HttpErrorResponse } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { sortBy } from 'sort-by-typescript';
-
+import { Pessoa } from '../../../model/Pessoa';
+import { AgeFromDate } from 'age-calculator';
+import { DatePipe } from '@angular/common';
+import * as DateDiff from 'date-diff';
 
 @Component({
   selector: 'app-pessoa',
@@ -85,7 +88,7 @@ export class PessoaComponent implements OnInit {
 
 
   public ngOnInit() {
-    
+
     toastr.options = {
       "closeButton": true,
       "debug": false,
@@ -148,7 +151,7 @@ export class PessoaComponent implements OnInit {
         $("select[name^=DP_UF_Ctps]").val($("select[name^=DP_UF_Ctps] option:first").val());
         $("select[name^=DP_ProfUF]").val($("select[name^=DP_ProfUF] option:first").val());
         $("select[name^=DP_Endereco_Cidade]").val($("select[name^=DP_Endereco_Cidade] option:first").val());
-        
+
       });
 
     }, (error: HttpErrorResponse) => {
@@ -192,8 +195,33 @@ export class PessoaComponent implements OnInit {
         }
       });
 
+      $("input[name^=DP_Nascimento]").blur(function () {
 
-      
+        var data = $("input[name='DP_Nascimento']").val().split("/");
+        let ageFromDate = new AgeFromDate(new Date(data[2], data[1], data[0])).age;
+
+        if (ageFromDate > 0)
+          $("input[name='DP_IdadeAparente']").val(ageFromDate > 1 ? ageFromDate + " ANOS" : ageFromDate + "ANO");
+        else {
+
+          var pipe = new DatePipe('en-US');
+          const now = Date.now();
+
+          //var oMonth = new MonthCalculator({
+          //  startDate: pipe.transform(new Date(data[2], data[1], data[0]), 'yyyy-MM-dd').toString(),
+          //  endDate: pipe.transform(now, 'yyyy-MM-dd').toString()
+          //});
+
+          var date1 = new Date(data[2], data[1], data[0]); // 2015-12-1
+          var date2 = new Date(data[2], data[1], data[0]); // 2014-01-1
+
+          var diff = new DateDiff(date1, date2);
+          console.log(diff.months());
+          // $("input[name='DP_IdadeAparente']").val(oMonth.getTotal() > 1 ? oMonth.getTotal() + " MESES" : oMonth.getTotal() + "MÊS");
+        }
+
+      });
+
     });
   }
 
@@ -251,7 +279,7 @@ export class PessoaComponent implements OnInit {
 
     var code = "<script> $(document).ready(function () {  $('#k_table_1').on('click', 'input[name^=Prof_Coord]', function() { var id = '#'+$(this).attr('id')+'';  if($(this).prop('checked') === true){     $(this).prop('checked',false);        swal({title: 'Deseja torná-lo como coordenador?', text: '', type: 'warning', showCancelButton: true, cancelButtonText:'Não', confirmButtonText: 'Sim' }).then(function(result) {   if (result.value) { $(id).prop('checked',true);  }   });    }else{   $(id).prop('checked',true);        swal({title: 'Deseja tirá-lo como coordenador?', text: '', type: 'warning', showCancelButton: true, cancelButtonText:'Não', confirmButtonText: 'Sim' }).then(function(result) {      if (result.value) {  $(id).prop('checked',false);  }    });      }    }); $('#k_table_1').on('click', 'input[name^=Prof_Ativo]', function() { var id = '#'+$(this).attr('id')+'';  if($(this).prop('checked') === true){     $(this).prop('checked',false);        swal({title: 'Deseja ativar a lotação?', text: '', type: 'warning', showCancelButton: true, cancelButtonText:'Não', confirmButtonText: 'Sim' }).then(function(result) {   if (result.value) { $(id).prop('checked',true);  }   });    }else{   $(id).prop('checked',true);        swal({title: 'Deseja desativar a lotação?', text: '', type: 'warning', showCancelButton: true, cancelButtonText:'Não', confirmButtonText: 'Sim' }).then(function(result) {      if (result.value) {  $(id).prop('checked',false);  }    });      }    }); });</script>";
 
-     $("#k_table_1").append($(code)[0]);
+    $("#k_table_1").append($(code)[0]);
 
     this.pessoaService.BindTipoProfissional().subscribe(data => {
       this.listaTipoProfissional = data.result;
@@ -415,8 +443,6 @@ export class PessoaComponent implements OnInit {
 
     if (this.TipoProfissional !== undefined) {
 
-      alert(this.listaTipoProfissional.find(x => x.descricao == this.TipoProfissional.descricao));
-
       if (this.listaTipoProfissional.find(x => x.descricao !== this.TipoProfissional.descricao)) {
 
         var numeroconselho = $("input[name='Prof_NumConselho']").val();
@@ -498,36 +524,14 @@ export class PessoaComponent implements OnInit {
   public onSubmit(p: NgForm) {
 
 
-
     $("#k_scrolltop").trigger("click");
 
-    let pessoa: any;
+    var pessoa: Pessoa = { };
+    var pessoaPaciente: PessoaPaciente;
+    var pessoaProfissional: PessoaProfissional;
 
 
-    if (p.value.DP_Prof_Login === "") {
-
-      var pessoapaciente: PessoaPaciente = {
-
-        recemnascido: recemnascido,
-        ativo: true
-      }
-
-      pessoa: pessoapaciente;
-
-    } else {
-
-      var pessoaprofissional: PessoaProfissional = {
-
-        login: p.value.DP_Prof_Login,
-        ativo: true
-      }
-
-      pessoa: pessoapaciente;
-    }
-
-
-
-    var recemnascido = p.value.DP_RecemNascido === "" ? false : true;
+    var recemNascido = p.value.DP_RecemNascido === "" ? false : true;
     var nascimento = $("input[name='DP_Nascimento']").val();
     var emissao = $("input[name='DP_OrgaoEmissorData']").val();
     var cpf = $("input[name='DP_CPF']").val();
@@ -535,33 +539,14 @@ export class PessoaComponent implements OnInit {
     var cns = $("input[name='DP_CNS']").val();
     var cep = $("input[name='DP_CEP']").val();
     var bairro = $("input[name='DP_Bairro']").val();
-    var pispasep = $("input[name='DC_PISPASEP']").val();
-    var dataentradapis = $("input[name='DC_DataEntrada_Pis']").val();
-    var dataemissaocertidao = $("input[name='DC_DataEmissao']").val();
-    var dataemissaoctps = $("input[name='DC_DataEmissao_Ctps']").val();
-    var tituloeleitor = $("input[name='DC_TituloEleitor']").val();
+    var pisPasep = $("input[name='DC_PISPASEP']").val();
+    var dataEntradaPis = $("input[name='DC_DataEntrada_Pis']").val();
+    var dataEmissaoCertidao = $("input[name='DC_DataEmissao']").val();
+    var dataEmissaoCtps = $("input[name='DC_DataEmissao_Ctps']").val();
+    var tituloEleitor = $("input[name='DC_TituloEleitor']").val();
     var escolaridadeId = $('input[type=radio][name=DC_Escolaridade]:checked').attr('id');
     var situacaoFamiliarConjugalId = $('input[type=radio][name=DC_SituacaoFamiliar]:checked').attr('id');
 
-
-    if (p.value.DP_NaoIdentificado === true) {
-
-      pessoa.nomecompleto = "NÃO IDENTIFICADO";
-      pessoa.descricaonaoidentificado = p.value.DP_Descricao_Nao_Identificado.toUpperCase();
-
-    } else {
-
-      if (p.value.DP_RecemNascido === true) {
-
-        pessoa.nomecompleto = p.value.DP_NomeRN.toUpperCase();
-        pessoa.numeroprontuario = p.value.DP_NumProntuarioMae;
-
-      } else {
-
-        pessoa.nomecompleto = p.value.DP_NomeCompleto.toUpperCase();
-        pessoa.nomesocial = p.value.DP_NomeSocial.toUpperCase();
-      }
-    }
 
     if ($("label[for='DP_Sexo_Masculino']").hasClass("active"))
       pessoa.sexo = "M";
@@ -597,7 +582,7 @@ export class PessoaComponent implements OnInit {
       pessoa.nomepai = p.value.DP_NomePai.toUpperCase();
 
     if (p.value.DP_IdadeAparente !== "")
-      pessoa.idadeaparente = p.value.DP_IdadeAparente.toUpperCase();
+      pessoa.idadeAparente = p.value.DP_IdadeAparente.toUpperCase();
 
     if (this.Raca !== undefined)
       pessoa.Raca = this.Raca;
@@ -645,8 +630,8 @@ export class PessoaComponent implements OnInit {
     if (this.CidadeEndereco !== undefined)
       pessoa.Cidade = this.CidadeEndereco;
 
-    if (pispasep !== "")
-      pessoa.pispasep = pispasep.replace('.', '').replace('.', '').replace('-', '');
+    if (pisPasep !== "")
+      pessoa.pisPasep = pisPasep.replace('.', '').replace('.', '').replace('-', '');
 
     if (this.Ocupacao !== undefined)
       pessoa.Ocupacao = this.Ocupacao;
@@ -654,41 +639,41 @@ export class PessoaComponent implements OnInit {
     if (this.Pais !== undefined)
       pessoa.PaisOrigem = this.Pais;
 
-    if (dataentradapis !== "")
-      pessoa.dataentradapis = dataentradapis;
+    if (dataEntradaPis !== "")
+      pessoa.dataEntradaPis = dataEntradaPis;
 
     if (this.TipoCertidao !== undefined)
       pessoa.TipoCertidao = this.TipoCertidao;
 
     if (p.value.DC_NomeDoCartorio !== "")
-      pessoa.nomecartorio = p.value.DC_NomeDoCartorio.toUpperCase();
+      pessoa.nomeCartorio = p.value.DC_NomeDoCartorio.toUpperCase();
 
     if (p.value.DC_NumeroDoLivro !== "")
-      pessoa.numerolivro = p.value.DC_NumeroDoLivro.toUpperCase();
+      pessoa.numeroLivro = p.value.DC_NumeroDoLivro.toUpperCase();
 
     if (p.value.DC_NumeroDaFolha !== "")
-      pessoa.numerofolha = p.value.DC_NumeroDaFolha.toUpperCase();
+      pessoa.numeroFolha = p.value.DC_NumeroDaFolha.toUpperCase();
 
     if (p.value.DC_NumeroDoTermo !== "")
-      pessoa.numerotermo = p.value.DC_NumeroDoTermo.toUpperCase();
+      pessoa.numeroTermo = p.value.DC_NumeroDoTermo.toUpperCase();
 
-    if (dataemissaocertidao !== "")
-      pessoa.dataemissaocertidao = dataemissaocertidao;
+    if (dataEmissaoCertidao !== "")
+      pessoa.dataEmissaoCertidao = dataEmissaoCertidao;
 
     if (p.value.DC_NumeroCTPS !== "")
-      pessoa.numeroctps = p.value.DC_NumeroCTPS.toUpperCase();
+      pessoa.numeroCtps = p.value.DC_NumeroCTPS.toUpperCase();
 
     if (p.value.DC_SerieCTPS !== "")
-      pessoa.seriectps = p.value.DC_SerieCTPS.toUpperCase();
+      pessoa.serieCtps = p.value.DC_SerieCTPS.toUpperCase();
 
     if (this.UfCtps !== undefined)
-      pessoa.ufctps = this.UfCtps.uf;
+      pessoa.ufCtps = this.UfCtps.uf;
 
-    if (dataemissaoctps !== "")
-      pessoa.dataemissaoctps = dataemissaoctps;
+    if (dataEmissaoCtps !== "")
+      pessoa.dataEmissaoCtps = dataEmissaoCtps;
 
-    if (tituloeleitor !== "")
-      pessoa.tituloeleitor = tituloeleitor;
+    if (tituloEleitor !== "")
+      pessoa.tituloEleitor = tituloEleitor;
 
     if (p.value.DC_Zona !== "")
       pessoa.zona = p.value.DC_Zona.toUpperCase();
@@ -697,10 +682,10 @@ export class PessoaComponent implements OnInit {
       pessoa.secao = p.value.DC_Secao.toUpperCase();
 
     if ($("label[for='FreqEsc1']").hasClass("active"))
-      pessoa.frequentaescola = true;
+      pessoa.frequentaeEscola = true;
 
     if ($("label[for='FreqEsc2']").hasClass("active"))
-      pessoa.frequentaescola = false;
+      pessoa.frequentaeEscola = false;
 
 
     if (escolaridadeId !== undefined)
@@ -709,64 +694,123 @@ export class PessoaComponent implements OnInit {
     if (situacaoFamiliarConjugalId !== undefined)
       pessoa.SituacaoFamiliarConjugal = this.listaSituacaoFamiliarConjugal[situacaoFamiliarConjugalId];
 
-    this.pessoaService.Salvar(pessoa).subscribe(data => {
+    if (this.listaLotacaoProfissional.length > 0) {
 
-      var pessoapacientecomid = data.result as PessoaPaciente;
+      pessoaProfissional = {};
+      pessoaProfissional = pessoa;
+
+      //pessoaProfissional.lotacoesProfissional = this.listaLotacaoProfissional;
+
+      this.pessoaService.SalvarPessoaProfissional(pessoaProfissional).subscribe(data => {
+
+        this.Mensagens("sucesso", "Salvo com sucesso");
+
+        var pessoacomid = data.result as PessoaProfissional;
+
+        this.SalvarContato(pessoacomid)
+
+        this.LimparCampos(p);
+
+      }, (error: HttpErrorResponse) => {
+        this.Mensagens("erro", "Falha ao comunicar com API");
+        console.log(`Error. ${error.message}.`);
+      },
+      );
 
 
-      var novalistaContatos = new Array<PessoaContato>();
+    } else {
 
+      pessoaPaciente = {};
 
-      for (let i = 0; i <= this.listaContatos.length; i++) {
+      if (p.value.DP_NaoIdentificado === true) {
 
-        var telefone = $("input[name='Cont_Telefone" + i + "']").val();
-        var celular = $("input[name='Cont_Celular" + i + "']").val();
-        var email = $("input[name='Cont_Email" + i + "']").val();
+        pessoa.nomeCompleto = "NÃO IDENTIFICADO";
+        pessoaPaciente.descricaoNaoIdentificado = p.value.DP_Descricao_Nao_Identificado.toUpperCase();
 
-        if (telefone !== "" || celular !== "" || email !== "") {
+      } else {
 
-          var pessoacontato: PessoaContato = {
-            Pessoa: pessoapacientecomid,
-            ativo: true
-          }
+        if (p.value.DP_RecemNascido === true) {
 
-          if (telefone !== "")
-            pessoacontato.telefone = telefone.replace('(', '').replace(')', '').replace('-', '');
+          pessoa.nomeCompleto = p.value.DP_NomeRN.toUpperCase();
+          pessoaPaciente.numeroProntuario = p.value.DP_NumProntuarioMae;
 
-          if (celular !== "")
-            pessoacontato.celular = celular.replace('(', '').replace(')', '').replace('-', '');
+        } else {
 
-          if (email !== "")
-            pessoacontato.email = email.replace('(', '').replace(')', '').replace('-', '');
+          pessoa.nomeCompleto = p.value.DP_NomeCompleto.toUpperCase();
+          pessoa.nomeSocial = p.value.DP_NomeSocial.toUpperCase();
 
-          novalistaContatos.push(pessoacontato);
         }
       }
 
-      this.Mensagens("sucesso", "Salvo com sucesso");
+      pessoaPaciente = pessoa;
 
-      if (novalistaContatos.length > 0) {
+      this.pessoaService.SalvarPessoaPaciente(pessoaPaciente).subscribe(data => {
 
+        this.Mensagens("sucesso", "Salvo com sucesso");
 
-        this.pessoaService.SalvarContato(novalistaContatos).subscribe(data => {
+        var pessoacomid = data.result as PessoaPaciente;
 
-          this.Mensagens("sucesso", "Contato salvo com sucesso");
+        this.SalvarContato(pessoacomid)
 
-        }, (error: HttpErrorResponse) => {
-          this.Mensagens("erro", "Falha ao comunicar com API");
-          console.log(`Error. ${error.message}.`);
-        });
+        this.LimparCampos(p);
 
-      }
-
-      this.LimparCampos(p);
-
-    }, (error: HttpErrorResponse) => {
-      this.Mensagens("erro", "Falha ao comunicar com API");
-      console.log(`Error. ${error.message}.`);
-    },
-    );
+      }, (error: HttpErrorResponse) => {
+        this.Mensagens("erro", "Falha ao comunicar com API");
+        console.log(`Error. ${error.message}.`);
+      },
+      );
+    }
   }
+
+  public SalvarContato(pessoa: object) {
+
+    var novalistaContatos = new Array<PessoaContato>();
+
+
+    for (let i = 0; i <= this.listaContatos.length; i++) {
+
+      var telefone = $("input[name='Cont_Telefone" + i + "']").val();
+      var celular = $("input[name='Cont_Celular" + i + "']").val();
+      var email = $("input[name='Cont_Email" + i + "']").val();
+
+      if (telefone !== "" || celular !== "" || email !== "") {
+
+        var pessoacontato: PessoaContato = {
+          Pessoa: pessoa,
+          ativo: true
+        }
+
+        if (telefone !== "")
+          pessoacontato.telefone = telefone.replace('(', '').replace(')', '').replace('-', '');
+
+        if (celular !== "")
+          pessoacontato.celular = celular.replace('(', '').replace(')', '').replace('-', '');
+
+        if (email !== "")
+          pessoacontato.email = email.replace('(', '').replace(')', '').replace('-', '');
+
+        novalistaContatos.push(pessoacontato);
+      }
+    }
+
+
+
+    if (novalistaContatos.length > 0) {
+
+
+      this.pessoaService.SalvarContato(novalistaContatos).subscribe(data => {
+
+        this.Mensagens("sucesso", "Contato salvo com sucesso");
+
+      }, (error: HttpErrorResponse) => {
+        this.Mensagens("erro", "Falha ao comunicar com API");
+        console.log(`Error. ${error.message}.`);
+      });
+
+    }
+
+  }
+
 
   public Mensagens(tipo: string, mensagem: string) {
 
