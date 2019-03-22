@@ -52,7 +52,8 @@
               "src/assets/demo/default/skins/header/menu/light.css",
               "src/assets/demo/default/skins/brand/navy.css",
               "src/assets/demo/default/skins/aside/navy.css",
-              "src/assets/app/custom/general/interface.css"
+              "src/assets/app/custom/general/interface.css",
+              "src/assets/vendors/custom/datatables/datatables.bundle.css"
             ],
             "scripts": [
               "node_modules/popper.js/dist/umd/popper.js",
@@ -110,7 +111,8 @@
               "src/assets/app/bundle/app.bundle.js",
               "src/assets/app/custom/general/jquery.maskedinput.js",
               "src/assets/app/custom/general/jquery.maskedinput.min.js",
-              "node_modules/sweetalert2/dist/sweetalert2.js"
+              "node_modules/sweetalert2/dist/sweetalert2.js",
+              "src/assets/app/custom/general/components/datatables/basic/basic.js"
             ],
             "es5BrowserSupport": true
           },

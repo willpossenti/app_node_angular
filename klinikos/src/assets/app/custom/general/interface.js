@@ -201,21 +201,7 @@ $(document).ready(function () {
       $('#box_dadosprof').addClass('oculta');
     }
   });
-
-  $("#btnExcluirContato0").click(function () {
-    swal({ title: 'Deseja excluir esse contato?', text: '', type: 'warning', showCancelButton: true, cancelButtonText: 'Não', confirmButtonText: 'Sim' })
-      .then(function (result) {
-        if (result.value) {
-          $("input[name='Cont_Telefone0']").val("");
-          $("input[name='Cont_Celular0']").val("");
-          $("input[name='Cont_Email0']").val("");
-        }
-      });
-  });
-
-
-
-
+ 
 
 
   /*=Acolhimento: ------------------------------------------- */

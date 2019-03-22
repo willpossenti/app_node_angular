@@ -9,6 +9,8 @@ import { Cidade } from '../../../model/Cidade';
 import { Cep } from '../../../model/Cep';
 import { PessoaPaciente } from '../../../model/PessoaPaciente';
 import { PessoaContato } from '../../../model/PessoaContato';
+import { PessoaProfissional } from 'src/app/model/PessoaProfissional';
+import { Pessoa } from 'src/app/model/Pessoa';
 
 
 @Injectable({
@@ -47,28 +49,21 @@ export class PessoaService {
   BindPais() { return this.http.get<Return>(`${this.baseUrl}pais`, this.httpOptions); }
   BindTipoCertidao() { return this.http.get<Return>(`${this.baseUrl}tipocertidao`, this.httpOptions); }
   BindEscolaridade() { return this.http.get<Return>(`${this.baseUrl}escolaridade`, this.httpOptions); }
-
-  Salvar(pessoapaciente: PessoaPaciente) {
+  BindSituacaoFamiliarConjugal() { return this.http.get<Return>(`${this.baseUrl}situacaofamiliarconjugal`, this.httpOptions); }
+  BindTipoProfissional() { return this.http.get<Return>(`${this.baseUrl}tipoprofissional`, this.httpOptions); }
+  BuscarCep(cep: string) { return this.http.get<Cep>(`${this.cepUrl}` + cep + `/json/`);}
+  BuscarCidade(nomecidade: string) { return this.http.get<Return>(`${this.baseUrl}cidade/buscacidade/` + nomecidade, this.httpOptions); }
+  SalvarPessoaPaciente(pessoapaciente: PessoaPaciente) {
 
     return this.http.post<Return>(`${this.baseUrl}pessoa/pessoapaciente/incluir`, pessoapaciente, this.httpOptions);
   }
+  SalvarPessoaProfissional(pessoaprofissional: PessoaProfissional) {
 
-  SalvarContato(pessoacontato: Array<PessoaContato>) {
-
-    return this.http.post<Return>(`${this.baseUrl}pessoa/pessoacontato/incluir`, JSON.stringify(pessoacontato), this.httpOptions);
+    return this.http.post<Return>(`${this.baseUrl}pessoa/pessoaprofissional/incluir`, pessoaprofissional, this.httpOptions);
   }
 
-  BuscarCep(cep: string) {
 
 
-    return this.http.get<Cep>(`${this.cepUrl}` + cep + `/json/`);
-
-  }
-
-  BuscarCidade(nomecidade: string) {
-
-    return this.http.get<Return>(`${this.baseUrl}cidade/buscacidade/` + nomecidade, this.httpOptions);
-  }
 
 
 

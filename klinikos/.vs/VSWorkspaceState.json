@@ -8,16 +8,15 @@
     "\\src\\app\\controller\\cadastro\\pessoa",
     "\\src\\app\\model",
     "\\src\\assets",
-    "\\src\\assets\\app",
-    "\\src\\assets\\app\\custom",
-    "\\src\\assets\\app\\custom\\general",
-    "\\src\\assets\\app\\custom\\general\\components",
-    "\\src\\assets\\app\\custom\\general\\components\\extended",
     "\\src\\assets\\vendors",
     "\\src\\assets\\vendors\\general",
-    "\\src\\assets\\vendors\\general\\sweetalert2",
-    "\\src\\assets\\vendors\\general\\sweetalert2\\dist",
-    "\\src\\assets\\vendors\\general\\sweetalert2\\src"
+    "\\src\\assets\\vendors\\general\\chart.js",
+    "\\src\\assets\\vendors\\general\\chart.js\\dist",
+    "\\src\\assets\\vendors\\general\\chart.js\\dist\\docs",
+    "\\src\\assets\\vendors\\general\\chart.js\\dist\\docs\\gitbook",
+    "\\src\\assets\\vendors\\general\\chart.js\\dist\\docs\\gitbook\\gitbook-plugin-chartjs",
+    "\\src\\assets\\vendors\\general\\chart.js\\src",
+    "\\src\\assets\\vendors\\general\\chart.js\\src\\core"
   ],
   "SelectedNode": "\\src\\app\\controller\\cadastro\\pessoa\\pessoa.component.ts",
   "PreviewInSolutionExplorer": false
