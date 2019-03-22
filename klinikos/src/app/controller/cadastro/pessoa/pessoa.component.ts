@@ -28,6 +28,7 @@ import { Pessoa } from '../../../model/Pessoa';
 import { AgeFromDate } from 'age-calculator';
 import { DatePipe } from '@angular/common';
 import * as DateDiff from 'date-diff';
+import * as swal from '../../../../assets/vendors/general/sweetalert2/dist/sweetalert2.js';
 
 @Component({
   selector: 'app-pessoa',
@@ -74,6 +75,7 @@ export class PessoaComponent implements OnInit {
   UfProfissional: Estado;
   OrgaoEmissorProfissional: OrgaoEmissor;
   TipoProfissional: TipoProfissional;
+  LotacaoProfissional: LotacaoProfissional;
 
   constructor(private pessoaService: PessoaService, private router: Router) {
     this.listaContatos = new Array<PessoaContato>();
@@ -88,6 +90,8 @@ export class PessoaComponent implements OnInit {
 
 
   public ngOnInit() {
+
+
 
     toastr.options = {
       "closeButton": true,
@@ -223,6 +227,74 @@ export class PessoaComponent implements OnInit {
       });
 
 
+      $('#k_table_1').on('click', 'input[name^=Prof_Coord]', function () {
+        var id = '#' + $(this).attr('id') + '';
+        if ($(this).prop('checked') === true) {
+          $(this).prop('checked', false);
+          swal({ title: 'Deseja torná-lo como coordenador?', text: '', type: 'warning', showCancelButton: true, cancelButtonText: 'Não', confirmButtonText: 'Sim' })
+            .then(function (result) {
+              if (result.value) {
+                $(id).prop('checked', true);
+              }
+            });
+        } else {
+          $(id).prop('checked', true);
+          swal({ title: 'Deseja tirá-lo como coordenador?', text: '', type: 'warning', showCancelButton: true, cancelButtonText: 'Não', confirmButtonText: 'Sim' })
+            .then(function (result) {
+              if (result.value) {
+                $(id).prop('checked', false);
+              }
+            });
+        }
+      });
+      $('#k_table_1').on('click', 'input[name^=Prof_Ativo]', function () {
+        var id = '#' + $(this).attr('id') + '';
+        if ($(this).prop('checked') === true) {
+          $(this).prop('checked', false);
+          swal({ title: 'Deseja ativar a lotação?', text: '', type: 'warning', showCancelButton: true, cancelButtonText: 'Não', confirmButtonText: 'Sim' })
+            .then(function (result) {
+              if (result.value) {
+                $(id).prop('checked', true);
+              }
+            });
+        } else {
+          $(id).prop('checked', true);
+          swal({ title: 'Deseja desativar a lotação?', text: '', type: 'warning', showCancelButton: true, cancelButtonText: 'Não', confirmButtonText: 'Sim' })
+            .then(function (result) {
+              if (result.value) {
+                $(id).prop('checked', false);
+              }
+            });
+        }
+      });
+
+      //confirmação na linha 0 para caso o usuário deseja excluir o contato, os demais são gerados dinamicamente
+      $("#btnExcluirContato0").click(function () {
+        swal({ title: 'Deseja excluir esse contato?', text: '', type: 'warning', showCancelButton: true, cancelButtonText: 'Não', confirmButtonText: 'Sim' })
+          .then(function (result) {
+            if (result.value) {
+              $("input[name='Cont_Telefone0']").val("");
+              $("input[name='Cont_Celular0']").val("");
+              $("input[name='Cont_Email0']").val("");
+            }
+          });
+      });
+
+      //Informa o usuário se já existe uma lotação para aquele cadastro
+      $("#btnAddNovaLotacao").click(function () {
+
+        var tipoprofissional = $("#idProfTipo option:selected").text();
+
+        $('#tableLotacaoProfissional1 tr').each(function () {
+          if ($(this).find('td').eq(0).text() === tipoprofissional) {
+            swal('Já existe esse tipo de profissional');
+          }
+        });
+
+      });
+
+
+
 
     });
   }
@@ -279,9 +351,6 @@ export class PessoaComponent implements OnInit {
   }
   onHabilitaProfissional() {
 
-    var code = "<script> $(document).ready(function () {  $('#k_table_1').on('click', 'input[name^=Prof_Coord]', function() { var id = '#'+$(this).attr('id')+'';  if($(this).prop('checked') === true){     $(this).prop('checked',false);        swal({title: 'Deseja torná-lo como coordenador?', text: '', type: 'warning', showCancelButton: true, cancelButtonText:'Não', confirmButtonText: 'Sim' }).then(function(result) {   if (result.value) { $(id).prop('checked',true);  }   });    }else{   $(id).prop('checked',true);        swal({title: 'Deseja tirá-lo como coordenador?', text: '', type: 'warning', showCancelButton: true, cancelButtonText:'Não', confirmButtonText: 'Sim' }).then(function(result) {      if (result.value) {  $(id).prop('checked',false);  }    });      }    }); $('#k_table_1').on('click', 'input[name^=Prof_Ativo]', function() { var id = '#'+$(this).attr('id')+'';  if($(this).prop('checked') === true){     $(this).prop('checked',false);        swal({title: 'Deseja ativar a lotação?', text: '', type: 'warning', showCancelButton: true, cancelButtonText:'Não', confirmButtonText: 'Sim' }).then(function(result) {   if (result.value) { $(id).prop('checked',true);  }   });    }else{   $(id).prop('checked',true);        swal({title: 'Deseja desativar a lotação?', text: '', type: 'warning', showCancelButton: true, cancelButtonText:'Não', confirmButtonText: 'Sim' }).then(function(result) {      if (result.value) {  $(id).prop('checked',false);  }    });      }    }); });</script>";
-
-    $("#k_table_1").append($(code)[0]);
 
     this.pessoaService.BindTipoProfissional().subscribe(data => {
       this.listaTipoProfissional = data.result;
@@ -450,7 +519,6 @@ export class PessoaComponent implements OnInit {
       var lotacaoProfissional: LotacaoProfissional = {
 
         TipoProfissional: this.TipoProfissional,
-        coordenador: false,
         ativo: true
       }
 
@@ -463,16 +531,22 @@ export class PessoaComponent implements OnInit {
       if (this.OrgaoEmissorProfissional !== undefined)
         lotacaoProfissional.OrgaoEmissorProfissional = this.OrgaoEmissorProfissional;
 
+      if (this.listaLotacaoProfissional.find(x => x.TipoProfissional === this.TipoProfissional) === undefined && this.LotacaoProfissional === undefined) {
 
-      if (this.listaLotacaoProfissional.find(x => x.TipoProfissional === this.TipoProfissional) === undefined)
         this.listaLotacaoProfissional.push(lotacaoProfissional);
-      else {
+        this.onLimparCamposProfissional();
+      } else if (this.LotacaoProfissional !== undefined) {
 
-        var index = this.listaLotacaoProfissional.findIndex(x => x.TipoProfissional === this.TipoProfissional);
+        if (this.LotacaoProfissional.TipoProfissional != lotacaoProfissional.TipoProfissional)
+          if (this.listaLotacaoProfissional.find(x => x.TipoProfissional === this.TipoProfissional))
+            return;
+
+        var index = this.listaLotacaoProfissional.findIndex(x => x.TipoProfissional === this.LotacaoProfissional.TipoProfissional);
+        lotacaoProfissional.coordenador = this.LotacaoProfissional.coordenador;
         this.listaLotacaoProfissional[index] = lotacaoProfissional;
+        this.onLimparCamposProfissional();
       }
 
-      this.onLimparCamposProfissional();
     } else {
 
       $(document).ready(function () {
@@ -488,22 +562,43 @@ export class PessoaComponent implements OnInit {
     $("input[name='Prof_NumConselho']").val(lotacaoprofissional.numeroConselho);
     this.UfProfissional = this.listaUFIdentidade.find(x => x.uf === lotacaoprofissional.ufProfissional);
     this.OrgaoEmissorProfissional = lotacaoprofissional.OrgaoEmissorProfissional;
+    var index = this.listaLotacaoProfissional.findIndex(x => x.TipoProfissional === lotacaoprofissional.TipoProfissional);
+    lotacaoprofissional.coordenador = $("#ckcoordenador" + index).prop('checked');
+    this.LotacaoProfissional = lotacaoprofissional;
 
     $("#btnAddNovaLotacao").html("<i class='fa fa-plus'></i>Salvar");
     $('#btnCancelarLotacao').removeClass('oculta');
 
   }
 
+  onExibeMensagemExcluir(lotacaoprofissional: LotacaoProfissional) {
+
+    var page = this;
+
+    return swal({ title: 'Deseja excluir essa lotação?', text: '', type: 'warning', showCancelButton: true, cancelButtonText: 'Não', confirmButtonText: 'Sim' })
+
+      .then(function (result) {
+        if (result.value) {
+          page.onExcluirLotacao(lotacaoprofissional);
+        }
+
+      });
+
+  }
+
   onExcluirLotacao(lotacaoprofissional: LotacaoProfissional) {
 
+    var index = this.listaLotacaoProfissional.findIndex(x => x.TipoProfissional === lotacaoprofissional.TipoProfissional);
+    this.listaLotacaoProfissional.splice(index, 1);
   }
 
   onLimparCamposProfissional() {
 
     $("input[name='Prof_NumConselho']").val("");
-    this.TipoProfissional = null;
-    this.UfProfissional = null;
-    this.OrgaoEmissorProfissional = null;
+    this.TipoProfissional = undefined;
+    this.UfProfissional = undefined;
+    this.OrgaoEmissorProfissional = undefined;
+    this.LotacaoProfissional = undefined;
 
     $(document).ready(function () {
       $("select[name^=DP_ProfTipo]").val($("select[name^=DP_ProfTipo] option:first").val());
@@ -760,6 +855,8 @@ export class PessoaComponent implements OnInit {
       pessoaProfissional = {};
       this.SalvarContato(pessoa);
       pessoaProfissional = pessoa;
+
+      pessoaProfissional.lotacoesProfissional = [];
       pessoaProfissional.lotacoesProfissional = this.listaLotacaoProfissional;
 
       this.pessoaService.SalvarPessoaProfissional(pessoaProfissional).subscribe(data => {

@@ -8,9 +8,16 @@
     "\\src\\app\\controller\\cadastro\\pessoa",
     "\\src\\app\\model",
     "\\src\\assets",
-    "\\src\\assets\\demo",
-    "\\src\\assets\\demo\\default"
+    "\\src\\assets\\vendors",
+    "\\src\\assets\\vendors\\general",
+    "\\src\\assets\\vendors\\general\\chart.js",
+    "\\src\\assets\\vendors\\general\\chart.js\\dist",
+    "\\src\\assets\\vendors\\general\\chart.js\\dist\\docs",
+    "\\src\\assets\\vendors\\general\\chart.js\\dist\\docs\\gitbook",
+    "\\src\\assets\\vendors\\general\\chart.js\\dist\\docs\\gitbook\\gitbook-plugin-chartjs",
+    "\\src\\assets\\vendors\\general\\chart.js\\src",
+    "\\src\\assets\\vendors\\general\\chart.js\\src\\core"
   ],
-  "SelectedNode": "\\src\\app\\controller\\cadastro\\pessoa\\pessoa.service.ts",
+  "SelectedNode": "\\src\\app\\controller\\cadastro\\pessoa\\pessoa.component.ts",
   "PreviewInSolutionExplorer": false
 }

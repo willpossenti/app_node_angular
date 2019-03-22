@@ -11,6 +11,7 @@ import { Justificativa } from "./Justificativa";
 import { Nacionalidade } from "./Nacionalidade";
 import { OrgaoEmissor } from "./OrgaoEmissor";
 import { PessoaContato } from './PessoaContato';
+import { LotacaoProfissional } from './LotacaoProfissional';
 
 
 export interface Pessoa  {
