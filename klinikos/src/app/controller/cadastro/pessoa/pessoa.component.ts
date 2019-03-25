@@ -27,8 +27,8 @@ import { sortBy } from 'sort-by-typescript';
 import { Pessoa } from '../../../model/Pessoa';
 import { AgeFromDate } from 'age-calculator';
 import { DatePipe } from '@angular/common';
-import * as DateDiff from 'date-diff';
 import * as swal from '../../../../assets/vendors/general/sweetalert2/dist/sweetalert2.js';
+import { equal } from 'assert';
 
 @Component({
   selector: 'app-pessoa',
@@ -201,30 +201,67 @@ export class PessoaComponent implements OnInit {
 
       $("input[name^=DP_Nascimento]").blur(function () {
 
+
+
         var data = $("input[name='DP_Nascimento']").val().split("/");
         let ageFromDate = new AgeFromDate(new Date(data[2], data[1], data[0])).age;
 
         if (ageFromDate > 0)
-          $("input[name='DP_IdadeAparente']").val(ageFromDate > 1 ? ageFromDate + " ANOS" : ageFromDate + "ANO");
+          $("input[name='DP_IdadeAparente']").val(ageFromDate > 1 ? ageFromDate + " ANOS" : ageFromDate + " ANO");
         else {
 
-          var pipe = new DatePipe('en-US');
-          const now = Date.now();
 
-          //var oMonth = new MonthCalculator({
-          //  startDate: pipe.transform(new Date(data[2], data[1], data[0]), 'yyyy-MM-dd').toString(),
-          //  endDate: pipe.transform(now, 'yyyy-MM-dd').toString()
-          //});
+          var today = new Date();
+          var start = new Date(data[2], data[1], data[0]);
+          var end = new Date(today.getFullYear(), today.getMonth() + 1, today.getDate());
+          var millisecondsPerDay = 1000 * 60 * 60 * 24;
+          var millisBetween = end.getTime() - start.getTime();
+          var days = millisBetween / millisecondsPerDay;
 
-          var date1 = new Date(data[2], data[1], data[0]); // 2015-12-1
-          var date2 = new Date(data[2], data[1], data[0]); // 2014-01-1
+          var today = new Date();
+          var currentDay = today.getDate();
+          var currentMonth = today.getMonth() + 1;
+          var currentYear = today.getFullYear();
 
-          var diff = new DateDiff(date1, date2);
-          console.log(diff.months());
-          // $("input[name='DP_IdadeAparente']").val(oMonth.getTotal() > 1 ? oMonth.getTotal() + " MESES" : oMonth.getTotal() + "MÊS");
+
+          if (currentMonth > parseInt(data[1]) && currentYear === parseInt(data[2])) {
+            if (data[0] <= currentDay) {
+              var monthDiff = currentMonth - data[1];
+              $("input[name='DP_IdadeAparente']").val(monthDiff > 1 ? monthDiff + " MESES" : monthDiff + " MÊS");
+
+            } else {
+              var monthDiff = (currentMonth - data[1]) - 1;
+              if (monthDiff > 0)
+                $("input[name='DP_IdadeAparente']").val(monthDiff > 1 ? monthDiff + " MESES" : monthDiff + " MÊS");
+            }
+          } else if (currentYear > parseInt(data[2]) && days > 30) {
+
+            var monthDiff = days / 30 | 0;
+
+            if (parseInt(data[1]) == currentMonth && parseInt(data[0]) > currentDay)
+              monthDiff--;
+
+            if (monthDiff >= 12) {
+
+              $("input[name='DP_IdadeAparente']").val("1 ANO");
+            } else {
+              $("input[name='DP_IdadeAparente']").val(monthDiff > 1 ? monthDiff + " MESES" : monthDiff + " MÊS");
+            }
+          }
+
+          else {
+
+            if (days > 0)
+              $("input[name='DP_IdadeAparente']").val(days > 1 ? days + " DIAS" : days + " DIA");
+            else
+              $("input[name='DP_IdadeAparente']").val("");
+          }
         }
 
       });
+
+
+
 
 
       $('#k_table_1').on('click', 'input[name^=Prof_Coord]', function () {
@@ -298,6 +335,7 @@ export class PessoaComponent implements OnInit {
 
     });
   }
+
 
   selectedRaca() {
 
@@ -645,7 +683,6 @@ export class PessoaComponent implements OnInit {
 
   public onSubmit(p: NgForm) {
 
-
     $("#k_scrolltop").trigger("click");
 
     var pessoa: Pessoa = {};
@@ -861,10 +898,18 @@ export class PessoaComponent implements OnInit {
 
       this.pessoaService.SalvarPessoaProfissional(pessoaProfissional).subscribe(data => {
 
-        this.Mensagens("sucesso", "Profissional salvo com sucesso");
+        console.log(data.statusCode);
 
-        this.LimparCampos(p);
+        if (data.statusCode == "409")
+          swal("Profissional já cadastrado!", "CPF ou CNS ou PIS/PASEP já existente na Base", "error");
+        else {
 
+
+
+          this.Mensagens("sucesso", "Profissional salvo com sucesso");
+          this.LimparCampos(p);
+
+        }
       }, (error: HttpErrorResponse) => {
         this.Mensagens("erro", "Falha ao comunicar com API");
         console.log(`Error. ${error.message}.`);
@@ -879,11 +924,20 @@ export class PessoaComponent implements OnInit {
       pessoaPaciente = pessoa;
 
       this.pessoaService.SalvarPessoaPaciente(pessoaPaciente).subscribe(data => {
+        console.log(data.statusCode === "409");
+        if (data.statusCode == "409")
+          swal("Paciente já cadastrado!", "CPF ou CNS ou PIS/PASEP já existente", "error");
+        else {
+          this.Mensagens("sucesso", "Paciente salvo com sucesso");
+          this.LimparCampos(p);
 
-        this.Mensagens("sucesso", "Paciente salvo com sucesso");
+          swal({ title: 'Deseja gerar o registro boletim?', text: '', type: 'warning', showCancelButton: true, cancelButtonText: 'Não', confirmButtonText: 'Sim' })
+            .then(function (result) {
+              if (result.value) {
 
-        this.LimparCampos(p);
-
+              }
+            });
+        }
       }, (error: HttpErrorResponse) => {
         this.Mensagens("erro", "Falha ao comunicar com API");
         console.log(`Error. ${error.message}.`);
