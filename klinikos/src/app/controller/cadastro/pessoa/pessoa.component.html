@@ -59,6 +59,21 @@
                               <input type="text" class="form-control maisc" name="DP_NomeCompleto" placeholder="" maxlength="140" autocomplete="off" tabindex="1" autofocus ngModel>
 
                             </div>
+                            <div class="dropdown-menu dropdown-menu-fit dropdown-menu-right dropdown-menu-top-unround dropdown-menu-anim dropdown-menu-lg">
+                              <div class="kt-quick-search kt-quick-search--dropdown kt-quick-search--result-compact" id="kt_quick_search_dropdown">
+                                  <div class="input-group">
+                                    <div class="input-group-prepend">
+                                      <span class="input-group-text"><i class="flaticon2-search-1"></i></span>
+                                    </div>
+                                    <input type="text" class="form-control kt-quick-search__input" placeholder="Search...">
+                                    <div class="input-group-append">
+                                      <span class="input-group-text"><i class="la la-close kt-quick-search__close"></i></span>
+                                    </div>
+                                  </div>
+
+                                <div class="kt-quick-search__wrapper kt-scroll ps" data-scroll="true" data-height="325" data-mobile-height="200" style="height: 325px; overflow: hidden;"><div class="ps__rail-x" style="left: 0px; bottom: 0px;"><div class="ps__thumb-x" tabindex="0" style="left: 0px; width: 0px;"></div></div><div class="ps__rail-y" style="top: 0px; right: 0px;"><div class="ps__thumb-y" tabindex="0" style="top: 0px; height: 0px;"></div></div></div>
+                              </div>
+                            </div>
 
                             <div class="oculta" id="box_numprontmae">
                               <label>Número do Prontuário da Mãe</label>
@@ -331,7 +346,7 @@
 
                           </div>
                           <div class="form-group row">
-                            
+
                             <div class="col-lg-12">
 
                               <button type="button" tabindex="33" class="btn btn-metal" data-toggle="popover" data-placement="top" data-trigger="hover" data-content="Adicionar uma nova lotação" style="float: right; margin-left: 10px;" (click)="onAdicionaLotacao()" id="btnAddNovaLotacao"><i class="fa fa-plus"></i>Adicionar</button>
@@ -339,46 +354,46 @@
                             </div>
                           </div>
                           <!-- Grid -->
-                            <table class="table table-striped- table-bordered table-hover table-checkable" id="k_table_1">
-                              <thead>
-                                <tr class="text-center">
-                                  <th>Tipo Profissional</th>
-                                  <th>Número Conselho</th>
-                                  <th>UF</th>
-                                  <th>Órgão Emissor</th>
-                                  <th>Coordenador</th>
-                                  <th>Ativo</th>
-                                  <th>&nbsp;</th>
-                                </tr>
-                              </thead>
-                              <tbody id="tableLotacaoProfissional1" *ngFor="let item of listaLotacaoProfissional; let i = index">
+                          <table class="table table-striped- table-bordered table-hover table-checkable" id="k_table_1">
+                            <thead>
+                              <tr class="text-center">
+                                <th>Tipo Profissional</th>
+                                <th>Número Conselho</th>
+                                <th>UF</th>
+                                <th>Órgão Emissor</th>
+                                <th>Coordenador</th>
+                                <th>Ativo</th>
+                                <th>&nbsp;</th>
+                              </tr>
+                            </thead>
+                            <tbody id="tableLotacaoProfissional1" *ngFor="let item of listaLotacaoProfissional; let i = index">
 
 
-                                <tr class="text-center" id="row{{i}}">
-                                  <td>{{ item.TipoProfissional.descricao }}</td>
-                                  <td>{{ item.numeroConselho }}</td>
-                                  <td>{{ item.ufProfissional }}</td>
-                                  <td>{{ item.OrgaoEmissorProfissional? item.OrgaoEmissorProfissional.descricao: '' }}</td>
-                                  <td>
-                                    <label class="k-checkbox k-checkbox--bold">
-                                      <input type="checkbox" class="form-control" name="Prof_Coord" id="ckcoordenador{{i}}" [checked]="item.coordenador"   > <span></span>
-                                    </label>
-                                  </td>
-                                  <td>
-                                    <label class="k-checkbox k-checkbox--bold">
-                                      <input type="checkbox" class="form-control" name="Prof_Ativo" id="ckativo{{i}}" [checked]="item.ativo"> <span></span>
-                                    </label>
-                                  </td>
-                                  <td id="lotacaoActions">
-                                    <button class="btn p-2 border-0 btn-sm btn-outline-secondary" type="button" title="Editar"><i class="fa fa-pen fa-fw" (click)="onEditarLotacao(item)"></i></button>
-                                    <button class="btn p-2 border-0 btn-sm btn-outline-secondary" name="btn_excluir_lotacao" type="button" title="Editar" (click)="onExibeMensagemExcluir(item)" ><i class="fa fa-trash fa-fw"></i></button>
-                                    
-                                  </td>
-                                </tr>
+                              <tr class="text-center" id="row{{i}}">
+                                <td>{{ item.TipoProfissional.descricao }}</td>
+                                <td>{{ item.numeroConselho }}</td>
+                                <td>{{ item.ufProfissional }}</td>
+                                <td>{{ item.OrgaoEmissorProfissional? item.OrgaoEmissorProfissional.descricao: '' }}</td>
+                                <td>
+                                  <label class="k-checkbox k-checkbox--bold">
+                                    <input type="checkbox" class="form-control" name="Prof_Coord" id="ckcoordenador{{i}}" [checked]="item.coordenador"> <span></span>
+                                  </label>
+                                </td>
+                                <td>
+                                  <label class="k-checkbox k-checkbox--bold">
+                                    <input type="checkbox" class="form-control" name="Prof_Ativo" id="ckativo{{i}}" [checked]="item.ativo"> <span></span>
+                                  </label>
+                                </td>
+                                <td id="lotacaoActions">
+                                  <button class="btn p-2 border-0 btn-sm btn-outline-secondary" type="button" title="Editar"><i class="fa fa-pen fa-fw" (click)="onEditarLotacao(item)"></i></button>
+                                  <button class="btn p-2 border-0 btn-sm btn-outline-secondary" name="btn_excluir_lotacao" type="button" title="Editar" (click)="onExibeMensagemExcluir(item)"><i class="fa fa-trash fa-fw"></i></button>
 
-                              </tbody>
-                            </table>
-</div>
+                                </td>
+                              </tr>
+
+                            </tbody>
+                          </table>
+                        </div>
                       </div>
                       <!--end::Portlet 2-->
 
@@ -477,11 +492,12 @@
                           <div class="form-group row">
                             <div class="col-lg-2">
                               <label>CEP</label>
-                              <input type="text" class="form-control mask_cep" name="DP_CEP" maxlength="11" value="" tabindex="25" #cep (blur)="onBuscaCep(cep.value)">
+                              <input type="text" class="form-control mask_cep" name="DP_CEP" maxlength="11" value="" tabindex="25" (blur)="onBuscaCep()">
                             </div>
                             <div class="col-lg-6">
                               <label>Logradouro</label>
-                              <input type="text" class="form-control" name="DP_Logradouro" placeholder="" maxlength="150" value="" tabindex="26" ngModel>
+                              <input type="text" class="form-control" name="DP_Logradouro" placeholder="" maxlength="150" value="" tabindex="26"  (blur)="onBuscaCep()" ngModel>
+
                             </div>
                             <div class="col-lg-2">
                               <label>Número</label>

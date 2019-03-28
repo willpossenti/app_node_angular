@@ -29,6 +29,8 @@ import { AgeFromDate } from 'age-calculator';
 import { DatePipe } from '@angular/common';
 import * as swal from '../../../../assets/vendors/general/sweetalert2/dist/sweetalert2.js';
 import { equal } from 'assert';
+import { Cep } from '../../../model/Cep';
+
 
 @Component({
   selector: 'app-pessoa',
@@ -649,21 +651,42 @@ export class PessoaComponent implements OnInit {
   }
 
 
-  onBuscaCep(cep: string) {
-    this.pessoaService.BuscarCep(cep.replace('-', '')).subscribe(data => {
+  onBuscaCep() {
 
-      $("input[name='DP_Logradouro']").val(data.logradouro.toUpperCase());
-      $("input[name='DP_Bairro']").val(data.bairro.toUpperCase());
+    var dp_cep = $("input[name^='DP_CEP']").val().replace('-', '');
+    var dp_logradouro = $.trim($("input[name^=DP_Logradouro]").val());
 
-      this.EstadoEndereco = this.listaEstado.find(x => x.uf == data.uf.toUpperCase())
+    var cep: Cep = {}
+
+    if ($.isNumeric(dp_cep) && dp_cep.length === 8)
+      cep.cep = dp_cep;
+
+    if (this.EstadoEndereco != undefined)
+      cep.uf = this.EstadoEndereco.uf.toLowerCase();
+
+    if (this.CidadeEndereco != undefined)
+      cep.localidade = this.CidadeEndereco.nome.toLowerCase();
+
+    if (dp_logradouro !== "")
+      cep.logradouro = dp_logradouro.toLowerCase();
+
+    this.pessoaService.BuscarCep(cep).subscribe(data => {
+
+      console.log(data[0]);
+
+      $("input[name^='DP_Logradouro']").val(data[0].logradouro.toUpperCase());
+
+      $("input[name^='DP_Bairro']").val(data[0].bairro.toUpperCase());
+    
+      this.EstadoEndereco = this.listaEstado.find(x => x.uf == data[0].uf.toUpperCase())
 
       this.pessoaService.BindCidade(this.EstadoEndereco).subscribe(subdata => {
 
         this.listaCidadeEndereco = subdata.result;
 
-        var cidadeSelecionada = RemoveAcentos.remove(data.localidade);
+        var cidadeSelecionada = RemoveAcentos.remove(data[0].localidade);
 
-        this.CidadeEndereco = this.listaCidadeEndereco.find(x => x.nome == cidadeSelecionada.toUpperCase());
+        this.CidadeEndereco = this.listaCidadeEndereco.find(x => x.nome == cidadeSelecionada.toUpperCase());    
 
 
       }, (error: HttpErrorResponse) => {
@@ -898,13 +921,10 @@ export class PessoaComponent implements OnInit {
 
       this.pessoaService.SalvarPessoaProfissional(pessoaProfissional).subscribe(data => {
 
-        console.log(data.statusCode);
-
-        if (data.statusCode == "409")
+        if (data.statusCode == "409") {
           swal("Profissional já cadastrado!", "CPF ou CNS ou PIS/PASEP já existente na Base", "error");
-        else {
 
-
+        } else {
 
           this.Mensagens("sucesso", "Profissional salvo com sucesso");
           this.LimparCampos(p);
@@ -924,10 +944,10 @@ export class PessoaComponent implements OnInit {
       pessoaPaciente = pessoa;
 
       this.pessoaService.SalvarPessoaPaciente(pessoaPaciente).subscribe(data => {
-        console.log(data.statusCode === "409");
-        if (data.statusCode == "409")
+
+        if (data.statusCode == "409") {
           swal("Paciente já cadastrado!", "CPF ou CNS ou PIS/PASEP já existente", "error");
-        else {
+        } else {
           this.Mensagens("sucesso", "Paciente salvo com sucesso");
           this.LimparCampos(p);
 

@@ -25,6 +25,7 @@ export class PessoaService {
   private justificativa: Justificativa;
   private estado: Estado;
 
+
   private httpOptions = {
     headers: new HttpHeaders({
       'Content-Type': 'application/json'
@@ -35,6 +36,7 @@ export class PessoaService {
   constructor(private http: HttpClient) {
     this.baseUrl = 'https://localhost:44307/api/';
     this.cepUrl = 'https://viacep.com.br/ws/';
+
   }
 
 
@@ -51,7 +53,17 @@ export class PessoaService {
   BindEscolaridade() { return this.http.get<Return>(`${this.baseUrl}escolaridade`, this.httpOptions); }
   BindSituacaoFamiliarConjugal() { return this.http.get<Return>(`${this.baseUrl}situacaofamiliarconjugal`, this.httpOptions); }
   BindTipoProfissional() { return this.http.get<Return>(`${this.baseUrl}tipoprofissional`, this.httpOptions); }
-  BuscarCep(cep: string) { return this.http.get<Cep>(`${this.cepUrl}` + cep + `/json/`);}
+  BuscarCep(cep: Cep) {
+
+
+    if (cep.cep != undefined)
+      return this.http.get<Cep>(`${this.cepUrl}` + cep.cep + `/json/`);
+
+    return this.http.get<Cep>(`${this.cepUrl}` + cep.uf + `/` + cep.localidade + `/` + cep.logradouro + `/json/`);
+
+
+  }
+
   BuscarCidade(nomecidade: string) { return this.http.get<Return>(`${this.baseUrl}cidade/buscacidade/` + nomecidade, this.httpOptions); }
   SalvarPessoaPaciente(pessoapaciente: PessoaPaciente) {
 

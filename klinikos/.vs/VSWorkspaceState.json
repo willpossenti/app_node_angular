@@ -4,20 +4,15 @@
     "\\src",
     "\\src\\app",
     "\\src\\app\\controller",
-    "\\src\\app\\controller\\cadastro",
-    "\\src\\app\\controller\\cadastro\\pessoa",
-    "\\src\\app\\model",
-    "\\src\\assets",
-    "\\src\\assets\\vendors",
+    "\\src\\assets\\demo\\default",
+    "\\src\\assets\\demo\\default\\base",
     "\\src\\assets\\vendors\\general",
-    "\\src\\assets\\vendors\\general\\chart.js",
-    "\\src\\assets\\vendors\\general\\chart.js\\dist",
-    "\\src\\assets\\vendors\\general\\chart.js\\dist\\docs",
-    "\\src\\assets\\vendors\\general\\chart.js\\dist\\docs\\gitbook",
-    "\\src\\assets\\vendors\\general\\chart.js\\dist\\docs\\gitbook\\gitbook-plugin-chartjs",
-    "\\src\\assets\\vendors\\general\\chart.js\\src",
-    "\\src\\assets\\vendors\\general\\chart.js\\src\\core"
+    "\\src\\assets\\vendors\\general\\js-cookie",
+    "\\src\\assets\\vendors\\general\\js-cookie\\src",
+    "\\src\\assets\\vendors\\general\\tether",
+    "\\src\\assets\\vendors\\general\\tether\\dist",
+    "\\src\\assets\\vendors\\general\\tether\\dist\\css"
   ],
-  "SelectedNode": "\\src\\app\\controller\\cadastro\\pessoa\\pessoa.component.ts",
+  "SelectedNode": "\\src\\test.ts",
   "PreviewInSolutionExplorer": false
 }

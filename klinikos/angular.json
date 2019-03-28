@@ -47,13 +47,11 @@
               "src/assets/vendors/custom/vendors/flaticon/flaticon.css",
               "src/assets/vendors/custom/vendors/flaticon2/flaticon.css",
               "src/assets/vendors/custom/vendors/fontawesome5/css/all.min.css",
-              "src/assets/demo/default/base/style.bundle.css",
               "src/assets/demo/default/skins/header/base/light.css",
               "src/assets/demo/default/skins/header/menu/light.css",
               "src/assets/demo/default/skins/brand/navy.css",
               "src/assets/demo/default/skins/aside/navy.css",
-              "src/assets/app/custom/general/interface.css",
-              "src/assets/vendors/custom/datatables/datatables.bundle.css"
+              "src/assets/app/custom/general/interface.css"
             ],
             "scripts": [
               "node_modules/popper.js/dist/umd/popper.js",
@@ -61,7 +59,6 @@
               "node_modules/js-cookie/src/js.cookie.js",
               "node_modules/moment/min/moment.min.js",
               "node_modules/tooltip.js/dist/umd/tooltip.min.js",
-              "node_modules/perfect-scrollbar/dist/perfect-scrollbar.js",
               "node_modules/sticky-js/dist/sticky.min.js",
               "node_modules/wnumb/wNumb.js",
               "node_modules/jquery-form/dist/jquery.form.min.js",
@@ -112,7 +109,8 @@
               "src/assets/app/custom/general/jquery.maskedinput.js",
               "src/assets/app/custom/general/jquery.maskedinput.min.js",
               "node_modules/sweetalert2/dist/sweetalert2.js",
-              "src/assets/app/custom/general/components/datatables/basic/basic.js"
+              "src/assets/app/custom/general/components/datatables/basic/basic.js",
+              "src/assets/vendors/general/perfect-scrollbar/dist/perfect-scrollbar.js"
             ],
             "es5BrowserSupport": true
           },
