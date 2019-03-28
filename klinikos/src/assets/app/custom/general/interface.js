@@ -37,6 +37,25 @@ function validarCPF(cpf) {
 }
 
 
+function validarCEP(cep) {
+  cep = cep.replace(/[^\d]+/g, '');
+
+  if (cep === "00000000" ||
+      cep === "11111111" ||
+      cep === "22222222" ||
+      cep === "33333333" ||
+      cep === "44444444" ||
+      cep === "55555555" ||
+      cep === "66666666" ||
+      cep === "77777777" ||
+      cep === "88888888" ||
+      cep === "99999999")
+    return false;
+  else
+    return true;
+
+}
+
 // Comportamentos de Interface ----------------------------------
 $(document).ready(function () {
   "use strict";
@@ -89,6 +108,8 @@ $(document).ready(function () {
   $('#DP_PIS').on('focusout', function () {
     // var
     var dp_pis = $(this).val().replace('.', '').replace('.', '').replace('-', '').replace('_', '');
+
+
     // não vazio/mask
     // retorno validação
     var verifica = validaPIS(dp_pis);
@@ -102,6 +123,25 @@ $(document).ready(function () {
       $('#msg_pis').addClass('oculta');
     }
 
+  });
+
+
+  $('#DP_CEP').on('focusout', function () {
+    // var
+    var dp_cep = $(this).val();
+    // não vazio/mask
+    if (dp_cep !== '_____-___') {
+      // retorno validação
+      var verifica = validarCEP(dp_cep);
+      // exibe mensagem de erro
+      if (verifica === false) {
+        $('#msg_cep').removeClass('oculta');
+      }
+      else {
+        // oculta mensagem de erro
+        $('#msg_cep').addClass('oculta');
+      }
+    }
   });
 
 
@@ -352,9 +392,9 @@ $(document).ready(function () {
     pis = pis.trim();
     pis = pis.replace("-", "").replace(".", "").padStart(11, '0');
 
-    for (var i = 0; i < 10; i++) 
+    for (var i = 0; i < 10; i++)
       soma += parseInt(pis.charAt(i)) * multiplicador[i];
- 
+
     resto = soma % 11;
 
     if (resto < 2)

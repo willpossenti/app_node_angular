@@ -56,6 +56,7 @@ export class PessoaComponent implements OnInit {
   listaSituacaoFamiliarConjugal: Array<SituacaoFamiliarConjugal>;
   listaTipoProfissional: Array<TipoProfissional>;
   listaLotacaoProfissional: Array<LotacaoProfissional>;
+  listaCep: Array<Cep>;
 
   Raca: Raca;
   Etnia: Etnia;
@@ -79,6 +80,7 @@ export class PessoaComponent implements OnInit {
   TipoProfissional: TipoProfissional;
   LotacaoProfissional: LotacaoProfissional;
 
+
   constructor(private pessoaService: PessoaService, private router: Router) {
     this.listaContatos = new Array<PessoaContato>();
     this.listaLotacaoProfissional = new Array<LotacaoProfissional>();
@@ -88,6 +90,7 @@ export class PessoaComponent implements OnInit {
     this.listaEstado = new Array<Estado>();
     this.listaEscolaridade = new Array<Escolaridade>();
     this.listaSituacaoFamiliarConjugal = new Array<SituacaoFamiliarConjugal>();
+
   }
 
 
@@ -331,6 +334,13 @@ export class PessoaComponent implements OnInit {
         });
 
       });
+
+
+
+
+
+
+
 
 
 
@@ -652,6 +662,7 @@ export class PessoaComponent implements OnInit {
 
 
   onBuscaCep() {
+    alert('teste');
 
     var dp_cep = $("input[name^='DP_CEP']").val().replace('-', '');
     var dp_logradouro = $.trim($("input[name^=DP_Logradouro]").val());
@@ -670,37 +681,81 @@ export class PessoaComponent implements OnInit {
     if (dp_logradouro !== "")
       cep.logradouro = dp_logradouro.toLowerCase();
 
-    this.pessoaService.BuscarCep(cep).subscribe(data => {
 
-      console.log(data[0]);
+    if ($.isNumeric(dp_cep) && dp_cep.length === 8 && dp_logradouro === "") {
 
-      $("input[name^='DP_Logradouro']").val(data[0].logradouro.toUpperCase());
+      console.log(cep);
 
-      $("input[name^='DP_Bairro']").val(data[0].bairro.toUpperCase());
-    
-      this.EstadoEndereco = this.listaEstado.find(x => x.uf == data[0].uf.toUpperCase())
-
-      this.pessoaService.BindCidade(this.EstadoEndereco).subscribe(subdata => {
-
-        this.listaCidadeEndereco = subdata.result;
-
-        var cidadeSelecionada = RemoveAcentos.remove(data[0].localidade);
-
-        this.CidadeEndereco = this.listaCidadeEndereco.find(x => x.nome == cidadeSelecionada.toUpperCase());    
+      this.pessoaService.BuscarCep(cep)
+        .subscribe(data => {
 
 
-      }, (error: HttpErrorResponse) => {
-        this.Mensagens("erro", "Falha ao carregar cidades na aba endereço");
-        console.log(`Error. ${error.message}.`);
-      });
+          if (data.logradouro !== "") {
+            this.Mensagens("info", "CEP não encontrado");
+          }else {
+            $("input[name^=DP_Logradouro]").val(data.logradouro.toUpperCase())
+            $("input[name^=DP_Bairro]").val(data.bairro.toUpperCase())
+
+            this.EstadoEndereco = this.listaEstado.find(x => x.uf == data.uf.toUpperCase())
+
+            this.pessoaService.BindCidade(this.EstadoEndereco).subscribe(subdata => {
+
+              this.listaCidadeEndereco = subdata.result;
+
+              var cidadeSelecionada = RemoveAcentos.remove(data.localidade);
+
+              this.CidadeEndereco = this.listaCidadeEndereco.find(x => x.nome == cidadeSelecionada.toUpperCase());
 
 
-    }, (error: HttpErrorResponse) => {
-      this.Mensagens("erro", "Falha ao consultar cep na aba endereço");
-      console.log(`Error. ${error.message}.`);
-    });
+            }, (error: HttpErrorResponse) => {
+              this.Mensagens("erro", "Falha ao carregar cidades na aba endereço");
+              console.log(`Error. ${error.message}.`);
+            });
+
+          }
+        }, (error: HttpErrorResponse) => {
+          //this.Mensagens("erro", "Falha ao consultar cep na aba endereço");
+          console.log(`Error. ${error.message}.`);
+        });
+    } else {
+
+      if (dp_logradouro !== "" && !$.isNumeric(dp_cep) && dp_cep.length === 0) {
+        if (dp_logradouro.length > 3) {
+          $('#divPesquisa').removeClass('oculta');
+
+          this.pessoaService.BuscarCepPorLogradouro(cep)
+            .subscribe(data => {
+
+              this.listaCep = data;
+
+            }, (error: HttpErrorResponse) => {
+              //this.Mensagens("erro", "Falha ao consultar cep na aba endereço");
+              console.log(`Error. ${error.message}.`);
+            });
+
+        } else {
+
+          $('#divPesquisa').addClass('oculta');
+        }
+      }
+    }
+  }
 
 
+  onLimpaConsultaCep() {
+
+    $('#divPesquisa').addClass('oculta');
+
+
+  }
+
+  public onSelectedCep(cep: any) {
+
+    $("input[name^=DP_CEP]").val(cep.cep);
+    $("input[name^=DP_Logradouro]").val(cep.logradouro.toUpperCase());
+    $("input[name^=DP_Bairro]").val(cep.bairro.toUpperCase());
+    $("input[name^=DP_Complemento]").val(cep.complemento.toUpperCase());
+    $('#divPesquisa').addClass('oculta');
   }
 
 

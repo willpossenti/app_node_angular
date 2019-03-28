@@ -11,7 +11,7 @@ import { PessoaPaciente } from '../../../model/PessoaPaciente';
 import { PessoaContato } from '../../../model/PessoaContato';
 import { PessoaProfissional } from 'src/app/model/PessoaProfissional';
 import { Pessoa } from 'src/app/model/Pessoa';
-
+import { Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
@@ -59,8 +59,11 @@ export class PessoaService {
     if (cep.cep != undefined)
       return this.http.get<Cep>(`${this.cepUrl}` + cep.cep + `/json/`);
 
-    return this.http.get<Cep>(`${this.cepUrl}` + cep.uf + `/` + cep.localidade + `/` + cep.logradouro + `/json/`);
+  }
 
+  BuscarCepPorLogradouro(cep: Cep): Observable<Array<Cep>> {
+
+    return this.http.get<Array<Cep>>(`${this.cepUrl}` + cep.uf + `/` + cep.localidade + `/` + cep.logradouro + `/json/`);
 
   }
 

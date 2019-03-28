@@ -61,15 +61,15 @@
                             </div>
                             <div class="dropdown-menu dropdown-menu-fit dropdown-menu-right dropdown-menu-top-unround dropdown-menu-anim dropdown-menu-lg">
                               <div class="kt-quick-search kt-quick-search--dropdown kt-quick-search--result-compact" id="kt_quick_search_dropdown">
-                                  <div class="input-group">
-                                    <div class="input-group-prepend">
-                                      <span class="input-group-text"><i class="flaticon2-search-1"></i></span>
-                                    </div>
-                                    <input type="text" class="form-control kt-quick-search__input" placeholder="Search...">
-                                    <div class="input-group-append">
-                                      <span class="input-group-text"><i class="la la-close kt-quick-search__close"></i></span>
-                                    </div>
+                                <div class="input-group">
+                                  <div class="input-group-prepend">
+                                    <span class="input-group-text"><i class="flaticon2-search-1"></i></span>
                                   </div>
+                                  <input type="text" class="form-control kt-quick-search__input" placeholder="Search...">
+                                  <div class="input-group-append">
+                                    <span class="input-group-text"><i class="la la-close kt-quick-search__close"></i></span>
+                                  </div>
+                                </div>
 
                                 <div class="kt-quick-search__wrapper kt-scroll ps" data-scroll="true" data-height="325" data-mobile-height="200" style="height: 325px; overflow: hidden;"><div class="ps__rail-x" style="left: 0px; bottom: 0px;"><div class="ps__thumb-x" tabindex="0" style="left: 0px; width: 0px;"></div></div><div class="ps__rail-y" style="top: 0px; right: 0px;"><div class="ps__thumb-y" tabindex="0" style="top: 0px; height: 0px;"></div></div></div>
                               </div>
@@ -492,16 +492,42 @@
                           <div class="form-group row">
                             <div class="col-lg-2">
                               <label>CEP</label>
-                              <input type="text" class="form-control mask_cep" name="DP_CEP" maxlength="11" value="" tabindex="25" (blur)="onBuscaCep()">
+                              <input type="text" class="form-control mask_cep" name="DP_CEP" id="DP_CEP" maxlength="11" value="" tabindex="25" (blur)="onBuscaCep()">
+                              <span id="msg_cep" class="form-text text-danger oculta">Informe um CEP válido</span>
                             </div>
                             <div class="col-lg-6">
                               <label>Logradouro</label>
-                              <input type="text" class="form-control" name="DP_Logradouro" placeholder="" maxlength="150" value="" tabindex="26"  (blur)="onBuscaCep()" ngModel>
+                              <input type="text" class="form-control" name="DP_Logradouro" placeholder="" maxlength="150" value="" tabindex="26" (keyup)="onBuscaCep()"   ngModel>
+
+
+                              <div class="dropdown-menu dropdown-menu-fit dropdown-menu-right dropdown-menu-top-unround dropdown-menu-anim dropdown-menu-lg show oculta" x-placement="bottom-end" style="position: absolute; left: 10px;width: 95%; will-change: transform;" id="divPesquisa">
+                                <div  class="k-quick-search k-quick-search--dropdown k-quick-search--result-compact k-quick-search--has-result" id="k_quick_search_dropdown">
+
+                                  <div class="k-quick-search__wrapper k-scroll ps"  style="height: 325px;  overflow: hidden;" >
+                                    <div class="kt-quick-search__result" id="divresultadologradouro">
+                                      <table class="table table-hover">
+                                        <thead>
+                                          <tr>
+                                            <th>
+                                            </th>
+                                        </thead>
+                                        <tbody>
+                                          <tr *ngFor="let cep of listaCep;" style="cursor:pointer">
+                                            <td (click)="onSelectedCep(cep)">{{cep.logradouro}} - {{cep.bairro}} - {{cep.cep}}</td>
+
+                                          </tr>
+                                        </tbody>
+                                      </table>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+
 
                             </div>
                             <div class="col-lg-2">
                               <label>Número</label>
-                              <input type="text" class="form-control" name="DP_Numero" placeholder="" maxlength="10" value="" tabindex="27" ngModel>
+                              <input type="text" class="form-control" name="DP_Numero" placeholder="" maxlength="10" value="" tabindex="27" (keyup)="onLimpaConsultaCep()" ngModel>
                             </div>
                             <div class="col-lg-2">
                               <label>Complemento</label>

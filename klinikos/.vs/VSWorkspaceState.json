@@ -2,17 +2,11 @@
   "ExpandedNodes": [
     "",
     "\\src",
-    "\\src\\app",
-    "\\src\\app\\controller",
-    "\\src\\assets\\demo\\default",
-    "\\src\\assets\\demo\\default\\base",
-    "\\src\\assets\\vendors\\general",
-    "\\src\\assets\\vendors\\general\\js-cookie",
-    "\\src\\assets\\vendors\\general\\js-cookie\\src",
-    "\\src\\assets\\vendors\\general\\tether",
-    "\\src\\assets\\vendors\\general\\tether\\dist",
-    "\\src\\assets\\vendors\\general\\tether\\dist\\css"
+    "\\src\\assets",
+    "\\src\\assets\\app",
+    "\\src\\assets\\app\\custom",
+    "\\src\\assets\\app\\custom\\general"
   ],
-  "SelectedNode": "\\src\\test.ts",
+  "SelectedNode": "\\src\\assets\\app\\custom\\general\\interface.js",
   "PreviewInSolutionExplorer": false
 }
