@@ -90,7 +90,6 @@ export class PessoaComponent implements OnInit {
     this.listaEstado = new Array<Estado>();
     this.listaEscolaridade = new Array<Escolaridade>();
     this.listaSituacaoFamiliarConjugal = new Array<SituacaoFamiliarConjugal>();
-
   }
 
 
@@ -662,7 +661,6 @@ export class PessoaComponent implements OnInit {
 
 
   onBuscaCep() {
-    alert('teste');
 
     var dp_cep = $("input[name^='DP_CEP']").val().replace('-', '');
     var dp_logradouro = $.trim($("input[name^=DP_Logradouro]").val());
@@ -684,14 +682,12 @@ export class PessoaComponent implements OnInit {
 
     if ($.isNumeric(dp_cep) && dp_cep.length === 8 && dp_logradouro === "") {
 
-      console.log(cep);
 
       this.pessoaService.BuscarCep(cep)
         .subscribe(data => {
 
-
-          if (data.logradouro !== "") {
-            this.Mensagens("info", "CEP não encontrado");
+          if (data.logradouro === undefined) {
+            this.Mensagens("warning", "CEP não encontrado");
           }else {
             $("input[name^=DP_Logradouro]").val(data.logradouro.toUpperCase())
             $("input[name^=DP_Bairro]").val(data.bairro.toUpperCase())
@@ -706,7 +702,7 @@ export class PessoaComponent implements OnInit {
 
               this.CidadeEndereco = this.listaCidadeEndereco.find(x => x.nome == cidadeSelecionada.toUpperCase());
 
-
+              this.CepEncontrado = true;
             }, (error: HttpErrorResponse) => {
               this.Mensagens("erro", "Falha ao carregar cidades na aba endereço");
               console.log(`Error. ${error.message}.`);
@@ -727,12 +723,12 @@ export class PessoaComponent implements OnInit {
             .subscribe(data => {
 
               this.listaCep = data;
-
+              this.CepEncontrado = true;
             }, (error: HttpErrorResponse) => {
               //this.Mensagens("erro", "Falha ao consultar cep na aba endereço");
               console.log(`Error. ${error.message}.`);
             });
-
+          this.CepEncontrado = true;
         } else {
 
           $('#divPesquisa').addClass('oculta');
@@ -745,7 +741,6 @@ export class PessoaComponent implements OnInit {
   onLimpaConsultaCep() {
 
     $('#divPesquisa').addClass('oculta');
-
 
   }
 
