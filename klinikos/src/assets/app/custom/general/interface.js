@@ -41,15 +41,15 @@ function validarCEP(cep) {
   cep = cep.replace(/[^\d]+/g, '');
 
   if (cep === "00000000" ||
-      cep === "11111111" ||
-      cep === "22222222" ||
-      cep === "33333333" ||
-      cep === "44444444" ||
-      cep === "55555555" ||
-      cep === "66666666" ||
-      cep === "77777777" ||
-      cep === "88888888" ||
-      cep === "99999999")
+    cep === "11111111" ||
+    cep === "22222222" ||
+    cep === "33333333" ||
+    cep === "44444444" ||
+    cep === "55555555" ||
+    cep === "66666666" ||
+    cep === "77777777" ||
+    cep === "88888888" ||
+    cep === "99999999")
     return false;
   else
     return true;
@@ -83,6 +83,64 @@ $(document).ready(function () {
       else {
         // oculta mensagem de erro
         $('#msg_cpf').addClass('oculta');
+
+        var cpf = dp_cpf.replace('.', '').replace('.', '').replace('.', '').replace('-', '');
+
+
+        $.get("https://localhost:44307/api/pessoa/pessoaprofissional/consultacpf/" + cpf, function (data) {
+
+          if (data.statusCode === 302) {
+            toastr.success("Paciente encontrado");
+          } else {
+
+            $.get("https://localhost:44307/api/pessoa/pessoapaciente/consultacpf/" + cpf, function (data) {
+
+              if (data.statusCode === 302) {
+                toastr.success("Paciente encontrado");
+
+                if (data.result.recemnascido === true) {
+
+                  $("input[name^=DP_RecemNascido]").prop("checked", true);
+                  $('#box_numprontmae, #box_nomeRN').removeClass('oculta');
+                  $('#box_nomecomp, #box_nomesocial').addClass('oculta');
+
+                  $("input[name^=DP_NomeRN]").val(data.result.nomeCompleto);
+                  $("input[name^=DP_NumProntuarioMae]").val(data.result.numeroProntuario);
+       
+                }  else {
+
+                  $("input[name^=DP_NomeCompleto]").val(data.result.nomeCompleto);
+                  $("input[name^=DP_NomeSocial]").val(data.result.nomeSocial);
+
+                  if (data.result.sexo === "M")
+                    $("label[for^=DP_Sexo_Masculino]").addClass("active");
+                  if (data.result.sexo === "F")
+                    $("label[for^=DP_Sexo_Feminino]").addClass("active");
+
+                  var date = new Date(data.result.nascimento),
+                    month = '' + (date.getMonth() + 1),
+                    day = '' + date.getDate(),
+                    year = date.getFullYear();
+
+                  $("input[name^=DP_Nascimento]").val(("0" + day).slice(-2) + "/" + ("0" + month).slice(-2) + "/" + year);
+                  $('input[name^=DP_Nascimento]').focus();
+                  $('input[name^=DP_Nascimento]').blur();
+
+                  if (data.result.raca !== undefined) {
+
+                    $('select[name^=DP_Cor]').val($('select[name^=DP_Cor] option').filter(function () {
+                      return $(this).html() === data.result.raca.nome;
+                    }).val());
+
+                  }
+
+                }
+              }
+
+            });
+          }
+        });
+
       }
     }
   });
@@ -151,12 +209,14 @@ $(document).ready(function () {
     var dp_cpf = $('#DP_CPF').val();
     var dp_cpf_check = validarCPF(dp_cpf);
     // vazio ou falso requer CPF
-    if ((dp_cpf === '') || (dp_cpf_check === false)) {
+    if (dp_cpf === '' || dp_cpf_check === false) {
       $('#msg_cpf').removeClass('oculta');
       $('#DP_CPF').focus();
+
     }
     else {
       $('#msg_cpf').addClass('oculta');
+
     }
   });
 
@@ -200,12 +260,14 @@ $(document).ready(function () {
     if ($('input[name="DP_RecemNascido"]').is(":checked")) {
       // Reexibe : Nome Completo, Nome Social (opção: Recém Nascido)
       $('#box_nomecomp, #box_nomesocial').removeClass('oculta');
-      $('#box_numprontmae, #box_nomeRN').addClass('oculta');
+      $('#box_numprontmae, #box_nomeRN, #msg_mae').addClass('oculta');
     }
     // Reexibe : Nome Completo, Nome Social  - Oculta Descrição (opção: Não Identificado)
     if ($('input[name="DP_NaoIdentificado"]').is(":checked")) {
       $('#box_nomecompleto, #box_social, #box_nomesocial').removeClass('oculta');
       $('#box_descricao, #box_nomeRN').addClass('oculta');
+
+      
     }
 
     /* Varre formulário que possui a classe '.clean_on') -------------------- */
@@ -257,13 +319,13 @@ $(document).ready(function () {
     // Mostra
     if ($(btnchk).is(":checked")) {
       $('#box_nomecomp, #box_nomesocial').addClass('oculta');
-      $('#box_numprontmae, #box_nomeRN').removeClass('oculta');
+      $('#box_numprontmae, #box_nomeRN, #msg_mae').removeClass('oculta');
     }
     // Oculta
     else {
       $(btnchk).prop('checked', false);
       $('#box_nomecomp, #box_nomesocial').removeClass('oculta');
-      $('#box_numprontmae, #box_nomeRN').addClass('oculta');
+      $('#box_numprontmae, #box_nomeRN, #msg_mae').addClass('oculta');
     }
   });
 

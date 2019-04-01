@@ -4,7 +4,7 @@
     <div class="col-lg-12">
 
       <!--begin::Form-->
-      <form class="k-form k-form--label-right clean_on" #pessoa="ngForm" (ngSubmit)="onSubmit(pessoa);">
+      <form class="k-form k-form--label-right clean_on" #pessoa="ngForm" (ngSubmit)="onSalvarPessoa(pessoa);">
 
         <!--begin: Portlet Main-->
         <div class="k-portlet">
@@ -152,7 +152,7 @@
                           <div class="col-lg-2">
                             <label class="">Cor</label>
                             <div class="k-input-icon">
-                              <select class="form-control" name="DP_Cor" tabindex="12" [(ngModel)]="Raca" (change)="selectedRaca()">
+                              <select class="form-control" name="DP_Cor" tabindex="12" [(ngModel)]="Raca" (change)="onSelectedRaca()">
                                 <option value="-1">-- Selecione --</option>
                                 <option *ngFor="let raca of listaRaca | orderBy: orderNome" [ngValue]="raca">{{raca.nome}}</option>
                               </select>
@@ -178,14 +178,14 @@
                           <div class="col-lg-6">
                             <label>Nome do Mãe</label>
                             <input type="text" class="form-control maisc" name="DP_NomeMae" placeholder="" maxlength="70" tabindex="15" ngModel>
-                            <!-- <span class="form-text text-muted">Please enter your full name</span> -->
+                            <span id="msg_mae" class="form-text text-danger oculta">Informe o nome da mãe</span>
                           </div>
                         </div>
 
                         <div class="form-group row">
                           <div class="col-lg-3">
                             <label>CPF</label>
-                            <input type="text" class="form-control mask_cpf" name="DP_CPF" id="DP_CPF" placeholder="000.000.000-00" maxlength="11" value="" tabindex="16" ngModel>
+                            <input type="text" class="form-control mask_cpf" name="DP_CPF" id="DP_CPF" placeholder="000.000.000-00" maxlength="11" value="" tabindex="16" (blur)="onConsultaCpf"  ngModel>
                             <span id="msg_cpf" class="form-text text-danger oculta">Informe um CPF válido</span>
                           </div>
                           <div class="col-lg-3">
@@ -213,7 +213,7 @@
                             <div class="input-group">
                               <div class="input-group-prepend">
 
-                                <select class="form-control" name="DP_NaturalidadeUF" tabindex="19" [(ngModel)]="Estado" (change)="selectedUf()">
+                                <select class="form-control" name="DP_NaturalidadeUF" tabindex="19" [(ngModel)]="Estado" (change)="onSelectedUf()">
                                   <option value="-1">-- Selecione --</option>
                                   <option *ngFor="let estado of listaEstado | orderBy: orderUf" [ngValue]="estado">{{estado.uf}}</option>
                                 </select>
@@ -543,7 +543,7 @@
                                 <option>-Selecione-</option>
                               </select>-->
 
-                              <select class="form-control" name="DP_Endereco_Estado" tabindex="31" [(ngModel)]="EstadoEndereco" (change)="selectedUfEndereco()">
+                              <select class="form-control" name="DP_Endereco_Estado" tabindex="31" [(ngModel)]="EstadoEndereco" (change)="onSelectedUfEndereco()">
                                 <option value="-1">-- Selecione --</option>
                                 <option *ngFor="let estadoendereco of listaEstado| orderBy: orderNome" [ngValue]="estadoendereco">{{estadoendereco.nome}}</option>
                               </select>

@@ -3,9 +3,18 @@
     "",
     "\\src",
     "\\src\\assets",
-    "\\src\\assets\\app",
-    "\\src\\assets\\app\\custom",
-    "\\src\\assets\\app\\custom\\general"
+    "\\src\\assets\\vendors",
+    "\\src\\assets\\vendors\\general",
+    "\\src\\assets\\vendors\\general\\bootstrap-touchspin",
+    "\\src\\assets\\vendors\\general\\bootstrap-touchspin\\dist",
+    "\\src\\assets\\vendors\\general\\bootstrap-touchspin\\src",
+    "\\src\\assets\\vendors\\general\\chart.js",
+    "\\src\\assets\\vendors\\general\\chart.js\\dist",
+    "\\src\\assets\\vendors\\general\\chart.js\\dist\\docs",
+    "\\src\\assets\\vendors\\general\\chart.js\\dist\\docs\\gitbook",
+    "\\src\\assets\\vendors\\general\\chart.js\\dist\\docs\\gitbook\\gitbook-plugin-chartjs",
+    "\\src\\assets\\vendors\\general\\chart.js\\src",
+    "\\src\\assets\\vendors\\general\\chart.js\\src\\core"
   ],
   "SelectedNode": "\\src\\assets\\app\\custom\\general\\interface.js",
   "PreviewInSolutionExplorer": false

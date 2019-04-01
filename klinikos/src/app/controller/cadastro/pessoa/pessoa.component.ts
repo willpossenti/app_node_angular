@@ -26,16 +26,13 @@ import { Router } from '@angular/router';
 import { sortBy } from 'sort-by-typescript';
 import { Pessoa } from '../../../model/Pessoa';
 import { AgeFromDate } from 'age-calculator';
-import { DatePipe } from '@angular/common';
 import * as swal from '../../../../assets/vendors/general/sweetalert2/dist/sweetalert2.js';
-import { equal } from 'assert';
 import { Cep } from '../../../model/Cep';
 
 
 @Component({
   selector: 'app-pessoa',
-  templateUrl: './pessoa.component.html',
-
+  templateUrl: './pessoa.component.html'
 })
 export class PessoaComponent implements OnInit {
 
@@ -92,7 +89,7 @@ export class PessoaComponent implements OnInit {
     this.listaSituacaoFamiliarConjugal = new Array<SituacaoFamiliarConjugal>();
   }
 
-
+  //begin:: Carregamento Básico da tela
   public ngOnInit() {
 
 
@@ -190,7 +187,6 @@ export class PessoaComponent implements OnInit {
       $('body').addClass("k-header--fixed k-header-mobile--fixed k-subheader--enabled k-subheader--transparent k-aside--enabled k-aside--fixed k-page--loading");
 
       $("select[name^=DP_Cor]").change(function () {
-
         var selectedRaca = $(this).children("option:selected").text();
 
         if (selectedRaca == "INDÍGENA") {
@@ -204,7 +200,6 @@ export class PessoaComponent implements OnInit {
       });
 
       $("input[name^=DP_Nascimento]").blur(function () {
-
 
 
         var data = $("input[name='DP_Nascimento']").val().split("/");
@@ -334,21 +329,15 @@ export class PessoaComponent implements OnInit {
 
       });
 
-
-
-
-
-
-
-
-
-
+      
 
     });
   }
+  //end:: Carregamento Básico da tela
 
 
-  selectedRaca() {
+  //begin:: Selecao Raca / Selecionado a opção indígena, habilita e carrega as tribos indígenas na aba dados pessoais
+  onSelectedRaca() {
 
     if (this.Raca.nome == "INDÍGENA") {
 
@@ -368,8 +357,10 @@ export class PessoaComponent implements OnInit {
       $(document).ready(function () { $("select[name^=DP_Etnia]").val($("select[name^=DP_Etnia] option:first").val()); });
     }
   }
+  //end:: Selecao Raca
 
-  selectedUf() {
+  //begin:: Selecao UF Naturalidade / Selecionado a uf, habilita e carrega as cidades correspondente a uf selecionada na aba dados pessoais
+  onSelectedUf() {
 
     $(document).ready(function () { $("select[name^=DP_NaturalidadeCidade]").val($("select[name^=DP_NaturalidadeCidade] option:first").val()); });
 
@@ -383,8 +374,10 @@ export class PessoaComponent implements OnInit {
 
 
   }
+  //end:: Selecao UF Naturalidade
 
-  selectedUfEndereco() {
+  //begin:: Selecao UF Endereco / Selecionado a uf, habilita e carrega as cidades correspondente a uf selecionada na aba endereço
+  onSelectedUfEndereco() {
 
     $(document).ready(function () { $("select[name^=DP_Endereco_Cidade]").val($("select[name^=DP_Endereco_Cidade] option:first").val()); });
 
@@ -398,6 +391,9 @@ export class PessoaComponent implements OnInit {
 
 
   }
+  //end::  Selecao UF Endereco
+
+  //begin:: Carregamento Tipo Profissional / carrega os tipos do profissional na aba profissional
   onHabilitaProfissional() {
 
 
@@ -412,7 +408,9 @@ export class PessoaComponent implements OnInit {
 
 
   }
+  //end::  Carregamento Tipo Profissional
 
+  //begin:: Carregamento Dados Complementares / carrega todas as combos na aba dados complementares
   onCarregaCamposDadosComplemenares() {
 
     $(document).ready(function () {
@@ -508,8 +506,9 @@ export class PessoaComponent implements OnInit {
 
 
   }
+  //end::  Carregamento Dados Complementares
 
-
+  //begin:: Carregamento Informacoes Contato / Adiciona novos campos de contato ao clicar no botao adicionar
   onAdicionaNovosCamposContato() {
 
 
@@ -557,7 +556,9 @@ export class PessoaComponent implements OnInit {
       }
     }
   }
+  //end::  Carregamento Informacoes Contato
 
+  //begin:: Adiciona Lotacao Profissional / Adiciona uma nova lotação ao profissional na aba profissional
   onAdicionaLotacao() {
 
 
@@ -605,7 +606,9 @@ export class PessoaComponent implements OnInit {
 
     }
   }
+  //end::  Adiciona Lotacao Profissional
 
+  //begin:: Edita Lotacao Profissional / Permite o usuário editar as lotações lançadas na aba profissional
   onEditarLotacao(lotacaoprofissional: LotacaoProfissional) {
     this.TipoProfissional = lotacaoprofissional.TipoProfissional;
     $("input[name='Prof_NumConselho']").val(lotacaoprofissional.numeroConselho);
@@ -619,7 +622,9 @@ export class PessoaComponent implements OnInit {
     $('#btnCancelarLotacao').removeClass('oculta');
 
   }
+  //end::  Edita Lotacao Profissional
 
+  //begin:: Exibe Mensagem Excluir / Alerta o usuário da confirmação da exclusão na aba profissional
   onExibeMensagemExcluir(lotacaoprofissional: LotacaoProfissional) {
 
     var page = this;
@@ -634,13 +639,17 @@ export class PessoaComponent implements OnInit {
       });
 
   }
+  //end:: Exibe Mensagem Excluir
 
+  //begin:: Exclui lotacao Profissional / Alerta o usuário da confirmação da exclusão na aba profissional
   onExcluirLotacao(lotacaoprofissional: LotacaoProfissional) {
 
     var index = this.listaLotacaoProfissional.findIndex(x => x.TipoProfissional === lotacaoprofissional.TipoProfissional);
     this.listaLotacaoProfissional.splice(index, 1);
   }
+  //end:: Exibe Mensagem Excluir
 
+  //begin:: Limpa Campos lotacao Profissional / Limpa os campos ao adicionar e editar da lotação do profissional na aba profissional
   onLimparCamposProfissional() {
 
     $("input[name='Prof_NumConselho']").val("");
@@ -658,8 +667,9 @@ export class PessoaComponent implements OnInit {
       $("#btnAddNovaLotacao").html('<i class="fa fa-plus"></i>Adicionar');
     });
   }
+  //end:: Limpa Campos lotacao Profissional
 
-
+  //begin:: Consulta Cep / Consulta tanto o CEP, quanto o logradouro e atribui aos campos correspondentes
   onBuscaCep() {
 
     var dp_cep = $("input[name^='DP_CEP']").val().replace('-', '');
@@ -688,7 +698,7 @@ export class PessoaComponent implements OnInit {
 
           if (data.logradouro === undefined) {
             this.Mensagens("warning", "CEP não encontrado");
-          }else {
+          } else {
             $("input[name^=DP_Logradouro]").val(data.logradouro.toUpperCase())
             $("input[name^=DP_Bairro]").val(data.bairro.toUpperCase())
 
@@ -702,7 +712,7 @@ export class PessoaComponent implements OnInit {
 
               this.CidadeEndereco = this.listaCidadeEndereco.find(x => x.nome == cidadeSelecionada.toUpperCase());
 
-              this.CepEncontrado = true;
+
             }, (error: HttpErrorResponse) => {
               this.Mensagens("erro", "Falha ao carregar cidades na aba endereço");
               console.log(`Error. ${error.message}.`);
@@ -723,12 +733,11 @@ export class PessoaComponent implements OnInit {
             .subscribe(data => {
 
               this.listaCep = data;
-              this.CepEncontrado = true;
             }, (error: HttpErrorResponse) => {
               //this.Mensagens("erro", "Falha ao consultar cep na aba endereço");
               console.log(`Error. ${error.message}.`);
             });
-          this.CepEncontrado = true;
+
         } else {
 
           $('#divPesquisa').addClass('oculta');
@@ -736,14 +745,9 @@ export class PessoaComponent implements OnInit {
       }
     }
   }
+  //end:: Consulta Cep
 
-
-  onLimpaConsultaCep() {
-
-    $('#divPesquisa').addClass('oculta');
-
-  }
-
+  //begin:: Seleciona Endereco / Responsável por selecionar o cep vindo da consulta cep logradouro
   public onSelectedCep(cep: any) {
 
     $("input[name^=DP_CEP]").val(cep.cep);
@@ -752,9 +756,10 @@ export class PessoaComponent implements OnInit {
     $("input[name^=DP_Complemento]").val(cep.complemento.toUpperCase());
     $('#divPesquisa').addClass('oculta');
   }
+  //end:: Seleciona Endereco
 
-
-  public onSubmit(p: NgForm) {
+  //begin:: Salvar Pessoa / Salva as informações da tela
+  public onSalvarPessoa(p: NgForm) {
 
     $("#k_scrolltop").trigger("click");
 
@@ -780,22 +785,14 @@ export class PessoaComponent implements OnInit {
     var situacaoFamiliarConjugalId = $('input[type=radio][name=DC_SituacaoFamiliar]:checked').attr('id');
 
     if (p.value.DP_NaoIdentificado === true) {
-      pessoaPaciente = {};
-      pessoa.nomeCompleto = "NÃO IDENTIFICADO";
 
-      if (p.value.DP_Descricao_Nao_Identificado !== "")
-        pessoaPaciente.descricaoNaoIdentificado = p.value.DP_Descricao_Nao_Identificado.toUpperCase();
+      pessoa.nomeCompleto = "NÃO IDENTIFICADO";
 
     } else {
 
-      if (p.value.DP_RecemNascido === true) {
-        pessoaPaciente = {};
+      if (p.value.DP_RecemNascido === true)
         pessoa.nomeCompleto = p.value.DP_NomeRN.toUpperCase();
-
-        if (p.value.DP_NumProntuarioMae !== "")
-          pessoaPaciente.numeroProntuario = p.value.DP_NumProntuarioMae.toUpperCase();
-
-      } else {
+      else {
 
         pessoa.nomeCompleto = p.value.DP_NomeCompleto.toUpperCase();
 
@@ -804,6 +801,8 @@ export class PessoaComponent implements OnInit {
 
       }
     }
+
+
 
 
     if ($("label[for='DP_Sexo_Masculino']").hasClass("active"))
@@ -963,7 +962,7 @@ export class PessoaComponent implements OnInit {
     if (this.listaLotacaoProfissional.length > 0) {
 
       pessoaProfissional = {};
-      this.SalvarContato(pessoa);
+      this.AdicionarContato(pessoa);
       pessoaProfissional = pessoa;
 
       pessoaProfissional.lotacoesProfissional = [];
@@ -990,24 +989,31 @@ export class PessoaComponent implements OnInit {
     } else {
 
       pessoaPaciente = {};
-      this.SalvarContato(pessoa);
+
+      if (this.listaContatos.length > 0)
+        this.AdicionarContato(pessoa);
+
+      console.log(pessoa);
+
+
       pessoaPaciente = pessoa;
+
+      console.log(pessoaPaciente);
+
+      pessoaPaciente.recemNascido = p.value.DP_RecemNascido === true;
+
+      if (p.value.DP_NumProntuarioMae !== "")
+        pessoaPaciente.numeroProntuario = p.value.DP_NumProntuarioMae.toUpperCase();
+
+      if (p.value.DP_Descricao_Nao_Identificado !== "")
+        pessoaPaciente.descricaoNaoIdentificado = p.value.DP_Descricao_Nao_Identificado.toUpperCase();
+
 
       this.pessoaService.SalvarPessoaPaciente(pessoaPaciente).subscribe(data => {
 
-        if (data.statusCode == "409") {
-          swal("Paciente já cadastrado!", "CPF ou CNS ou PIS/PASEP já existente", "error");
-        } else {
-          this.Mensagens("sucesso", "Paciente salvo com sucesso");
-          this.LimparCampos(p);
+        this.Mensagens("sucesso", "Paciente salvo com sucesso");
+        this.LimparCampos(p);
 
-          swal({ title: 'Deseja gerar o registro boletim?', text: '', type: 'warning', showCancelButton: true, cancelButtonText: 'Não', confirmButtonText: 'Sim' })
-            .then(function (result) {
-              if (result.value) {
-
-              }
-            });
-        }
       }, (error: HttpErrorResponse) => {
         this.Mensagens("erro", "Falha ao comunicar com API");
         console.log(`Error. ${error.message}.`);
@@ -1015,8 +1021,10 @@ export class PessoaComponent implements OnInit {
       );
     }
   }
+  //end:: Salvar Pessoa
 
-  public SalvarContato(pessoa: Pessoa) {
+  //begin:: Adicionar Pessoa Contato / Obtêm as informações de contato e aplica ao array
+  public AdicionarContato(pessoa: Pessoa) {
 
     pessoa.pessoaContatos = [];
 
@@ -1047,8 +1055,9 @@ export class PessoaComponent implements OnInit {
     }
 
   }
+  //end:: Adicionar Pessoa Contato
 
-
+  //begin:: Mensagens de Exibição Padrão/ Mensagens responsáveis pelos avisos com integrações externas
   public Mensagens(tipo: string, mensagem: string) {
 
     switch (tipo) {
@@ -1076,8 +1085,9 @@ export class PessoaComponent implements OnInit {
 
 
   }
+  //end:: Mensagens de Exibição Padrão
 
-
+  //begin:: Limpa Campos/ Mensagens responsáveis pelos avisos com integrações externas
   public LimparCampos(p: NgForm) {
 
     $("#btn_formclear").trigger("click");
@@ -1102,7 +1112,7 @@ export class PessoaComponent implements OnInit {
     $("div").find("#box_newcontact4").remove();
     $("div").find("#box_newcontact5").remove();
   }
-
+  //end:: Limpa Campos
 
 
 }
