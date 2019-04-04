@@ -135,7 +135,7 @@
                           </div>
                           <div class="col-lg-2">
                             <label>Nascimento</label>
-                            <input type="text" class="form-control mask_data" name="DP_Nascimento" placeholder="00/00/0000" tabindex="10">
+                            <input type="text" class="form-control mask_data" name="DP_Nascimento" placeholder="00/00/0000" tabindex="10" (blur)="onCalculaIdade()">
                           </div>
                           <div class="col-lg-2">
                             <label>Idade Aparente</label>
@@ -156,12 +156,14 @@
                                 <option value="-1">-- Selecione --</option>
                                 <option *ngFor="let raca of listaRaca | orderBy: orderNome" [ngValue]="raca">{{raca.nome}}</option>
                               </select>
+
+
                             </div>
                           </div>
                           <div class="col-lg-4">
                             <label class="">Etnia</label>
                             <div class="k-input-icon">
-                              <select class="form-control" name="DP_Etnia" tabindex="13" [(ngModel)]="Etnia" disabled>
+                              <select class="form-control" name="DP_Etnia" tabindex="13" [(ngModel)]="Etnia" disabled >
                                 <option value="-1">-- Selecione --</option>
                                 <option *ngFor="let etnia of listaEtnia| orderBy: orderNome" [ngValue]="etnia">{{etnia.nome}}</option>
                               </select>
@@ -185,7 +187,7 @@
                         <div class="form-group row">
                           <div class="col-lg-3">
                             <label>CPF</label>
-                            <input type="text" class="form-control mask_cpf" name="DP_CPF" id="DP_CPF" placeholder="000.000.000-00" maxlength="11" value="" tabindex="16" (blur)="onConsultaCpf"  ngModel>
+                            <input type="text" class="form-control mask_cpf" name="DP_CPF" id="DP_CPF" placeholder="000.000.000-00" maxlength="11" value="" tabindex="16" (blur)="onConsultaCpf($event)"  ngModel>
                             <span id="msg_cpf" class="form-text text-danger oculta">Informe um CPF válido</span>
                           </div>
                           <div class="col-lg-3">
@@ -370,10 +372,10 @@
 
 
                               <tr class="text-center" id="row{{i}}">
-                                <td>{{ item.TipoProfissional.descricao }}</td>
+                                <td>{{ item.tipoProfissional.descricao }}</td>
                                 <td>{{ item.numeroConselho }}</td>
                                 <td>{{ item.ufProfissional }}</td>
-                                <td>{{ item.OrgaoEmissorProfissional? item.OrgaoEmissorProfissional.descricao: '' }}</td>
+                                <td>{{ item.orgaoEmissorProfissional? item.orgaoEmissorProfissional.descricao: '' }}</td>
                                 <td>
                                   <label class="k-checkbox k-checkbox--bold">
                                     <input type="checkbox" class="form-control" name="Prof_Coord" id="ckcoordenador{{i}}" [checked]="item.coordenador"> <span></span>
@@ -594,7 +596,7 @@
                           <div class="form-group row">
                             <div class="col-lg-3">
                               <label>PIS / PASEP</label>
-                              <input type="text" class="form-control  mask_pis" name="DC_PISPASEP" id="DP_PIS" placeholder="" maxlength="15" value="" tabindex="32">
+                              <input type="text" class="form-control  mask_pis" name="DC_PISPASEP" placeholder="" maxlength="15" tabindex="32">
                               <span id="msg_pis" class="form-text text-danger oculta">Informe um PIS válido</span>
                             </div>
                             <div class="col-lg-3">
@@ -612,7 +614,7 @@
                               <!--<select class="form-control" name="DC_PaisDeOrigem" tabindex="34">
                                 <option value="">- Selecione -</option>
                               </select>-->
-                              <select class="form-control" name="DC_PaisDeOrigem" tabindex="31" [(ngModel)]="Pais">
+                              <select class="form-control" name="DC_PaisDeOrigem" tabindex="32" [(ngModel)]="Pais">
                                 <option value="-1">-- Selecione --</option>
                                 <option *ngFor="let pais of listaPais| orderBy: orderDescricao" [ngValue]="pais">{{pais.descricao}}</option>
                               </select>
@@ -685,7 +687,7 @@
                             </div>
                             <div class="col-lg-2">
                               <label>Zona</label>
-                              <input type="text" class="form-control" name="DC_Zona" id="DC_Zona" maxlength="10" value="" tabindex="46" ngModel>
+                              <input type="text" class="form-control" name="DC_Zona" maxlength="10" value="" tabindex="46" ngModel>
                             </div>
                             <div class="col-lg-2">
                               <label>Seção</label>
@@ -715,8 +717,6 @@
                             <div class="col-lg-3">
                               <div class="k-radio-list" id="divEscolaridadeColuna1">
                                 <div class="card-title mb-4"> <i class="flaticon-folder-1"></i> Escolaridade</div>
-
-
                               </div>
                             </div>
 

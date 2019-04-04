@@ -55,6 +55,7 @@ export class PessoaComponent implements OnInit {
   listaLotacaoProfissional: Array<LotacaoProfissional>;
   listaCep: Array<Cep>;
 
+  Pessoa: any;
   Raca: Raca;
   Etnia: Etnia;
   Justificativa: Justificativa;
@@ -76,7 +77,8 @@ export class PessoaComponent implements OnInit {
   OrgaoEmissorProfissional: OrgaoEmissor;
   TipoProfissional: TipoProfissional;
   LotacaoProfissional: LotacaoProfissional;
-
+  Escolaridade: Escolaridade;
+  SituacaoFamiliarConjugal: SituacaoFamiliarConjugal;
 
   constructor(private pessoaService: PessoaService, private router: Router) {
     this.listaContatos = new Array<PessoaContato>();
@@ -87,11 +89,14 @@ export class PessoaComponent implements OnInit {
     this.listaEstado = new Array<Estado>();
     this.listaEscolaridade = new Array<Escolaridade>();
     this.listaSituacaoFamiliarConjugal = new Array<SituacaoFamiliarConjugal>();
+
+
   }
 
   //begin:: Carregamento Básico da tela
   public ngOnInit() {
 
+    var page = this;
 
 
     toastr.options = {
@@ -115,7 +120,9 @@ export class PessoaComponent implements OnInit {
     this.pessoaService.BindRaca().subscribe(data => {
       this.listaRaca = data.result;
 
+
       $(document).ready(function () { $("select[name^=DP_Cor]").val($("select[name^=DP_Cor] option:first").val()); });
+
 
     }, (error: HttpErrorResponse) => {
 
@@ -186,81 +193,6 @@ export class PessoaComponent implements OnInit {
       $('body').css("background-image", "");
       $('body').addClass("k-header--fixed k-header-mobile--fixed k-subheader--enabled k-subheader--transparent k-aside--enabled k-aside--fixed k-page--loading");
 
-      $("select[name^=DP_Cor]").change(function () {
-        var selectedRaca = $(this).children("option:selected").text();
-
-        if (selectedRaca == "INDÍGENA") {
-
-          $("select[name^=DP_Etnia]").removeAttr("disabled");
-
-        } else {
-          $("select[name^=DP_Etnia]").prop('disabled', 'disabled');
-
-        }
-      });
-
-      $("input[name^=DP_Nascimento]").blur(function () {
-
-
-        var data = $("input[name='DP_Nascimento']").val().split("/");
-        let ageFromDate = new AgeFromDate(new Date(data[2], data[1], data[0])).age;
-
-        if (ageFromDate > 0)
-          $("input[name='DP_IdadeAparente']").val(ageFromDate > 1 ? ageFromDate + " ANOS" : ageFromDate + " ANO");
-        else {
-
-
-          var today = new Date();
-          var start = new Date(data[2], data[1], data[0]);
-          var end = new Date(today.getFullYear(), today.getMonth() + 1, today.getDate());
-          var millisecondsPerDay = 1000 * 60 * 60 * 24;
-          var millisBetween = end.getTime() - start.getTime();
-          var days = millisBetween / millisecondsPerDay;
-
-          var today = new Date();
-          var currentDay = today.getDate();
-          var currentMonth = today.getMonth() + 1;
-          var currentYear = today.getFullYear();
-
-
-          if (currentMonth > parseInt(data[1]) && currentYear === parseInt(data[2])) {
-            if (data[0] <= currentDay) {
-              var monthDiff = currentMonth - data[1];
-              $("input[name='DP_IdadeAparente']").val(monthDiff > 1 ? monthDiff + " MESES" : monthDiff + " MÊS");
-
-            } else {
-              var monthDiff = (currentMonth - data[1]) - 1;
-              if (monthDiff > 0)
-                $("input[name='DP_IdadeAparente']").val(monthDiff > 1 ? monthDiff + " MESES" : monthDiff + " MÊS");
-            }
-          } else if (currentYear > parseInt(data[2]) && days > 30) {
-
-            var monthDiff = days / 30 | 0;
-
-            if (parseInt(data[1]) == currentMonth && parseInt(data[0]) > currentDay)
-              monthDiff--;
-
-            if (monthDiff >= 12) {
-
-              $("input[name='DP_IdadeAparente']").val("1 ANO");
-            } else {
-              $("input[name='DP_IdadeAparente']").val(monthDiff > 1 ? monthDiff + " MESES" : monthDiff + " MÊS");
-            }
-          }
-
-          else {
-
-            if (days > 0)
-              $("input[name='DP_IdadeAparente']").val(days > 1 ? days + " DIAS" : days + " DIA");
-            else
-              $("input[name='DP_IdadeAparente']").val("");
-          }
-        }
-
-      });
-
-
-
 
 
       $('#k_table_1').on('click', 'input[name^=Prof_Coord]', function () {
@@ -329,35 +261,402 @@ export class PessoaComponent implements OnInit {
 
       });
 
-      
+
 
     });
   }
   //end:: Carregamento Básico da tela
 
+  validarCPF(cpf) {
 
-  //begin:: Selecao Raca / Selecionado a opção indígena, habilita e carrega as tribos indígenas na aba dados pessoais
+    var cpf = cpf.replace(/[^\d]+/g, '');
+    if (cpf === '') return false;
+    // Elimina CPFs invalidos conhecidos	
+    if (cpf.length !== 11 ||
+      cpf === "00000000000" ||
+      cpf === "11111111111" ||
+      cpf === "22222222222" ||
+      cpf === "33333333333" ||
+      cpf === "44444444444" ||
+      cpf === "55555555555" ||
+      cpf === "66666666666" ||
+      cpf === "77777777777" ||
+      cpf === "88888888888" ||
+      cpf === "99999999999")
+      return false;
+    // Valida digito	
+    var add = 0;
+    for (let i = 0; i < 9; i++)
+      add += parseInt(cpf.charAt(i)) * (10 - i);
+    var rev = 11 - (add % 11);
+    if (rev === 10 || rev === 11)
+      rev = 0;
+    if (rev !== parseInt(cpf.charAt(9)))
+      return false;
+    // Valida 2o digito	
+    add = 0;
+    for (let i = 0; i < 10; i++)
+      add += parseInt(cpf.charAt(i)) * (11 - i);
+    rev = 11 - (add % 11);
+    if (rev === 10 || rev === 11)
+      rev = 0;
+    if (rev !== parseInt(cpf.charAt(10)))
+      return false;
+    return true;
+  }
+
+  public onCalculaIdade() {
+
+
+    var data = $("input[name='DP_Nascimento']").val().split("/");
+    let ageFromDate = new AgeFromDate(new Date(data[2], data[1], data[0])).age;
+
+    if (ageFromDate > 0)
+      $("input[name='DP_IdadeAparente']").val(ageFromDate > 1 ? ageFromDate + " ANOS" : ageFromDate + " ANO");
+    else {
+
+
+      var today = new Date();
+      var start = new Date(data[2], data[1], data[0]);
+      var end = new Date(today.getFullYear(), today.getMonth() + 1, today.getDate());
+      var millisecondsPerDay = 1000 * 60 * 60 * 24;
+      var millisBetween = end.getTime() - start.getTime();
+      var days = millisBetween / millisecondsPerDay;
+
+      var today = new Date();
+      var currentDay = today.getDate();
+      var currentMonth = today.getMonth() + 1;
+      var currentYear = today.getFullYear();
+
+
+      if (currentMonth > parseInt(data[1]) && currentYear === parseInt(data[2])) {
+        if (data[0] <= currentDay) {
+          var monthDiff = currentMonth - data[1];
+          $("input[name='DP_IdadeAparente']").val(monthDiff > 1 ? monthDiff + " MESES" : monthDiff + " MÊS");
+
+        } else {
+          var monthDiff = (currentMonth - data[1]) - 1;
+          if (monthDiff > 0)
+            $("input[name='DP_IdadeAparente']").val(monthDiff > 1 ? monthDiff + " MESES" : monthDiff + " MÊS");
+        }
+      } else if (currentYear > parseInt(data[2]) && days > 30) {
+
+        var monthDiff = days / 30 | 0;
+
+        if (parseInt(data[1]) == currentMonth && parseInt(data[0]) > currentDay)
+          monthDiff--;
+
+        if (monthDiff >= 12) {
+
+          $("input[name='DP_IdadeAparente']").val("1 ANO");
+        } else {
+          $("input[name='DP_IdadeAparente']").val(monthDiff > 1 ? monthDiff + " MESES" : monthDiff + " MÊS");
+        }
+      }
+
+      else {
+
+        if (days > 0)
+          $("input[name='DP_IdadeAparente']").val(days > 1 ? days + " DIAS" : days + " DIA");
+        else
+          $("input[name='DP_IdadeAparente']").val("");
+      }
+    }
+
+  }
+
+  onConsultaCpf(e) {
+
+    var cpf = e.target.value;
+
+    if (cpf !== '___.___.___-__') {
+
+      var verifica = this.validarCPF(cpf);
+
+      if (verifica === false) {
+        $('#msg_cpf').removeClass('oculta');
+      } else {
+        $('#msg_cpf').addClass('oculta');
+
+        var cpf = cpf.replace('.', '').replace('.', '').replace('.', '').replace('-', '');
+
+        this.pessoaService.ConsultaCpfProfissional(cpf).subscribe(data => {
+
+          if (data.statusCode != "302") {
+
+            this.pessoaService.ConsultaCpfPaciente(cpf).subscribe(subdata => {
+
+              if (subdata.statusCode == "302") {
+                toastr.success("Paciente encontrado");
+
+                var paciente = subdata.result;
+
+                if (paciente.recemnascido == true) {
+
+                  $("input[name^=DP_RecemNascido]").prop("checked", true);
+                  $('#box_numprontmae, #box_nomeRN').removeClass('oculta');
+                  $('#box_nomecomp, #box_nomesocial').addClass('oculta');
+                  $("input[name^=DP_NomeRN]").val(paciente.nomeCompleto);
+                  $("input[name^=DP_NumProntuarioMae]").val(paciente.numeroProntuario);
+
+                }
+
+                this.CarregaPessoa(paciente);
+              }
+            }, (error: HttpErrorResponse) => {
+
+              this.Mensagens("erro", "Falha ao carregar Raças na aba Dados Pessoais");
+              console.log(`Error. ${error.message}.`);
+            });
+          } else {
+
+
+            var profissional = data.result;
+
+            toastr.success("Profissional encontrado");
+
+            this.CarregaPessoa(profissional);
+
+            $('#DP_TipoCadastro').prop('checked', true);
+            $('#box_dadosprof').removeClass('oculta');
+            $('#collapseTwo1').addClass('show');
+
+            this.listaLotacaoProfissional = profissional.lotacoesProfissional;
+
+          }
+
+        }, (error: HttpErrorResponse) => {
+
+          this.Mensagens("erro", "Falha ao carregar Raças na aba Dados Pessoais");
+          console.log(`Error. ${error.message}.`);
+        });
+      }
+    }
+
+  }
+
+  CarregaPessoa(pessoa: any) {
+
+    this.Pessoa = pessoa;
+
+    console.log(pessoa)
+
+    $("input[name^=DP_NomeCompleto]").val(pessoa.nomeCompleto);
+    $("input[name^=DP_NomeSocial]").val(pessoa.nomeSocial);
+
+    if (pessoa.sexo === "M")
+      $("label[for^=DP_Sexo_Masculino]").addClass("active");
+    if (pessoa.sexo === "F")
+      $("label[for^=DP_Sexo_Feminino]").addClass("active");
+
+    if (pessoa.nascimento != null) {
+
+      var nascimento = new Date(pessoa.nascimento),
+        month = '' + (nascimento.getMonth() + 1),
+        day = '' + nascimento.getDate(),
+        year = nascimento.getFullYear();
+
+      $("input[name^=DP_Nascimento]").val(("0" + day).slice(-2) + "/" + ("0" + month).slice(-2) + "/" + year);
+    }
+
+    this.onCalculaIdade();
+
+    if (pessoa.raca !== null) {
+
+      this.Raca = this.listaRaca.find(x => x.racaId === pessoa.raca.racaId);
+
+      if (pessoa.etnia !== null) {
+
+        this.Etnia = pessoa.etnia;
+        this.onSelectedRaca();
+      }
+    }
+
+    $("input[name^=DP_NomePai]").val(pessoa.nomePai);
+    $("input[name^=DP_NomeMae]").val(pessoa.nomeMae);
+
+    if (pessoa.justificativa !== null)
+      this.Justificativa = this.listaJustificativa.find(x => x.justificativaId === pessoa.justificativa.justificativaId);
+    if (pessoa.nacionalidade !== null)
+      this.Nacionalidade = this.listaNacionalidade.find(x => x.nacionalidadeId === pessoa.nacionalidade.nacionalidadeId);
+
+    if (pessoa.naturalidade !== null) {
+
+      this.Estado = this.listaEstado.find(x => x.estadoId === pessoa.naturalidade.estado.estadoId);
+      this.Cidade = pessoa.naturalidade;
+      this.onSelectedUf();
+    }
+
+    $("input[name^=DP_Identidade]").val(pessoa.identidade);
+    this.UfIdentidade = this.listaEstado.find(x => x.uf === pessoa.uf);
+
+    if (pessoa.orgaoEmissor !== null)
+      this.OrgaoEmissor = this.listaOrgaoEmissor.find(x => x.orgaoEmissorId === pessoa.orgaoEmissor.orgaoEmissorId);
+
+    if (pessoa.emissao != null) {
+      var emissao = new Date(pessoa.emissao),
+        month = '' + (emissao.getMonth() + 1),
+        day = '' + emissao.getDate(),
+        year = emissao.getFullYear();
+      $("input[name^=DP_OrgaoEmissorData]").val(("0" + day).slice(-2) + "/" + ("0" + month).slice(-2) + "/" + year);
+    }
+
+    $("input[name^=DP_CNS]").val(pessoa.cns);
+
+
+    for (var i = 0; i < pessoa.pessoaContatos.length; i++) {
+
+      var pessoacontato: PessoaContato = {
+
+        ativo: pessoa.pessoaContatos[i].ativo,
+        celular: pessoa.pessoaContatos[i].celular,
+        email: pessoa.pessoaContatos[i].email,
+        telefone: pessoa.pessoaContatos[i].telefone
+      };
+
+      if (i > 0) {
+        this.onAdicionaNovosCamposContato();
+        this.listaContatos[i] = pessoacontato;
+      }
+
+
+      $("input[name^=Cont_Telefone" + i + "]").val(pessoa.pessoaContatos[i].telefone);
+      $("input[name^=Cont_Celular" + i + "]").val(pessoa.pessoaContatos[i].celular);
+      $("input[name^=Cont_Email" + i + "]").val(pessoa.pessoaContatos[i].email);
+
+
+    }
+
+
+    $("input[name^=DP_CEP]").val(pessoa.cep);
+    $("input[name^=DP_Logradouro]").val(pessoa.logradouro);
+    $("input[name^=DP_Numero]").val(pessoa.numero);
+    $("input[name^=DP_Complemento]").val(pessoa.complemento);
+
+    if (pessoa.estado !== null) {
+      this.EstadoEndereco = this.listaEstado.find(x => x.estadoId === pessoa.estado.estadoId);
+      this.onSelectedUfEndereco();
+      this.CidadeEndereco = pessoa.cidade;
+    }
+
+    $("input[name^=DP_Bairro]").val(pessoa.bairro);
+
+
+    if (pessoa.pisPasep != null || pessoa.ocupacao != null || pessoa.paisOrigem != null || pessoa.dataEntradaPis != null ||
+      pessoa.tipoCertidao != null || pessoa.nomeCartorio != null || pessoa.numeroLivro != null || pessoa.numeroFolha != null ||
+      pessoa.numeroTermo != null || pessoa.dataEmissaoCertidao != null || pessoa.numeroCtps != null || pessoa.serieCtps != null ||
+      pessoa.ufCtps != null || pessoa.dataEmissaoCtps != null || pessoa.tituloEleitor != null || pessoa.zona != null || pessoa.secao != null ||
+      pessoa.frequentaEscola != null) {
+
+      console.log(pessoa.pisPasep);
+
+      $("input[name^=DC_PISPASEP]").val(pessoa.pisPasep);
+
+      if (pessoa.ocupacao != null)
+        this.Ocupacao = pessoa.ocupacao;
+
+      if (pessoa.paisOrigem != null)
+        this.Pais = pessoa.paisOrigem;
+
+      if (pessoa.dataEntradaPis != null) {
+
+        var entradaPis = new Date(pessoa.dataEntradaPis),
+          month = '' + (entradaPis.getMonth() + 1),
+          day = '' + entradaPis.getDate(),
+          year = entradaPis.getFullYear();
+
+        $("input[name^=DC_DataEntrada_Pis]").val(("0" + day).slice(-2) + "/" + ("0" + month).slice(-2) + "/" + year);
+      }
+
+      if (pessoa.tipoCertidao != null)
+        this.TipoCertidao = pessoa.tipoCertidao;
+
+      $("input[name^=DC_NomeDoCartorio]").val(pessoa.nomeCartorio);
+      $("input[name^=DC_NumeroDoLivro]").val(pessoa.numeroLivro);
+      $("input[name^=DC_NumeroDaFolha]").val(pessoa.numeroFolha);
+      $("input[name^=DC_NumeroDoTermo]").val(pessoa.numeroTermo);
+
+      if (pessoa.dataEmissaoCertidao != null) {
+
+        var emissaoCertidao = new Date(pessoa.dataEmissaoCertidao),
+          month = '' + (emissaoCertidao.getMonth() + 1),
+          day = '' + emissaoCertidao.getDate(),
+          year = emissaoCertidao.getFullYear();
+
+        $("input[name^=DC_DataEmissao]").val(("0" + day).slice(-2) + "/" + ("0" + month).slice(-2) + "/" + year);
+      }
+
+
+      $("input[name^=DC_NumeroCTPS]").val(pessoa.numeroCtps);
+      $("input[name^=DC_SerieCTPS]").val(pessoa.serieCtps);
+
+      if (pessoa.ufCtps != null)
+        this.UfCtps = this.listaEstado.find(x => x.uf === pessoa.ufCtps);
+
+
+      if (pessoa.dataEmissaoCtps != null) {
+
+        var dataEmissaoCtps = new Date(pessoa.dataEmissaoCtps),
+          month = '' + (dataEmissaoCtps.getMonth() + 1),
+          day = '' + dataEmissaoCtps.getDate(),
+          year = dataEmissaoCtps.getFullYear();
+
+        $("input[name^=DC_DataEmissao_Ctps]").val(("0" + day).slice(-2) + "/" + ("0" + month).slice(-2) + "/" + year);
+      }
+
+
+      $("input[name^=DC_TituloEleitor]").val(pessoa.tituloEleitor);
+      $("input[name^=DC_Zona]").val(pessoa.zona);
+      $("input[name^=DC_Secao]").val(pessoa.secao);
+
+      if (pessoa.frequentaEscola === true)
+        $("label[for^=FreqEsc1]").addClass("active");
+      if (pessoa.frequentaEscola === false)
+        $("label[for^=FreqEsc2]").addClass("active");
+
+      if (pessoa.escolaridade != null)
+        this.Escolaridade = pessoa.escolaridade;
+
+      if (pessoa.situacaoFamiliarConjugal != null) {
+
+        this.SituacaoFamiliarConjugal = pessoa.situacaoFamiliarConjugal;
+        console.log(this.SituacaoFamiliarConjugal.situacaoFamiliarConjugalId);
+        console.log(pessoa.situacaoFamiliarConjugalsituacaoFamiliarConjugalId);
+      }
+
+      this.onCarregaCamposDadosComplemenares();
+    }
+  }
+
+  //begin:: Habilita combo indigena / habilita a combo para caso selecionar indígena
   onSelectedRaca() {
 
     if (this.Raca.nome == "INDÍGENA") {
+      $("select[name^=DP_Etnia]").removeAttr("disabled");
+
 
       this.pessoaService.BindEtnia().subscribe(data => {
         this.listaEtnia = data.result;
 
-        $(document).ready(function () { $("select[name^=DP_Etnia]").val($("select[name^=DP_Etnia] option:first").val()); });
+        if (this.Etnia != null) {
+
+          var etniaId = this.Etnia.etniaId;
+          this.Etnia = this.listaEtnia.find(x => x.etniaId === etniaId);
+        }
+        else
+          $(document).ready(function () { $("select[name^=DP_Etnia]").val($("select[name^=DP_Etnia] option:first").val()); });
 
       }, error => {
         this.Mensagens("erro", "Falha ao carregar Etnias na aba Dados Pessoais");
         console.log(`Error. ${error._body}.`);;
       });
 
-    } else {
-
-      this.listaEtnia = [];
-      $(document).ready(function () { $("select[name^=DP_Etnia]").val($("select[name^=DP_Etnia] option:first").val()); });
     }
+    else
+      $("select[name^=DP_Etnia]").prop('disabled', 'disabled');
   }
-  //end:: Selecao Raca
+  //end:: Habilita combo indigena
+
 
   //begin:: Selecao UF Naturalidade / Selecionado a uf, habilita e carrega as cidades correspondente a uf selecionada na aba dados pessoais
   onSelectedUf() {
@@ -366,7 +665,15 @@ export class PessoaComponent implements OnInit {
 
     this.pessoaService.BindCidade(this.Estado).subscribe(data => {
       this.listaCidade = data.result;
-      $(document).ready(function () { $("select[name^=DP_NaturalidadeCidade]").val($("select[name^=DP_NaturalidadeCidade] option:first").val()); });
+
+      if (this.Cidade != null) {
+
+        var cidadeId = this.Cidade.cidadeId;
+        this.Cidade = this.listaCidade.find(x => x.cidadeId === cidadeId);
+      }
+      else
+        $(document).ready(function () { $("select[name^=DP_NaturalidadeCidade]").val($("select[name^=DP_NaturalidadeCidade] option:first").val()); });
+
     }, (error: HttpErrorResponse) => {
       this.Mensagens("erro", "Falha ao carregar UF(s) na aba Dados Pessoais");
       console.log(`Error. ${error.message}.`);
@@ -383,7 +690,15 @@ export class PessoaComponent implements OnInit {
 
     this.pessoaService.BindCidade(this.EstadoEndereco).subscribe(data => {
       this.listaCidadeEndereco = data.result;
-      $(document).ready(function () { $("select[name^=DP_Endereco_Cidade]").val($("select[name^=DP_Endereco_Cidade] option:first").val()); });
+
+      if (this.CidadeEndereco != null) {
+
+        var cidadeId = this.CidadeEndereco.cidadeId;
+        this.CidadeEndereco = this.listaCidadeEndereco.find(x => x.cidadeId === cidadeId);
+      }
+      else
+        $(document).ready(function () { $("select[name^=DP_Endereco_Cidade]").val($("select[name^=DP_Endereco_Cidade] option:first").val()); });
+
     }, (error: HttpErrorResponse) => {
       this.Mensagens("erro", "Falha ao carregar os Estados na aba Dados Pessoais");
       console.log(`Error. ${error.message}.`);
@@ -413,45 +728,63 @@ export class PessoaComponent implements OnInit {
   //begin:: Carregamento Dados Complementares / carrega todas as combos na aba dados complementares
   onCarregaCamposDadosComplemenares() {
 
-    $(document).ready(function () {
+
+    if (this.listaOcupacao.length == 0) {
 
       $("select[name^=DC_Ocupacao]").val($("select[name^=DC_Ocupacao] option:first").val());
-      $("select[name^=DC_PaisDeOrigem]").val($("select[name^=DC_PaisDeOrigem] option:first").val());
-      $("select[name^=DC_TipoCertidao]").val($("select[name^=DC_TipoCertidao] option:first").val());
-    });
-
-
-    if (this.listaOcupacao.length === 0) {
 
       this.pessoaService.BindOcupacao().subscribe(data => {
         this.listaOcupacao = data.result;
 
-        $(document).ready(function () { $("select[name^=DC_Ocupacao]").val($("select[name^=DC_Ocupacao] option:first").val()); });
+        if (this.Ocupacao != null) {
+
+          var ocupacaoId = this.Ocupacao.ocupacaoId;
+          this.Ocupacao = this.listaOcupacao.find(x => x.ocupacaoId === ocupacaoId);
+        }
+        else
+          $(document).ready(function () { $("select[name^=DC_Ocupacao]").val($("select[name^=DC_Ocupacao] option:first").val()); });
       }, (error: HttpErrorResponse) => {
         this.Mensagens("erro", "Falha ao carregar Ocupações na aba Dados Complementares");
         console.log(`Error. ${error.message}.`);
       });
     }
 
-    if (this.listaPais.length === 0) {
+
+    if (this.listaPais.length == 0) {
+
+      $("select[name^=DC_PaisDeOrigem]").val($("select[name^=DC_PaisDeOrigem] option:first").val());
 
       this.pessoaService.BindPais().subscribe(data => {
         this.listaPais = data.result;
 
-        $(document).ready(function () { $("select[name^=DC_PaisDeOrigem]").val($("select[name^=DC_PaisDeOrigem] option:first").val()); });
+        if (this.Pais != null) {
+
+          var paisId = this.Pais.paisId;
+          this.Pais = this.listaPais.find(x => x.paisId === paisId);
+        }
+        else
+          $(document).ready(function () { $("select[name^=DC_PaisDeOrigem]").val($("select[name^=DC_PaisDeOrigem] option:first").val()); });
       }, (error: HttpErrorResponse) => {
         this.Mensagens("erro", "Falha ao carregar Paises na aba Dados Complementares");
         console.log(`Error. ${error.message}.`);
       });
     }
 
-    if (this.listaTipoCertidao.length === 0) {
+    if (this.listaTipoCertidao.length == 0) {
 
+      $("select[name^=DC_TipoCertidao]").val($("select[name^=DC_TipoCertidao] option:first").val());
 
       this.pessoaService.BindTipoCertidao().subscribe(data => {
         this.listaTipoCertidao = data.result;
 
-        $(document).ready(function () { $("select[name^=DC_TipoCertidao]").val($("select[name^=DC_TipoCertidao] option:first").val()); });
+        if (this.TipoCertidao != null) {
+
+          var tipocertidaoId = this.TipoCertidao.tipocertidaoId;
+          this.TipoCertidao = this.listaTipoCertidao.find(x => x.tipocertidaoId === tipocertidaoId);
+        }
+        else
+          $(document).ready(function () { $("select[name^=DC_TipoCertidao]").val($("select[name^=DC_TipoCertidao] option:first").val()); });
+
       }, (error: HttpErrorResponse) => {
         this.Mensagens("erro", "Falha ao carregar Paises na aba Dados Complementares");
         console.log(`Error. ${error.message}.`);
@@ -468,11 +801,18 @@ export class PessoaComponent implements OnInit {
         for (let i = 0; i < this.listaEscolaridade.length; i++) {
 
           if (i < 5)
-            $("#divEscolaridadeColuna1").append("<label class='k-radio k-radio--brand' id='radioEscolaridade" + i + "'></label>");
+            $("#divEscolaridadeColuna1").append("<label class='k-radio k-radio--brand' id='escolaridade" + i + "'></label>");
           else
-            $("#divEscolaridadeColuna2").append("<label class='k-radio k-radio--brand' id='radioEscolaridade" + i + "'></label>");
+            $("#divEscolaridadeColuna2").append("<label class='k-radio k-radio--brand' id='escolaridade" + i + "'></label>");
 
-          $("#radioEscolaridade" + i).append("<input type='radio' name='DC_Escolaridade' tabindex='50' id='" + i + "'>" + this.listaEscolaridade[i].descricao + "<span></span>");
+          if (this.Escolaridade != null) {
+            if (this.Escolaridade.escolaridadeId === this.listaEscolaridade[i].escolaridadeId)
+              $("#escolaridade" + i).append("<input type='radio' name='DC_Escolaridade' tabindex='50' checked='true' id='" + this.listaEscolaridade[i].escolaridadeId + "'>" + this.listaEscolaridade[i].descricao + "<span></span>");
+            else
+              $("#escolaridade" + i).append("<input type='radio' name='DC_Escolaridade' tabindex='50'  id='" + this.listaEscolaridade[i].escolaridadeId + "'>" + this.listaEscolaridade[i].descricao + "<span></span>");
+          } else {
+            $("#escolaridade" + i).append("<input type='radio' name='DC_Escolaridade' tabindex='50'  id='" + this.listaEscolaridade[i].escolaridadeId + "'>" + this.listaEscolaridade[i].descricao + "<span></span>");
+          }
 
         }
 
@@ -485,15 +825,24 @@ export class PessoaComponent implements OnInit {
 
     if (this.listaSituacaoFamiliarConjugal.length === 0) {
 
+      console.log(this.SituacaoFamiliarConjugal.situacaoFamiliarConjugalId);
 
       this.pessoaService.BindSituacaoFamiliarConjugal().subscribe(data => {
         this.listaSituacaoFamiliarConjugal = data.result.sort(sortBy('codigoSituacaoFamiliarConjugal'));
 
+        console.log(this.SituacaoFamiliarConjugal.situacaoFamiliarConjugalId);
 
         for (let i = 0; i < this.listaSituacaoFamiliarConjugal.length; i++) {
 
           $("#divSituacaoFamiliarConjugal").append("<label class='k-radio k-radio--brand' id='radioSituacaoFamiliarConjugal" + i + "'></label>");
-          $("#radioSituacaoFamiliarConjugal" + i).append("<input type='radio' name='DC_SituacaoFamiliar' tabindex='50' id='" + i + "'>" + this.listaSituacaoFamiliarConjugal[i].descricao + "<span></span>");
+
+          if (this.SituacaoFamiliarConjugal != null) {
+            if (this.SituacaoFamiliarConjugal.situacaoFamiliarConjugalId === this.listaSituacaoFamiliarConjugal[i].situacaoFamiliarConjugalId)
+              $("#radioSituacaoFamiliarConjugal" + i).append("<input type='radio' name='DC_SituacaoFamiliar' tabindex='50' checked='true' id='" + this.listaSituacaoFamiliarConjugal[i].situacaoFamiliarConjugalId + "'>" + this.listaSituacaoFamiliarConjugal[i].descricao + "<span></span>");
+            else
+              $("#radioSituacaoFamiliarConjugal" + i).append("<input type='radio' name='DC_SituacaoFamiliar' tabindex='50' id='" + this.listaSituacaoFamiliarConjugal[i].situacaoFamiliarConjugalId + "'>" + this.listaSituacaoFamiliarConjugal[i].descricao + "<span></span>");
+          } else
+            $("#radioSituacaoFamiliarConjugal" + i).append("<input type='radio' name='DC_SituacaoFamiliar' tabindex='50' id='" + this.listaSituacaoFamiliarConjugal[i].situacaoFamiliarConjugalId + "'>" + this.listaSituacaoFamiliarConjugal[i].descricao + "<span></span>");
         }
 
 
@@ -557,6 +906,7 @@ export class PessoaComponent implements OnInit {
     }
   }
   //end::  Carregamento Informacoes Contato
+
 
   //begin:: Adiciona Lotacao Profissional / Adiciona uma nova lotação ao profissional na aba profissional
   onAdicionaLotacao() {
@@ -946,11 +1296,10 @@ export class PessoaComponent implements OnInit {
 
 
     if (escolaridadeId !== undefined)
-      pessoa.Escolaridade = this.listaEscolaridade[escolaridadeId];
+      pessoa.Escolaridade = this.listaEscolaridade.find(x => x.escolaridadeId === escolaridadeId);
 
     if (situacaoFamiliarConjugalId !== undefined)
-      pessoa.SituacaoFamiliarConjugal = this.listaSituacaoFamiliarConjugal[situacaoFamiliarConjugalId];
-
+      pessoa.SituacaoFamiliarConjugal = this.listaSituacaoFamiliarConjugal.find(x => x.situacaofamiliarconjugalId === situacaoFamiliarConjugalId); 
 
 
     if (p.value.DP_Prof_Login !== "")

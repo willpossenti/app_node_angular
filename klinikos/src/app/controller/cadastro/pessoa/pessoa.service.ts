@@ -60,14 +60,20 @@ export class PessoaService {
       return this.http.get<Cep>(`${this.cepUrl}` + cep.cep + `/json/`);
 
   }
-
   BuscarCepPorLogradouro(cep: Cep): Observable<Array<Cep>> {
 
     return this.http.get<Array<Cep>>(`${this.cepUrl}` + cep.uf + `/` + cep.localidade + `/` + cep.logradouro + `/json/`);
 
   }
-
   BuscarCidade(nomecidade: string) { return this.http.get<Return>(`${this.baseUrl}cidade/buscacidade/` + nomecidade, this.httpOptions); }
+
+  ConsultaCpfProfissional(cpf: string) {
+    return this.http.get<Return>(`${this.baseUrl}pessoa/pessoaprofissional/consultacpf/` + cpf, this.httpOptions);
+  }
+  ConsultaCpfPaciente(cpf: string) {
+    return this.http.get<Return>(`${this.baseUrl}pessoa/pessoapaciente/consultacpf/` + cpf, this.httpOptions);
+  }
+
   SalvarPessoaPaciente(pessoapaciente: PessoaPaciente) {
 
     return this.http.post<Return>(`${this.baseUrl}pessoa/pessoapaciente/incluir`, pessoapaciente, this.httpOptions);
