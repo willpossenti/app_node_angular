@@ -74,6 +74,14 @@ export class PessoaService {
     return this.http.get<Return>(`${this.baseUrl}pessoa/pessoapaciente/consultacpf/` + cpf, this.httpOptions);
   }
 
+  ConsultaNomePaciente(nome: string) {
+    return this.http.get<Return>(`${this.baseUrl}pessoa/pessoapaciente/consultanome/` + nome, this.httpOptions);
+  }
+
+  ConsultaNomeProfissional(nome: string) {
+    return this.http.get<Return>(`${this.baseUrl}pessoa/pessoaprofissional/consultanome/` + nome, this.httpOptions);
+  }
+
   SalvarPessoaPaciente(pessoapaciente: PessoaPaciente) {
 
     return this.http.post<Return>(`${this.baseUrl}pessoa/pessoapaciente/incluir`, pessoapaciente, this.httpOptions);

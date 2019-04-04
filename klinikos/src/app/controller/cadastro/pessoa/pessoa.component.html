@@ -56,24 +56,83 @@
                           <div class="col-lg-6" id="box_nomecompleto">
                             <div class="" id="box_nomecomp">
                               <label>Nome Completo</label>
-                              <input type="text" class="form-control maisc" name="DP_NomeCompleto" placeholder="" maxlength="140" autocomplete="off" tabindex="1" autofocus ngModel>
+                              <input type="text" class="form-control maisc" name="DP_NomeCompleto" placeholder="" maxlength="140" autocomplete="off" tabindex="1" autofocus (keyup)="onConsultaNomeCompleto()" ngModel>
 
-                            </div>
-                            <div class="dropdown-menu dropdown-menu-fit dropdown-menu-right dropdown-menu-top-unround dropdown-menu-anim dropdown-menu-lg">
-                              <div class="kt-quick-search kt-quick-search--dropdown kt-quick-search--result-compact" id="kt_quick_search_dropdown">
-                                <div class="input-group">
-                                  <div class="input-group-prepend">
-                                    <span class="input-group-text"><i class="flaticon2-search-1"></i></span>
+
+
+                              <div class="dropdown-menu dropdown-menu-fit dropdown-menu-right dropdown-menu-top-unround dropdown-menu-anim dropdown-menu-lg" x-placement="bottom-end" style="position: absolute; left: 10px;  width: 95%; will-change: transform; top: 65px;" id="divPesquisaNomeCompleto">
+
+                                <div class="k-quick-search k-quick-search--dropdown k-quick-search--result-compact k-quick-search--has-result" id="k_quick_search_dropdown">
+
+                                  <div class="k-quick-search__wrapper k-scroll ps ps--active-y m-0 p-0" data-scroll="true" data-height="325" data-mobile-height="200" style="overflow: hidden; height: 325px;">
+
+                                    <!--begin::k-quick-search__result-->
+                                    <div class="k-quick-search__result">
+
+                                      <div class="k-quick-search__category border-bottom text-primary">Profissionais</div>
+                                      <div class="k-quick-search__section p-0 mb-1" *ngFor="let profissional of listaPessoaProfissional;">
+                                        <div class="k-quick-search__item">
+                                          <div class="k-quick-search__item-img k-quick-search__item-img--file">
+                                            <i class="fa fa-user-md ml-2" style="font-size:1.5em; color:#069;"></i>
+                                          </div>
+                                          <div class="k-quick-search__item-wrapper">
+                                            <a href="#" class="k-quick-search__item-title">
+                                              {{profissional.nomeCompleto}}  - {{profissional.nascimento | date: 'dd/MM/yyyy'}}
+                                            </a>
+                                            <div class="k-quick-search__item-desc">
+                                              {{profissional.nomeMae}}
+                                            </div>
+                                          </div>
+                                       
+                                        </div>
+                                      </div>
+
+                                      <div class="k-quick-search__category mt-2 border-bottom text-primary">Pacientes</div>
+                                      <div class="k-quick-search__section p-0 mb-1"  *ngFor="let paciente of listaPessoaPaciente;">
+                                        <div class="k-quick-search__item">
+                                          <div class="k-quick-search__item-img k-quick-search__item-img--file">
+                                            <i class="fa fa-user ml-2" style="font-size:1.5em; color:#999;"></i>
+                                          </div>
+                                          <div class="k-quick-search__item-wrapper">
+                                            <a href="#" class="k-quick-search__item-title">
+                                              {{paciente.nomeCompleto}}  - {{paciente.nascimento | date: 'dd/MM/yyyy'}}
+                                            </a>
+                                            <div class="k-quick-search__item-desc">
+                                              {{paciente.nomeMae}}
+                                            </div>
+                                          </div>
+   
+                                    
+                                        </div>
+                                      </div>
+
+
+
+                                    <!--
+  <div class="k-quick-search__category mt-2">
+    Pacientes
+  </div>
+  <div class="k-quick-search__section">
+  </div>
+   -->
                                   </div>
-                                  <input type="text" class="form-control kt-quick-search__input" placeholder="Search...">
-                                  <div class="input-group-append">
-                                    <span class="input-group-text"><i class="la la-close kt-quick-search__close"></i></span>
+                                    <!--end::k-quick-search__result-->
+
                                   </div>
                                 </div>
 
-                                <div class="kt-quick-search__wrapper kt-scroll ps" data-scroll="true" data-height="325" data-mobile-height="200" style="height: 325px; overflow: hidden;"><div class="ps__rail-x" style="left: 0px; bottom: 0px;"><div class="ps__thumb-x" tabindex="0" style="left: 0px; width: 0px;"></div></div><div class="ps__rail-y" style="top: 0px; right: 0px;"><div class="ps__thumb-y" tabindex="0" style="top: 0px; height: 0px;"></div></div></div>
+
+
+
+
+
+
+
                               </div>
+
+
                             </div>
+                     
 
                             <div class="oculta" id="box_numprontmae">
                               <label>Número do Prontuário da Mãe</label>
@@ -163,7 +222,7 @@
                           <div class="col-lg-4">
                             <label class="">Etnia</label>
                             <div class="k-input-icon">
-                              <select class="form-control" name="DP_Etnia" tabindex="13" [(ngModel)]="Etnia" disabled >
+                              <select class="form-control" name="DP_Etnia" tabindex="13" [(ngModel)]="Etnia" disabled>
                                 <option value="-1">-- Selecione --</option>
                                 <option *ngFor="let etnia of listaEtnia| orderBy: orderNome" [ngValue]="etnia">{{etnia.nome}}</option>
                               </select>
@@ -187,7 +246,7 @@
                         <div class="form-group row">
                           <div class="col-lg-3">
                             <label>CPF</label>
-                            <input type="text" class="form-control mask_cpf" name="DP_CPF" id="DP_CPF" placeholder="000.000.000-00" maxlength="11" value="" tabindex="16" (blur)="onConsultaCpf($event)"  ngModel>
+                            <input type="text" class="form-control mask_cpf" name="DP_CPF" id="DP_CPF" placeholder="000.000.000-00" maxlength="11" value="" tabindex="16" (blur)="onConsultaCpf($event)" ngModel>
                             <span id="msg_cpf" class="form-text text-danger oculta">Informe um CPF válido</span>
                           </div>
                           <div class="col-lg-3">
@@ -499,33 +558,37 @@
                             </div>
                             <div class="col-lg-6">
                               <label>Logradouro</label>
-                              <input type="text" class="form-control" name="DP_Logradouro" placeholder="" maxlength="150" value="" tabindex="26" (keypress)="onBuscaCep()"   ngModel>
+                              <input type="text" class="form-control" name="DP_Logradouro" placeholder="" maxlength="150" value="" tabindex="26" (keypress)="onBuscaCep()" ngModel>
 
+                              <div class="dropdown-menu dropdown-menu-fit dropdown-menu-right dropdown-menu-top-unround dropdown-menu-anim dropdown-menu-lg" x-placement="bottom-end" style="position: absolute; left: 10px;  width: 95%; will-change: transform; top: 65px;" id="divPesquisaLogradouro">
 
-                              <div class="dropdown-menu dropdown-menu-fit dropdown-menu-right dropdown-menu-top-unround dropdown-menu-anim dropdown-menu-lg show oculta" x-placement="bottom-end" style="position: absolute; left: 10px;width: 95%; will-change: transform;" id="divPesquisa">
-                                <div  class="k-quick-search k-quick-search--dropdown k-quick-search--result-compact k-quick-search--has-result" id="k_quick_search_dropdown">
+                                <div class="k-quick-search k-quick-search--dropdown k-quick-search--result-compact k-quick-search--has-result" id="k_quick_search_dropdown">
 
-                                  <div class="k-quick-search__wrapper k-scroll ps"  style="height: 325px;  overflow: hidden;" >
-                                    <div class="kt-quick-search__result" id="divresultadologradouro">
-                                      <table class="table table-hover">
-                                        <thead>
-                                          <tr>
-                                            <th>
-                                            </th>
-                                        </thead>
-                                        <tbody>
-                                          <tr *ngFor="let cep of listaCep;" style="cursor:pointer">
-                                            <td (click)="onSelectedCep(cep)">{{cep.logradouro}} - {{cep.bairro}} - {{cep.cep}}</td>
+                                  <div class="k-quick-search__wrapper k-scroll ps ps--active-y m-0 p-0" data-scroll="true" data-height="325" data-mobile-height="200" style="overflow: hidden; height: 325px;">
 
-                                          </tr>
-                                        </tbody>
-                                      </table>
+                                    <!--begin::k-quick-search__result-->
+                                    <div class="k-quick-search__result">
+
+                                      <div class="k-quick-search__category border-bottom text-primary">Endereços</div>
+                                      <div class="k-quick-search__section p-0 mb-1" *ngFor="let cep of listaCep;" >
+                                        <div class="k-quick-search__item">
+                                          <div class="k-quick-search__item-img k-quick-search__item-img--file">
+                                            <i class="fa fa-map-marker-alt ml-2" style="font-size:1.5em; color:#069;"></i>
+                                          </div>
+                                          <div class="k-quick-search__item-wrapper">
+                                            <a href="#" class="k-quick-search__item-title">
+                                              {{cep.logradouro}} 
+                                            </a>
+                                            <div class="k-quick-search__item-desc">
+                                              {{cep.bairro}} - {{cep.cep}}
+                                            </div>
+                                          </div>
+                                        </div>
+                                      </div>
                                     </div>
                                   </div>
                                 </div>
                               </div>
-
-
                             </div>
                             <div class="col-lg-2">
                               <label>Número</label>
