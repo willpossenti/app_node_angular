@@ -30,6 +30,7 @@ import * as swal from '../../../../assets/vendors/general/sweetalert2/dist/sweet
 import { Cep } from '../../../model/Cep';
 
 
+
 @Component({
   selector: 'app-pessoa',
   templateUrl: './pessoa.component.html'
@@ -91,43 +92,9 @@ export class PessoaComponent implements OnInit {
     this.listaEstado = new Array<Estado>();
     this.listaEscolaridade = new Array<Escolaridade>();
     this.listaSituacaoFamiliarConjugal = new Array<SituacaoFamiliarConjugal>();
-
-
-  }
-
-
-  onConsultaNomeCompleto() {
-
-    var dp_nomecompleto = $("input[name^='DP_NomeCompleto']").val().trim().toUpperCase();
-
-
- 
-    $('#divPesquisaNomeCompleto').addClass('show');
-
-      this.pessoaService.ConsultaNomeProfissional(dp_nomecompleto)
-        .subscribe(data => {
-
-          this.listaPessoaProfissional = data.result;
-
-
-        }, (error: HttpErrorResponse) => {
-          console.log(`Error. ${error.message}.`);
-        });
-
-   
-
-    this.pessoaService.ConsultaNomePaciente(dp_nomecompleto)
-      .subscribe(data => {
-
-        this.listaPessoaPaciente = data.result;
-
-      }, (error: HttpErrorResponse) => {
-        //this.Mensagens("erro", "Falha ao consultar cep na aba endereço");
-        console.log(`Error. ${error.message}.`);
-      });
+    this.Pessoa = null;
 
   }
-
 
   //begin:: Carregamento Básico da tela
   public ngOnInit() {
@@ -224,12 +191,11 @@ export class PessoaComponent implements OnInit {
     $(document).ready(function () {
 
 
-      $("select[name^=DP_Etnia]").val($("select[name^=DP_Etnia] option:first").val());
-
       $('body').css("background-image", "");
       $('body').addClass("k-header--fixed k-header-mobile--fixed k-subheader--enabled k-subheader--transparent k-aside--enabled k-aside--fixed k-page--loading");
+      document.title = 'Cadastro | Klinikos';
 
-
+      $("select[name^=DP_Etnia]").val($("select[name^=DP_Etnia] option:first").val());
 
       $('#k_table_1').on('click', 'input[name^=Prof_Coord]', function () {
         var id = '#' + $(this).attr('id') + '';
@@ -303,6 +269,90 @@ export class PessoaComponent implements OnInit {
   }
   //end:: Carregamento Básico da tela
 
+  //begin:: Consulta o nome do paciente/ Consulta e monta um grid com as opções
+  onConsultaNomeCompleto() {
+
+    var dp_nomecompleto = $("input[name^=DP_NomeCompleto]").val().trim().toUpperCase();
+
+    $('#divPesquisaNomeCompleto').addClass('show');
+
+    this.pessoaService.ConsultaNomeCompletoProfissional(dp_nomecompleto)
+      .subscribe(data => {
+
+        this.listaPessoaProfissional = data.result;
+
+
+      }, (error: HttpErrorResponse) => {
+        console.log(`Error. ${error.message}.`);
+      });
+
+
+
+    this.pessoaService.ConsultaNomeCompletoPaciente(dp_nomecompleto)
+      .subscribe(data => {
+
+        this.listaPessoaPaciente = data.result;
+
+      }, (error: HttpErrorResponse) => {
+        //this.Mensagens("erro", "Falha ao consultar cep na aba endereço");
+        console.log(`Error. ${error.message}.`);
+      });
+
+
+
+
+  }
+  //end:: Consulta o nome do paciente
+
+  //begin:: Consulta o nome social do paciente/ Consulta e monta um grid com as opções
+  onConsultaNomeSocial() {
+
+    var dp_nomesocial = $("input[name^=DP_NomeSocial]").val().trim().toUpperCase();
+
+    $('#divPesquisaNomeSocial').addClass('show');
+    $('#divPesquisaNomeCompleto').removeClass('show');
+
+    this.pessoaService.ConsultaNomeSocialProfissional(dp_nomesocial)
+      .subscribe(data => {
+
+        this.listaPessoaProfissional = data.result;
+
+
+      }, (error: HttpErrorResponse) => {
+        console.log(`Error. ${error.message}.`);
+      });
+
+
+
+    this.pessoaService.ConsultaNomeSocialPaciente(dp_nomesocial)
+      .subscribe(data => {
+
+        this.listaPessoaPaciente = data.result;
+
+      }, (error: HttpErrorResponse) => {
+        //this.Mensagens("erro", "Falha ao consultar cep na aba endereço");
+        console.log(`Error. ${error.message}.`);
+      });
+
+    console.log(this.listaPessoaProfissional);
+    console.log(this.listaPessoaPaciente);
+  }
+  //end:: Consulta o nome do paciente
+
+  //begin:: Fecha as pesquisas
+  onFechaPesquisa() {
+
+    if ($("#divPesquisaNomeCompleto").hasClass('show'))
+      $("#divPesquisaNomeCompleto").removeClass('show');
+
+    if ($("#divPesquisaLogradouro").hasClass('show'))
+      $("#divPesquisaLogradouro").removeClass('show');
+
+    if ($("#divPesquisaNomeSocial").hasClass('show'))
+      $("#divPesquisaNomeSocial").removeClass('show');
+  }
+  //end:: Fecha as pesquisas
+
   //begin:: validacao de formatação do cpf
   validarCPF(cpf) {
 
@@ -342,6 +392,131 @@ export class PessoaComponent implements OnInit {
     return true;
   }
   //end:: validacao de formatação do cpf
+
+  //begin:: validacao de formatação do cns
+  validaCNS(cns) {
+
+    var pis;
+    var resto;
+    var dv;
+    var soma;
+    var resultado;
+    var result;
+    var tamCNS = cns.length;
+    result = 0;
+
+
+    if ((cns.substring(0, 1) !== "7") && (cns.substring(0, 1) !== "8") && (cns.substring(0, 1) !== "9")) {
+
+      if ((tamCNS) !== 15) {
+        return false;
+      }
+      pis = cns.substring(0, 11);
+
+      soma = (((parseInt(pis.substring(0, 1))) * 15) +
+        ((parseInt(pis.substring(1, 2))) * 14) +
+        ((parseInt(pis.substring(2, 3))) * 13) +
+        ((parseInt(pis.substring(3, 4))) * 12) +
+        ((parseInt(pis.substring(4, 5))) * 11) +
+        ((parseInt(pis.substring(5, 6))) * 10) +
+        ((parseInt(pis.substring(6, 7))) * 9) +
+        ((parseInt(pis.substring(7, 8))) * 8) +
+        ((parseInt(pis.substring(8, 9))) * 7) +
+        ((parseInt(pis.substring(9, 10))) * 6) +
+        ((parseInt(pis.substring(10, 11))) * 5));
+
+
+      resto = soma % 11;
+      dv = 11 - resto;
+      if (dv === 11) {
+        dv = 0;
+      }
+
+
+      if (dv === 10) {
+        soma = (((parseInt(pis.substring(0, 1))) * 15) +
+          ((parseInt(pis.substring(1, 2))) * 14) +
+          ((parseInt(pis.substring(2, 3))) * 13) +
+          ((parseInt(pis.substring(3, 4))) * 12) +
+          ((parseInt(pis.substring(4, 5))) * 11) +
+          ((parseInt(pis.substring(5, 6))) * 10) +
+          ((parseInt(pis.substring(6, 7))) * 9) +
+          ((parseInt(pis.substring(7, 8))) * 8) +
+          ((parseInt(pis.substring(8, 9))) * 7) +
+          ((parseInt(pis.substring(9, 10))) * 6) +
+          ((parseInt(pis.substring(10, 11))) * 5) + 2);
+        resto = soma % 11;
+        dv = 11 - resto;
+        resultado = pis + "001" + String(dv);
+      } else {
+        resultado = pis + "000" + String(dv);
+      }
+      if (cns !== resultado) {
+        return false;
+      } else {
+        return true;
+      }
+    }
+
+
+    if (pis === "") {
+      return false;
+    }
+
+
+    soma = ((parseInt(pis.substring(0, 1), 10)) * 15)
+      + ((parseInt(pis.substring(1, 2), 10)) * 14)
+      + ((parseInt(pis.substring(2, 3), 10)) * 13)
+      + ((parseInt(pis.substring(3, 4), 10)) * 12)
+      + ((parseInt(pis.substring(4, 5), 10)) * 11)
+      + ((parseInt(pis.substring(5, 6), 10)) * 10)
+      + ((parseInt(pis.substring(6, 7), 10)) * 9)
+      + ((parseInt(pis.substring(7, 8), 10)) * 8)
+      + ((parseInt(pis.substring(8, 9), 10)) * 7)
+      + ((parseInt(pis.substring(9, 10), 10)) * 6)
+      + ((parseInt(pis.substring(10, 11), 10)) * 5)
+      + ((parseInt(pis.substring(11, 12), 10)) * 4)
+      + ((parseInt(pis.substring(12, 13), 10)) * 3)
+      + ((parseInt(pis.substring(13, 14), 10)) * 2)
+      + ((parseInt(pis.substring(14, 15), 10)) * 1);
+
+    resto = soma % 11;
+    if (resto === 0) {
+      return true;
+    }
+    else {
+      return false;
+    }
+
+  }
+  //end:: validacao de formatação do cns
+
+  //begin:: validacao de formatação do pis
+  validaPIS(pis) {
+
+    var multiplicador = [3, 2, 9, 8, 7, 6, 5, 4, 3, 2];
+    var soma = 0;
+    var resto = 0;
+
+    if (pis.trim().length !== 11)
+      return false;
+
+    pis = pis.trim();
+    pis = pis.replace("-", "").replace(".", "").padStart(11, '0');
+
+    for (var i = 0; i < 10; i++)
+      soma += parseInt(pis.charAt(i)) * multiplicador[i];
+
+    resto = soma % 11;
+
+    if (resto < 2)
+      resto = 0;
+    else
+      resto = 11 - resto;
+
+    return pis.endsWith(resto.toString());
+  }
+  //end:: validacao de formatação do pis
 
   //begin:: calcula idade
   public onCalculaIdade() {
@@ -452,17 +627,9 @@ export class PessoaComponent implements OnInit {
           } else {
 
 
-            var profissional = data.result;
+            this.onSelectedProfissional(data.result);
 
             toastr.success("Profissional encontrado");
-
-            this.CarregaPessoa(profissional);
-
-            $('#DP_TipoCadastro').prop('checked', true);
-            $('#box_dadosprof').removeClass('oculta');
-            $('#collapseTwo1').addClass('show');
-
-            this.listaLotacaoProfissional = profissional.lotacoesProfissional;
 
           }
 
@@ -477,12 +644,204 @@ export class PessoaComponent implements OnInit {
   }
   //end:: validacao e consulta de CPF
 
+  //begin:: validacao e consulta de CNS
+  onConsultaCns(e) {
+
+    // var
+    var dp_cns = e.target.value.replace(' ', '').replace(' ', '').replace(' ', '').replace('_', '');
+
+    // não vazio/mask
+    // retorno validação
+    var verifica = this.validaCNS(dp_cns);
+    // exibe mensagem de erro
+    if (verifica === false) {
+      $('#msg_cns').removeClass('oculta');
+    }
+    else {
+      // oculta mensagem de erro
+      $('#msg_cns').addClass('oculta');
+
+
+      this.pessoaService.ConsultaCnsProfissional(dp_cns).subscribe(data => {
+
+        if (data.statusCode != "302") {
+
+          this.pessoaService.ConsultaCnsPaciente(dp_cns).subscribe(subdata => {
+
+            if (subdata.statusCode == "302") {
+              toastr.success("Paciente encontrado");
+
+              var paciente = subdata.result;
+
+              if (paciente.recemnascido == true) {
+
+                $("input[name^=DP_RecemNascido]").prop("checked", true);
+                $('#box_numprontmae, #box_nomeRN').removeClass('oculta');
+                $('#box_nomecomp, #box_nomesocial').addClass('oculta');
+                $("input[name^=DP_NomeRN]").val(paciente.nomeCompleto);
+                $("input[name^=DP_NumProntuarioMae]").val(paciente.numeroProntuario);
+
+              }
+
+              this.CarregaPessoa(paciente);
+            }
+          }, (error: HttpErrorResponse) => {
+
+            this.Mensagens("erro", "Falha ao carregar Raças na aba Dados Pessoais");
+            console.log(`Error. ${error.message}.`);
+          });
+        } else {
+
+
+          this.onSelectedProfissional(data.result);
+
+          toastr.success("Profissional encontrado");
+
+        }
+
+      }, (error: HttpErrorResponse) => {
+
+        this.Mensagens("erro", "Falha ao carregar Raças na aba Dados Pessoais");
+        console.log(`Error. ${error.message}.`);
+      });
+
+    }
+
+
+  }
+  //end:: validacao e consulta de CNS
+
+  //begin:: validacao e consulta de PIS
+  onConsultaPis(e) {
+
+    // var
+    var dp_pis = e.target.value.replace('.', '').replace('.', '').replace('-', '').replace('_', '');
+
+    // não vazio/mask
+    // retorno validação
+    var verifica = this.validaPIS(dp_pis);
+    // exibe mensagem de erro
+    if (verifica === false) {
+      $('#msg_pis').removeClass('oculta');
+    }
+    else {
+      // oculta mensagem de erro
+      $('#msg_pis').addClass('oculta');
+
+
+      this.pessoaService.ConsultaPisProfissional(dp_pis).subscribe(data => {
+
+        if (data.statusCode != "302") {
+
+          this.pessoaService.ConsultaPisPaciente(dp_pis).subscribe(subdata => {
+
+            if (subdata.statusCode == "302") {
+              toastr.success("Paciente encontrado");
+
+              var paciente = subdata.result;
+
+              if (paciente.recemnascido == true) {
+
+                $("input[name^=DP_RecemNascido]").prop("checked", true);
+                $('#box_numprontmae, #box_nomeRN').removeClass('oculta');
+                $('#box_nomecomp, #box_nomesocial').addClass('oculta');
+                $("input[name^=DP_NomeRN]").val(paciente.nomeCompleto);
+                $("input[name^=DP_NumProntuarioMae]").val(paciente.numeroProntuario);
+
+              }
+
+              this.CarregaPessoa(paciente);
+            }
+          }, (error: HttpErrorResponse) => {
+
+            this.Mensagens("erro", "Falha ao carregar Raças na aba Dados Pessoais");
+            console.log(`Error. ${error.message}.`);
+          });
+        } else {
+
+
+          this.onSelectedProfissional(data.result);
+
+          toastr.success("Profissional encontrado");
+
+        }
+
+      }, (error: HttpErrorResponse) => {
+
+        this.Mensagens("erro", "Falha ao carregar Raças na aba Dados Pessoais");
+        console.log(`Error. ${error.message}.`);
+      });
+
+    }
+
+
+  }
+  //end:: validacao e consulta de PIS
+
+  //begin:: Carregamento do Profissional pela Busca
+  onSelectedProfissional(profissional: PessoaProfissional) {
+
+    $("input[name^=DP_CPF]").val(profissional.cpf);
+
+    this.pessoaService.ConsultaContatosProfissional(profissional.pessoaId).subscribe(data => {
+
+      this.listaContatos = data.result;
+
+    }, error => {
+      this.Mensagens("erro", "Falha ao carregar Etnias na aba Dados Pessoais");
+      console.log(`Error. ${error._body}.`);;
+    });
+
+    console.log(this.listaContatos);
+
+
+   // this.CarregaPessoa(profissional);
+
+    $('#DP_TipoCadastro').prop('checked', true);
+    $('#box_dadosprof').removeClass('oculta');
+
+    this.pessoaService.ConsultaLotacoesProfissional(profissional.pessoaId).subscribe(data => {
+
+      this.listaLotacaoProfissional = data.result;
+    }, error => {
+      this.Mensagens("erro", "Falha ao carregar Etnias na aba Dados Pessoais");
+      console.log(`Error. ${error._body}.`);;
+      });
+
+
+    this.onFechaPesquisa();
+
+  }
+  //end::  Carregamento do Profissional pela Busca
+
+  //begin:: Carregamento do Paciente pela Busca
+  onSelectedPaciente(paciente: PessoaPaciente) {
+
+    $("input[name^=DP_CPF]").val(paciente.cpf);
+
+
+    if (paciente.recemNascido == true) {
+
+      $("input[name^=DP_RecemNascido]").prop("checked", true);
+      $('#box_numprontmae, #box_nomeRN').removeClass('oculta');
+      $('#box_nomecomp, #box_nomesocial').addClass('oculta');
+      $("input[name^=DP_NomeRN]").val(paciente.nomeCompleto);
+      $("input[name^=DP_NumProntuarioMae]").val(paciente.numeroProntuario);
+
+    }
+
+    this.CarregaPessoa(paciente);
+
+    this.onFechaPesquisa();
+
+  }
+  //end::  Carregamento do Paciente pela Busca
+
   //begin:: carregamento padrão de campos para a tela
   CarregaPessoa(pessoa: any) {
 
     this.Pessoa = pessoa;
 
-    console.log(pessoa)
 
     $("input[name^=DP_NomeCompleto]").val(pessoa.nomeCompleto);
     $("input[name^=DP_NomeSocial]").val(pessoa.nomeSocial);
@@ -546,30 +905,7 @@ export class PessoaComponent implements OnInit {
 
     $("input[name^=DP_CNS]").val(pessoa.cns);
 
-
-    for (var i = 0; i < pessoa.pessoaContatos.length; i++) {
-
-      var pessoacontato: PessoaContato = {
-
-        ativo: pessoa.pessoaContatos[i].ativo,
-        celular: pessoa.pessoaContatos[i].celular,
-        email: pessoa.pessoaContatos[i].email,
-        telefone: pessoa.pessoaContatos[i].telefone
-      };
-
-      if (i > 0) {
-        this.onAdicionaNovosCamposContato();
-        this.listaContatos[i] = pessoacontato;
-      }
-
-
-      $("input[name^=Cont_Telefone" + i + "]").val(pessoa.pessoaContatos[i].telefone);
-      $("input[name^=Cont_Celular" + i + "]").val(pessoa.pessoaContatos[i].celular);
-      $("input[name^=Cont_Email" + i + "]").val(pessoa.pessoaContatos[i].email);
-
-
-    }
-
+    this.CarregaPessoaContatos(pessoa.pessoaContatos);
 
     $("input[name^=DP_CEP]").val(pessoa.cep);
     $("input[name^=DP_Logradouro]").val(pessoa.logradouro);
@@ -659,17 +995,40 @@ export class PessoaComponent implements OnInit {
       if (pessoa.escolaridade != null)
         this.Escolaridade = pessoa.escolaridade;
 
-      if (pessoa.situacaoFamiliarConjugal != null) {
-
+      if (pessoa.situacaoFamiliarConjugal != null)
         this.SituacaoFamiliarConjugal = pessoa.situacaoFamiliarConjugal;
-        console.log(this.SituacaoFamiliarConjugal.situacaoFamiliarConjugalId);
-        console.log(pessoa.situacaoFamiliarConjugalsituacaoFamiliarConjugalId);
-      }
+
 
       this.onCarregaCamposDadosComplemenares();
     }
   }
   //end:: carregamento padrão de campos para a tela
+
+  CarregaPessoaContatos(contatos: Array<PessoaContato>) {
+
+    for (var i = 0; i < contatos.length; i++) {
+
+      var pessoacontato: PessoaContato = {
+
+        ativo: contatos[i].ativo,
+        celular: contatos[i].celular,
+        email: contatos[i].email,
+        telefone: contatos[i].telefone
+      };
+
+      if (i > 0) {
+        this.onAdicionaNovosCamposContato();
+        this.listaContatos[i] = pessoacontato;
+      }
+
+
+      $("input[name^=Cont_Telefone" + i + "]").val(contatos[i].telefone);
+      $("input[name^=Cont_Celular" + i + "]").val(contatos[i].celular);
+      $("input[name^=Cont_Email" + i + "]").val(contatos[i].email);
+
+
+    }
+  }
 
   //begin:: Habilita combo indigena / habilita a combo para caso selecionar indígena
   onSelectedRaca() {
@@ -871,8 +1230,6 @@ export class PessoaComponent implements OnInit {
       this.pessoaService.BindSituacaoFamiliarConjugal().subscribe(data => {
         this.listaSituacaoFamiliarConjugal = data.result.sort(sortBy('codigoSituacaoFamiliarConjugal'));
 
-        console.log(this.SituacaoFamiliarConjugal.situacaoFamiliarConjugalId);
-
         for (let i = 0; i < this.listaSituacaoFamiliarConjugal.length; i++) {
 
           $("#divSituacaoFamiliarConjugal").append("<label class='k-radio k-radio--brand' id='radioSituacaoFamiliarConjugal" + i + "'></label>");
@@ -950,7 +1307,6 @@ export class PessoaComponent implements OnInit {
 
   //begin:: Adiciona Lotacao Profissional / Adiciona uma nova lotação ao profissional na aba profissional
   onAdicionaLotacao() {
-
 
     if (this.TipoProfissional !== undefined) {
 
@@ -1129,7 +1485,7 @@ export class PessoaComponent implements OnInit {
             });
 
         } else {
-                 $('#divPesquisaLogradouro').removeClass('show');
+          $('#divPesquisaLogradouro').removeClass('show');
           //$('#divPesquisaLogradouro').addClass('oculta');
         }
       }
@@ -1347,62 +1703,64 @@ export class PessoaComponent implements OnInit {
 
     pessoa.ativo = true;
 
+    if (this.Pessoa == null) {
 
-    if (this.listaLotacaoProfissional.length > 0) {
+      if (this.listaLotacaoProfissional.length > 0) {
 
-      pessoaProfissional = {};
-      this.AdicionarContato(pessoa);
-      pessoaProfissional = pessoa;
+        pessoaProfissional = {};
+        this.AdicionarContato(pessoa);
+        pessoaProfissional = pessoa;
 
-      pessoaProfissional.lotacoesProfissional = [];
-      pessoaProfissional.lotacoesProfissional = this.listaLotacaoProfissional;
+        pessoaProfissional.lotacoesProfissional = [];
+        pessoaProfissional.lotacoesProfissional = this.listaLotacaoProfissional;
 
-      this.pessoaService.SalvarPessoaProfissional(pessoaProfissional).subscribe(data => {
+        this.pessoaService.SalvarPessoaProfissional(pessoaProfissional).subscribe(data => {
 
-        if (data.statusCode == "409") {
-          swal("Profissional já cadastrado!", "CPF ou CNS ou PIS/PASEP já existente na Base", "error");
+          if (data.statusCode == "409") {
+            swal("Profissional já cadastrado!", "CPF ou CNS ou PIS/PASEP já existente na Base", "error");
 
-        } else {
+          } else {
 
-          this.Mensagens("sucesso", "Profissional salvo com sucesso");
+            this.Mensagens("sucesso", "Profissional salvo com sucesso");
+            this.LimparCampos(p);
+
+          }
+        }, (error: HttpErrorResponse) => {
+          this.Mensagens("erro", "Falha ao comunicar com API");
+          console.log(`Error. ${error.message}.`);
+        },
+        );
+
+
+      } else {
+
+        pessoaPaciente = {};
+
+        if (this.listaContatos.length > 0)
+          this.AdicionarContato(pessoa);
+
+        pessoaPaciente = pessoa;
+
+        pessoaPaciente.recemNascido = p.value.DP_RecemNascido === true;
+
+        if (p.value.DP_NumProntuarioMae !== "")
+          pessoaPaciente.numeroProntuario = p.value.DP_NumProntuarioMae.toUpperCase();
+
+        if (p.value.DP_Descricao_Nao_Identificado !== "")
+          pessoaPaciente.descricaoNaoIdentificado = p.value.DP_Descricao_Nao_Identificado.toUpperCase();
+
+
+        this.pessoaService.SalvarPessoaPaciente(pessoaPaciente).subscribe(data => {
+
+          this.Mensagens("sucesso", "Paciente salvo com sucesso");
           this.LimparCampos(p);
 
-        }
-      }, (error: HttpErrorResponse) => {
-        this.Mensagens("erro", "Falha ao comunicar com API");
-        console.log(`Error. ${error.message}.`);
-      },
-      );
-
-
-    } else {
-
-      pessoaPaciente = {};
-
-      if (this.listaContatos.length > 0)
-        this.AdicionarContato(pessoa);
-
-      pessoaPaciente = pessoa;
-
-      pessoaPaciente.recemNascido = p.value.DP_RecemNascido === true;
-
-      if (p.value.DP_NumProntuarioMae !== "")
-        pessoaPaciente.numeroProntuario = p.value.DP_NumProntuarioMae.toUpperCase();
-
-      if (p.value.DP_Descricao_Nao_Identificado !== "")
-        pessoaPaciente.descricaoNaoIdentificado = p.value.DP_Descricao_Nao_Identificado.toUpperCase();
-
-
-      this.pessoaService.SalvarPessoaPaciente(pessoaPaciente).subscribe(data => {
-
-        this.Mensagens("sucesso", "Paciente salvo com sucesso");
-        this.LimparCampos(p);
-
-      }, (error: HttpErrorResponse) => {
-        this.Mensagens("erro", "Falha ao comunicar com API");
-        console.log(`Error. ${error.message}.`);
-      },
-      );
+        }, (error: HttpErrorResponse) => {
+          this.Mensagens("erro", "Falha ao comunicar com API");
+          console.log(`Error. ${error.message}.`);
+        },
+        );
+      }
     }
   }
   //end:: Salvar Pessoa

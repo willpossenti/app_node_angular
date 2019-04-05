@@ -56,8 +56,7 @@
                           <div class="col-lg-6" id="box_nomecompleto">
                             <div class="" id="box_nomecomp">
                               <label>Nome Completo</label>
-                              <input type="text" class="form-control maisc" name="DP_NomeCompleto" placeholder="" maxlength="140" autocomplete="off" tabindex="1" autofocus (keyup)="onConsultaNomeCompleto()" ngModel>
-
+                              <input type="text" class="form-control maisc" name="DP_NomeCompleto" placeholder="" maxlength="140" autocomplete="off" tabindex="1" autofocus (keyup)="onConsultaNomeCompleto()"  ngModel>
 
 
                               <div class="dropdown-menu dropdown-menu-fit dropdown-menu-right dropdown-menu-top-unround dropdown-menu-anim dropdown-menu-lg" x-placement="bottom-end" style="position: absolute; left: 10px;  width: 95%; will-change: transform; top: 65px;" id="divPesquisaNomeCompleto">
@@ -76,7 +75,7 @@
                                             <i class="fa fa-user-md ml-2" style="font-size:1.5em; color:#069;"></i>
                                           </div>
                                           <div class="k-quick-search__item-wrapper">
-                                            <a href="#" class="k-quick-search__item-title">
+                                            <a class="k-quick-search__item-title"  style="cursor:pointer;" (click)="onSelectedProfissional(profissional)">
                                               {{profissional.nomeCompleto}}  - {{profissional.nascimento | date: 'dd/MM/yyyy'}}
                                             </a>
                                             <div class="k-quick-search__item-desc">
@@ -94,43 +93,19 @@
                                             <i class="fa fa-user ml-2" style="font-size:1.5em; color:#999;"></i>
                                           </div>
                                           <div class="k-quick-search__item-wrapper">
-                                            <a href="#" class="k-quick-search__item-title">
+                                            <a class="k-quick-search__item-title"  style="cursor:pointer;" (click)="onSelectedPaciente(paciente)">
                                               {{paciente.nomeCompleto}}  - {{paciente.nascimento | date: 'dd/MM/yyyy'}}
                                             </a>
                                             <div class="k-quick-search__item-desc">
                                               {{paciente.nomeMae}}
                                             </div>
                                           </div>
-   
-                                    
                                         </div>
                                       </div>
-
-
-
-                                    <!--
-  <div class="k-quick-search__category mt-2">
-    Pacientes
-  </div>
-  <div class="k-quick-search__section">
-  </div>
-   -->
                                   </div>
-                                    <!--end::k-quick-search__result-->
-
                                   </div>
                                 </div>
-
-
-
-
-
-
-
-
                               </div>
-
-
                             </div>
                      
 
@@ -150,8 +125,59 @@
                             <!-- id="box_nomesocial" -->
                             <div class="" id="box_nomesocial">
                               <label>Nome Social</label>
-                              <input type="text" class="form-control maisc" name="DP_NomeSocial" placeholder="" maxlength="140" tabindex="2" ngModel>
+                              <input type="text" class="form-control maisc" name="DP_NomeSocial" placeholder="" maxlength="140" tabindex="2" (keyup)="onConsultaNomeSocial()" ngModel>
                               <!-- <span class="form-text text-muted">Please enter your contact number</span> -->
+
+                              <div class="dropdown-menu dropdown-menu-fit dropdown-menu-right dropdown-menu-top-unround dropdown-menu-anim dropdown-menu-lg" x-placement="bottom-end" style="position: absolute; left: 10px;  width: 95%; will-change: transform; top: 65px;" id="divPesquisaNomeSocial">
+
+                                <div class="k-quick-search k-quick-search--dropdown k-quick-search--result-compact k-quick-search--has-result" id="k_quick_search_dropdown">
+
+                                  <div class="k-quick-search__wrapper k-scroll ps ps--active-y m-0 p-0" data-scroll="true" data-height="325" data-mobile-height="200" style="overflow: hidden; height: 325px;">
+
+                                    <!--begin::k-quick-search__result-->
+                                    <div class="k-quick-search__result">
+
+                                      <div class="k-quick-search__category border-bottom text-primary">Profissionais</div>
+                                      <div class="k-quick-search__section p-0 mb-1" *ngFor="let profissional of listaPessoaProfissional;">
+                                        <div class="k-quick-search__item">
+                                          <div class="k-quick-search__item-img k-quick-search__item-img--file">
+                                            <i class="fa fa-user-md ml-2" style="font-size:1.5em; color:#069;"></i>
+                                          </div>
+                                          <div class="k-quick-search__item-wrapper">
+                                            <a class="k-quick-search__item-title" style="cursor:pointer;" (click)="onSelectedProfissional(profissional)">
+                                              {{profissional.nomeSocial}}  - {{profissional.nascimento | date: 'dd/MM/yyyy'}}
+                                            </a>
+                                            <div class="k-quick-search__item-desc">
+                                              {{profissional.nomeMae}}
+                                            </div>
+                                          </div>
+
+                                        </div>
+                                      </div>
+
+                                      <div class="k-quick-search__category mt-2 border-bottom text-primary">Pacientes</div>
+                                      <div class="k-quick-search__section p-0 mb-1" *ngFor="let paciente of listaPessoaPaciente;">
+                                        <div class="k-quick-search__item">
+                                          <div class="k-quick-search__item-img k-quick-search__item-img--file">
+                                            <i class="fa fa-user ml-2" style="font-size:1.5em; color:#999;"></i>
+                                          </div>
+                                          <div class="k-quick-search__item-wrapper">
+                                            <a class="k-quick-search__item-title" style="cursor:pointer;" (click)="onSelectedPaciente(paciente)">
+                                              {{paciente.nomeSocial}}  - {{paciente.nascimento | date: 'dd/MM/yyyy'}}
+                                            </a>
+                                            <div class="k-quick-search__item-desc">
+                                              {{paciente.nomeMae}}
+                                            </div>
+                                          </div>
+                                        </div>
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+
+
+
                             </div>
                             <div class="oculta" id="box_nomeRN">
                               <label>Nome do Recém Nascido</label>
@@ -320,7 +346,7 @@
                         <div class="form-group row">
                           <div class="col-lg-6">
                             <label>Cartão Nacional de Saúde</label>
-                            <input type="text" class="form-control mask_cns" name="DP_CNS" id="DP_CNS" value="" tabindex="25" maxlength="15" ngModel>
+                            <input type="text" class="form-control mask_cns" name="DP_CNS" id="DP_CNS" value="" tabindex="25" maxlength="15" (blur)="onConsultaCns($event)" ngModel>
                             <span id="msg_cns" class="form-text text-danger oculta">Informe um CNS válido</span>
                           </div>
 
@@ -472,15 +498,7 @@
 
                       <!--begin::Portlet 3-->
                       <div class="k-portlet">
-                        <!--
-                        <div class="k-portlet__head">
-                            <div class="k-portlet__head-label">
-                                <h3 class="k-portlet__head-title">
-                                    Contatos
-                                </h3>
-                            </div>
-                        </div>
-                        -->
+
                         <div class="k-portlet__body p-1" id="bodyContact">
 
                           <div class="form-group row m-0 p-0">
@@ -498,15 +516,10 @@
                             <div class="col-lg-3">
                               <label>Celular</label>
                               <input type="text" class="form-control mask_mobile" name="Cont_Celular0" maxlength="20" value="" tabindex="22">
-                              <!-- <span class="form-text text-muted">Please enter your contact number</span> -->
                             </div>
                             <div class="col-lg-5">
                               <label>E-mail</label>
                               <input type="email" class="form-control minus" name="Cont_Email0" value="" tabindex="23">
-                              <!--<div class="input-group-append">
-                                <button class="btn btn-outline-secondary" type="button" title="Editar"><i class="fa fa-edit fa-fw"></i></button>
-                                <button class="btn btn-outline-secondary" type="button" title="Excluir"><i class="fa fa-trash fa-fw"></i></button>
-                              </div>-->
                               <span class="form-text text-muted">Campo obrigatório após preenchimento de Dados Profissionais</span>
                             </div>
                             <div class="col-lg-1">
@@ -515,11 +528,6 @@
                                 <button class="btn btn-outline-secondary" type="button" title="Excluir" id="btnExcluirContato0" (click)="onAdicionaContato()"><i class="fa fa-trash fa-fw"></i></button>
                               </div>
                             </div>
-                            <!--<div class="col-lg-2">
-                              <label class="d-block">&nbsp;</label>
-                              <button type="button" class="btn btn-metal" id="btnAddContato" data-toggle="popover" data-placement="top" data-trigger="hover" data-content="Adicionar campos para contato" tabindex="24" (click)="onAdicionaContato()"><i class="fa fa-plus"></i> Adicionar</button>
-
-                            </div>-->
                           </div>
 
                         </div>
@@ -540,27 +548,19 @@
 
                       <!--begin::Portlet 4-->
                       <div class="k-portlet">
-                        <!--
-                            <div class="k-portlet__head">
-                                <div class="k-portlet__head-label">
-                                    <h3 class="k-portlet__head-title">
-                                        Endereço
-                                    </h3>
-                                </div>
-                            </div>
-                        -->
+
                         <div class="k-portlet__body">
                           <div class="form-group row">
                             <div class="col-lg-2">
                               <label>CEP</label>
-                              <input type="text" class="form-control mask_cep" name="DP_CEP" id="DP_CEP" maxlength="11" value="" tabindex="25" (blur)="onBuscaCep()">
+                              <input type="text" class="form-control mask_cep" name="DP_CEP" id="DP_CEP" maxlength="11" value="" tabindex="25" (blur)="onBuscaCep()" (focus)="onFechaPesquisa()">
                               <span id="msg_cep" class="form-text text-danger oculta">Informe um CEP válido</span>
                             </div>
                             <div class="col-lg-6">
                               <label>Logradouro</label>
                               <input type="text" class="form-control" name="DP_Logradouro" placeholder="" maxlength="150" value="" tabindex="26" (keypress)="onBuscaCep()" ngModel>
 
-                              <div class="dropdown-menu dropdown-menu-fit dropdown-menu-right dropdown-menu-top-unround dropdown-menu-anim dropdown-menu-lg" x-placement="bottom-end" style="position: absolute; left: 10px;  width: 95%; will-change: transform; top: 65px;" id="divPesquisaLogradouro">
+                              <div class="dropdown-menu dropdown-menu-fit dropdown-menu-right dropdown-menu-top-unround dropdown-menu-anim dropdown-menu-lg" x-placement="bottom-end" style="position: absolute; left: 10px;  width: 95%; will-change: transform; top: 65px;" id="divPesquisaLogradouro" >
 
                                 <div class="k-quick-search k-quick-search--dropdown k-quick-search--result-compact k-quick-search--has-result" id="k_quick_search_dropdown">
 
@@ -576,7 +576,7 @@
                                             <i class="fa fa-map-marker-alt ml-2" style="font-size:1.5em; color:#069;"></i>
                                           </div>
                                           <div class="k-quick-search__item-wrapper">
-                                            <a href="#" class="k-quick-search__item-title">
+                                            <a class="k-quick-search__item-title" style="cursor:pointer;" (click)="onSelectedCep(cep)">
                                               {{cep.logradouro}} 
                                             </a>
                                             <div class="k-quick-search__item-desc">
@@ -592,11 +592,11 @@
                             </div>
                             <div class="col-lg-2">
                               <label>Número</label>
-                              <input type="text" class="form-control" name="DP_Numero" placeholder="" maxlength="10" value="" tabindex="27" (keyup)="onLimpaConsultaCep()" ngModel>
+                              <input type="text" class="form-control" name="DP_Numero" placeholder="" maxlength="10" value="" tabindex="27" (focus)="onFechaPesquisa()" ngModel>
                             </div>
                             <div class="col-lg-2">
                               <label>Complemento</label>
-                              <input type="text" class="form-control" name="DP_Complemento" placeholder="" maxlength="10" value="" tabindex="28" ngModel>
+                              <input type="text" class="form-control" name="DP_Complemento" placeholder="" maxlength="10" value="" tabindex="28" (focus)="onFechaPesquisa()" ngModel>
                             </div>
                           </div>
                           <div class="form-group row">
@@ -608,14 +608,14 @@
                                 <option>-Selecione-</option>
                               </select>-->
 
-                              <select class="form-control" name="DP_Endereco_Estado" tabindex="31" [(ngModel)]="EstadoEndereco" (change)="onSelectedUfEndereco()">
+                              <select class="form-control" name="DP_Endereco_Estado" tabindex="31" [(ngModel)]="EstadoEndereco" (change)="onSelectedUfEndereco()" (focus)="onFechaPesquisa()">
                                 <option value="-1">-- Selecione --</option>
                                 <option *ngFor="let estadoendereco of listaEstado| orderBy: orderNome" [ngValue]="estadoendereco">{{estadoendereco.nome}}</option>
                               </select>
                             </div>
                             <div class="col-lg-4">
                               <label>Munícipio</label>
-                              <select class="form-control" name="DP_Endereco_Cidade" tabindex="31" [(ngModel)]="CidadeEndereco">
+                              <select class="form-control" name="DP_Endereco_Cidade" tabindex="31" [(ngModel)]="CidadeEndereco" (focus)="onFechaPesquisa()">
                                 <option value="-1">-- Selecione --</option>
                                 <option *ngFor="let cidadeendereco of listaCidadeEndereco | orderBy: orderNome" [ngValue]="cidadeendereco">{{cidadeendereco.nome}}</option>
                               </select>
@@ -625,7 +625,7 @@
                               <!--<select class="form-control" tabindex="29">
                                 <option>-Selecione-</option>
                               </select>-->
-                              <input type="text" class="form-control" name="DP_Bairro" placeholder="" maxlength="100" value="" tabindex="29" ngModel>
+                              <input type="text" class="form-control" name="DP_Bairro" placeholder="" maxlength="100" value="" tabindex="29" (focus)="onFechaPesquisa()" ngModel>
                             </div>
                           </div>
                         </div>
@@ -659,7 +659,7 @@
                           <div class="form-group row">
                             <div class="col-lg-3">
                               <label>PIS / PASEP</label>
-                              <input type="text" class="form-control  mask_pis" name="DC_PISPASEP" placeholder="" maxlength="15" tabindex="32">
+                              <input type="text" class="form-control  mask_pis" name="DC_PISPASEP" placeholder="" maxlength="15" (blur)="onConsultaPis($event)" tabindex="32">
                               <span id="msg_pis" class="form-text text-danger oculta">Informe um PIS válido</span>
                             </div>
                             <div class="col-lg-3">

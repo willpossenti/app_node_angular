@@ -66,22 +66,42 @@ export class PessoaService {
 
   }
   BuscarCidade(nomecidade: string) { return this.http.get<Return>(`${this.baseUrl}cidade/buscacidade/` + nomecidade, this.httpOptions); }
-
   ConsultaCpfProfissional(cpf: string) {
     return this.http.get<Return>(`${this.baseUrl}pessoa/pessoaprofissional/consultacpf/` + cpf, this.httpOptions);
   }
   ConsultaCpfPaciente(cpf: string) {
     return this.http.get<Return>(`${this.baseUrl}pessoa/pessoapaciente/consultacpf/` + cpf, this.httpOptions);
   }
-
-  ConsultaNomePaciente(nome: string) {
+  ConsultaCnsProfissional(cns: string) {
+    return this.http.get<Return>(`${this.baseUrl}pessoa/pessoaprofissional/consultacns/` + cns, this.httpOptions);
+  }
+  ConsultaCnsPaciente(cns: string) {
+    return this.http.get<Return>(`${this.baseUrl}pessoa/pessoapaciente/consultacns/` + cns, this.httpOptions);
+  }
+  ConsultaPisProfissional(pis: string) {
+    return this.http.get<Return>(`${this.baseUrl}pessoa/pessoaprofissional/consultapis/` + pis, this.httpOptions);
+  }
+  ConsultaPisPaciente(pis: string) {
+    return this.http.get<Return>(`${this.baseUrl}pessoa/pessoapaciente/consultapis/` + pis, this.httpOptions);
+  }
+  ConsultaNomeCompletoPaciente(nome: string) {
     return this.http.get<Return>(`${this.baseUrl}pessoa/pessoapaciente/consultanome/` + nome, this.httpOptions);
   }
-
-  ConsultaNomeProfissional(nome: string) {
+  ConsultaNomeCompletoProfissional(nome: string) {
     return this.http.get<Return>(`${this.baseUrl}pessoa/pessoaprofissional/consultanome/` + nome, this.httpOptions);
   }
-
+  ConsultaNomeSocialPaciente(nome: string) {
+    return this.http.get<Return>(`${this.baseUrl}pessoa/pessoapaciente/consultanomesocial/` + nome, this.httpOptions);
+  }
+  ConsultaNomeSocialProfissional(nome: string) {
+    return this.http.get<Return>(`${this.baseUrl}pessoa/pessoaprofissional/consultanomesocial/` + nome, this.httpOptions);
+  }
+  ConsultaLotacoesProfissional(pessoaId: string) {
+    return this.http.get<Return>(`${this.baseUrl}lotacaoprofissional/consultalotacoesprofissional/` + pessoaId, this.httpOptions);
+  }
+  ConsultaContatosProfissional(pessoaId: string) {
+    return this.http.get<Return>(`${this.baseUrl}/pessoa/pessoacontato/` + pessoaId, this.httpOptions);
+  }
   SalvarPessoaPaciente(pessoapaciente: PessoaPaciente) {
 
     return this.http.post<Return>(`${this.baseUrl}pessoa/pessoapaciente/incluir`, pessoapaciente, this.httpOptions);
