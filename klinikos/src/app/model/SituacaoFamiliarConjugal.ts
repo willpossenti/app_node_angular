@@ -1,7 +1,7 @@
 export interface SituacaoFamiliarConjugal {
 
-  situacaofamiliarconjugalId: string;
-  codigosituacaofamiliarconjugal: string;
+  situacaoFamiliarConjugalId: string;
+  codigoSituacaoFamiliarConjugal: string;
   descricao: string;
   ativo: string;
 }

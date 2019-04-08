@@ -2,11 +2,15 @@
   "ExpandedNodes": [
     "",
     "\\src",
-    "\\src\\assets",
+    "\\src\\app",
+    "\\src\\app\\controller",
     "\\src\\assets\\app",
-    "\\src\\assets\\app\\custom",
-    "\\src\\assets\\app\\custom\\general"
+    "\\src\\assets\\app\\bundle",
+    "\\src\\assets\\demo",
+    "\\src\\assets\\demo\\default",
+    "\\src\\assets\\demo\\default\\base",
+    "\\src\\assets\\demo\\demo3"
   ],
-  "SelectedNode": "\\src\\assets\\app\\custom\\general\\interface.js",
+  "SelectedNode": "\\src\\index.html",
   "PreviewInSolutionExplorer": false
 }

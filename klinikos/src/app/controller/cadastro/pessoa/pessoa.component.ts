@@ -26,16 +26,14 @@ import { Router } from '@angular/router';
 import { sortBy } from 'sort-by-typescript';
 import { Pessoa } from '../../../model/Pessoa';
 import { AgeFromDate } from 'age-calculator';
-import { DatePipe } from '@angular/common';
 import * as swal from '../../../../assets/vendors/general/sweetalert2/dist/sweetalert2.js';
-import { equal } from 'assert';
 import { Cep } from '../../../model/Cep';
+
 
 
 @Component({
   selector: 'app-pessoa',
-  templateUrl: './pessoa.component.html',
-
+  templateUrl: './pessoa.component.html'
 })
 export class PessoaComponent implements OnInit {
 
@@ -57,7 +55,10 @@ export class PessoaComponent implements OnInit {
   listaTipoProfissional: Array<TipoProfissional>;
   listaLotacaoProfissional: Array<LotacaoProfissional>;
   listaCep: Array<Cep>;
+  listaPessoaProfissional: Array<PessoaProfissional>;
+  listaPessoaPaciente: Array<PessoaPaciente>;
 
+  Pessoa: any;
   Raca: Raca;
   Etnia: Etnia;
   Justificativa: Justificativa;
@@ -79,7 +80,8 @@ export class PessoaComponent implements OnInit {
   OrgaoEmissorProfissional: OrgaoEmissor;
   TipoProfissional: TipoProfissional;
   LotacaoProfissional: LotacaoProfissional;
-
+  Escolaridade: Escolaridade;
+  SituacaoFamiliarConjugal: SituacaoFamiliarConjugal;
 
   constructor(private pessoaService: PessoaService, private router: Router) {
     this.listaContatos = new Array<PessoaContato>();
@@ -90,11 +92,14 @@ export class PessoaComponent implements OnInit {
     this.listaEstado = new Array<Estado>();
     this.listaEscolaridade = new Array<Escolaridade>();
     this.listaSituacaoFamiliarConjugal = new Array<SituacaoFamiliarConjugal>();
+    this.Pessoa = null;
+
   }
 
-
+  //begin:: Carregamento Básico da tela
   public ngOnInit() {
 
+    var page = this;
 
 
     toastr.options = {
@@ -118,7 +123,9 @@ export class PessoaComponent implements OnInit {
     this.pessoaService.BindRaca().subscribe(data => {
       this.listaRaca = data.result;
 
+
       $(document).ready(function () { $("select[name^=DP_Cor]").val($("select[name^=DP_Cor] option:first").val()); });
+
 
     }, (error: HttpErrorResponse) => {
 
@@ -184,89 +191,11 @@ export class PessoaComponent implements OnInit {
     $(document).ready(function () {
 
 
-      $("select[name^=DP_Etnia]").val($("select[name^=DP_Etnia] option:first").val());
-
       $('body').css("background-image", "");
       $('body').addClass("k-header--fixed k-header-mobile--fixed k-subheader--enabled k-subheader--transparent k-aside--enabled k-aside--fixed k-page--loading");
+      document.title = 'Cadastro | Klinikos';
 
-      $("select[name^=DP_Cor]").change(function () {
-
-        var selectedRaca = $(this).children("option:selected").text();
-
-        if (selectedRaca == "INDÍGENA") {
-
-          $("select[name^=DP_Etnia]").removeAttr("disabled");
-
-        } else {
-          $("select[name^=DP_Etnia]").prop('disabled', 'disabled');
-
-        }
-      });
-
-      $("input[name^=DP_Nascimento]").blur(function () {
-
-
-
-        var data = $("input[name='DP_Nascimento']").val().split("/");
-        let ageFromDate = new AgeFromDate(new Date(data[2], data[1], data[0])).age;
-
-        if (ageFromDate > 0)
-          $("input[name='DP_IdadeAparente']").val(ageFromDate > 1 ? ageFromDate + " ANOS" : ageFromDate + " ANO");
-        else {
-
-
-          var today = new Date();
-          var start = new Date(data[2], data[1], data[0]);
-          var end = new Date(today.getFullYear(), today.getMonth() + 1, today.getDate());
-          var millisecondsPerDay = 1000 * 60 * 60 * 24;
-          var millisBetween = end.getTime() - start.getTime();
-          var days = millisBetween / millisecondsPerDay;
-
-          var today = new Date();
-          var currentDay = today.getDate();
-          var currentMonth = today.getMonth() + 1;
-          var currentYear = today.getFullYear();
-
-
-          if (currentMonth > parseInt(data[1]) && currentYear === parseInt(data[2])) {
-            if (data[0] <= currentDay) {
-              var monthDiff = currentMonth - data[1];
-              $("input[name='DP_IdadeAparente']").val(monthDiff > 1 ? monthDiff + " MESES" : monthDiff + " MÊS");
-
-            } else {
-              var monthDiff = (currentMonth - data[1]) - 1;
-              if (monthDiff > 0)
-                $("input[name='DP_IdadeAparente']").val(monthDiff > 1 ? monthDiff + " MESES" : monthDiff + " MÊS");
-            }
-          } else if (currentYear > parseInt(data[2]) && days > 30) {
-
-            var monthDiff = days / 30 | 0;
-
-            if (parseInt(data[1]) == currentMonth && parseInt(data[0]) > currentDay)
-              monthDiff--;
-
-            if (monthDiff >= 12) {
-
-              $("input[name='DP_IdadeAparente']").val("1 ANO");
-            } else {
-              $("input[name='DP_IdadeAparente']").val(monthDiff > 1 ? monthDiff + " MESES" : monthDiff + " MÊS");
-            }
-          }
-
-          else {
-
-            if (days > 0)
-              $("input[name='DP_IdadeAparente']").val(days > 1 ? days + " DIAS" : days + " DIA");
-            else
-              $("input[name='DP_IdadeAparente']").val("");
-          }
-        }
-
-      });
-
-
-
-
+      $("select[name^=DP_Etnia]").val($("select[name^=DP_Etnia] option:first").val());
 
       $('#k_table_1').on('click', 'input[name^=Prof_Coord]', function () {
         var id = '#' + $(this).attr('id') + '';
@@ -336,46 +265,816 @@ export class PessoaComponent implements OnInit {
 
 
 
-
-
-
-
-
-
-
-
     });
   }
+  //end:: Carregamento Básico da tela
+
+  //begin:: Consulta o nome do paciente/ Consulta e monta um grid com as opções
+  onConsultaNomeCompleto() {
+
+    var dp_nomecompleto = $("input[name^=DP_NomeCompleto]").val().trim().toUpperCase();
+
+    $('#divPesquisaNomeCompleto').addClass('show');
+
+    this.pessoaService.ConsultaNomeCompletoProfissional(dp_nomecompleto)
+      .subscribe(data => {
+
+        this.listaPessoaProfissional = data.result;
 
 
-  selectedRaca() {
+      }, (error: HttpErrorResponse) => {
+        console.log(`Error. ${error.message}.`);
+      });
+
+
+
+    this.pessoaService.ConsultaNomeCompletoPaciente(dp_nomecompleto)
+      .subscribe(data => {
+
+        this.listaPessoaPaciente = data.result;
+
+      }, (error: HttpErrorResponse) => {
+        //this.Mensagens("erro", "Falha ao consultar cep na aba endereço");
+        console.log(`Error. ${error.message}.`);
+      });
+
+
+
+
+  }
+  //end:: Consulta o nome do paciente
+
+  //begin:: Consulta o nome social do paciente/ Consulta e monta um grid com as opções
+  onConsultaNomeSocial() {
+
+    var dp_nomesocial = $("input[name^=DP_NomeSocial]").val().trim().toUpperCase();
+
+    $('#divPesquisaNomeSocial').addClass('show');
+    $('#divPesquisaNomeCompleto').removeClass('show');
+
+    this.pessoaService.ConsultaNomeSocialProfissional(dp_nomesocial)
+      .subscribe(data => {
+
+        this.listaPessoaProfissional = data.result;
+
+
+      }, (error: HttpErrorResponse) => {
+        console.log(`Error. ${error.message}.`);
+      });
+
+
+
+    this.pessoaService.ConsultaNomeSocialPaciente(dp_nomesocial)
+      .subscribe(data => {
+
+        this.listaPessoaPaciente = data.result;
+
+      }, (error: HttpErrorResponse) => {
+        //this.Mensagens("erro", "Falha ao consultar cep na aba endereço");
+        console.log(`Error. ${error.message}.`);
+      });
+
+    console.log(this.listaPessoaProfissional);
+    console.log(this.listaPessoaPaciente);
+  }
+  //end:: Consulta o nome do paciente
+
+  //begin:: Fecha as pesquisas
+  onFechaPesquisa() {
+
+    if ($("#divPesquisaNomeCompleto").hasClass('show'))
+      $("#divPesquisaNomeCompleto").removeClass('show');
+
+    if ($("#divPesquisaLogradouro").hasClass('show'))
+      $("#divPesquisaLogradouro").removeClass('show');
+
+    if ($("#divPesquisaNomeSocial").hasClass('show'))
+      $("#divPesquisaNomeSocial").removeClass('show');
+  }
+  //end:: Fecha as pesquisas
+
+  //begin:: validacao de formatação do cpf
+  validarCPF(cpf) {
+
+    var cpf = cpf.replace(/[^\d]+/g, '');
+    if (cpf === '') return false;
+    // Elimina CPFs invalidos conhecidos	
+    if (cpf.length !== 11 ||
+      cpf === "00000000000" ||
+      cpf === "11111111111" ||
+      cpf === "22222222222" ||
+      cpf === "33333333333" ||
+      cpf === "44444444444" ||
+      cpf === "55555555555" ||
+      cpf === "66666666666" ||
+      cpf === "77777777777" ||
+      cpf === "88888888888" ||
+      cpf === "99999999999")
+      return false;
+    // Valida digito	
+    var add = 0;
+    for (let i = 0; i < 9; i++)
+      add += parseInt(cpf.charAt(i)) * (10 - i);
+    var rev = 11 - (add % 11);
+    if (rev === 10 || rev === 11)
+      rev = 0;
+    if (rev !== parseInt(cpf.charAt(9)))
+      return false;
+    // Valida 2o digito	
+    add = 0;
+    for (let i = 0; i < 10; i++)
+      add += parseInt(cpf.charAt(i)) * (11 - i);
+    rev = 11 - (add % 11);
+    if (rev === 10 || rev === 11)
+      rev = 0;
+    if (rev !== parseInt(cpf.charAt(10)))
+      return false;
+    return true;
+  }
+  //end:: validacao de formatação do cpf
+
+  //begin:: validacao de formatação do cns
+  validaCNS(cns) {
+
+    var pis;
+    var resto;
+    var dv;
+    var soma;
+    var resultado;
+    var result;
+    var tamCNS = cns.length;
+    result = 0;
+
+
+    if ((cns.substring(0, 1) !== "7") && (cns.substring(0, 1) !== "8") && (cns.substring(0, 1) !== "9")) {
+
+      if ((tamCNS) !== 15) {
+        return false;
+      }
+      pis = cns.substring(0, 11);
+
+      soma = (((parseInt(pis.substring(0, 1))) * 15) +
+        ((parseInt(pis.substring(1, 2))) * 14) +
+        ((parseInt(pis.substring(2, 3))) * 13) +
+        ((parseInt(pis.substring(3, 4))) * 12) +
+        ((parseInt(pis.substring(4, 5))) * 11) +
+        ((parseInt(pis.substring(5, 6))) * 10) +
+        ((parseInt(pis.substring(6, 7))) * 9) +
+        ((parseInt(pis.substring(7, 8))) * 8) +
+        ((parseInt(pis.substring(8, 9))) * 7) +
+        ((parseInt(pis.substring(9, 10))) * 6) +
+        ((parseInt(pis.substring(10, 11))) * 5));
+
+
+      resto = soma % 11;
+      dv = 11 - resto;
+      if (dv === 11) {
+        dv = 0;
+      }
+
+
+      if (dv === 10) {
+        soma = (((parseInt(pis.substring(0, 1))) * 15) +
+          ((parseInt(pis.substring(1, 2))) * 14) +
+          ((parseInt(pis.substring(2, 3))) * 13) +
+          ((parseInt(pis.substring(3, 4))) * 12) +
+          ((parseInt(pis.substring(4, 5))) * 11) +
+          ((parseInt(pis.substring(5, 6))) * 10) +
+          ((parseInt(pis.substring(6, 7))) * 9) +
+          ((parseInt(pis.substring(7, 8))) * 8) +
+          ((parseInt(pis.substring(8, 9))) * 7) +
+          ((parseInt(pis.substring(9, 10))) * 6) +
+          ((parseInt(pis.substring(10, 11))) * 5) + 2);
+        resto = soma % 11;
+        dv = 11 - resto;
+        resultado = pis + "001" + String(dv);
+      } else {
+        resultado = pis + "000" + String(dv);
+      }
+      if (cns !== resultado) {
+        return false;
+      } else {
+        return true;
+      }
+    }
+
+
+    if (pis === "") {
+      return false;
+    }
+
+
+    soma = ((parseInt(pis.substring(0, 1), 10)) * 15)
+      + ((parseInt(pis.substring(1, 2), 10)) * 14)
+      + ((parseInt(pis.substring(2, 3), 10)) * 13)
+      + ((parseInt(pis.substring(3, 4), 10)) * 12)
+      + ((parseInt(pis.substring(4, 5), 10)) * 11)
+      + ((parseInt(pis.substring(5, 6), 10)) * 10)
+      + ((parseInt(pis.substring(6, 7), 10)) * 9)
+      + ((parseInt(pis.substring(7, 8), 10)) * 8)
+      + ((parseInt(pis.substring(8, 9), 10)) * 7)
+      + ((parseInt(pis.substring(9, 10), 10)) * 6)
+      + ((parseInt(pis.substring(10, 11), 10)) * 5)
+      + ((parseInt(pis.substring(11, 12), 10)) * 4)
+      + ((parseInt(pis.substring(12, 13), 10)) * 3)
+      + ((parseInt(pis.substring(13, 14), 10)) * 2)
+      + ((parseInt(pis.substring(14, 15), 10)) * 1);
+
+    resto = soma % 11;
+    if (resto === 0) {
+      return true;
+    }
+    else {
+      return false;
+    }
+
+  }
+  //end:: validacao de formatação do cns
+
+  //begin:: validacao de formatação do pis
+  validaPIS(pis) {
+
+    var multiplicador = [3, 2, 9, 8, 7, 6, 5, 4, 3, 2];
+    var soma = 0;
+    var resto = 0;
+
+    if (pis.trim().length !== 11)
+      return false;
+
+    pis = pis.trim();
+    pis = pis.replace("-", "").replace(".", "").padStart(11, '0');
+
+    for (var i = 0; i < 10; i++)
+      soma += parseInt(pis.charAt(i)) * multiplicador[i];
+
+    resto = soma % 11;
+
+    if (resto < 2)
+      resto = 0;
+    else
+      resto = 11 - resto;
+
+    return pis.endsWith(resto.toString());
+  }
+  //end:: validacao de formatação do pis
+
+  //begin:: calcula idade
+  public onCalculaIdade() {
+
+
+    var data = $("input[name='DP_Nascimento']").val().split("/");
+    let ageFromDate = new AgeFromDate(new Date(data[2], data[1], data[0])).age;
+
+    if (ageFromDate > 0)
+      $("input[name='DP_IdadeAparente']").val(ageFromDate > 1 ? ageFromDate + " ANOS" : ageFromDate + " ANO");
+    else {
+
+
+      var today = new Date();
+      var start = new Date(data[2], data[1], data[0]);
+      var end = new Date(today.getFullYear(), today.getMonth() + 1, today.getDate());
+      var millisecondsPerDay = 1000 * 60 * 60 * 24;
+      var millisBetween = end.getTime() - start.getTime();
+      var days = millisBetween / millisecondsPerDay;
+
+      var today = new Date();
+      var currentDay = today.getDate();
+      var currentMonth = today.getMonth() + 1;
+      var currentYear = today.getFullYear();
+
+
+      if (currentMonth > parseInt(data[1]) && currentYear === parseInt(data[2])) {
+        if (data[0] <= currentDay) {
+          var monthDiff = currentMonth - data[1];
+          $("input[name='DP_IdadeAparente']").val(monthDiff > 1 ? monthDiff + " MESES" : monthDiff + " MÊS");
+
+        } else {
+          var monthDiff = (currentMonth - data[1]) - 1;
+          if (monthDiff > 0)
+            $("input[name='DP_IdadeAparente']").val(monthDiff > 1 ? monthDiff + " MESES" : monthDiff + " MÊS");
+        }
+      } else if (currentYear > parseInt(data[2]) && days > 30) {
+
+        var monthDiff = days / 30 | 0;
+
+        if (parseInt(data[1]) == currentMonth && parseInt(data[0]) > currentDay)
+          monthDiff--;
+
+        if (monthDiff >= 12) {
+
+          $("input[name='DP_IdadeAparente']").val("1 ANO");
+        } else {
+          $("input[name='DP_IdadeAparente']").val(monthDiff > 1 ? monthDiff + " MESES" : monthDiff + " MÊS");
+        }
+      }
+
+      else {
+
+        if (days > 0)
+          $("input[name='DP_IdadeAparente']").val(days > 1 ? days + " DIAS" : days + " DIA");
+        else
+          $("input[name='DP_IdadeAparente']").val("");
+      }
+    }
+
+  }
+  //end:: calcula idade
+
+  //begin:: validacao e consulta de CPF
+  onConsultaCpf(e) {
+
+    var cpf = e.target.value;
+
+    if (cpf !== '___.___.___-__') {
+
+      var verifica = this.validarCPF(cpf);
+
+      if (verifica === false) {
+        $('#msg_cpf').removeClass('oculta');
+      } else {
+        $('#msg_cpf').addClass('oculta');
+
+        var cpf = cpf.replace('.', '').replace('.', '').replace('.', '').replace('-', '');
+
+        this.pessoaService.ConsultaCpfProfissional(cpf).subscribe(data => {
+
+          if (data.statusCode != "302") {
+
+            this.pessoaService.ConsultaCpfPaciente(cpf).subscribe(subdata => {
+
+              if (subdata.statusCode == "302") {
+                toastr.success("Paciente encontrado");
+
+                var paciente = subdata.result;
+
+                if (paciente.recemnascido == true) {
+
+                  $("input[name^=DP_RecemNascido]").prop("checked", true);
+                  $('#box_numprontmae, #box_nomeRN').removeClass('oculta');
+                  $('#box_nomecomp, #box_nomesocial').addClass('oculta');
+                  $("input[name^=DP_NomeRN]").val(paciente.nomeCompleto);
+                  $("input[name^=DP_NumProntuarioMae]").val(paciente.numeroProntuario);
+
+                }
+
+                this.CarregaPessoa(paciente);
+              }
+            }, (error: HttpErrorResponse) => {
+
+              this.Mensagens("erro", "Falha ao carregar Raças na aba Dados Pessoais");
+              console.log(`Error. ${error.message}.`);
+            });
+          } else {
+
+
+            this.onSelectedProfissional(data.result);
+
+            toastr.success("Profissional encontrado");
+
+          }
+
+        }, (error: HttpErrorResponse) => {
+
+          this.Mensagens("erro", "Falha ao carregar Raças na aba Dados Pessoais");
+          console.log(`Error. ${error.message}.`);
+        });
+      }
+    }
+
+  }
+  //end:: validacao e consulta de CPF
+
+  //begin:: validacao e consulta de CNS
+  onConsultaCns(e) {
+
+    // var
+    var dp_cns = e.target.value.replace(' ', '').replace(' ', '').replace(' ', '').replace('_', '');
+
+    // não vazio/mask
+    // retorno validação
+    var verifica = this.validaCNS(dp_cns);
+    // exibe mensagem de erro
+    if (verifica === false) {
+      $('#msg_cns').removeClass('oculta');
+    }
+    else {
+      // oculta mensagem de erro
+      $('#msg_cns').addClass('oculta');
+
+
+      this.pessoaService.ConsultaCnsProfissional(dp_cns).subscribe(data => {
+
+        if (data.statusCode != "302") {
+
+          this.pessoaService.ConsultaCnsPaciente(dp_cns).subscribe(subdata => {
+
+            if (subdata.statusCode == "302") {
+              toastr.success("Paciente encontrado");
+
+              var paciente = subdata.result;
+
+              if (paciente.recemnascido == true) {
+
+                $("input[name^=DP_RecemNascido]").prop("checked", true);
+                $('#box_numprontmae, #box_nomeRN').removeClass('oculta');
+                $('#box_nomecomp, #box_nomesocial').addClass('oculta');
+                $("input[name^=DP_NomeRN]").val(paciente.nomeCompleto);
+                $("input[name^=DP_NumProntuarioMae]").val(paciente.numeroProntuario);
+
+              }
+
+              this.CarregaPessoa(paciente);
+            }
+          }, (error: HttpErrorResponse) => {
+
+            this.Mensagens("erro", "Falha ao carregar Raças na aba Dados Pessoais");
+            console.log(`Error. ${error.message}.`);
+          });
+        } else {
+
+
+          this.onSelectedProfissional(data.result);
+
+          toastr.success("Profissional encontrado");
+
+        }
+
+      }, (error: HttpErrorResponse) => {
+
+        this.Mensagens("erro", "Falha ao carregar Raças na aba Dados Pessoais");
+        console.log(`Error. ${error.message}.`);
+      });
+
+    }
+
+
+  }
+  //end:: validacao e consulta de CNS
+
+  //begin:: validacao e consulta de PIS
+  onConsultaPis(e) {
+
+    // var
+    var dp_pis = e.target.value.replace('.', '').replace('.', '').replace('-', '').replace('_', '');
+
+    // não vazio/mask
+    // retorno validação
+    var verifica = this.validaPIS(dp_pis);
+    // exibe mensagem de erro
+    if (verifica === false) {
+      $('#msg_pis').removeClass('oculta');
+    }
+    else {
+      // oculta mensagem de erro
+      $('#msg_pis').addClass('oculta');
+
+
+      this.pessoaService.ConsultaPisProfissional(dp_pis).subscribe(data => {
+
+        if (data.statusCode != "302") {
+
+          this.pessoaService.ConsultaPisPaciente(dp_pis).subscribe(subdata => {
+
+            if (subdata.statusCode == "302") {
+              toastr.success("Paciente encontrado");
+
+              var paciente = subdata.result;
+
+              if (paciente.recemnascido == true) {
+
+                $("input[name^=DP_RecemNascido]").prop("checked", true);
+                $('#box_numprontmae, #box_nomeRN').removeClass('oculta');
+                $('#box_nomecomp, #box_nomesocial').addClass('oculta');
+                $("input[name^=DP_NomeRN]").val(paciente.nomeCompleto);
+                $("input[name^=DP_NumProntuarioMae]").val(paciente.numeroProntuario);
+
+              }
+
+              this.CarregaPessoa(paciente);
+            }
+          }, (error: HttpErrorResponse) => {
+
+            this.Mensagens("erro", "Falha ao carregar Raças na aba Dados Pessoais");
+            console.log(`Error. ${error.message}.`);
+          });
+        } else {
+
+
+          this.onSelectedProfissional(data.result);
+
+          toastr.success("Profissional encontrado");
+
+        }
+
+      }, (error: HttpErrorResponse) => {
+
+        this.Mensagens("erro", "Falha ao carregar Raças na aba Dados Pessoais");
+        console.log(`Error. ${error.message}.`);
+      });
+
+    }
+
+
+  }
+  //end:: validacao e consulta de PIS
+
+  //begin:: Carregamento do Profissional pela Busca
+  onSelectedProfissional(profissional: PessoaProfissional) {
+
+    $("input[name^=DP_CPF]").val(profissional.cpf);
+
+    this.pessoaService.ConsultaContatosProfissional(profissional.pessoaId).subscribe(data => {
+
+      this.listaContatos = data.result;
+
+    }, error => {
+      this.Mensagens("erro", "Falha ao carregar Etnias na aba Dados Pessoais");
+      console.log(`Error. ${error._body}.`);;
+    });
+
+    console.log(this.listaContatos);
+
+
+   // this.CarregaPessoa(profissional);
+
+    $('#DP_TipoCadastro').prop('checked', true);
+    $('#box_dadosprof').removeClass('oculta');
+
+    this.pessoaService.ConsultaLotacoesProfissional(profissional.pessoaId).subscribe(data => {
+
+      this.listaLotacaoProfissional = data.result;
+    }, error => {
+      this.Mensagens("erro", "Falha ao carregar Etnias na aba Dados Pessoais");
+      console.log(`Error. ${error._body}.`);;
+      });
+
+
+    this.onFechaPesquisa();
+
+  }
+  //end::  Carregamento do Profissional pela Busca
+
+  //begin:: Carregamento do Paciente pela Busca
+  onSelectedPaciente(paciente: PessoaPaciente) {
+
+    $("input[name^=DP_CPF]").val(paciente.cpf);
+
+
+    if (paciente.recemNascido == true) {
+
+      $("input[name^=DP_RecemNascido]").prop("checked", true);
+      $('#box_numprontmae, #box_nomeRN').removeClass('oculta');
+      $('#box_nomecomp, #box_nomesocial').addClass('oculta');
+      $("input[name^=DP_NomeRN]").val(paciente.nomeCompleto);
+      $("input[name^=DP_NumProntuarioMae]").val(paciente.numeroProntuario);
+
+    }
+
+    this.CarregaPessoa(paciente);
+
+    this.onFechaPesquisa();
+
+  }
+  //end::  Carregamento do Paciente pela Busca
+
+  //begin:: carregamento padrão de campos para a tela
+  CarregaPessoa(pessoa: any) {
+
+    this.Pessoa = pessoa;
+
+
+    $("input[name^=DP_NomeCompleto]").val(pessoa.nomeCompleto);
+    $("input[name^=DP_NomeSocial]").val(pessoa.nomeSocial);
+
+    if (pessoa.sexo === "M")
+      $("label[for^=DP_Sexo_Masculino]").addClass("active");
+    if (pessoa.sexo === "F")
+      $("label[for^=DP_Sexo_Feminino]").addClass("active");
+
+    if (pessoa.nascimento != null) {
+
+      var nascimento = new Date(pessoa.nascimento),
+        month = '' + (nascimento.getMonth() + 1),
+        day = '' + nascimento.getDate(),
+        year = nascimento.getFullYear();
+
+      $("input[name^=DP_Nascimento]").val(("0" + day).slice(-2) + "/" + ("0" + month).slice(-2) + "/" + year);
+    }
+
+    this.onCalculaIdade();
+
+    if (pessoa.raca !== null) {
+
+      this.Raca = this.listaRaca.find(x => x.racaId === pessoa.raca.racaId);
+
+      if (pessoa.etnia !== null) {
+
+        this.Etnia = pessoa.etnia;
+        this.onSelectedRaca();
+      }
+    }
+
+    $("input[name^=DP_NomePai]").val(pessoa.nomePai);
+    $("input[name^=DP_NomeMae]").val(pessoa.nomeMae);
+
+    if (pessoa.justificativa !== null)
+      this.Justificativa = this.listaJustificativa.find(x => x.justificativaId === pessoa.justificativa.justificativaId);
+    if (pessoa.nacionalidade !== null)
+      this.Nacionalidade = this.listaNacionalidade.find(x => x.nacionalidadeId === pessoa.nacionalidade.nacionalidadeId);
+
+    if (pessoa.naturalidade !== null) {
+
+      this.Estado = this.listaEstado.find(x => x.estadoId === pessoa.naturalidade.estado.estadoId);
+      this.Cidade = pessoa.naturalidade;
+      this.onSelectedUf();
+    }
+
+    $("input[name^=DP_Identidade]").val(pessoa.identidade);
+    this.UfIdentidade = this.listaEstado.find(x => x.uf === pessoa.uf);
+
+    if (pessoa.orgaoEmissor !== null)
+      this.OrgaoEmissor = this.listaOrgaoEmissor.find(x => x.orgaoEmissorId === pessoa.orgaoEmissor.orgaoEmissorId);
+
+    if (pessoa.emissao != null) {
+      var emissao = new Date(pessoa.emissao),
+        month = '' + (emissao.getMonth() + 1),
+        day = '' + emissao.getDate(),
+        year = emissao.getFullYear();
+      $("input[name^=DP_OrgaoEmissorData]").val(("0" + day).slice(-2) + "/" + ("0" + month).slice(-2) + "/" + year);
+    }
+
+    $("input[name^=DP_CNS]").val(pessoa.cns);
+
+    this.CarregaPessoaContatos(pessoa.pessoaContatos);
+
+    $("input[name^=DP_CEP]").val(pessoa.cep);
+    $("input[name^=DP_Logradouro]").val(pessoa.logradouro);
+    $("input[name^=DP_Numero]").val(pessoa.numero);
+    $("input[name^=DP_Complemento]").val(pessoa.complemento);
+
+    if (pessoa.estado !== null) {
+      this.EstadoEndereco = this.listaEstado.find(x => x.estadoId === pessoa.estado.estadoId);
+      this.onSelectedUfEndereco();
+      this.CidadeEndereco = pessoa.cidade;
+    }
+
+    $("input[name^=DP_Bairro]").val(pessoa.bairro);
+
+
+    if (pessoa.pisPasep != null || pessoa.ocupacao != null || pessoa.paisOrigem != null || pessoa.dataEntradaPis != null ||
+      pessoa.tipoCertidao != null || pessoa.nomeCartorio != null || pessoa.numeroLivro != null || pessoa.numeroFolha != null ||
+      pessoa.numeroTermo != null || pessoa.dataEmissaoCertidao != null || pessoa.numeroCtps != null || pessoa.serieCtps != null ||
+      pessoa.ufCtps != null || pessoa.dataEmissaoCtps != null || pessoa.tituloEleitor != null || pessoa.zona != null || pessoa.secao != null ||
+      pessoa.frequentaEscola != null) {
+
+
+      $("input[name^=DC_PISPASEP]").val(pessoa.pisPasep);
+
+      if (pessoa.ocupacao != null)
+        this.Ocupacao = pessoa.ocupacao;
+
+      if (pessoa.paisOrigem != null)
+        this.Pais = pessoa.paisOrigem;
+
+      if (pessoa.dataEntradaPis != null) {
+
+        var entradaPis = new Date(pessoa.dataEntradaPis),
+          month = '' + (entradaPis.getMonth() + 1),
+          day = '' + entradaPis.getDate(),
+          year = entradaPis.getFullYear();
+
+        $("input[name^=DC_DataEntrada_Pis]").val(("0" + day).slice(-2) + "/" + ("0" + month).slice(-2) + "/" + year);
+      }
+
+      if (pessoa.tipoCertidao != null)
+        this.TipoCertidao = pessoa.tipoCertidao;
+
+      $("input[name^=DC_NomeDoCartorio]").val(pessoa.nomeCartorio);
+      $("input[name^=DC_NumeroDoLivro]").val(pessoa.numeroLivro);
+      $("input[name^=DC_NumeroDaFolha]").val(pessoa.numeroFolha);
+      $("input[name^=DC_NumeroDoTermo]").val(pessoa.numeroTermo);
+
+      if (pessoa.dataEmissaoCertidao != null) {
+
+        var emissaoCertidao = new Date(pessoa.dataEmissaoCertidao),
+          month = '' + (emissaoCertidao.getMonth() + 1),
+          day = '' + emissaoCertidao.getDate(),
+          year = emissaoCertidao.getFullYear();
+
+        $("input[name^=DC_DataEmissao]").val(("0" + day).slice(-2) + "/" + ("0" + month).slice(-2) + "/" + year);
+      }
+
+
+      $("input[name^=DC_NumeroCTPS]").val(pessoa.numeroCtps);
+      $("input[name^=DC_SerieCTPS]").val(pessoa.serieCtps);
+
+      if (pessoa.ufCtps != null)
+        this.UfCtps = this.listaEstado.find(x => x.uf === pessoa.ufCtps);
+
+
+      if (pessoa.dataEmissaoCtps != null) {
+
+        var dataEmissaoCtps = new Date(pessoa.dataEmissaoCtps),
+          month = '' + (dataEmissaoCtps.getMonth() + 1),
+          day = '' + dataEmissaoCtps.getDate(),
+          year = dataEmissaoCtps.getFullYear();
+
+        $("input[name^=DC_DataEmissao_Ctps]").val(("0" + day).slice(-2) + "/" + ("0" + month).slice(-2) + "/" + year);
+      }
+
+
+      $("input[name^=DC_TituloEleitor]").val(pessoa.tituloEleitor);
+      $("input[name^=DC_Zona]").val(pessoa.zona);
+      $("input[name^=DC_Secao]").val(pessoa.secao);
+
+      if (pessoa.frequentaEscola === true)
+        $("label[for^=FreqEsc1]").addClass("active");
+      if (pessoa.frequentaEscola === false)
+        $("label[for^=FreqEsc2]").addClass("active");
+
+      if (pessoa.escolaridade != null)
+        this.Escolaridade = pessoa.escolaridade;
+
+      if (pessoa.situacaoFamiliarConjugal != null)
+        this.SituacaoFamiliarConjugal = pessoa.situacaoFamiliarConjugal;
+
+
+      this.onCarregaCamposDadosComplemenares();
+    }
+  }
+  //end:: carregamento padrão de campos para a tela
+
+  CarregaPessoaContatos(contatos: Array<PessoaContato>) {
+
+    for (var i = 0; i < contatos.length; i++) {
+
+      var pessoacontato: PessoaContato = {
+
+        ativo: contatos[i].ativo,
+        celular: contatos[i].celular,
+        email: contatos[i].email,
+        telefone: contatos[i].telefone
+      };
+
+      if (i > 0) {
+        this.onAdicionaNovosCamposContato();
+        this.listaContatos[i] = pessoacontato;
+      }
+
+
+      $("input[name^=Cont_Telefone" + i + "]").val(contatos[i].telefone);
+      $("input[name^=Cont_Celular" + i + "]").val(contatos[i].celular);
+      $("input[name^=Cont_Email" + i + "]").val(contatos[i].email);
+
+
+    }
+  }
+
+  //begin:: Habilita combo indigena / habilita a combo para caso selecionar indígena
+  onSelectedRaca() {
 
     if (this.Raca.nome == "INDÍGENA") {
+      $("select[name^=DP_Etnia]").removeAttr("disabled");
+
 
       this.pessoaService.BindEtnia().subscribe(data => {
         this.listaEtnia = data.result;
 
-        $(document).ready(function () { $("select[name^=DP_Etnia]").val($("select[name^=DP_Etnia] option:first").val()); });
+        if (this.Etnia != null) {
+
+          var etniaId = this.Etnia.etniaId;
+          this.Etnia = this.listaEtnia.find(x => x.etniaId === etniaId);
+        }
+        else
+          $(document).ready(function () { $("select[name^=DP_Etnia]").val($("select[name^=DP_Etnia] option:first").val()); });
 
       }, error => {
         this.Mensagens("erro", "Falha ao carregar Etnias na aba Dados Pessoais");
         console.log(`Error. ${error._body}.`);;
       });
 
-    } else {
-
-      this.listaEtnia = [];
-      $(document).ready(function () { $("select[name^=DP_Etnia]").val($("select[name^=DP_Etnia] option:first").val()); });
     }
+    else
+      $("select[name^=DP_Etnia]").prop('disabled', 'disabled');
   }
+  //end:: Habilita combo indigena
 
-  selectedUf() {
+  //begin:: Selecao UF Naturalidade / Selecionado a uf, habilita e carrega as cidades correspondente a uf selecionada na aba dados pessoais
+  onSelectedUf() {
 
     $(document).ready(function () { $("select[name^=DP_NaturalidadeCidade]").val($("select[name^=DP_NaturalidadeCidade] option:first").val()); });
 
     this.pessoaService.BindCidade(this.Estado).subscribe(data => {
       this.listaCidade = data.result;
-      $(document).ready(function () { $("select[name^=DP_NaturalidadeCidade]").val($("select[name^=DP_NaturalidadeCidade] option:first").val()); });
+
+      if (this.Cidade != null) {
+
+        var cidadeId = this.Cidade.cidadeId;
+        this.Cidade = this.listaCidade.find(x => x.cidadeId === cidadeId);
+      }
+      else
+        $(document).ready(function () { $("select[name^=DP_NaturalidadeCidade]").val($("select[name^=DP_NaturalidadeCidade] option:first").val()); });
+
     }, (error: HttpErrorResponse) => {
       this.Mensagens("erro", "Falha ao carregar UF(s) na aba Dados Pessoais");
       console.log(`Error. ${error.message}.`);
@@ -383,14 +1082,24 @@ export class PessoaComponent implements OnInit {
 
 
   }
+  //end:: Selecao UF Naturalidade
 
-  selectedUfEndereco() {
+  //begin:: Selecao UF Endereco / Selecionado a uf, habilita e carrega as cidades correspondente a uf selecionada na aba endereço
+  onSelectedUfEndereco() {
 
     $(document).ready(function () { $("select[name^=DP_Endereco_Cidade]").val($("select[name^=DP_Endereco_Cidade] option:first").val()); });
 
     this.pessoaService.BindCidade(this.EstadoEndereco).subscribe(data => {
       this.listaCidadeEndereco = data.result;
-      $(document).ready(function () { $("select[name^=DP_Endereco_Cidade]").val($("select[name^=DP_Endereco_Cidade] option:first").val()); });
+
+      if (this.CidadeEndereco != null) {
+
+        var cidadeId = this.CidadeEndereco.cidadeId;
+        this.CidadeEndereco = this.listaCidadeEndereco.find(x => x.cidadeId === cidadeId);
+      }
+      else
+        $(document).ready(function () { $("select[name^=DP_Endereco_Cidade]").val($("select[name^=DP_Endereco_Cidade] option:first").val()); });
+
     }, (error: HttpErrorResponse) => {
       this.Mensagens("erro", "Falha ao carregar os Estados na aba Dados Pessoais");
       console.log(`Error. ${error.message}.`);
@@ -398,6 +1107,9 @@ export class PessoaComponent implements OnInit {
 
 
   }
+  //end::  Selecao UF Endereco
+
+  //begin:: Carregamento Tipo Profissional / carrega os tipos do profissional na aba profissional
   onHabilitaProfissional() {
 
 
@@ -412,48 +1124,68 @@ export class PessoaComponent implements OnInit {
 
 
   }
+  //end::  Carregamento Tipo Profissional
 
+  //begin:: Carregamento Dados Complementares / carrega todas as combos na aba dados complementares
   onCarregaCamposDadosComplemenares() {
 
-    $(document).ready(function () {
+
+    if (this.listaOcupacao.length == 0) {
 
       $("select[name^=DC_Ocupacao]").val($("select[name^=DC_Ocupacao] option:first").val());
-      $("select[name^=DC_PaisDeOrigem]").val($("select[name^=DC_PaisDeOrigem] option:first").val());
-      $("select[name^=DC_TipoCertidao]").val($("select[name^=DC_TipoCertidao] option:first").val());
-    });
-
-
-    if (this.listaOcupacao.length === 0) {
 
       this.pessoaService.BindOcupacao().subscribe(data => {
         this.listaOcupacao = data.result;
 
-        $(document).ready(function () { $("select[name^=DC_Ocupacao]").val($("select[name^=DC_Ocupacao] option:first").val()); });
+        if (this.Ocupacao != null) {
+
+          var ocupacaoId = this.Ocupacao.ocupacaoId;
+          this.Ocupacao = this.listaOcupacao.find(x => x.ocupacaoId === ocupacaoId);
+        }
+        else
+          $(document).ready(function () { $("select[name^=DC_Ocupacao]").val($("select[name^=DC_Ocupacao] option:first").val()); });
       }, (error: HttpErrorResponse) => {
         this.Mensagens("erro", "Falha ao carregar Ocupações na aba Dados Complementares");
         console.log(`Error. ${error.message}.`);
       });
     }
 
-    if (this.listaPais.length === 0) {
+
+    if (this.listaPais.length == 0) {
+
+      $("select[name^=DC_PaisDeOrigem]").val($("select[name^=DC_PaisDeOrigem] option:first").val());
 
       this.pessoaService.BindPais().subscribe(data => {
         this.listaPais = data.result;
 
-        $(document).ready(function () { $("select[name^=DC_PaisDeOrigem]").val($("select[name^=DC_PaisDeOrigem] option:first").val()); });
+        if (this.Pais != null) {
+
+          var paisId = this.Pais.paisId;
+          this.Pais = this.listaPais.find(x => x.paisId === paisId);
+        }
+        else
+          $(document).ready(function () { $("select[name^=DC_PaisDeOrigem]").val($("select[name^=DC_PaisDeOrigem] option:first").val()); });
       }, (error: HttpErrorResponse) => {
         this.Mensagens("erro", "Falha ao carregar Paises na aba Dados Complementares");
         console.log(`Error. ${error.message}.`);
       });
     }
 
-    if (this.listaTipoCertidao.length === 0) {
+    if (this.listaTipoCertidao.length == 0) {
 
+      $("select[name^=DC_TipoCertidao]").val($("select[name^=DC_TipoCertidao] option:first").val());
 
       this.pessoaService.BindTipoCertidao().subscribe(data => {
         this.listaTipoCertidao = data.result;
 
-        $(document).ready(function () { $("select[name^=DC_TipoCertidao]").val($("select[name^=DC_TipoCertidao] option:first").val()); });
+        if (this.TipoCertidao != null) {
+
+          var tipocertidaoId = this.TipoCertidao.tipocertidaoId;
+          this.TipoCertidao = this.listaTipoCertidao.find(x => x.tipocertidaoId === tipocertidaoId);
+        }
+        else
+          $(document).ready(function () { $("select[name^=DC_TipoCertidao]").val($("select[name^=DC_TipoCertidao] option:first").val()); });
+
       }, (error: HttpErrorResponse) => {
         this.Mensagens("erro", "Falha ao carregar Paises na aba Dados Complementares");
         console.log(`Error. ${error.message}.`);
@@ -470,11 +1202,18 @@ export class PessoaComponent implements OnInit {
         for (let i = 0; i < this.listaEscolaridade.length; i++) {
 
           if (i < 5)
-            $("#divEscolaridadeColuna1").append("<label class='k-radio k-radio--brand' id='radioEscolaridade" + i + "'></label>");
+            $("#divEscolaridadeColuna1").append("<label class='k-radio k-radio--brand' id='escolaridade" + i + "'></label>");
           else
-            $("#divEscolaridadeColuna2").append("<label class='k-radio k-radio--brand' id='radioEscolaridade" + i + "'></label>");
+            $("#divEscolaridadeColuna2").append("<label class='k-radio k-radio--brand' id='escolaridade" + i + "'></label>");
 
-          $("#radioEscolaridade" + i).append("<input type='radio' name='DC_Escolaridade' tabindex='50' id='" + i + "'>" + this.listaEscolaridade[i].descricao + "<span></span>");
+          if (this.Escolaridade != null) {
+            if (this.Escolaridade.escolaridadeId === this.listaEscolaridade[i].escolaridadeId)
+              $("#escolaridade" + i).append("<input type='radio' name='DC_Escolaridade' tabindex='50' checked='true' id='" + this.listaEscolaridade[i].escolaridadeId + "'>" + this.listaEscolaridade[i].descricao + "<span></span>");
+            else
+              $("#escolaridade" + i).append("<input type='radio' name='DC_Escolaridade' tabindex='50'  id='" + this.listaEscolaridade[i].escolaridadeId + "'>" + this.listaEscolaridade[i].descricao + "<span></span>");
+          } else {
+            $("#escolaridade" + i).append("<input type='radio' name='DC_Escolaridade' tabindex='50'  id='" + this.listaEscolaridade[i].escolaridadeId + "'>" + this.listaEscolaridade[i].descricao + "<span></span>");
+          }
 
         }
 
@@ -491,11 +1230,17 @@ export class PessoaComponent implements OnInit {
       this.pessoaService.BindSituacaoFamiliarConjugal().subscribe(data => {
         this.listaSituacaoFamiliarConjugal = data.result.sort(sortBy('codigoSituacaoFamiliarConjugal'));
 
-
         for (let i = 0; i < this.listaSituacaoFamiliarConjugal.length; i++) {
 
           $("#divSituacaoFamiliarConjugal").append("<label class='k-radio k-radio--brand' id='radioSituacaoFamiliarConjugal" + i + "'></label>");
-          $("#radioSituacaoFamiliarConjugal" + i).append("<input type='radio' name='DC_SituacaoFamiliar' tabindex='50' id='" + i + "'>" + this.listaSituacaoFamiliarConjugal[i].descricao + "<span></span>");
+
+          if (this.SituacaoFamiliarConjugal != null) {
+            if (this.SituacaoFamiliarConjugal.situacaoFamiliarConjugalId === this.listaSituacaoFamiliarConjugal[i].situacaoFamiliarConjugalId)
+              $("#radioSituacaoFamiliarConjugal" + i).append("<input type='radio' name='DC_SituacaoFamiliar' tabindex='50' checked='true' id='" + this.listaSituacaoFamiliarConjugal[i].situacaoFamiliarConjugalId + "'>" + this.listaSituacaoFamiliarConjugal[i].descricao + "<span></span>");
+            else
+              $("#radioSituacaoFamiliarConjugal" + i).append("<input type='radio' name='DC_SituacaoFamiliar' tabindex='50' id='" + this.listaSituacaoFamiliarConjugal[i].situacaoFamiliarConjugalId + "'>" + this.listaSituacaoFamiliarConjugal[i].descricao + "<span></span>");
+          } else
+            $("#radioSituacaoFamiliarConjugal" + i).append("<input type='radio' name='DC_SituacaoFamiliar' tabindex='50' id='" + this.listaSituacaoFamiliarConjugal[i].situacaoFamiliarConjugalId + "'>" + this.listaSituacaoFamiliarConjugal[i].descricao + "<span></span>");
         }
 
 
@@ -508,8 +1253,9 @@ export class PessoaComponent implements OnInit {
 
 
   }
+  //end::  Carregamento Dados Complementares
 
-
+  //begin:: Carregamento Informacoes Contato / Adiciona novos campos de contato ao clicar no botao adicionar
   onAdicionaNovosCamposContato() {
 
 
@@ -557,9 +1303,10 @@ export class PessoaComponent implements OnInit {
       }
     }
   }
+  //end::  Carregamento Informacoes Contato
 
+  //begin:: Adiciona Lotacao Profissional / Adiciona uma nova lotação ao profissional na aba profissional
   onAdicionaLotacao() {
-
 
     if (this.TipoProfissional !== undefined) {
 
@@ -605,7 +1352,9 @@ export class PessoaComponent implements OnInit {
 
     }
   }
+  //end::  Adiciona Lotacao Profissional
 
+  //begin:: Edita Lotacao Profissional / Permite o usuário editar as lotações lançadas na aba profissional
   onEditarLotacao(lotacaoprofissional: LotacaoProfissional) {
     this.TipoProfissional = lotacaoprofissional.TipoProfissional;
     $("input[name='Prof_NumConselho']").val(lotacaoprofissional.numeroConselho);
@@ -619,7 +1368,9 @@ export class PessoaComponent implements OnInit {
     $('#btnCancelarLotacao').removeClass('oculta');
 
   }
+  //end::  Edita Lotacao Profissional
 
+  //begin:: Exibe Mensagem Excluir / Alerta o usuário da confirmação da exclusão na aba profissional
   onExibeMensagemExcluir(lotacaoprofissional: LotacaoProfissional) {
 
     var page = this;
@@ -634,13 +1385,17 @@ export class PessoaComponent implements OnInit {
       });
 
   }
+  //end:: Exibe Mensagem Excluir
 
+  //begin:: Exclui lotacao Profissional / Alerta o usuário da confirmação da exclusão na aba profissional
   onExcluirLotacao(lotacaoprofissional: LotacaoProfissional) {
 
     var index = this.listaLotacaoProfissional.findIndex(x => x.TipoProfissional === lotacaoprofissional.TipoProfissional);
     this.listaLotacaoProfissional.splice(index, 1);
   }
+  //end:: Exibe Mensagem Excluir
 
+  //begin:: Limpa Campos lotacao Profissional / Limpa os campos ao adicionar e editar da lotação do profissional na aba profissional
   onLimparCamposProfissional() {
 
     $("input[name='Prof_NumConselho']").val("");
@@ -658,8 +1413,9 @@ export class PessoaComponent implements OnInit {
       $("#btnAddNovaLotacao").html('<i class="fa fa-plus"></i>Adicionar');
     });
   }
+  //end:: Limpa Campos lotacao Profissional
 
-
+  //begin:: Consulta Cep / Consulta tanto o CEP, quanto o logradouro e atribui aos campos correspondentes
   onBuscaCep() {
 
     var dp_cep = $("input[name^='DP_CEP']").val().replace('-', '');
@@ -688,7 +1444,7 @@ export class PessoaComponent implements OnInit {
 
           if (data.logradouro === undefined) {
             this.Mensagens("warning", "CEP não encontrado");
-          }else {
+          } else {
             $("input[name^=DP_Logradouro]").val(data.logradouro.toUpperCase())
             $("input[name^=DP_Bairro]").val(data.bairro.toUpperCase())
 
@@ -702,7 +1458,7 @@ export class PessoaComponent implements OnInit {
 
               this.CidadeEndereco = this.listaCidadeEndereco.find(x => x.nome == cidadeSelecionada.toUpperCase());
 
-              this.CepEncontrado = true;
+
             }, (error: HttpErrorResponse) => {
               this.Mensagens("erro", "Falha ao carregar cidades na aba endereço");
               console.log(`Error. ${error.message}.`);
@@ -717,44 +1473,39 @@ export class PessoaComponent implements OnInit {
 
       if (dp_logradouro !== "" && !$.isNumeric(dp_cep) && dp_cep.length === 0) {
         if (dp_logradouro.length > 3) {
-          $('#divPesquisa').removeClass('oculta');
-
+          //$('#divPesquisaLogradouro').removeClass('oculta');
+          $('#divPesquisaLogradouro').addClass('show');
           this.pessoaService.BuscarCepPorLogradouro(cep)
             .subscribe(data => {
 
               this.listaCep = data;
-              this.CepEncontrado = true;
             }, (error: HttpErrorResponse) => {
               //this.Mensagens("erro", "Falha ao consultar cep na aba endereço");
               console.log(`Error. ${error.message}.`);
             });
-          this.CepEncontrado = true;
-        } else {
 
-          $('#divPesquisa').addClass('oculta');
+        } else {
+          $('#divPesquisaLogradouro').removeClass('show');
+          //$('#divPesquisaLogradouro').addClass('oculta');
         }
       }
     }
   }
+  //end:: Consulta Cep
 
-
-  onLimpaConsultaCep() {
-
-    $('#divPesquisa').addClass('oculta');
-
-  }
-
+  //begin:: Seleciona Endereco / Responsável por selecionar o cep vindo da consulta cep logradouro
   public onSelectedCep(cep: any) {
 
     $("input[name^=DP_CEP]").val(cep.cep);
     $("input[name^=DP_Logradouro]").val(cep.logradouro.toUpperCase());
     $("input[name^=DP_Bairro]").val(cep.bairro.toUpperCase());
     $("input[name^=DP_Complemento]").val(cep.complemento.toUpperCase());
-    $('#divPesquisa').addClass('oculta');
+    $('#divPesquisaLogradouro').addClass('oculta');
   }
+  //end:: Seleciona Endereco
 
-
-  public onSubmit(p: NgForm) {
+  //begin:: Salvar Pessoa / Salva as informações da tela
+  public onSalvarPessoa(p: NgForm) {
 
     $("#k_scrolltop").trigger("click");
 
@@ -780,22 +1531,14 @@ export class PessoaComponent implements OnInit {
     var situacaoFamiliarConjugalId = $('input[type=radio][name=DC_SituacaoFamiliar]:checked').attr('id');
 
     if (p.value.DP_NaoIdentificado === true) {
-      pessoaPaciente = {};
-      pessoa.nomeCompleto = "NÃO IDENTIFICADO";
 
-      if (p.value.DP_Descricao_Nao_Identificado !== "")
-        pessoaPaciente.descricaoNaoIdentificado = p.value.DP_Descricao_Nao_Identificado.toUpperCase();
+      pessoa.nomeCompleto = "NÃO IDENTIFICADO";
 
     } else {
 
-      if (p.value.DP_RecemNascido === true) {
-        pessoaPaciente = {};
+      if (p.value.DP_RecemNascido === true)
         pessoa.nomeCompleto = p.value.DP_NomeRN.toUpperCase();
-
-        if (p.value.DP_NumProntuarioMae !== "")
-          pessoaPaciente.numeroProntuario = p.value.DP_NumProntuarioMae.toUpperCase();
-
-      } else {
+      else {
 
         pessoa.nomeCompleto = p.value.DP_NomeCompleto.toUpperCase();
 
@@ -804,6 +1547,8 @@ export class PessoaComponent implements OnInit {
 
       }
     }
+
+
 
 
     if ($("label[for='DP_Sexo_Masculino']").hasClass("active"))
@@ -947,11 +1692,10 @@ export class PessoaComponent implements OnInit {
 
 
     if (escolaridadeId !== undefined)
-      pessoa.Escolaridade = this.listaEscolaridade[escolaridadeId];
+      pessoa.Escolaridade = this.listaEscolaridade.find(x => x.escolaridadeId === escolaridadeId);
 
     if (situacaoFamiliarConjugalId !== undefined)
-      pessoa.SituacaoFamiliarConjugal = this.listaSituacaoFamiliarConjugal[situacaoFamiliarConjugalId];
-
+      pessoa.SituacaoFamiliarConjugal = this.listaSituacaoFamiliarConjugal.find(x => x.situacaoFamiliarConjugalId === situacaoFamiliarConjugalId);
 
 
     if (p.value.DP_Prof_Login !== "")
@@ -959,64 +1703,70 @@ export class PessoaComponent implements OnInit {
 
     pessoa.ativo = true;
 
+    if (this.Pessoa == null) {
 
-    if (this.listaLotacaoProfissional.length > 0) {
+      if (this.listaLotacaoProfissional.length > 0) {
 
-      pessoaProfissional = {};
-      this.SalvarContato(pessoa);
-      pessoaProfissional = pessoa;
+        pessoaProfissional = {};
+        this.AdicionarContato(pessoa);
+        pessoaProfissional = pessoa;
 
-      pessoaProfissional.lotacoesProfissional = [];
-      pessoaProfissional.lotacoesProfissional = this.listaLotacaoProfissional;
+        pessoaProfissional.lotacoesProfissional = [];
+        pessoaProfissional.lotacoesProfissional = this.listaLotacaoProfissional;
 
-      this.pessoaService.SalvarPessoaProfissional(pessoaProfissional).subscribe(data => {
+        this.pessoaService.SalvarPessoaProfissional(pessoaProfissional).subscribe(data => {
 
-        if (data.statusCode == "409") {
-          swal("Profissional já cadastrado!", "CPF ou CNS ou PIS/PASEP já existente na Base", "error");
+          if (data.statusCode == "409") {
+            swal("Profissional já cadastrado!", "CPF ou CNS ou PIS/PASEP já existente na Base", "error");
 
-        } else {
+          } else {
 
-          this.Mensagens("sucesso", "Profissional salvo com sucesso");
-          this.LimparCampos(p);
+            this.Mensagens("sucesso", "Profissional salvo com sucesso");
+            this.LimparCampos(p);
 
-        }
-      }, (error: HttpErrorResponse) => {
-        this.Mensagens("erro", "Falha ao comunicar com API");
-        console.log(`Error. ${error.message}.`);
-      },
-      );
+          }
+        }, (error: HttpErrorResponse) => {
+          this.Mensagens("erro", "Falha ao comunicar com API");
+          console.log(`Error. ${error.message}.`);
+        },
+        );
 
 
-    } else {
+      } else {
 
-      pessoaPaciente = {};
-      this.SalvarContato(pessoa);
-      pessoaPaciente = pessoa;
+        pessoaPaciente = {};
 
-      this.pessoaService.SalvarPessoaPaciente(pessoaPaciente).subscribe(data => {
+        if (this.listaContatos.length > 0)
+          this.AdicionarContato(pessoa);
 
-        if (data.statusCode == "409") {
-          swal("Paciente já cadastrado!", "CPF ou CNS ou PIS/PASEP já existente", "error");
-        } else {
+        pessoaPaciente = pessoa;
+
+        pessoaPaciente.recemNascido = p.value.DP_RecemNascido === true;
+
+        if (p.value.DP_NumProntuarioMae !== "")
+          pessoaPaciente.numeroProntuario = p.value.DP_NumProntuarioMae.toUpperCase();
+
+        if (p.value.DP_Descricao_Nao_Identificado !== "")
+          pessoaPaciente.descricaoNaoIdentificado = p.value.DP_Descricao_Nao_Identificado.toUpperCase();
+
+
+        this.pessoaService.SalvarPessoaPaciente(pessoaPaciente).subscribe(data => {
+
           this.Mensagens("sucesso", "Paciente salvo com sucesso");
           this.LimparCampos(p);
 
-          swal({ title: 'Deseja gerar o registro boletim?', text: '', type: 'warning', showCancelButton: true, cancelButtonText: 'Não', confirmButtonText: 'Sim' })
-            .then(function (result) {
-              if (result.value) {
-
-              }
-            });
-        }
-      }, (error: HttpErrorResponse) => {
-        this.Mensagens("erro", "Falha ao comunicar com API");
-        console.log(`Error. ${error.message}.`);
-      },
-      );
+        }, (error: HttpErrorResponse) => {
+          this.Mensagens("erro", "Falha ao comunicar com API");
+          console.log(`Error. ${error.message}.`);
+        },
+        );
+      }
     }
   }
+  //end:: Salvar Pessoa
 
-  public SalvarContato(pessoa: Pessoa) {
+  //begin:: Adicionar Pessoa Contato / Obtêm as informações de contato e aplica ao array
+  public AdicionarContato(pessoa: Pessoa) {
 
     pessoa.pessoaContatos = [];
 
@@ -1047,8 +1797,9 @@ export class PessoaComponent implements OnInit {
     }
 
   }
+  //end:: Adicionar Pessoa Contato
 
-
+  //begin:: Mensagens de Exibição Padrão/ Mensagens responsáveis pelos avisos com integrações externas
   public Mensagens(tipo: string, mensagem: string) {
 
     switch (tipo) {
@@ -1076,8 +1827,9 @@ export class PessoaComponent implements OnInit {
 
 
   }
+  //end:: Mensagens de Exibição Padrão
 
-
+  //begin:: Limpa Campos/ Mensagens responsáveis pelos avisos com integrações externas
   public LimparCampos(p: NgForm) {
 
     $("#btn_formclear").trigger("click");
@@ -1102,7 +1854,7 @@ export class PessoaComponent implements OnInit {
     $("div").find("#box_newcontact4").remove();
     $("div").find("#box_newcontact5").remove();
   }
-
+  //end:: Limpa Campos
 
 
 }
