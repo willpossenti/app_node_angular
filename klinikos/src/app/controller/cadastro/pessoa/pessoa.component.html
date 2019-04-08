@@ -604,10 +604,6 @@
 
                             <div class="col-lg-4">
                               <label>Estado</label>
-                              <!--<select class="form-control" tabindex="31">
-                                <option>-Selecione-</option>
-                              </select>-->
-
                               <select class="form-control" name="DP_Endereco_Estado" tabindex="31" [(ngModel)]="EstadoEndereco" (change)="onSelectedUfEndereco()" (focus)="onFechaPesquisa()">
                                 <option value="-1">-- Selecione --</option>
                                 <option *ngFor="let estadoendereco of listaEstado| orderBy: orderNome" [ngValue]="estadoendereco">{{estadoendereco.nome}}</option>
@@ -622,9 +618,6 @@
                             </div>
                             <div class="col-lg-4">
                               <label>Bairro</label>
-                              <!--<select class="form-control" tabindex="29">
-                                <option>-Selecione-</option>
-                              </select>-->
                               <input type="text" class="form-control" name="DP_Bairro" placeholder="" maxlength="100" value="" tabindex="29" (focus)="onFechaPesquisa()" ngModel>
                             </div>
                           </div>

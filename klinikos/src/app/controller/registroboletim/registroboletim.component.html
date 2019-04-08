@@ -4,7 +4,7 @@
     <div class="col-lg-12">
 
       <!--begin::Form-->
-      <form class="k-form k-form--label-right clean_on">
+      <form class="k-form k-form--label-right clean_on" #registroboletim="ngForm" (ngSubmit)="onSalvarRegistroBoletim(registroboletim);">
 
         <!--begin: Portlet Main-->
         <div class="k-portlet">
@@ -40,12 +40,12 @@
 
                           <div class="col-lg-3">
                             <label>Número do Boletim</label>
-                            <input type="email" class="form-control bg-light" name="IB_NumeroBoletim" placeholder="" maxlength="" value="" disabled>
+                            <input type="text" class="form-control bg-light" name="IB_NumeroBoletim" placeholder="" value="" disabled ngModel>
                             <!-- <span class="form-text text-muted">Please enter your contact number</span> -->
                           </div>
                           <div class="col-lg-2">
                             <label>Data <span class="fld-obg" title="Obrigatório">*</span></label>
-                            <input type="text" class="form-control mask_data" name="IB_Data" placeholder="00/00/0000" maxlength="140" value="">
+                            <input type="text" class="form-control mask_data" name="IB_Data" placeholder="00/00/0000" maxlength="140" value="" ngModel>
                             <!-- <span class="form-text text-muted">Please enter your contact number</span> -->
                           </div>
                           <div class="col-lg-1">
@@ -55,15 +55,62 @@
 
                           <div class="col-lg-6">
                             <label>Nome <span class="fld-obg" title="Obrigatório">*</span></label>
-                            <input type="email" class="form-control maisc" name="IB_NomePaciente" placeholder="" maxlength="140" value="">
+                            <input type="text" class="form-control maisc" name="IB_NomePaciente" placeholder="" maxlength="140" value="" (keyup)="onConsultaNomeCompleto()" ngModel>
                             <!-- <span class="form-text text-muted">Please enter your contact number</span> -->
+                            <div class="dropdown-menu dropdown-menu-fit dropdown-menu-right dropdown-menu-top-unround dropdown-menu-anim dropdown-menu-lg" x-placement="bottom-end" style="position: absolute; left: 10px;  width: 95%; will-change: transform; top: 65px;" id="divPesquisaNomeCompleto">
+
+                              <div class="k-quick-search k-quick-search--dropdown k-quick-search--result-compact k-quick-search--has-result" id="k_quick_search_dropdown">
+
+                                <div class="k-quick-search__wrapper k-scroll ps ps--active-y m-0 p-0" data-scroll="true" data-height="325" data-mobile-height="200" style="overflow: hidden; height: 325px;">
+
+                                  <!--begin::k-quick-search__result-->
+                                  <div class="k-quick-search__result">
+
+                                    <div class="k-quick-search__category border-bottom text-primary">Profissionais</div>
+                                    <div class="k-quick-search__section p-0 mb-1" *ngFor="let profissional of listaPessoaProfissional;">
+                                      <div class="k-quick-search__item">
+                                        <div class="k-quick-search__item-img k-quick-search__item-img--file">
+                                          <i class="fa fa-user-md ml-2" style="font-size:1.5em; color:#069;"></i>
+                                        </div>
+                                        <div class="k-quick-search__item-wrapper">
+                                          <a class="k-quick-search__item-title" style="cursor:pointer;" (click)="onSelectedProfissional(profissional)">
+                                            {{profissional.nomeCompleto}}  - {{profissional.nascimento | date: 'dd/MM/yyyy'}}
+                                          </a>
+                                          <div class="k-quick-search__item-desc">
+                                            {{profissional.nomeMae}}
+                                          </div>
+                                        </div>
+
+                                      </div>
+                                    </div>
+
+                                    <div class="k-quick-search__category mt-2 border-bottom text-primary">Pacientes</div>
+                                    <div class="k-quick-search__section p-0 mb-1" *ngFor="let paciente of listaPessoaPaciente;">
+                                      <div class="k-quick-search__item">
+                                        <div class="k-quick-search__item-img k-quick-search__item-img--file">
+                                          <i class="fa fa-user ml-2" style="font-size:1.5em; color:#999;"></i>
+                                        </div>
+                                        <div class="k-quick-search__item-wrapper">
+                                          <a class="k-quick-search__item-title" style="cursor:pointer;" (click)="onSelectedPaciente(paciente)">
+                                            {{paciente.nomeCompleto}}  - {{paciente.nascimento | date: 'dd/MM/yyyy'}}
+                                          </a>
+                                          <div class="k-quick-search__item-desc">
+                                            {{paciente.nomeMae}}
+                                          </div>
+                                        </div>
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
                           </div>
                         </div>
 
                         <div class="form-group row">
                           <div class="col-lg-2">
                             <label>CPF</label>
-                            <input type="text" name="IB_CPF" id="DP_CPF" class="form-control mask_cpf" placeholder="Pesquisar por CPF" value="">
+                            <input type="text" name="IB_CPF" id="DP_CPF" class="form-control mask_cpf" placeholder="Pesquisar por CPF" value="" (blur)="onConsultaCpf($event)">
                             <span id="msg_cpf" class="form-text text-danger oculta">Informe um CPF válido</span>
                           </div>
                           <div class="col-lg-2">
@@ -76,59 +123,100 @@
                           </div>
                           <div class="col-lg-6">
                             <label>Nome Social</label>
-                            <input type="text" class="form-control" name="IB_NomeSocial" placeholder="" maxlength="" value="">
+                            <input type="text" class="form-control" name="IB_NomeSocial" placeholder="" maxlength="70" value=""  (keyup)="onConsultaNomeSocial()" ngModel>
                             <!-- <span class="form-text text-muted">Please enter your contact number</span> -->
+
+
+                            <div class="dropdown-menu dropdown-menu-fit dropdown-menu-right dropdown-menu-top-unround dropdown-menu-anim dropdown-menu-lg" x-placement="bottom-end" style="position: absolute; left: 10px;  width: 95%; will-change: transform; top: 65px;" id="divPesquisaNomeSocial">
+
+                              <div class="k-quick-search k-quick-search--dropdown k-quick-search--result-compact k-quick-search--has-result" id="k_quick_search_dropdown">
+
+                                <div class="k-quick-search__wrapper k-scroll ps ps--active-y m-0 p-0" data-scroll="true" data-height="325" data-mobile-height="200" style="overflow: hidden; height: 325px;">
+
+                                  <!--begin::k-quick-search__result-->
+                                  <div class="k-quick-search__result">
+
+                                    <div class="k-quick-search__category border-bottom text-primary">Profissionais</div>
+                                    <div class="k-quick-search__section p-0 mb-1" *ngFor="let profissional of listaPessoaProfissional;">
+                                      <div class="k-quick-search__item">
+                                        <div class="k-quick-search__item-img k-quick-search__item-img--file">
+                                          <i class="fa fa-user-md ml-2" style="font-size:1.5em; color:#069;"></i>
+                                        </div>
+                                        <div class="k-quick-search__item-wrapper">
+                                          <a class="k-quick-search__item-title" style="cursor:pointer;" (click)="onSelectedProfissional(profissional)">
+                                            {{profissional.nomeSocial}}  - {{profissional.nascimento | date: 'dd/MM/yyyy'}}
+                                          </a>
+                                          <div class="k-quick-search__item-desc">
+                                            {{profissional.nomeMae}}
+                                          </div>
+                                        </div>
+
+                                      </div>
+                                    </div>
+
+                                    <div class="k-quick-search__category mt-2 border-bottom text-primary">Pacientes</div>
+                                    <div class="k-quick-search__section p-0 mb-1" *ngFor="let paciente of listaPessoaPaciente;">
+                                      <div class="k-quick-search__item">
+                                        <div class="k-quick-search__item-img k-quick-search__item-img--file">
+                                          <i class="fa fa-user ml-2" style="font-size:1.5em; color:#999;"></i>
+                                        </div>
+                                        <div class="k-quick-search__item-wrapper">
+                                          <a class="k-quick-search__item-title" style="cursor:pointer;" (click)="onSelectedPaciente(paciente)">
+                                            {{paciente.nomeSocial}}  - {{paciente.nascimento | date: 'dd/MM/yyyy'}}
+                                          </a>
+                                          <div class="k-quick-search__item-desc">
+                                            {{paciente.nomeMae}}
+                                          </div>
+                                        </div>
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+
+
+
                           </div>
                         </div>
 
                         <div class="form-group row">
                           <div class="col-lg-6">
                             <label>Endereço</label>
-                            <input type="text" name="DP_Logradouro" class="form-control" value="" tabindex="7">
+                            <input type="text" name="DP_Logradouro" class="form-control" value="" tabindex="7" ngModel>
                           </div>
                           <div class="col-lg-1">
                             <label>Número</label>
-                            <input type="text" name="DP_Numero" class="form-control" value="" tabindex="8">
+                            <input type="text" name="DP_Numero" class="form-control" value="" tabindex="8" ngModel>
                           </div>
                           <div class="col-lg-2">
                             <label>Complemento</label>
-                            <input type="text" name="DP_Complemento" class="form-control" value="" tabindex="9">
+                            <input type="text" name="DP_Complemento" class="form-control" value="" tabindex="9" ngModel>
                           </div>
                           <div class="col-lg-3">
                             <label>Bairro</label>
-                            <input type="text" name="DP_Bairro" class="form-control" value="" tabindex="10">
+                            <input type="text" name="DP_Bairro" class="form-control" value="" tabindex="10" ngModel>
                           </div>
                         </div>
 
                         <div class="form-group row">
                           <div class="col-lg-6">
                             <label>Como Chegou? <span class="fld-obg" title="Obrigatório">*</span></label>
-                            <select class="form-control" name="IB_ComoChegou" tabindex="15">
-                              <option>-- Selecione --</option>
-                              <option value="">SAMU</option>
-                              <option value="">GSE</option>
-                              <option value="">Meios Próprios</option>
-                              <option value="">SAMU</option>
-                              <option value="">Outros</option>
+
+                            <select class="form-control" name="IB_ComoChegou" tabindex="13" [(ngModel)]="TipoChegada">
+                              <option value="-1">-- Selecione --</option>
+                              <option *ngFor="let tipoChegada of listaTipoChegada | orderBy: orderDescricao" [ngValue]="tipoChegada">{{tipoChegada.descricao}}</option>
                             </select>
                           </div>
                           <div class="col-lg-6">
                             <label>Especialidade <span class="fld-obg" title="Obrigatório">*</span></label>
-                            <select class="form-control" name="IB_Especialidade" tabindex="16">
-                              <option>-- Selecione --</option>
-                            </select>
-                          </div>
 
-                          <!--
-                          <div class="col-lg-3">
-                            <label class="d-block text-left">&nbsp;</label>
-                              <div class="k-checkbox-list mt-3">
-                                  <label class="k-checkbox k-checkbox--brand" data-toggle="popover" data-placement="top" data-trigger="hover" data-content="">
-                                      <input type="checkbox" name="IB_PacienteRisco" id="" value="" tabindex="14">Paciente em Risco<span></span>
-                                  </label>
-                               </div>
+                            <select class="form-control" name="IB_Especialidade" tabindex="13" [(ngModel)]="Especialidade">
+                              <option value="-1">-- Selecione --</option>
+                              <option *ngFor="let especialidade of listaEspecialidade| orderBy: orderDescricao" [ngValue]="especialidade">{{especialidade.descricao}}</option>
+                            </select>
+
                           </div>
-                          -->
 
                         </div>
 
@@ -165,22 +253,22 @@
                         <div class="form-group row">
                           <div class="col-lg-4">
                             <label>Nome do Informante</label>
-                            <input type="text" class="form-control" name="IN_NomeDoInformante" placeholder="" maxlength="" value="" tabindex="17">
+                            <input type="text" class="form-control" name="IN_NomeDoInformante" placeholder="" value="" tabindex="17" ngModel>
                             <!-- <span class="form-text text-muted">Please enter your contact number</span> -->
                           </div>
                           <div class="col-lg-4">
                             <label>Endereço</label>
-                            <input type="text" class="form-control" name="IN_Endereco" maxlength="" value="" tabindex="18">
+                            <input type="text" class="form-control" name="IN_Endereco" maxlength="" value="" tabindex="18" ngModel>
                             <!-- <span class="form-text text-muted">Please enter your contact number</span> -->
                           </div>
                           <div class="col-lg-2">
                             <label>Telefone</label>
-                            <input type="text" class="form-control mask_phone" name="IN_Telefone" maxlength="" value="" tabindex="19">
+                            <input type="text" class="form-control mask_phone" name="IN_Telefone" maxlength="" value="" tabindex="19" ngModel>
                             <!-- <span class="form-text text-muted">Please enter your contact number</span> -->
                           </div>
                           <div class="col-lg-2">
                             <label>Grau Parentesco</label>
-                            <input type="text" class="form-control" name="IN_GrauParentesco" maxlength="" value="" tabindex="20">
+                            <input type="text" class="form-control" name="IN_GrauParentesco" maxlength="" value="" tabindex="20" ngModel>
                             <!-- <span class="form-text text-muted">Please enter your contact number</span> -->
                           </div>
                         </div>
@@ -217,25 +305,25 @@
                         <div class="form-group row">
                           <div class="col-lg-4">
                             <label>Procedência</label>
-                            <input type="text" class="form-control" name="DO_Procedencia" placeholder="" maxlength="" value="" tabindex="21">
+                            <input type="text" class="form-control" name="DO_Procedencia" placeholder="" value="" tabindex="21" ngModel>
                             <!-- <span class="form-text text-muted">Please enter your contact number</span> -->
                           </div>
                           <div class="col-lg-3">
                             <label>Tipo de Ocorrência</label>
-                            <select name="DO_TipoOcorrencia" class="form-control" tabindex="22">
-                              <option value="">-- Selecione --</option>
-                              <option value="">Acidente de Trabalho</option>
-                              <option value="">Afogamentos </option>
-                              <option value="">Agressões (outras idades)</option>
-                              <option value="">Agressões ao idoso (60 anos ou mais)</option>
-                              <option value="">Agressões às crianças (menores de 12 anos)</option>
-                              <option value="">Atropelamentos</option>
+
+
+                            <select class="form-control" name="DO_TipoOcorrencia" tabindex="22" [(ngModel)]="TipoOcorrencia" >
+                              <option value="-1">-- Selecione --</option>
+                              <option *ngFor="let tipoOcorrencia of listaTipoOcorrencia | orderBy: orderDescricao" [ngValue]="tipoOcorrencia">{{tipoOcorrencia.descricao}}</option>
                             </select>
+
+
+                       
                             <!-- <span class="form-text text-muted">Please enter your contact number</span> -->
                           </div>
                           <div class="col-lg-2">
                             <label>Data</label>
-                            <input type="text" class="form-control mask_data" name="DO_Data" placeholder="" maxlength="" value="" tabindex="22">
+                            <input type="text" class="form-control mask_data" name="DO_Data" placeholder="" maxlength="" value="" tabindex="22" ngModel>
                             <!-- <span class="form-text text-muted">Please enter your contact number</span> -->
                           </div>
                           <div class="col-lg-1">
@@ -246,10 +334,10 @@
                           <div class="col-lg-2">
                             <label class="d-block">&nbsp;</label>
                             <div class="btn-group btn-group-toggle" data-toggle="buttons">
-                              <label class="btn btn-outline-info clear" for="M" style="cursor:pointer;" data-toggle="popover" data-placement="top" data-trigger="hover" data-content="Perfuração por Arma Branca">
+                              <label class="btn btn-outline-info clear" for="PAB" style="cursor:pointer;" data-toggle="popover" data-placement="top" data-trigger="hover" data-content="Perfuração por Arma Branca">
                                 <input type="checkbox" name="DO_PAB" autocomplete="off" value=""> PAB
                               </label>
-                              <label class="btn btn-outline-info clear" for="F" style="cursor:pointer;" data-toggle="popover" data-placement="top" data-trigger="hover" data-content="Perfuração por Arma de Fogo">
+                              <label class="btn btn-outline-info clear" for="PAF" style="cursor:pointer;" data-toggle="popover" data-placement="top" data-trigger="hover" data-content="Perfuração por Arma de Fogo">
                                 <input type="checkbox" name="DO_PAF" autocomplete="off" value=""> PAF
                               </label>
                             </div>
@@ -259,39 +347,70 @@
                         <div class="form-group row">
                           <div class="col-lg-2">
                             <label>CEP</label>
-                            <input type="text" class="form-control mask_cep" name="DO_CEP" placeholder="00000-000" value="" tabindex="24">
+                            <input type="text" class="form-control mask_cep" name="DO_CEP" id="DP_CEP" maxlength="11" value="" tabindex="24" (blur)="onBuscaCep()" (focus)="onFechaPesquisa()">
+                            <span id="msg_cep" class="form-text text-danger oculta">Informe um CEP válido</span>
                           </div>
                           <div class="col-lg-6">
                             <label>Logradouro</label>
-                            <input type="text" class="form-control" name="DO_Logradouro" placeholder="" maxlength="150" value="" tabindex="25">
+                            <input type="text" class="form-control" name="DO_Logradouro" placeholder="" maxlength="150" value="" tabindex="25"  (keypress)="onBuscaCep()" ngModel>
+
+                            <div class="dropdown-menu dropdown-menu-fit dropdown-menu-right dropdown-menu-top-unround dropdown-menu-anim dropdown-menu-lg" x-placement="bottom-end" style="position: absolute; left: 10px;  width: 95%; will-change: transform; top: 65px;" id="divPesquisaLogradouro">
+
+                              <div class="k-quick-search k-quick-search--dropdown k-quick-search--result-compact k-quick-search--has-result" id="k_quick_search_dropdown">
+
+                                <div class="k-quick-search__wrapper k-scroll ps ps--active-y m-0 p-0" data-scroll="true" data-height="325" data-mobile-height="200" style="overflow: hidden; height: 325px;">
+
+                                  <!--begin::k-quick-search__result-->
+                                  <div class="k-quick-search__result">
+
+                                    <div class="k-quick-search__category border-bottom text-primary">Endereços</div>
+                                    <div class="k-quick-search__section p-0 mb-1" *ngFor="let cep of listaCep;">
+                                      <div class="k-quick-search__item">
+                                        <div class="k-quick-search__item-img k-quick-search__item-img--file">
+                                          <i class="fa fa-map-marker-alt ml-2" style="font-size:1.5em; color:#069;"></i>
+                                        </div>
+                                        <div class="k-quick-search__item-wrapper">
+                                          <a class="k-quick-search__item-title" style="cursor:pointer;" (click)="onSelectedCep(cep)">
+                                            {{cep.logradouro}}
+                                          </a>
+                                          <div class="k-quick-search__item-desc">
+                                            {{cep.bairro}} - {{cep.cep}}
+                                          </div>
+                                        </div>
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
                           </div>
                           <div class="col-lg-2">
                             <label>Número</label>
-                            <input type="text" class="form-control" name="DO_Numero" placeholder="" maxlength="5" value="" tabindex="26">
+                            <input type="text" class="form-control" name="DO_Numero" placeholder="" maxlength="5" value="" tabindex="26" (focus)="onFechaPesquisa()" ngModel>
                           </div>
                           <div class="col-lg-2">
                             <label>Complemento</label>
-                            <input type="text" class="form-control" name="DO_Complemento" placeholder="" maxlength="30" value="" tabindex="27">
+                            <input type="text" class="form-control" name="DO_Complemento" placeholder="" maxlength="30" value="" tabindex="27" (focus)="onFechaPesquisa()" ngModel>
                           </div>
                         </div>
                         <div class="form-group row">
-                          <div class="col-lg-6">
-                            <label>Bairro</label>
-                            <select class="form-control" name="DO_Bairro" tabindex="28">
-                              <option>-Selecione-</option>
+                          <div class="col-lg-4">
+                            <label>Estado</label>
+                            <select class="form-control" name="DP_Endereco_Estado" tabindex="31" [(ngModel)]="Estado" (change)="onSelectedUf()" (focus)="onFechaPesquisa()">
+                              <option value="-1">-- Selecione --</option>
+                              <option *ngFor="let estado of listaEstado| orderBy: orderNome" [ngValue]="estado">{{estado.nome}}</option>
                             </select>
                           </div>
                           <div class="col-lg-4">
                             <label>Munícipio</label>
-                            <select class="form-control" name="DO_Municipio" tabindex="29">
-                              <option>-Selecione-</option>
+                            <select class="form-control" name="DP_Endereco_Cidade" tabindex="31" [(ngModel)]="Cidade" (focus)="onFechaPesquisa()">
+                              <option value="-1">-- Selecione --</option>
+                              <option *ngFor="let cidade of listaCidade | orderBy: orderNome" [ngValue]="cidade">{{cidade.nome}}</option>
                             </select>
                           </div>
-                          <div class="col-lg-2">
-                            <label>Estado</label>
-                            <select class="form-control" name="DO_Estado" tabindex="30">
-                              <option>-Selecione-</option>
-                            </select>
+                          <div class="col-lg-4">
+                            <label>Bairro</label>
+                            <input type="text" class="form-control" name="DO_Bairro" placeholder="" maxlength="100" value="" tabindex="29" (focus)="onFechaPesquisa()" ngModel>
                           </div>
                         </div>
 
@@ -321,7 +440,7 @@
                 <button type="button" id="btn_formclear" class="btn btn-metal" data-toggle="popover" data-placement="top" data-trigger="hover" data-content="Limpar Campos do Formulário">Limpar</button>
               </div>
               <div class="col-lg-6 text-right">
-                <button type="reset" class="btn btn-primary" tabindex="64">Salvar</button>
+                <button type="submit" class="btn btn-primary" tabindex="64">Salvar</button>
                 <button type="reset" class="btn btn-metal" tabindex="65">Cancelar</button>
               </div>
             </div>

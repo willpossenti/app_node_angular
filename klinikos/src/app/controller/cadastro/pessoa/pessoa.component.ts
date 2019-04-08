@@ -20,7 +20,6 @@ import { TipoProfissional } from '../../../model/TipoProfissional';
 import { LotacaoProfissional } from '../../../model/LotacaoProfissional';
 import { PessoaService } from './pessoa.service';
 import * as RemoveAcentos from 'remove-accents';
-import * as toastr from 'toastr';
 import { HttpErrorResponse } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { sortBy } from 'sort-by-typescript';
@@ -28,6 +27,8 @@ import { Pessoa } from '../../../model/Pessoa';
 import { AgeFromDate } from 'age-calculator';
 import * as swal from '../../../../assets/vendors/general/sweetalert2/dist/sweetalert2.js';
 import { Cep } from '../../../model/Cep';
+import { MensagemService } from '../../util/mensagem.service';
+import { CpfService } from '../../util/cpf.service';
 
 
 
@@ -83,7 +84,7 @@ export class PessoaComponent implements OnInit {
   Escolaridade: Escolaridade;
   SituacaoFamiliarConjugal: SituacaoFamiliarConjugal;
 
-  constructor(private pessoaService: PessoaService, private router: Router) {
+  constructor(private pessoaService: PessoaService, private mensagemService: MensagemService, private cpfService: CpfService, private router: Router) {
     this.listaContatos = new Array<PessoaContato>();
     this.listaLotacaoProfissional = new Array<LotacaoProfissional>();
     this.listaOcupacao = new Array<Ocupacao>();
@@ -102,24 +103,6 @@ export class PessoaComponent implements OnInit {
     var page = this;
 
 
-    toastr.options = {
-      "closeButton": true,
-      "debug": false,
-      "newestOnTop": false,
-      "progressBar": false,
-      "positionClass": "toast-top-right",
-      "preventDuplicates": false,
-      "onclick": null,
-      "showDuration": "300",
-      "hideDuration": "1000",
-      "timeOut": "5000",
-      "extendedTimeOut": "1000",
-      "showEasing": "swing",
-      "hideEasing": "linear",
-      "showMethod": "fadeIn",
-      "hideMethod": "fadeOut"
-    };
-
     this.pessoaService.BindRaca().subscribe(data => {
       this.listaRaca = data.result;
 
@@ -129,7 +112,7 @@ export class PessoaComponent implements OnInit {
 
     }, (error: HttpErrorResponse) => {
 
-      this.Mensagens("erro", "Falha ao carregar Raças na aba Dados Pessoais");
+      this.mensagemService.Mensagens("erro", "Falha ao carregar Raças na aba Dados Pessoais");
       console.log(`Error. ${error.message}.`);
     });
 
@@ -139,7 +122,7 @@ export class PessoaComponent implements OnInit {
 
       $(document).ready(function () { $("select[name^=DP_JustificativaCPF]").val($("select[name^=DP_JustificativaCPF] option:first").val()); });
     }, (error: HttpErrorResponse) => {
-      this.Mensagens("erro", "Falha ao carregar Justificativas na aba Dados Pessoais");
+      this.mensagemService.Mensagens("erro", "Falha ao carregar Justificativas na aba Dados Pessoais");
       console.log(`Error. ${error.message}.`);
     });
 
@@ -150,7 +133,7 @@ export class PessoaComponent implements OnInit {
       $(document).ready(function () { $("select[name^=DP_Nacionalidade]").val($("select[name^=DP_Nacionalidade] option:first").val()); });
 
     }, (error: HttpErrorResponse) => {
-      this.Mensagens("erro", "Falha ao carregar Nacionalidades na aba Dados Pessoais");
+      this.mensagemService.Mensagens("erro", "Falha ao carregar Nacionalidades na aba Dados Pessoais");
       console.log(`Error. ${error.message}.`);
     });
 
@@ -170,7 +153,7 @@ export class PessoaComponent implements OnInit {
       });
 
     }, (error: HttpErrorResponse) => {
-      this.Mensagens("erro", "Falha ao carregar Estados Naturalidade na aba Dados Pessoais");
+      this.mensagemService.Mensagens("erro", "Falha ao carregar Estados Naturalidade na aba Dados Pessoais");
       console.log(`Error. ${error.message}.`);
     });
 
@@ -183,7 +166,7 @@ export class PessoaComponent implements OnInit {
       });
 
     }, (error: HttpErrorResponse) => {
-      this.Mensagens("erro", "Falha ao carregar Orgãos Emissores na aba Dados Pessoais");
+      this.mensagemService.Mensagens("erro", "Falha ao carregar Orgãos Emissores na aba Dados Pessoais");
       console.log(`Error. ${error.message}.`);
     });
 
@@ -352,46 +335,6 @@ export class PessoaComponent implements OnInit {
       $("#divPesquisaNomeSocial").removeClass('show');
   }
   //end:: Fecha as pesquisas
-
-  //begin:: validacao de formatação do cpf
-  validarCPF(cpf) {
-
-    var cpf = cpf.replace(/[^\d]+/g, '');
-    if (cpf === '') return false;
-    // Elimina CPFs invalidos conhecidos	
-    if (cpf.length !== 11 ||
-      cpf === "00000000000" ||
-      cpf === "11111111111" ||
-      cpf === "22222222222" ||
-      cpf === "33333333333" ||
-      cpf === "44444444444" ||
-      cpf === "55555555555" ||
-      cpf === "66666666666" ||
-      cpf === "77777777777" ||
-      cpf === "88888888888" ||
-      cpf === "99999999999")
-      return false;
-    // Valida digito	
-    var add = 0;
-    for (let i = 0; i < 9; i++)
-      add += parseInt(cpf.charAt(i)) * (10 - i);
-    var rev = 11 - (add % 11);
-    if (rev === 10 || rev === 11)
-      rev = 0;
-    if (rev !== parseInt(cpf.charAt(9)))
-      return false;
-    // Valida 2o digito	
-    add = 0;
-    for (let i = 0; i < 10; i++)
-      add += parseInt(cpf.charAt(i)) * (11 - i);
-    rev = 11 - (add % 11);
-    if (rev === 10 || rev === 11)
-      rev = 0;
-    if (rev !== parseInt(cpf.charAt(10)))
-      return false;
-    return true;
-  }
-  //end:: validacao de formatação do cpf
 
   //begin:: validacao de formatação do cns
   validaCNS(cns) {
@@ -587,7 +530,7 @@ export class PessoaComponent implements OnInit {
 
     if (cpf !== '___.___.___-__') {
 
-      var verifica = this.validarCPF(cpf);
+      var verifica = this.cpfService.validarCPF(cpf);
 
       if (verifica === false) {
         $('#msg_cpf').removeClass('oculta');
@@ -603,7 +546,7 @@ export class PessoaComponent implements OnInit {
             this.pessoaService.ConsultaCpfPaciente(cpf).subscribe(subdata => {
 
               if (subdata.statusCode == "302") {
-                toastr.success("Paciente encontrado");
+                this.mensagemService.Mensagens("sucesso", "Paciente encontrado");
 
                 var paciente = subdata.result;
 
@@ -621,7 +564,7 @@ export class PessoaComponent implements OnInit {
               }
             }, (error: HttpErrorResponse) => {
 
-              this.Mensagens("erro", "Falha ao carregar Raças na aba Dados Pessoais");
+              this.mensagemService.Mensagens("erro", "Falha ao carregar Raças na aba Dados Pessoais");
               console.log(`Error. ${error.message}.`);
             });
           } else {
@@ -629,13 +572,12 @@ export class PessoaComponent implements OnInit {
 
             this.onSelectedProfissional(data.result);
 
-            toastr.success("Profissional encontrado");
-
+            this.mensagemService.Mensagens("sucesso", "Profissional encontrado");
           }
 
         }, (error: HttpErrorResponse) => {
 
-          this.Mensagens("erro", "Falha ao carregar Raças na aba Dados Pessoais");
+          this.mensagemService.Mensagens("erro", "Falha ao carregar Raças na aba Dados Pessoais");
           console.log(`Error. ${error.message}.`);
         });
       }
@@ -669,7 +611,8 @@ export class PessoaComponent implements OnInit {
           this.pessoaService.ConsultaCnsPaciente(dp_cns).subscribe(subdata => {
 
             if (subdata.statusCode == "302") {
-              toastr.success("Paciente encontrado");
+              this.mensagemService.Mensagens("sucesso", "Paciente encontrado");
+
 
               var paciente = subdata.result;
 
@@ -687,7 +630,7 @@ export class PessoaComponent implements OnInit {
             }
           }, (error: HttpErrorResponse) => {
 
-            this.Mensagens("erro", "Falha ao carregar Raças na aba Dados Pessoais");
+            this.mensagemService.Mensagens("erro", "Falha ao carregar Raças na aba Dados Pessoais");
             console.log(`Error. ${error.message}.`);
           });
         } else {
@@ -695,13 +638,12 @@ export class PessoaComponent implements OnInit {
 
           this.onSelectedProfissional(data.result);
 
-          toastr.success("Profissional encontrado");
-
+          this.mensagemService.Mensagens("sucesso", "Profissional encontrado");
         }
 
       }, (error: HttpErrorResponse) => {
 
-        this.Mensagens("erro", "Falha ao carregar Raças na aba Dados Pessoais");
+        this.mensagemService.Mensagens("erro", "Falha ao carregar Raças na aba Dados Pessoais");
         console.log(`Error. ${error.message}.`);
       });
 
@@ -736,7 +678,7 @@ export class PessoaComponent implements OnInit {
           this.pessoaService.ConsultaPisPaciente(dp_pis).subscribe(subdata => {
 
             if (subdata.statusCode == "302") {
-              toastr.success("Paciente encontrado");
+              this.mensagemService.Mensagens("sucesso", "Paciente encontrado");
 
               var paciente = subdata.result;
 
@@ -754,21 +696,20 @@ export class PessoaComponent implements OnInit {
             }
           }, (error: HttpErrorResponse) => {
 
-            this.Mensagens("erro", "Falha ao carregar Raças na aba Dados Pessoais");
+            this.mensagemService.Mensagens("erro", "Falha ao carregar Raças na aba Dados Pessoais");
             console.log(`Error. ${error.message}.`);
           });
         } else {
 
 
           this.onSelectedProfissional(data.result);
-
-          toastr.success("Profissional encontrado");
+          this.mensagemService.Mensagens("sucesso", "Profissional encontrado");
 
         }
 
       }, (error: HttpErrorResponse) => {
 
-        this.Mensagens("erro", "Falha ao carregar Raças na aba Dados Pessoais");
+        this.mensagemService.Mensagens("erro", "Falha ao carregar Raças na aba Dados Pessoais");
         console.log(`Error. ${error.message}.`);
       });
 
@@ -788,7 +729,7 @@ export class PessoaComponent implements OnInit {
       this.listaContatos = data.result;
 
     }, error => {
-      this.Mensagens("erro", "Falha ao carregar Etnias na aba Dados Pessoais");
+      this.mensagemService.Mensagens("erro", "Falha ao carregar Etnias na aba Dados Pessoais");
       console.log(`Error. ${error._body}.`);;
     });
 
@@ -804,7 +745,7 @@ export class PessoaComponent implements OnInit {
 
       this.listaLotacaoProfissional = data.result;
     }, error => {
-      this.Mensagens("erro", "Falha ao carregar Etnias na aba Dados Pessoais");
+      this.mensagemService.Mensagens("erro", "Falha ao carregar Etnias na aba Dados Pessoais");
       console.log(`Error. ${error._body}.`);;
       });
 
@@ -1049,7 +990,7 @@ export class PessoaComponent implements OnInit {
           $(document).ready(function () { $("select[name^=DP_Etnia]").val($("select[name^=DP_Etnia] option:first").val()); });
 
       }, error => {
-        this.Mensagens("erro", "Falha ao carregar Etnias na aba Dados Pessoais");
+        this.mensagemService.Mensagens("erro", "Falha ao carregar Etnias na aba Dados Pessoais");
         console.log(`Error. ${error._body}.`);;
       });
 
@@ -1076,7 +1017,7 @@ export class PessoaComponent implements OnInit {
         $(document).ready(function () { $("select[name^=DP_NaturalidadeCidade]").val($("select[name^=DP_NaturalidadeCidade] option:first").val()); });
 
     }, (error: HttpErrorResponse) => {
-      this.Mensagens("erro", "Falha ao carregar UF(s) na aba Dados Pessoais");
+      this.mensagemService.Mensagens("erro", "Falha ao carregar UF(s) na aba Dados Pessoais");
       console.log(`Error. ${error.message}.`);
     });
 
@@ -1101,7 +1042,7 @@ export class PessoaComponent implements OnInit {
         $(document).ready(function () { $("select[name^=DP_Endereco_Cidade]").val($("select[name^=DP_Endereco_Cidade] option:first").val()); });
 
     }, (error: HttpErrorResponse) => {
-      this.Mensagens("erro", "Falha ao carregar os Estados na aba Dados Pessoais");
+      this.mensagemService.Mensagens("erro", "Falha ao carregar os Estados na aba Dados Pessoais");
       console.log(`Error. ${error.message}.`);
     });
 
@@ -1118,7 +1059,7 @@ export class PessoaComponent implements OnInit {
 
       $(document).ready(function () { $("select[name^=DP_ProfTipo]").val($("select[name^=DP_ProfTipo] option:first").val()); });
     }, (error: HttpErrorResponse) => {
-      this.Mensagens("erro", "Falha ao carregar Paises na aba Dados Complementares");
+      this.mensagemService.Mensagens("erro", "Falha ao carregar Paises na aba Dados Complementares");
       console.log(`Error. ${error.message}.`);
     });
 
@@ -1145,7 +1086,7 @@ export class PessoaComponent implements OnInit {
         else
           $(document).ready(function () { $("select[name^=DC_Ocupacao]").val($("select[name^=DC_Ocupacao] option:first").val()); });
       }, (error: HttpErrorResponse) => {
-        this.Mensagens("erro", "Falha ao carregar Ocupações na aba Dados Complementares");
+        this.mensagemService.Mensagens("erro", "Falha ao carregar Ocupações na aba Dados Complementares");
         console.log(`Error. ${error.message}.`);
       });
     }
@@ -1166,7 +1107,7 @@ export class PessoaComponent implements OnInit {
         else
           $(document).ready(function () { $("select[name^=DC_PaisDeOrigem]").val($("select[name^=DC_PaisDeOrigem] option:first").val()); });
       }, (error: HttpErrorResponse) => {
-        this.Mensagens("erro", "Falha ao carregar Paises na aba Dados Complementares");
+        this.mensagemService.Mensagens("erro", "Falha ao carregar Paises na aba Dados Complementares");
         console.log(`Error. ${error.message}.`);
       });
     }
@@ -1187,7 +1128,7 @@ export class PessoaComponent implements OnInit {
           $(document).ready(function () { $("select[name^=DC_TipoCertidao]").val($("select[name^=DC_TipoCertidao] option:first").val()); });
 
       }, (error: HttpErrorResponse) => {
-        this.Mensagens("erro", "Falha ao carregar Paises na aba Dados Complementares");
+        this.mensagemService.Mensagens("erro", "Falha ao carregar Paises na aba Dados Complementares");
         console.log(`Error. ${error.message}.`);
       });
 
@@ -1219,7 +1160,7 @@ export class PessoaComponent implements OnInit {
 
 
       }, (error: HttpErrorResponse) => {
-        this.Mensagens("erro", "Falha ao carregar Paises na aba Dados Complementares");
+        this.mensagemService.Mensagens("erro", "Falha ao carregar Paises na aba Dados Complementares");
         console.log(`Error. ${error.message}.`);
       });
     }
@@ -1245,7 +1186,7 @@ export class PessoaComponent implements OnInit {
 
 
       }, (error: HttpErrorResponse) => {
-        this.Mensagens("erro", "Falha ao carregar Paises na aba Dados Complementares");
+        this.mensagemService.Mensagens("erro", "Falha ao carregar Paises na aba Dados Complementares");
         console.log(`Error. ${error.message}.`);
       });
 
@@ -1443,7 +1384,7 @@ export class PessoaComponent implements OnInit {
         .subscribe(data => {
 
           if (data.logradouro === undefined) {
-            this.Mensagens("warning", "CEP não encontrado");
+            this.mensagemService.Mensagens("warning", "CEP não encontrado");
           } else {
             $("input[name^=DP_Logradouro]").val(data.logradouro.toUpperCase())
             $("input[name^=DP_Bairro]").val(data.bairro.toUpperCase())
@@ -1460,7 +1401,7 @@ export class PessoaComponent implements OnInit {
 
 
             }, (error: HttpErrorResponse) => {
-              this.Mensagens("erro", "Falha ao carregar cidades na aba endereço");
+              this.mensagemService.Mensagens("erro", "Falha ao carregar cidades na aba endereço");
               console.log(`Error. ${error.message}.`);
             });
 
@@ -1515,18 +1456,18 @@ export class PessoaComponent implements OnInit {
 
 
     var recemNascido = p.value.DP_RecemNascido === "" ? false : true;
-    var nascimento = $("input[name='DP_Nascimento']").val();
-    var emissao = $("input[name='DP_OrgaoEmissorData']").val();
-    var cpf = $("input[name='DP_CPF']").val();
-    var identidade = $("input[name='DP_Identidade']").val();
-    var cns = $("input[name='DP_CNS']").val();
-    var cep = $("input[name='DP_CEP']").val();
-    var bairro = $("input[name='DP_Bairro']").val();
-    var pisPasep = $("input[name='DC_PISPASEP']").val();
-    var dataEntradaPis = $("input[name='DC_DataEntrada_Pis']").val();
-    var dataEmissaoCertidao = $("input[name='DC_DataEmissao']").val();
-    var dataEmissaoCtps = $("input[name='DC_DataEmissao_Ctps']").val();
-    var tituloEleitor = $("input[name='DC_TituloEleitor']").val();
+    var nascimento = $("input[name^=DP_Nascimento]").val();
+    var emissao = $("input[name^=DP_OrgaoEmissorData]").val();
+    var cpf = $("input[name^=DP_CPF]").val();
+    var identidade = $("input[name^=DP_Identidade]").val();
+    var cns = $("input[name^=DP_CNS]").val();
+    var cep = $("input[name^=DP_CEP]").val();
+    var bairro = $("input[name^=DP_Bairro]").val();
+    var pisPasep = $("input[name^=DC_PISPASEP]").val();
+    var dataEntradaPis = $("input[name^=DC_DataEntrada_Pis]").val();
+    var dataEmissaoCertidao = $("input[name^=DC_DataEmissao]").val();
+    var dataEmissaoCtps = $("input[name^=DC_DataEmissao_Ctps]").val();
+    var tituloEleitor = $("input[name^=DC_TituloEleitor]").val();
     var escolaridadeId = $('input[type=radio][name=DC_Escolaridade]:checked').attr('id');
     var situacaoFamiliarConjugalId = $('input[type=radio][name=DC_SituacaoFamiliar]:checked').attr('id');
 
@@ -1551,10 +1492,10 @@ export class PessoaComponent implements OnInit {
 
 
 
-    if ($("label[for='DP_Sexo_Masculino']").hasClass("active"))
+    if ($("label[for^=DP_Sexo_Masculino]").hasClass("active"))
       pessoa.sexo = "M";
 
-    if ($("label[for='DP_Sexo_Feminino']").hasClass("active"))
+    if ($("label[for^=DP_Sexo_Feminino]").hasClass("active"))
       pessoa.sexo = "F";
 
     if (nascimento !== "") {
@@ -1684,10 +1625,10 @@ export class PessoaComponent implements OnInit {
     if (p.value.DC_Secao !== "")
       pessoa.secao = p.value.DC_Secao.toUpperCase();
 
-    if ($("label[for='FreqEsc1']").hasClass("active"))
+    if ($("label[for^=FreqEsc1]").hasClass("active"))
       pessoa.frequentaeEscola = true;
 
-    if ($("label[for='FreqEsc2']").hasClass("active"))
+    if ($("label[for^=FreqEsc2]").hasClass("active"))
       pessoa.frequentaeEscola = false;
 
 
@@ -1721,12 +1662,12 @@ export class PessoaComponent implements OnInit {
 
           } else {
 
-            this.Mensagens("sucesso", "Profissional salvo com sucesso");
+            this.mensagemService.Mensagens("sucesso", "Profissional salvo com sucesso");
             this.LimparCampos(p);
 
           }
         }, (error: HttpErrorResponse) => {
-          this.Mensagens("erro", "Falha ao comunicar com API");
+          this.mensagemService.Mensagens("erro", "Falha ao comunicar com API");
           console.log(`Error. ${error.message}.`);
         },
         );
@@ -1752,11 +1693,11 @@ export class PessoaComponent implements OnInit {
 
         this.pessoaService.SalvarPessoaPaciente(pessoaPaciente).subscribe(data => {
 
-          this.Mensagens("sucesso", "Paciente salvo com sucesso");
+          this.mensagemService.Mensagens("sucesso", "Paciente salvo com sucesso");
           this.LimparCampos(p);
 
         }, (error: HttpErrorResponse) => {
-          this.Mensagens("erro", "Falha ao comunicar com API");
+          this.mensagemService.Mensagens("erro", "Falha ao comunicar com API");
           console.log(`Error. ${error.message}.`);
         },
         );
@@ -1798,36 +1739,6 @@ export class PessoaComponent implements OnInit {
 
   }
   //end:: Adicionar Pessoa Contato
-
-  //begin:: Mensagens de Exibição Padrão/ Mensagens responsáveis pelos avisos com integrações externas
-  public Mensagens(tipo: string, mensagem: string) {
-
-    switch (tipo) {
-      case "sucesso": {
-        toastr.success(mensagem);
-        break;
-      }
-      case "erro": {
-        toastr.error(mensagem);
-        break;
-      }
-      case "info": {
-        toastr.info(mensagem);
-        break;
-      }
-      case "warning": {
-        toastr.warning(mensagem);
-        break;
-      }
-      default: {
-        break;
-      }
-    }
-
-
-
-  }
-  //end:: Mensagens de Exibição Padrão
 
   //begin:: Limpa Campos/ Mensagens responsáveis pelos avisos com integrações externas
   public LimparCampos(p: NgForm) {
