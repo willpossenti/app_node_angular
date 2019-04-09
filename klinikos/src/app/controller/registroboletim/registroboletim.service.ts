@@ -3,6 +3,8 @@ import { Injectable } from '@angular/core';
 import { Return } from '../../model/Return';
 import { Estado } from '../../model/Estado';
 import { RegistroBoletim } from '../../model/RegistroBoletim';
+import { Pessoa } from '../../model/Pessoa';
+import { PessoaPaciente } from '../../model/PessoaPaciente';
 
 @Injectable({
   providedIn: 'root',
@@ -31,5 +33,10 @@ export class RegistroBoletimService {
   SalvarRegistroBoletim(registroboletim: RegistroBoletim) {
 
     return this.http.post<Return>(`${this.baseUrl}registroboletim/incluir`, registroboletim, this.httpOptions);
+  }
+
+ AlterarRegistroPessoa(paciente: PessoaPaciente) {
+
+   return this.http.put<Return>(`${this.baseUrl}pessoa/pessoapaciente/alterar`, paciente, this.httpOptions);
   }
 }

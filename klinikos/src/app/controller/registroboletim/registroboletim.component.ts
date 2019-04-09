@@ -19,6 +19,7 @@ import { Pessoa } from '../../model/Pessoa';
 import { PessoaPaciente } from '../../model/PessoaPaciente';
 import { PessoaProfissional } from '../../model/PessoaProfissional';
 import { PessoaContato } from 'src/app/model/PessoaContato';
+import { transformAll } from '@angular/compiler/src/render3/r3_ast';
 
 
 @Component({
@@ -26,7 +27,7 @@ import { PessoaContato } from 'src/app/model/PessoaContato';
   templateUrl: './registroboletim.component.html'
 })
 export class RegistroBoletimComponent implements OnInit {
-  
+
   listaEspecialidade: Array<Especialidade>;
   listaTipoChegada: Array<TipoChegada>;
   listaTipoOcorrencia: Array<TipoOcorrencia>;
@@ -47,14 +48,92 @@ export class RegistroBoletimComponent implements OnInit {
   Pessoa: any;
 
   constructor(private registroBoletimService: RegistroBoletimService, private mensagemService: MensagemService, private pessoaService: PessoaService, private cpfService: CpfService, private router: Router) {
-   
+
 
   }
 
 
   public ngOnInit() {
 
-    $(document).ready(function () { document.title = 'Registro Boletim | Klinikos'; });
+    var page = this;
+
+    $(document).ready(function () {
+
+      document.title = 'Registro Boletim | Klinikos';
+
+
+      $("#divPesquisaNomeCompleto")
+        .mouseover(function () {
+          $("#divPesquisaNomeCompleto").addClass('show');
+        })
+        .mouseout(function () {
+          $("#divPesquisaNomeCompleto").removeClass('show');
+        });
+
+      $("input[name^=IB_NomePaciente]").focus(function () {
+        if (page.listaPessoaProfissional.length > 0 || page.listaPessoaPaciente.length > 0)
+          $("#divPesquisaNomeCompleto").addClass('show');
+      });
+
+      $("input[name^=IB_NomePaciente]").focusout(function () {
+        if ($('#divPesquisaNomeCompleto').is(':hover') === false)
+          $("#divPesquisaNomeCompleto").removeClass('show');
+        else
+          $("#divPesquisaNomeCompleto").addClass('show');
+      });
+
+
+
+
+
+      $("#divPesquisaNomeSocial")
+        .mouseover(function () {
+          $("#divPesquisaNomeSocial").addClass('show');
+        })
+        .mouseout(function () {
+          $("#divPesquisaNomeSocial").removeClass('show');
+        });
+
+
+      $("input[name^=IB_NomeSocial]").focus(function () {
+        if (page.listaPessoaProfissional.length > 0 || page.listaPessoaPaciente.length > 0)
+          $("#divPesquisaNomeCompleto").addClass('show');
+      });
+
+      $("input[name^=IB_NomeSocial]").focusout(function () {
+        if ($('#divPesquisaNomeSocial').is(':hover') === false)
+          $("#divPesquisaNomeSocial").removeClass('show');
+        else
+          $("#divPesquisaNomeSocial").addClass('show');
+      });
+
+
+
+
+
+      $("#divPesquisaLogradouro")
+        .mouseover(function () {
+          $("#divPesquisaLogradouro").addClass('show');
+        })
+        .mouseout(function () {
+          $("#divPesquisaLogradouro").removeClass('show');
+        });
+
+
+      $("input[name^=DO_CEP]").focus(function () {
+        if (page.listaPessoaProfissional.length > 0 || page.listaPessoaPaciente.length > 0)
+          $("#divPesquisaLogradouro").addClass('show');
+      });
+
+      $("input[name^=DO_CEP]").focusout(function () {
+        if ($('#divPesquisaLogradouro').is(':hover') === false)
+          $("#divPesquisaLogradouro").removeClass('show');
+        else
+          $("#divPesquisaLogradouro").addClass('show');
+      });
+
+
+    });
 
     $(document).ready(function () { $("select[name^=DP_Endereco_Cidade]").val($("select[name^=DP_Endereco_Cidade] option:first").val()); });
 
@@ -74,7 +153,7 @@ export class RegistroBoletimComponent implements OnInit {
     }, (error: HttpErrorResponse) => {
       this.mensagemService.Mensagens("erro", "Falha ao carregar tipos de chegada na aba Informações do boletim");
       console.log(`Error. ${error.message}.`);
-      });
+    });
 
     this.registroBoletimService.BindTipoOcorrencia().subscribe(data => {
       this.listaTipoOcorrencia = data.result;
@@ -83,7 +162,7 @@ export class RegistroBoletimComponent implements OnInit {
     }, (error: HttpErrorResponse) => {
       this.mensagemService.Mensagens("erro", "Falha ao carregar tipos de chegada na aba Informações do boletim");
       console.log(`Error. ${error.message}.`);
-      });
+    });
 
     this.registroBoletimService.BindEstado().subscribe(data => {
       this.listaEstado = data.result;
@@ -92,7 +171,7 @@ export class RegistroBoletimComponent implements OnInit {
     }, (error: HttpErrorResponse) => {
       this.mensagemService.Mensagens("erro", "Falha ao carregar os estados na aba Informações do boletim");
       console.log(`Error. ${error.message}.`);
-      });
+    });
 
 
   }
@@ -115,19 +194,7 @@ export class RegistroBoletimComponent implements OnInit {
 
   }
 
-  //begin:: Fecha as pesquisas
-  onFechaPesquisa() {
 
-    if ($("#divPesquisaNomeCompleto").hasClass('show'))
-      $("#divPesquisaNomeCompleto").removeClass('show');
-
-    if ($("#divPesquisaLogradouro").hasClass('show'))
-      $("#divPesquisaLogradouro").removeClass('show');
-
-    if ($("#divPesquisaNomeSocial").hasClass('show'))
-      $("#divPesquisaNomeSocial").removeClass('show');
-  }
-  //end:: Fecha as pesquisas
 
   //begin:: Consulta Cep / Consulta tanto o CEP, quanto o logradouro e atribui aos campos correspondentes
   onBuscaCep() {
@@ -194,7 +261,7 @@ export class RegistroBoletimComponent implements OnInit {
           $('#divPesquisaLogradouro').addClass('show');
           this.pessoaService.BuscarCepPorLogradouro(cep)
             .subscribe(data => {
- 
+
               this.listaCep = data;
             }, (error: HttpErrorResponse) => {
               //this.Mensagens("erro", "Falha ao consultar cep na aba endereço");
@@ -243,7 +310,7 @@ export class RegistroBoletimComponent implements OnInit {
         this.pessoaService.ConsultaCpfPaciente(cpf).subscribe(data => {
           if (data.statusCode == "302") {
             this.mensagemService.Mensagens("sucesso", "Paciente encontrado");
-         
+
             var paciente = data.result;
             this.CarregaPessoa(paciente);
           }
@@ -304,75 +371,71 @@ export class RegistroBoletimComponent implements OnInit {
       var newData = new Date(data[2] + '-' + data[1] + '-' + data[0]);
 
       if (horaBoletim !== "") {
-        newData.setHours(newData.getHours() + parseInt(horaBoletim.substring(0, 2)));
-        newData.setMinutes(newData.getMinutes() + parseInt(horaBoletim.substring(2, 4)));
+        var hora = horaBoletim.split(":");
+        newData.setHours(newData.getHours() + parseInt(hora[0]));
+        newData.setMinutes(newData.getMinutes() + parseInt(hora[1]));
       }
-
       registroboletim.dataBoletim = newData;
     }
-    console.log(this.Pessoa);
-
-    if (this.Pessoa == undefined) {
-
-      var pessoa: PessoaPaciente = {};
-
-      var cpf = $("input[name^=DO_CEP]").val();
-      var nascimento = $("input[name^=IB_Nascimento]").val();
-      var telefone = $("input[name^=DP_Telefone]").val();
-
-      
-
-      if (rb.value.IB_NomePaciente !== "")
-        pessoa.nomeCompleto = rb.value.IB_NomePaciente.toUpperCase();
-
-      if (cpf !== "")
-        pessoa.cpf = cpf.replace('.', '').replace('.', '').replace('-', '');
-
-      if (nascimento !== "") {
-
-        var data = nascimento.split("/");
-        pessoa.nascimento = new Date(data[2] + '-' + data[1] + '-' + data[0]);
-
-      }
 
 
-      if (telefone !== "") {
-        pessoa.pessoaContatos = [];
+    var pessoa: PessoaPaciente = {};
 
-        var pessoacontato: PessoaContato = {
-          telefone: telefone,
-          ativo: true
-        }
+    pessoa.ativo = true;
 
-        pessoa.pessoaContatos.push(pessoacontato);
-      }
 
-      if (rb.value.IB_NomeSocial !== "")
-        pessoa.nomeSocial = rb.value.IB_NomeSocial.toUpperCase();
+    var cpf = $("input[name^=IB_CPF]").val();
+    var nascimento = $("input[name^=IB_Nascimento]").val();
+    var telefone = $("input[name^=DP_Telefone]").val();
+    var nome = $("input[name^=IB_NomePaciente]").val()
 
-      if (rb.value.DP_Logradouro !== "")
-        pessoa.logradouro = rb.value.DP_Logradouro.toUpperCase();
+    if (nome !== "")
+      pessoa.nomeCompleto = nome.toUpperCase();
 
-      if (rb.value.DP_Numero !== "")
-        pessoa.numero = rb.value.DP_Numero.toUpperCase();
+    if (cpf !== "")
+      pessoa.cpf = cpf.replace('.', '').replace('.', '').replace('-', '');
 
-      if (rb.value.DP_Complemento !== "")
-        pessoa.complemento = rb.value.DP_Complemento.toUpperCase();
+    if (nascimento !== "") {
 
-      if (rb.value.DP_Bairro !== "")
-        pessoa.bairro = rb.value.DP_Bairro.toUpperCase();
+      var data = nascimento.split("/");
+      pessoa.nascimento = new Date(data[2] + '-' + data[1] + '-' + data[0]);
 
     }
 
 
-    registroboletim.Pessoa = this.Pessoa;
+    if (rb.value.IB_NomeSocial !== "")
+      pessoa.nomeSocial = rb.value.IB_NomeSocial.toUpperCase();
+
+    if (rb.value.DP_Logradouro !== "")
+      pessoa.logradouro = rb.value.DP_Logradouro.toUpperCase();
+
+    if (rb.value.DP_Numero !== "")
+      pessoa.numero = rb.value.DP_Numero.toUpperCase();
+
+    if (rb.value.DP_Complemento !== "")
+      pessoa.complemento = rb.value.DP_Complemento.toUpperCase();
+
+    if (rb.value.DP_Bairro !== "")
+      pessoa.bairro = rb.value.DP_Bairro.toUpperCase();
+
+
     registroboletim.TipoChegada = this.TipoChegada;
     registroboletim.Especialidade = this.Especialidade;
-    registroboletim.nomeInformante = rb.value.IN_NomeDoInformante;
-    registroboletim.enderecoInformante = rb.value.IN_Endereco;
-    registroboletim.telefoneInformante = rb.value.IN_Telefone;
-    registroboletim.grauParentesco = rb.value.IN_GrauParentesco;
-    registroboletim.procedencia = rb.value.DO_Procedencia;
+
+    if (rb.value.IN_NomeDoInformante !== "")
+      registroboletim.nomeInformante = rb.value.IN_NomeDoInformante.toUpperCase();
+
+    if (rb.value.IN_Endereco !== "")
+      registroboletim.enderecoInformante = rb.value.IN_Endereco.toUpperCase();
+
+    registroboletim.telefoneInformante = rb.value.telefone;
+
+    if (rb.value.IN_GrauParentesco !== "")
+      registroboletim.grauParentesco = rb.value.IN_GrauParentesco.toUpperCase();
+
+    if (rb.value.IN_GrauParentesco !== "")
+      registroboletim.procedencia = rb.value.IN_GrauParentesco;
+
     registroboletim.TipoOcorrencia = this.TipoOcorrencia;
 
     if (dataOcorrencia !== "") {
@@ -394,12 +457,40 @@ export class RegistroBoletimComponent implements OnInit {
     if ($("label[for^=PAF]").hasClass("active"))
       registroboletim.tipoPerfuracao = "PAF";
 
-    registroboletim.cep = cepOcorrencia;
-    registroboletim.logradouro = rb.value.DO_Logradouro;
-    registroboletim.numero = rb.value.DO_Numero;
-    registroboletim.complemento = rb.value.DO_Complemento;
+    if (cepOcorrencia !== "")
+      pessoa.cep = cepOcorrencia.replace('-', '');
+
+    if (rb.value.DO_Logradouro !== "")
+      registroboletim.logradouro = rb.value.DO_Logradouro;
+
+    if (rb.value.DO_Numero !== "")
+      registroboletim.numero = rb.value.DO_Numero;
+
+    if (rb.value.DO_Complemento !== "")
+      registroboletim.complemento = rb.value.DO_Complemento;
+
     registroboletim.Estado = this.Estado;
     registroboletim.Cidade = this.Cidade;
+
+    if (this.Pessoa === undefined)
+      registroboletim.Pessoa = pessoa;
+    else {
+
+      pessoa.pessoaId = this.Pessoa.pessoaId;
+
+      this.registroBoletimService.AlterarRegistroPessoa(pessoa).subscribe(data => {
+
+
+        registroboletim.Pessoa = pessoa;
+
+      }, (error: HttpErrorResponse) => {
+        this.mensagemService.Mensagens("erro", "Falha ao comunicar com API");
+        console.log(`Error. ${error.message}.`);
+      },
+      );
+
+    }
+
 
     this.registroBoletimService.SalvarRegistroBoletim(registroboletim).subscribe(data => {
 
@@ -492,24 +583,21 @@ export class RegistroBoletimComponent implements OnInit {
 
 
     this.CarregaPessoa(profissional);
-
-    this.onFechaPesquisa();
+    $("#divPesquisaNomeCompleto").removeClass('show');
+    $("#divPesquisaNomeSocial").removeClass('show');
 
   }
   //end::  Carregamento do Profissional pela Busca
-
-
 
   //begin:: Carregamento do Paciente pela Busca
   onSelectedPaciente(paciente: PessoaPaciente) {
 
     $("input[name^=DP_CPF]").val(paciente.cpf);
 
-
     this.CarregaPessoa(paciente);
 
-    this.onFechaPesquisa();
-
+    $("#divPesquisaNomeCompleto").removeClass('show');
+    $("#divPesquisaNomeSocial").removeClass('show');
   }
   //end::  Carregamento do Paciente pela Busca
 
@@ -518,6 +606,8 @@ export class RegistroBoletimComponent implements OnInit {
   public LimparCampos(rb: NgForm) {
 
     $("#btn_formclear").trigger("click");
+
+    this.Pessoa = undefined;
 
     rb.value.IN_Endereco = "";
     rb.value.IN_Telefone = "";

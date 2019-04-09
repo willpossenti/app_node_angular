@@ -119,7 +119,7 @@ $(document).ready(function () {
     $(".mask_cep").mask("99999-999");
     $(".mask_pis").mask("999.9999.999-9"); // PIS PASEP
     $(".mask_te").mask("999999999999"); // Titulo Eleitor
-
+    $(".mask_hour").mask("99:99"); //hora
   });
 
 

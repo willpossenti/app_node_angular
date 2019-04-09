@@ -2,15 +2,11 @@
   "ExpandedNodes": [
     "",
     "\\src",
-    "\\src\\app",
-    "\\src\\app\\controller",
-    "\\src\\app\\controller\\cadastro",
-    "\\src\\app\\controller\\cadastro\\pessoa",
-    "\\src\\app\\controller\\registroboletim",
-    "\\src\\app\\model",
     "\\src\\assets",
-    "\\src\\assets\\app"
+    "\\src\\assets\\app",
+    "\\src\\assets\\app\\custom",
+    "\\src\\assets\\app\\custom\\general"
   ],
-  "SelectedNode": "\\src\\app\\controller\\cadastro\\pessoa\\pessoa.component.html",
+  "SelectedNode": "\\src\\assets\\app\\custom\\general\\interface.js",
   "PreviewInSolutionExplorer": false
 }
