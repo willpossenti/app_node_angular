@@ -1,0 +1,35 @@
+@charset "utf-8";
+/* ECO Customize */
+
+/* placeholders browsers colors : -------------- */
+/* Chrome/Opera/Safari */
+::-webkit-input-placeholder { color: #C6C6C6 !important; }
+/* Firefox 19+ */
+::-moz-placeholder { color: #C6C6C6 !important; }
+/* IE 10+ */
+:-ms-input-placeholder { color: #C6C6C6 !important; }
+/* Firefox 18- */
+:-moz-placeholder { color: #C6C6C6 !important; }
+/* fields */
+input[type="text"], input[type="password"], input[type="email"], input[type="date"], select, textarea {
+	border: 1px solid #D6D6D6 !important;
+}
+input[type="text"]:focus, input[type="password"]:focus, input[type="email"]:focus, input[type="date"]:focus, select:focus, textarea:focus {
+	border-color: #A5B6FF !important;
+	-webkit-box-shadow: 3px 3px 36px -13px rgba(38,72,204,1) !important;
+	-moz-box-shadow: 3px 3px 36px -13px rgba(38,72,204,1) !important;
+	box-shadow: 3px 3px 36px -13px rgba(38,72,204,1) !important;
+}
+
+/* Campos de formulário */
+.oculta {
+	display: none !important;
+}
+.maisc {
+	text-transform: uppercase !important;
+}
+.minus {
+	text-transform: lowercase !important;
+}
+
+
