@@ -3,7 +3,6 @@ import { Injectable } from '@angular/core';
 import { Return } from '../../model/Return';
 import { Estado } from '../../model/Estado';
 import { RegistroBoletim } from '../../model/RegistroBoletim';
-import { Pessoa } from '../../model/Pessoa';
 import { PessoaPaciente } from '../../model/PessoaPaciente';
 
 @Injectable({

@@ -10,7 +10,6 @@ import { Etnia } from "./Etnia";
 import { Justificativa } from "./Justificativa";
 import { Nacionalidade } from "./Nacionalidade";
 import { OrgaoEmissor } from "./OrgaoEmissor";
-import { PessoaContato } from './PessoaContato';
 import { LotacaoProfissional } from './LotacaoProfissional';
 
 
@@ -42,7 +41,10 @@ export interface Pessoa  {
   bairro?: string;
   Estado?: Estado;
   Cidade?: Cidade;
-  pessoaContatos?: Array<PessoaContato>;
+  contato1?: string;
+  contato2?: string;
+  contato3?: string;
+  email?: string;
   pisPasep?: string;
   Ocupacao?: Ocupacao;
   PaisOrigem?: Pais;

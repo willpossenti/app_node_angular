@@ -1,3 +1,5 @@
+
+
 <!-- begin:: Content -->
 <div class="k-content k-grid__item k-grid__item--fluid" id="k_content">
   <div class="row">
@@ -40,7 +42,7 @@
 
                           <div class="col-lg-3">
                             <label>Número do Boletim</label>
-                            <input type="text" class="form-control bg-light" name="IB_NumeroBoletim" placeholder="" value="" disabled ngModel>
+                            <input type="text" class="form-control bg-light" name="IB_NumeroBoletim" placeholder="" disabled ngModel>
                             <!-- <span class="form-text text-muted">Please enter your contact number</span> -->
                           </div>
                           <div class="col-lg-2">
@@ -50,12 +52,12 @@
                           </div>
                           <div class="col-lg-1">
                             <label>Hora <span class="fld-obg" title="Obrigatório">*</span></label>
-                            <input type="text" name="IB_Hora" class="form-control mask_hour" placeholder="00:00" tabindex="2"  value="">
+                            <input type="text" name="IB_Hora" class="form-control mask_hour" placeholder="00:00" tabindex="2" value="">
                           </div>
 
                           <div class="col-lg-6">
                             <label>Nome <span class="fld-obg" title="Obrigatório">*</span></label>
-                            <input type="text" class="form-control maisc" name="IB_NomePaciente" placeholder="" tabindex="3"  maxlength="140" (keyup)="onConsultaNomeCompleto()" ngModel>
+                            <input type="text" class="form-control maisc" name="IB_NomePaciente" placeholder="" tabindex="3" maxlength="140" (keyup)="onConsultaNomeCompleto()" ngModel>
                             <!-- <span class="form-text text-muted">Please enter your contact number</span> -->
                             <div class="dropdown-menu dropdown-menu-fit dropdown-menu-right dropdown-menu-top-unround dropdown-menu-anim dropdown-menu-lg" x-placement="bottom-end" style="position: absolute; left: 10px;  width: 95%; will-change: transform; top: 65px;" id="divPesquisaNomeCompleto">
 
@@ -110,7 +112,7 @@
                         <div class="form-group row">
                           <div class="col-lg-2">
                             <label>CPF</label>
-                            <input type="text" name="IB_CPF" id="DP_CPF" class="form-control mask_cpf" placeholder="Pesquisar por CPF" tabindex="4"  (blur)="onConsultaCpf($event)">
+                            <input type="text" name="P_CPF" id="DP_CPF" class="form-control mask_cpf" placeholder="Pesquisar por CPF" tabindex="4" (blur)="onConsultaCpf($event)">
                             <span id="msg_cpf" class="form-text text-danger oculta">Informe um CPF válido</span>
                           </div>
                           <div class="col-lg-2">
@@ -119,11 +121,11 @@
                           </div>
                           <div class="col-lg-2">
                             <label>Telefone</label>
-                            <input type="text" name="DP_Telefone" class="form-control mask_phone" value="" tabindex="6">
+                            <input type="text" name="DP_Telefone" class="form-control telefone" value="" tabindex="6">
                           </div>
                           <div class="col-lg-6">
                             <label>Nome Social</label>
-                            <input type="text" class="form-control" name="IB_NomeSocial" placeholder="" maxlength="70"  tabindex="7"  (keyup)="onConsultaNomeSocial()" ngModel>
+                            <input type="text" class="form-control" name="IB_NomeSocial" placeholder="" maxlength="70" tabindex="7" (keyup)="onConsultaNomeSocial()" ngModel>
                             <!-- <span class="form-text text-muted">Please enter your contact number</span> -->
 
 
@@ -227,154 +229,138 @@
 
                   </div>
                 </div>
-              </div>
-              <!--end: Card 1 -->
-              <!--begin: Card 3 : Informante -->
-              <div class="card">
-                <div class="card-header" id="headingOne3">
-                  <div class="card-title" data-toggle="collapse" data-target="#collapseOne3" aria-expanded="false" aria-controls="collapseOne3"> <i class="flaticon-users-1"></i> Informante </div>
-                </div>
-                <div id="collapseOne3" class="collapse" aria-labelledby="headingOne3" data-parent="#accordionExample1" style="">
-                  <div class="card-body">
 
-                    <!--begin::Portlet 2-->
-                    <div class="k-portlet">
-                      <!--
-                      <div class="k-portlet__head">
-                          <div class="k-portlet__head-label">
-                              <h3 class="k-portlet__head-title">
-                                  Dados Pessoais
-                              </h3>
-                          </div>
-                      </div>
-                      -->
-                      <div class="k-portlet__body p-1">
-
-                        <div class="form-group row">
-                          <div class="col-lg-4">
-                            <label>Nome do Informante</label>
-                            <input type="text" class="form-control" name="IN_NomeDoInformante" placeholder="" value="" tabindex="14" ngModel>
-                            <!-- <span class="form-text text-muted">Please enter your contact number</span> -->
-                          </div>
-                          <div class="col-lg-4">
-                            <label>Endereço</label>
-                            <input type="text" class="form-control" name="IN_Endereco" maxlength="" value="" tabindex="15" ngModel>
-                            <!-- <span class="form-text text-muted">Please enter your contact number</span> -->
-                          </div>
-                          <div class="col-lg-2">
-                            <label>Telefone</label>
-                            <input type="text" class="form-control mask_phone" name="IN_Telefone" maxlength="" value="" tabindex="16" ngModel>
-                            <!-- <span class="form-text text-muted">Please enter your contact number</span> -->
-                          </div>
-                          <div class="col-lg-2">
-                            <label>Grau Parentesco</label>
-                            <input type="text" class="form-control" name="IN_GrauParentesco" maxlength="" value="" tabindex="17" ngModel>
-                            <!-- <span class="form-text text-muted">Please enter your contact number</span> -->
-                          </div>
-                        </div>
-
-                      </div>
-                    </div>
-                    <!--end::Portlet 2-->
-
+                <!--end: Card 1 -->
+                <!--begin: Card 3 : Informante -->
+                <div class="card">
+                  <div class="card-header" id="headingOne3">
+                    <div class="card-title" data-toggle="collapse" data-target="#collapseOne3" aria-expanded="false" aria-controls="collapseOne3"> <i class="flaticon-users-1"></i> Informante </div>
                   </div>
-                </div>
-              </div>
-              <!--end: Card 3 -->
-              <!--begin: Card 4 : Dados da Ocorrência -->
-              <div class="card">
-                <div class="card-header" id="headingOne4">
-                  <div class="card-title" data-toggle="collapse" data-target="#collapseOne4" aria-expanded="false" aria-controls="collapseOne4"> <i class="flaticon-placeholder-3"></i> Dados da Ocorrência </div>
-                </div>
-                <div id="collapseOne4" class="collapse" aria-labelledby="headingOne4" data-parent="#accordionExample1" style="">
-                  <div class="card-body">
+                  <div id="collapseOne3" class="collapse" aria-labelledby="headingOne3" data-parent="#accordionExample1" style="">
+                    <div class="card-body">
 
-                    <!--begin::Portlet 2-->
-                    <div class="k-portlet">
-                      <!--
-                      <div class="k-portlet__head">
-                          <div class="k-portlet__head-label">
-                              <h3 class="k-portlet__head-title">
-                                  Dados Pessoais
-                              </h3>
-                          </div>
-                      </div>
-                      -->
-                      <div class="k-portlet__body p-1">
+                      <!--begin::Portlet 2-->
+                      <div class="k-portlet">
+                        <!--
+                        <div class="k-portlet__head">
+                            <div class="k-portlet__head-label">
+                                <h3 class="k-portlet__head-title">
+                                    Dados Pessoais
+                                </h3>
+                            </div>
+                        </div>
+                        -->
+                        <div class="k-portlet__body p-1">
 
-                        <div class="form-group row">
-                          <div class="col-lg-4">
-                            <label>Procedência</label>
-                            <input type="text" class="form-control" name="DO_Procedencia" placeholder="" value="" tabindex="18" ngModel>
-                            <!-- <span class="form-text text-muted">Please enter your contact number</span> -->
-                          </div>
-                          <div class="col-lg-3">
-                            <label>Tipo de Ocorrência</label>
-
-
-                            <select class="form-control" name="DO_TipoOcorrencia" tabindex="19" [(ngModel)]="TipoOcorrencia" >
-                              <option value="-1">-- Selecione --</option>
-                              <option *ngFor="let tipoOcorrencia of listaTipoOcorrencia | orderBy: orderDescricao" [ngValue]="tipoOcorrencia">{{tipoOcorrencia.descricao}}</option>
-                            </select>
-
-
-                       
-                            <!-- <span class="form-text text-muted">Please enter your contact number</span> -->
-                          </div>
-                          <div class="col-lg-2">
-                            <label>Data</label>
-                            <input type="text" class="form-control mask_data" name="DO_Data" placeholder="" maxlength="" value="" tabindex="20" ngModel>
-                            <!-- <span class="form-text text-muted">Please enter your contact number</span> -->
-                          </div>
-                          <div class="col-lg-1">
-                            <label>Hora</label>
-                            <input type="text" class="form-control mask_hour" name="DO_Hora" placeholder="" maxlength="" value="" tabindex="21">
-                            <!-- <span class="form-text text-muted">Please enter your contact number</span> -->
-                          </div>
-                          <div class="col-lg-2">
-                            <label class="d-block">&nbsp;</label>
-                            <div class="btn-group btn-group-toggle" data-toggle="buttons">
-                              <label class="btn btn-outline-info clear" for="PAB" style="cursor:pointer;" data-toggle="popover" data-placement="top" data-trigger="hover" data-content="Perfuração por Arma Branca">
-                                <input type="checkbox" name="DO_PAB" autocomplete="off" value=""> PAB
-                              </label>
-                              <label class="btn btn-outline-info clear" for="PAF" style="cursor:pointer;" data-toggle="popover" data-placement="top" data-trigger="hover" data-content="Perfuração por Arma de Fogo">
-                                <input type="checkbox" name="DO_PAF" autocomplete="off" value=""> PAF
-                              </label>
+                          <div class="form-group row">
+                            <div class="col-lg-4">
+                              <label>Nome do Informante</label>
+                              <input type="text" class="form-control" name="IN_NomeDoInformante" placeholder="" value="" tabindex="14" ngModel>
+                              <!-- <span class="form-text text-muted">Please enter your contact number</span> -->
+                            </div>
+                            <div class="col-lg-4">
+                              <label>Endereço</label>
+                              <input type="text" class="form-control" name="IN_Endereco" maxlength="" value="" tabindex="15" ngModel>
+                              <!-- <span class="form-text text-muted">Please enter your contact number</span> -->
+                            </div>
+                            <div class="col-lg-2">
+                              <label>Telefone</label>
+                              <input type="text" class="form-control mask_phone" name="IN_Telefone" maxlength="" value="" tabindex="16" ngModel>
+                              <!-- <span class="form-text text-muted">Please enter your contact number</span> -->
+                            </div>
+                            <div class="col-lg-2">
+                              <label>Grau Parentesco</label>
+                              <input type="text" class="form-control" name="IN_GrauParentesco" maxlength="" value="" tabindex="17" ngModel>
+                              <!-- <span class="form-text text-muted">Please enter your contact number</span> -->
                             </div>
                           </div>
+
                         </div>
+                      </div>
+                      <!--end::Portlet 2-->
 
-                        <div class="form-group row">
-                          <div class="col-lg-2">
-                            <label>CEP</label>
-                            <input type="text" class="form-control mask_cep" name="DO_CEP" id="DP_CEP" maxlength="11" value="" tabindex="23" (blur)="onBuscaCep()">
-                            <span id="msg_cep" class="form-text text-danger oculta">Informe um CEP válido</span>
+                    </div>
+                  </div>
+                </div>
+                <!--end: Card 3 -->
+                <!--begin: Card 4 : Dados da Ocorrência -->
+                <div class="card">
+                  <div class="card-header" id="headingOne4">
+                    <div class="card-title" data-toggle="collapse" data-target="#collapseOne4" aria-expanded="false" aria-controls="collapseOne4"> <i class="flaticon-placeholder-3"></i> Dados da Ocorrência </div>
+                  </div>
+                  <div id="collapseOne4" class="collapse" aria-labelledby="headingOne4" data-parent="#accordionExample1" style="">
+                    <div class="card-body">
+
+                      <!--begin::Portlet 2-->
+                      <div class="k-portlet">
+                        <div class="k-portlet__body p-1">
+
+                          <div class="form-group row">
+                            <div class="col-lg-4">
+                              <label>Procedência</label>
+                              <input type="text" class="form-control" name="DO_Procedencia" placeholder="" value="" tabindex="18" ngModel>
+                            </div>
+                            <div class="col-lg-3">
+                              <label>Tipo de Ocorrência</label>
+
+
+                              <select class="form-control" name="DO_TipoOcorrencia" tabindex="19" [(ngModel)]="TipoOcorrencia">
+                                <option value="-1">-- Selecione --</option>
+                                <option *ngFor="let tipoOcorrencia of listaTipoOcorrencia | orderBy: orderDescricao" [ngValue]="tipoOcorrencia">{{tipoOcorrencia.descricao}}</option>
+                              </select>
+                            </div>
+                            <div class="col-lg-2">
+                              <label>Data</label>
+                              <input type="text" class="form-control mask_data" name="DO_Data" placeholder="" tabindex="20" ngModel>
+                            </div>
+                            <div class="col-lg-1">
+                              <label>Hora</label>
+                              <input type="text" class="form-control mask_hour" name="DO_Hora" placeholder="" tabindex="21" ngModel>
+                            </div>
+                            <div class="col-lg-2">
+                              <label class="d-block">&nbsp;</label>
+                              <div class="btn-group btn-group-toggle" data-toggle="buttons">
+                                <label class="btn btn-outline-info clear" for="PAB" style="cursor:pointer;" data-toggle="popover" data-placement="top" data-trigger="hover" data-content="Perfuração por Arma Branca">
+                                  <input type="checkbox" name="DO_PAB" autocomplete="off" value=""> PAB
+                                </label>
+                                <label class="btn btn-outline-info clear" for="PAF" style="cursor:pointer;" data-toggle="popover" data-placement="top" data-trigger="hover" data-content="Perfuração por Arma de Fogo">
+                                  <input type="checkbox" name="DO_PAF" autocomplete="off" value=""> PAF
+                                </label>
+                              </div>
+                            </div>
                           </div>
-                          <div class="col-lg-6">
-                            <label>Logradouro</label>
-                            <input type="text" class="form-control" name="DO_Logradouro" placeholder="" maxlength="150" value="" tabindex="24"  (keypress)="onBuscaCep()" ngModel>
+                          <div class="form-group row">
+                            <div class="col-lg-2">
+                              <label>CEP</label>
+                              <input type="text" class="form-control mask_cep" name="DO_CEP" id="DP_CEP" maxlength="11" value="" tabindex="23" (blur)="onBuscaCep()">
+                              <span id="msg_cep" class="form-text text-danger oculta">Informe um CEP válido</span>
+                            </div>
+                            <div class="col-lg-6">
+                              <label>Logradouro</label>
+                              <input type="text" class="form-control" name="DO_Logradouro" placeholder="" tabindex="24" (keypress)="onBuscaCep()" ngModel>
 
-                            <div class="dropdown-menu dropdown-menu-fit dropdown-menu-right dropdown-menu-top-unround dropdown-menu-anim dropdown-menu-lg" x-placement="bottom-end" style="position: absolute; left: 10px;  width: 95%; will-change: transform; top: 65px;" id="divPesquisaLogradouro">
+                              <div class="dropdown-menu dropdown-menu-fit dropdown-menu-right dropdown-menu-top-unround dropdown-menu-anim dropdown-menu-lg" x-placement="bottom-end" style="position: absolute; left: 10px;  width: 95%; will-change: transform; top: 65px;" id="divPesquisaLogradouro">
 
-                              <div class="k-quick-search k-quick-search--dropdown k-quick-search--result-compact k-quick-search--has-result" id="k_quick_search_dropdown">
+                                <div class="k-quick-search k-quick-search--dropdown k-quick-search--result-compact k-quick-search--has-result" id="k_quick_search_dropdown">
 
-                                <div class="k-quick-search__wrapper k-scroll ps ps--active-y m-0 p-0" data-scroll="true" data-height="325" data-mobile-height="200" style="overflow: hidden; height: 325px;">
+                                  <div class="k-quick-search__wrapper k-scroll ps ps--active-y m-0 p-0" data-scroll="true" data-height="325" data-mobile-height="200" style="overflow: hidden; height: 325px;">
 
-                                  <!--begin::k-quick-search__result-->
-                                  <div class="k-quick-search__result">
+                                    <!--begin::k-quick-search__result-->
+                                    <div class="k-quick-search__result">
 
-                                    <div class="k-quick-search__category border-bottom text-primary">Endereços</div>
-                                    <div class="k-quick-search__section p-0 mb-1" *ngFor="let cep of listaCep;">
-                                      <div class="k-quick-search__item">
-                                        <div class="k-quick-search__item-img k-quick-search__item-img--file">
-                                          <i class="fa fa-map-marker-alt ml-2" style="font-size:1.5em; color:#069;"></i>
-                                        </div>
-                                        <div class="k-quick-search__item-wrapper">
-                                          <a class="k-quick-search__item-title" style="cursor:pointer;" (click)="onSelectedCep(cep)">
-                                            {{cep.logradouro}}
-                                          </a>
-                                          <div class="k-quick-search__item-desc">
-                                            {{cep.bairro}} - {{cep.cep}}
+                                      <div class="k-quick-search__category border-bottom text-primary">Endereços</div>
+                                      <div class="k-quick-search__section p-0 mb-1" *ngFor="let cep of listaCep;">
+                                        <div class="k-quick-search__item">
+                                          <div class="k-quick-search__item-img k-quick-search__item-img--file">
+                                            <i class="fa fa-map-marker-alt ml-2" style="font-size:1.5em; color:#069;"></i>
+                                          </div>
+                                          <div class="k-quick-search__item-wrapper">
+                                            <a class="k-quick-search__item-title" style="cursor:pointer;" (click)="onSelectedCep(cep)">
+                                              {{cep.logradouro}}
+                                            </a>
+                                            <div class="k-quick-search__item-desc">
+                                              {{cep.bairro}} - {{cep.cep}}
+                                            </div>
                                           </div>
                                         </div>
                                       </div>
@@ -383,52 +369,51 @@
                                 </div>
                               </div>
                             </div>
+                            <div class="col-lg-2">
+                              <label>Número</label>
+                              <input type="text" class="form-control" name="DO_Numero" placeholder="" maxlength="5" value="" tabindex="25" ngModel>
+                            </div>
+                            <div class="col-lg-2">
+                              <label>Complemento</label>
+                              <input type="text" class="form-control" name="DO_Complemento" placeholder="" maxlength="30" value="" tabindex="26" ngModel>
+                            </div>
                           </div>
-                          <div class="col-lg-2">
-                            <label>Número</label>
-                            <input type="text" class="form-control" name="DO_Numero" placeholder="" maxlength="5" value="" tabindex="25"  ngModel>
+                          <div class="form-group row">
+                            <div class="col-lg-4">
+                              <label>Estado</label>
+                              <select class="form-control" name="DP_Endereco_Estado" tabindex="27" [(ngModel)]="Estado" (change)="onSelectedUf()">
+                                <option value="-1">-- Selecione --</option>
+                                <option *ngFor="let estado of listaEstado| orderBy: orderNome" [ngValue]="estado">{{estado.nome}}</option>
+                              </select>
+                            </div>
+                            <div class="col-lg-4">
+                              <label>Munícipio</label>
+                              <select class="form-control" name="DP_Endereco_Cidade" tabindex="28" [(ngModel)]="Cidade">
+                                <option value="-1">-- Selecione --</option>
+                                <option *ngFor="let cidade of listaCidade | orderBy: orderNome" [ngValue]="cidade">{{cidade.nome}}</option>
+                              </select>
+                            </div>
+                            <div class="col-lg-4">
+                              <label>Bairro</label>
+                              <input type="text" class="form-control" name="DO_Bairro" placeholder="" maxlength="100" value="" tabindex="29" ngModel>
+                            </div>
                           </div>
-                          <div class="col-lg-2">
-                            <label>Complemento</label>
-                            <input type="text" class="form-control" name="DO_Complemento" placeholder="" maxlength="30" value="" tabindex="26"  ngModel>
-                          </div>
-                        </div>
-                        <div class="form-group row">
-                          <div class="col-lg-4">
-                            <label>Estado</label>
-                            <select class="form-control" name="DP_Endereco_Estado" tabindex="27" [(ngModel)]="Estado" (change)="onSelectedUf()" >
-                              <option value="-1">-- Selecione --</option>
-                              <option *ngFor="let estado of listaEstado| orderBy: orderNome" [ngValue]="estado">{{estado.nome}}</option>
-                            </select>
-                          </div>
-                          <div class="col-lg-4">
-                            <label>Munícipio</label>
-                            <select class="form-control" name="DP_Endereco_Cidade" tabindex="28" [(ngModel)]="Cidade" >
-                              <option value="-1">-- Selecione --</option>
-                              <option *ngFor="let cidade of listaCidade | orderBy: orderNome" [ngValue]="cidade">{{cidade.nome}}</option>
-                            </select>
-                          </div>
-                          <div class="col-lg-4">
-                            <label>Bairro</label>
-                            <input type="text" class="form-control" name="DO_Bairro" placeholder="" maxlength="100" value="" tabindex="29"  ngModel>
-                          </div>
-                        </div>
 
+                        </div>
                       </div>
-                    </div>
-                    <!--end::Portlet 2-->
+                      <!--end::Portlet 2-->
 
+                    </div>
                   </div>
                 </div>
+                <!--end: Card 4 -->
+
+
               </div>
-              <!--end: Card 4 -->
-
-
+              <!--end::Accordion-->
             </div>
-            <!--end::Accordion-->
+            <!--end::Portlet-body -->
           </div>
-          <!--end::Portlet-body -->
-
         </div>
         <!--begin::Portlet Main-->
         <!--begin:: Form Buttons -->

@@ -16,7 +16,9 @@
               <!--begin: Card 1 : Dados Pessoais -->
               <div class="card">
                 <div class="card-header" id="headingOne1">
-                  <div class="card-title" data-toggle="collapse" data-target="#collapseOne1" aria-expanded="false" aria-controls="collapseOne1"> <i class="flaticon2-user"></i> Dados Pessoais </div>
+                  <div class="card-title" data-toggle="collapse" data-target="#collapseOne1" aria-expanded="false" aria-controls="collapseOne1">
+                    <i class="flaticon2-user"></i> Dados Pessoais
+                  </div>
                 </div>
                 <div id="collapseOne1" class="collapse show" aria-labelledby="headingOne1" data-parent="#accordionExample1" style="">
                   <div class="card-body">
@@ -24,14 +26,14 @@
                     <!--begin::Portlet 1-->
                     <div class="k-portlet">
                       <!--
-                      <div class="k-portlet__head">
-                          <div class="k-portlet__head-label">
-                              <h3 class="k-portlet__head-title">
-                                  Dados Pessoais
-                              </h3>
-                          </div>
-                      </div>
-                      -->
+        <div class="k-portlet__head">
+            <div class="k-portlet__head-label">
+                <h3 class="k-portlet__head-title">
+                    Dados Pessoais
+                </h3>
+            </div>
+        </div>
+        -->
                       <div class="k-portlet__body p-1">
                         <div class="form-group row">
                           <div class="col-lg-2">
@@ -75,25 +77,25 @@
                                             <i class="fa fa-user-md ml-2" style="font-size:1.5em; color:#069;"></i>
                                           </div>
                                           <div class="k-quick-search__item-wrapper">
-                                            <a class="k-quick-search__item-title"  style="cursor:pointer;" (click)="onSelectedProfissional(profissional)">
+                                            <a class="k-quick-search__item-title" style="cursor:pointer;" (click)="onSelectedProfissional(profissional)">
                                               {{profissional.nomeCompleto}}  - {{profissional.nascimento | date: 'dd/MM/yyyy'}}
                                             </a>
                                             <div class="k-quick-search__item-desc">
                                               {{profissional.nomeMae}}
                                             </div>
                                           </div>
-                                       
+
                                         </div>
                                       </div>
 
                                       <div class="k-quick-search__category mt-2 border-bottom text-primary">Pacientes</div>
-                                      <div class="k-quick-search__section p-0 mb-1"  *ngFor="let paciente of listaPessoaPaciente;">
+                                      <div class="k-quick-search__section p-0 mb-1" *ngFor="let paciente of listaPessoaPaciente;">
                                         <div class="k-quick-search__item">
                                           <div class="k-quick-search__item-img k-quick-search__item-img--file">
                                             <i class="fa fa-user ml-2" style="font-size:1.5em; color:#999;"></i>
                                           </div>
                                           <div class="k-quick-search__item-wrapper">
-                                            <a class="k-quick-search__item-title"  style="cursor:pointer;" (click)="onSelectedPaciente(paciente)">
+                                            <a class="k-quick-search__item-title" style="cursor:pointer;" (click)="onSelectedPaciente(paciente)">
                                               {{paciente.nomeCompleto}}  - {{paciente.nascimento | date: 'dd/MM/yyyy'}}
                                             </a>
                                             <div class="k-quick-search__item-desc">
@@ -102,12 +104,12 @@
                                           </div>
                                         </div>
                                       </div>
-                                  </div>
+                                    </div>
                                   </div>
                                 </div>
                               </div>
                             </div>
-                     
+
 
                             <div class="oculta" id="box_numprontmae">
                               <label>Número do Prontuário da Mãe</label>
@@ -125,7 +127,7 @@
                             <!-- id="box_nomesocial" -->
                             <div class="" id="box_nomesocial">
                               <label>Nome Social</label>
-                              <input type="text" class="form-control maisc" name="DP_NomeSocial" placeholder="" maxlength="140" tabindex="2" (keyup)="onConsultaNomeSocial()"  ngModel>
+                              <input type="text" class="form-control maisc" name="DP_NomeSocial" placeholder="" maxlength="140" tabindex="2" (keyup)="onConsultaNomeSocial()" ngModel>
                               <!-- <span class="form-text text-muted">Please enter your contact number</span> -->
 
                               <div class="dropdown-menu dropdown-menu-fit dropdown-menu-right dropdown-menu-top-unround dropdown-menu-anim dropdown-menu-lg" x-placement="bottom-end" style="position: absolute; left: 10px;  width: 95%; will-change: transform; top: 65px;" id="divPesquisaNomeSocial" (focusout)="onFechaPesquisa()">
@@ -227,10 +229,10 @@
                             <div class="k-input-icon">
                               <input type="text" class="form-control" name="DP_IdadeAparente" placeholder="" tabindex="11" ngModel>
                               <!--
-                              <span class="k-input-icon__icon k-input-icon__icon--right">
-                                  <span><i class="la la-calendar"></i></span>
-                              </span>
-                              -->
+                <span class="k-input-icon__icon k-input-icon__icon--right">
+                    <span><i class="la la-calendar"></i></span>
+                </span>
+                -->
                             </div>
                           </div>
 
@@ -501,34 +503,28 @@
 
                         <div class="k-portlet__body p-1" id="bodyContact">
 
-                          <div class="form-group row m-0 p-0">
-                            <div class="col">
-                              <button type="button" id="btn_addContato" class="btn btn-sm btn-outline-hover-accent float-right" data-toggle="popover" data-placement="top" data-trigger="hover" data-content="Adicionar campos para contato" tabindex="24" (click)="onAdicionaNovosCamposContato()"><i class="fa fa-plus"></i> Adicionar</button>
-                            </div>
-                          </div>
-
-
                           <div class="form-group row" id="box_newcontact0">
-                            <div class="col-lg-3">
-                              <label>Telefone</label>
-                              <input type="text" class="form-control mask_phone" name="Cont_Telefone0" maxlength="20" value="" tabindex="21">
+                            <div class="col-lg-2">
+                              <label>Telefone/Celular</label>
+                              <input type="text" class="form-control telefone" name="Cont_Contato1" maxlength="20" value="" tabindex="21">
                             </div>
-                            <div class="col-lg-3">
-                              <label>Celular</label>
-                              <input type="text" class="form-control mask_mobile" name="Cont_Celular0" maxlength="20" value="" tabindex="22">
+                            <div class="col-lg-2">
+                              <label>Telefone/Celular</label>
+                              <input type="text" class="form-control telefone" name="Cont_Contato2" maxlength="20" value="" tabindex="22">
                             </div>
-                            <div class="col-lg-5">
+                            <div class="col-lg-2">
+                              <label>Telefone/Celular</label>
+                              <input type="text" class="form-control telefone" name="Cont_Contato3" maxlength="20" value="" tabindex="22">
+                            </div>
+                            <div class="col-lg-6">
                               <label>E-mail</label>
-                              <input type="email" class="form-control minus" name="Cont_Email0" value="" tabindex="23">
+                              <input type="email" class="form-control minus" name="Cont_Email" value="" tabindex="23" ngModel>
                               <span class="form-text text-muted">Campo obrigatório após preenchimento de Dados Profissionais</span>
                             </div>
-                            <div class="col-lg-1">
-                              <label>&nbsp;</label>
-                              <div class="input-group-append">
-                                <button class="btn btn-outline-secondary" type="button" title="Excluir" id="btnExcluirContato0" (click)="onAdicionaContato()"><i class="fa fa-trash fa-fw"></i></button>
-                              </div>
-                            </div>
                           </div>
+
+
+
 
                         </div>
                       </div>
@@ -560,7 +556,7 @@
                               <label>Logradouro</label>
                               <input type="text" class="form-control" name="DP_Logradouro" placeholder="" maxlength="150" value="" tabindex="26" (keypress)="onBuscaCep()" ngModel>
 
-                              <div class="dropdown-menu dropdown-menu-fit dropdown-menu-right dropdown-menu-top-unround dropdown-menu-anim dropdown-menu-lg" x-placement="bottom-end" style="position: absolute; left: 10px;  width: 95%; will-change: transform; top: 65px;" id="divPesquisaLogradouro" >
+                              <div class="dropdown-menu dropdown-menu-fit dropdown-menu-right dropdown-menu-top-unround dropdown-menu-anim dropdown-menu-lg" x-placement="bottom-end" style="position: absolute; left: 10px;  width: 95%; will-change: transform; top: 65px;" id="divPesquisaLogradouro">
 
                                 <div class="k-quick-search k-quick-search--dropdown k-quick-search--result-compact k-quick-search--has-result" id="k_quick_search_dropdown">
 
@@ -570,14 +566,14 @@
                                     <div class="k-quick-search__result">
 
                                       <div class="k-quick-search__category border-bottom text-primary">Endereços</div>
-                                      <div class="k-quick-search__section p-0 mb-1" *ngFor="let cep of listaCep;" >
+                                      <div class="k-quick-search__section p-0 mb-1" *ngFor="let cep of listaCep;">
                                         <div class="k-quick-search__item">
                                           <div class="k-quick-search__item-img k-quick-search__item-img--file">
                                             <i class="fa fa-map-marker-alt ml-2" style="font-size:1.5em; color:#069;"></i>
                                           </div>
                                           <div class="k-quick-search__item-wrapper">
                                             <a class="k-quick-search__item-title" style="cursor:pointer;" (click)="onSelectedCep(cep)">
-                                              {{cep.logradouro}} 
+                                              {{cep.logradouro}}
                                             </a>
                                             <div class="k-quick-search__item-desc">
                                               {{cep.bairro}} - {{cep.cep}}
@@ -640,14 +636,14 @@
                       <!--begin::Portlet 5 -->
                       <div class="k-portlet">
                         <!--
-                        <div class="k-portlet__head">
-                            <div class="k-portlet__head-label">
-                                <h3 class="k-portlet__head-title">
-                                    Dados Complementares
-                                </h3>
-                            </div>
-                        </div>
-                        -->
+          <div class="k-portlet__head">
+              <div class="k-portlet__head-label">
+                  <h3 class="k-portlet__head-title">
+                      Dados Complementares
+                  </h3>
+              </div>
+          </div>
+          -->
                         <div class="k-portlet__body p-1">
                           <div class="form-group row">
                             <div class="col-lg-3">
@@ -658,8 +654,8 @@
                             <div class="col-lg-3">
                               <label>Ocupação</label>
                               <!--<select class="form-control" name="DC_Ocupacao" tabindex="33">
-                                <option value="">- Selecione -</option>
-                              </select>-->
+                  <option value="">- Selecione -</option>
+                </select>-->
                               <select class="form-control" name="DC_Ocupacao" tabindex="31" [(ngModel)]="Ocupacao">
                                 <option value="-1">-- Selecione --</option>
                                 <option *ngFor="let ocupacao of listaOcupacao| orderBy: orderDescricao" [ngValue]="ocupacao">{{ocupacao.descricao}}</option>
@@ -668,8 +664,8 @@
                             <div class="col-lg-4">
                               <label>País de Origem (Estrangeiro)</label>
                               <!--<select class="form-control" name="DC_PaisDeOrigem" tabindex="34">
-                                <option value="">- Selecione -</option>
-                              </select>-->
+                  <option value="">- Selecione -</option>
+                </select>-->
                               <select class="form-control" name="DC_PaisDeOrigem" tabindex="32" [(ngModel)]="Pais">
                                 <option value="-1">-- Selecione --</option>
                                 <option *ngFor="let pais of listaPais| orderBy: orderDescricao" [ngValue]="pais">{{pais.descricao}}</option>
@@ -685,8 +681,8 @@
                             <div class="col-lg-2">
                               <label>Tipo de Certidão</label>
                               <!--<select class="form-control" name="DC_TipoCertidao" tabindex="36">
-                                <option value=""></option>
-                              </select>-->
+                  <option value=""></option>
+                </select>-->
                               <select class="form-control" name="DC_TipoCertidao" tabindex="36" [(ngModel)]="TipoCertidao">
                                 <option value="-1">-- Selecione --</option>
                                 <option *ngFor="let tipocertidao of listaTipoCertidao | orderBy: orderDescricao" [ngValue]="tipocertidao">{{tipocertidao.descricao}}</option>
@@ -765,9 +761,9 @@
                           </div>
 
                           <!--
-                          <div class="form-group row">
-                          </div>
-                          -->
+            <div class="form-group row">
+            </div>
+            -->
 
                           <div class="form-group row">
                             <div class="col-lg-3">
@@ -801,7 +797,30 @@
                   </div>
                 </div>
                 <!--end: Card 5 -->
+                <!--begin: Card 2 : Dados Profissionais -->
+                <div class="card" >
+                  <div class="card-header" id="headingTwo1">
+                    <div class="card-title" data-toggle="collapse" data-target="#collapseTwo1" aria-expanded="true" aria-controls="collapseTwo1"> <i class="flaticon-profile-1"></i>Registro Boletim</div>
+                  </div>
+                  <div id="collapseTwo1" class="collapse" aria-labelledby="headingTwo1" data-parent="#accordionExample1">
+                    <div class="card-body">
 
+                      <!--begin::Portlet 2-->
+                      <div class="k-portlet">
+
+
+
+
+                        <div class="k-portlet__body p-1">
+                      
+                        </div>
+                      </div>
+                      <!--end::Portlet 2-->
+
+                    </div>
+                  </div>
+                </div>
+                <!--end: Card 2 -->
 
               </div>
               <!--end::Accordion-->
@@ -838,3 +857,4 @@
 
 </div>
 <!-- end:: Content -->
+

@@ -2,11 +2,15 @@
   "ExpandedNodes": [
     "",
     "\\src",
+    "\\src\\app",
+    "\\src\\app\\controller",
+    "\\src\\app\\controller\\cadastro",
+    "\\src\\app\\controller\\cadastro\\pessoa",
+    "\\src\\app\\controller\\login",
+    "\\src\\app\\controller\\master",
     "\\src\\assets",
-    "\\src\\assets\\app",
-    "\\src\\assets\\app\\custom",
-    "\\src\\assets\\app\\custom\\general"
+    "\\src\\assets\\app"
   ],
-  "SelectedNode": "\\src\\assets\\app\\custom\\general\\interface.js",
+  "SelectedNode": "\\src\\app\\app.component.ts",
   "PreviewInSolutionExplorer": false
 }

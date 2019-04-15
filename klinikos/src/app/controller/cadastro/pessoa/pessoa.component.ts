@@ -12,7 +12,6 @@ import { PessoaPaciente } from '../../../model/PessoaPaciente';
 import { PessoaProfissional } from '../../../model/PessoaProfissional';
 import { OrgaoEmissor } from '../../../model/OrgaoEmissor';
 import { Escolaridade } from '../../../model/Escolaridade';
-import { PessoaContato } from '../../../model/PessoaContato';
 import { Pais } from '../../../model/Pais';
 import { TipoCertidao } from '../../../model/TipoCertidao';
 import { SituacaoFamiliarConjugal } from '../../../model/SituacaoFamiliarConjugal';
@@ -24,12 +23,13 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { sortBy } from 'sort-by-typescript';
 import { Pessoa } from '../../../model/Pessoa';
+import { Return } from '../../../model/Return';
 import { AgeFromDate } from 'age-calculator';
 import * as swal from '../../../../assets/vendors/general/sweetalert2/dist/sweetalert2.js';
 import { Cep } from '../../../model/Cep';
 import { MensagemService } from '../../util/mensagem.service';
 import { CpfService } from '../../util/cpf.service';
-
+import * as moment from 'moment';
 
 
 @Component({
@@ -46,7 +46,6 @@ export class PessoaComponent implements OnInit {
   listaUFIdentidade: Array<Estado>;
   listaCidade: Array<Cidade>;
   listaOrgaoEmissor: Array<OrgaoEmissor>;
-  listaContatos: Array<PessoaContato>;
   listaCidadeEndereco: Array<Cidade>;
   listaOcupacao: Array<Ocupacao>;
   listaPais: Array<Pais>;
@@ -84,8 +83,8 @@ export class PessoaComponent implements OnInit {
   Escolaridade: Escolaridade;
   SituacaoFamiliarConjugal: SituacaoFamiliarConjugal;
 
+
   constructor(private pessoaService: PessoaService, private mensagemService: MensagemService, private cpfService: CpfService, private router: Router) {
-    this.listaContatos = new Array<PessoaContato>();
     this.listaLotacaoProfissional = new Array<LotacaoProfissional>();
     this.listaOcupacao = new Array<Ocupacao>();
     this.listaPais = new Array<Pais>();
@@ -102,10 +101,15 @@ export class PessoaComponent implements OnInit {
 
     var page = this;
 
+    var dataAtual = moment(new Date()).format('DD/MM/YYYY');
+    var horaAtual = moment(new Date()).format('HH:mm:ss');
 
-    this.pessoaService.BindRaca().subscribe(data => {
+
+
+    console.log(dataAtual + " "+horaAtual);
+
+    this.pessoaService.BindRaca().subscribe(async (data: Return) => {
       this.listaRaca = data.result;
-
 
       $(document).ready(function () { $("select[name^=DP_Cor]").val($("select[name^=DP_Cor] option:first").val()); });
 
@@ -117,7 +121,7 @@ export class PessoaComponent implements OnInit {
     });
 
 
-    this.pessoaService.BindJustificativa().subscribe(data => {
+    this.pessoaService.BindJustificativa().subscribe(async (data: Return) => {
       this.listaJustificativa = data.result;
 
       $(document).ready(function () { $("select[name^=DP_JustificativaCPF]").val($("select[name^=DP_JustificativaCPF] option:first").val()); });
@@ -126,7 +130,7 @@ export class PessoaComponent implements OnInit {
       console.log(`Error. ${error.message}.`);
     });
 
-    this.pessoaService.BindNacionalidade().subscribe(data => {
+    this.pessoaService.BindNacionalidade().subscribe(async (data: Return) => {
 
       this.listaNacionalidade = data.result;
 
@@ -137,7 +141,7 @@ export class PessoaComponent implements OnInit {
       console.log(`Error. ${error.message}.`);
     });
 
-    this.pessoaService.BindEstado().subscribe(data => {
+    this.pessoaService.BindEstado().subscribe(async (data: Return) => {
       this.listaEstado = data.result;
       this.listaUFIdentidade = data.result;
 
@@ -158,7 +162,7 @@ export class PessoaComponent implements OnInit {
     });
 
 
-    this.pessoaService.BindOrgaoEmissor().subscribe(data => {
+    this.pessoaService.BindOrgaoEmissor().subscribe(async (data: Return) => {
       this.listaOrgaoEmissor = data.result;
       $(document).ready(function () {
         $("select[name^=DP_OrgaoEmissor]").val($("select[name^=DP_OrgaoEmissor] option:first").val());
@@ -173,9 +177,6 @@ export class PessoaComponent implements OnInit {
 
     $(document).ready(function () {
 
-
-      $('body').css("background-image", "");
-      $('body').addClass("k-header--fixed k-header-mobile--fixed k-subheader--enabled k-subheader--transparent k-aside--enabled k-aside--fixed k-page--loading");
       document.title = 'Cadastro | Klinikos';
 
       $("select[name^=DP_Etnia]").val($("select[name^=DP_Etnia] option:first").val());
@@ -249,6 +250,15 @@ export class PessoaComponent implements OnInit {
 
 
     });
+
+
+    var dataAtual2 = moment(new Date()).format('DD/MM/YYYY');
+    var horaAtual2 = moment(new Date()).format('HH:mm:ss');
+
+
+
+    console.log(dataAtual2 + " " + horaAtual2);
+
   }
   //end:: Carregamento Básico da tela
 
@@ -260,7 +270,7 @@ export class PessoaComponent implements OnInit {
     $('#divPesquisaNomeCompleto').addClass('show');
 
     this.pessoaService.ConsultaNomeCompletoProfissional(dp_nomecompleto)
-      .subscribe(data => {
+      .subscribe(async (data: Return) => {
 
         this.listaPessoaProfissional = data.result;
 
@@ -296,7 +306,7 @@ export class PessoaComponent implements OnInit {
     $('#divPesquisaNomeCompleto').removeClass('show');
 
     this.pessoaService.ConsultaNomeSocialProfissional(dp_nomesocial)
-      .subscribe(data => {
+      .subscribe(async (data: Return) => {
 
         this.listaPessoaProfissional = data.result;
 
@@ -308,7 +318,7 @@ export class PessoaComponent implements OnInit {
 
 
     this.pessoaService.ConsultaNomeSocialPaciente(dp_nomesocial)
-      .subscribe(data => {
+      .subscribe(async (data: Return) => {
 
         this.listaPessoaPaciente = data.result;
 
@@ -317,8 +327,6 @@ export class PessoaComponent implements OnInit {
         console.log(`Error. ${error.message}.`);
       });
 
-    console.log(this.listaPessoaProfissional);
-    console.log(this.listaPessoaPaciente);
   }
   //end:: Consulta o nome do paciente
 
@@ -539,14 +547,14 @@ export class PessoaComponent implements OnInit {
 
         var cpf = cpf.replace('.', '').replace('.', '').replace('.', '').replace('-', '');
 
-        this.pessoaService.ConsultaCpfProfissional(cpf).subscribe(data => {
+        this.pessoaService.ConsultaCpfProfissional(cpf).subscribe(async (data: Return) => {
 
           if (data.statusCode != "302") {
 
-            this.pessoaService.ConsultaCpfPaciente(cpf).subscribe(subdata => {
+            this.pessoaService.ConsultaCpfPaciente(cpf).subscribe(async (subdata: Return) => {
 
               if (subdata.statusCode == "302") {
-                this.mensagemService.Mensagens("sucesso", "Paciente encontrado");
+                this.mensagemService.Mensagens("info", "Paciente encontrado");
 
                 var paciente = subdata.result;
 
@@ -572,7 +580,7 @@ export class PessoaComponent implements OnInit {
 
             this.onSelectedProfissional(data.result);
 
-            this.mensagemService.Mensagens("sucesso", "Profissional encontrado");
+            this.mensagemService.Mensagens("info", "Profissional encontrado");
           }
 
         }, (error: HttpErrorResponse) => {
@@ -604,14 +612,14 @@ export class PessoaComponent implements OnInit {
       $('#msg_cns').addClass('oculta');
 
 
-      this.pessoaService.ConsultaCnsProfissional(dp_cns).subscribe(data => {
+      this.pessoaService.ConsultaCnsProfissional(dp_cns).subscribe(async (data: Return) => {
 
         if (data.statusCode != "302") {
 
-          this.pessoaService.ConsultaCnsPaciente(dp_cns).subscribe(subdata => {
+          this.pessoaService.ConsultaCnsPaciente(dp_cns).subscribe(async (subdata: Return) => {
 
             if (subdata.statusCode == "302") {
-              this.mensagemService.Mensagens("sucesso", "Paciente encontrado");
+              this.mensagemService.Mensagens("info", "Paciente encontrado");
 
 
               var paciente = subdata.result;
@@ -638,7 +646,7 @@ export class PessoaComponent implements OnInit {
 
           this.onSelectedProfissional(data.result);
 
-          this.mensagemService.Mensagens("sucesso", "Profissional encontrado");
+          this.mensagemService.Mensagens("info", "Profissional encontrado");
         }
 
       }, (error: HttpErrorResponse) => {
@@ -671,14 +679,14 @@ export class PessoaComponent implements OnInit {
       $('#msg_pis').addClass('oculta');
 
 
-      this.pessoaService.ConsultaPisProfissional(dp_pis).subscribe(data => {
+      this.pessoaService.ConsultaPisProfissional(dp_pis).subscribe(async (data: Return) => {
 
         if (data.statusCode != "302") {
 
-          this.pessoaService.ConsultaPisPaciente(dp_pis).subscribe(subdata => {
+          this.pessoaService.ConsultaPisPaciente(dp_pis).subscribe(async (subdata: Return) => {
 
             if (subdata.statusCode == "302") {
-              this.mensagemService.Mensagens("sucesso", "Paciente encontrado");
+              this.mensagemService.Mensagens("info", "Paciente encontrado");
 
               var paciente = subdata.result;
 
@@ -703,7 +711,7 @@ export class PessoaComponent implements OnInit {
 
 
           this.onSelectedProfissional(data.result);
-          this.mensagemService.Mensagens("sucesso", "Profissional encontrado");
+          this.mensagemService.Mensagens("info", "Profissional encontrado");
 
         }
 
@@ -724,24 +732,13 @@ export class PessoaComponent implements OnInit {
 
     $("input[name^=DP_CPF]").val(profissional.cpf);
 
-    this.pessoaService.ConsultaContatosProfissional(profissional.pessoaId).subscribe(data => {
-
-      this.listaContatos = data.result;
-
-    }, error => {
-      this.mensagemService.Mensagens("erro", "Falha ao carregar Etnias na aba Dados Pessoais");
-      console.log(`Error. ${error._body}.`);;
-    });
-
-    console.log(this.listaContatos);
-
 
    // this.CarregaPessoa(profissional);
 
     $('#DP_TipoCadastro').prop('checked', true);
     $('#box_dadosprof').removeClass('oculta');
 
-    this.pessoaService.ConsultaLotacoesProfissional(profissional.pessoaId).subscribe(data => {
+    this.pessoaService.ConsultaLotacoesProfissional(profissional.pessoaId).subscribe(async (data: Return) => {
 
       this.listaLotacaoProfissional = data.result;
     }, error => {
@@ -846,8 +843,6 @@ export class PessoaComponent implements OnInit {
 
     $("input[name^=DP_CNS]").val(pessoa.cns);
 
-    this.CarregaPessoaContatos(pessoa.pessoaContatos);
-
     $("input[name^=DP_CEP]").val(pessoa.cep);
     $("input[name^=DP_Logradouro]").val(pessoa.logradouro);
     $("input[name^=DP_Numero]").val(pessoa.numero);
@@ -860,6 +855,12 @@ export class PessoaComponent implements OnInit {
     }
 
     $("input[name^=DP_Bairro]").val(pessoa.bairro);
+
+    $("input[name^=Cont_Contato1]").val(pessoa.contato1);
+    $("input[name^=Cont_Contato2]").val(pessoa.contato2);
+    $("input[name^=Cont_Contato3]").val(pessoa.contato3);
+    $("input[name^=Cont_Email]").val(pessoa.email);
+
 
 
     if (pessoa.pisPasep != null || pessoa.ocupacao != null || pessoa.paisOrigem != null || pessoa.dataEntradaPis != null ||
@@ -945,32 +946,6 @@ export class PessoaComponent implements OnInit {
   }
   //end:: carregamento padrão de campos para a tela
 
-  CarregaPessoaContatos(contatos: Array<PessoaContato>) {
-
-    for (var i = 0; i < contatos.length; i++) {
-
-      var pessoacontato: PessoaContato = {
-
-        ativo: contatos[i].ativo,
-        celular: contatos[i].celular,
-        email: contatos[i].email,
-        telefone: contatos[i].telefone
-      };
-
-      if (i > 0) {
-        this.onAdicionaNovosCamposContato();
-        this.listaContatos[i] = pessoacontato;
-      }
-
-
-      $("input[name^=Cont_Telefone" + i + "]").val(contatos[i].telefone);
-      $("input[name^=Cont_Celular" + i + "]").val(contatos[i].celular);
-      $("input[name^=Cont_Email" + i + "]").val(contatos[i].email);
-
-
-    }
-  }
-
   //begin:: Habilita combo indigena / habilita a combo para caso selecionar indígena
   onSelectedRaca() {
 
@@ -1005,7 +980,7 @@ export class PessoaComponent implements OnInit {
 
     $(document).ready(function () { $("select[name^=DP_NaturalidadeCidade]").val($("select[name^=DP_NaturalidadeCidade] option:first").val()); });
 
-    this.pessoaService.BindCidade(this.Estado).subscribe(data => {
+    this.pessoaService.BindCidade(this.Estado).subscribe(async (data: Return) => {
       this.listaCidade = data.result;
 
       if (this.Cidade != null) {
@@ -1030,7 +1005,7 @@ export class PessoaComponent implements OnInit {
 
     $(document).ready(function () { $("select[name^=DP_Endereco_Cidade]").val($("select[name^=DP_Endereco_Cidade] option:first").val()); });
 
-    this.pessoaService.BindCidade(this.EstadoEndereco).subscribe(data => {
+    this.pessoaService.BindCidade(this.EstadoEndereco).subscribe(async (data: Return) => {
       this.listaCidadeEndereco = data.result;
 
       if (this.CidadeEndereco != null) {
@@ -1054,7 +1029,7 @@ export class PessoaComponent implements OnInit {
   onHabilitaProfissional() {
 
 
-    this.pessoaService.BindTipoProfissional().subscribe(data => {
+    this.pessoaService.BindTipoProfissional().subscribe(async (data: Return) => {
       this.listaTipoProfissional = data.result;
 
       $(document).ready(function () { $("select[name^=DP_ProfTipo]").val($("select[name^=DP_ProfTipo] option:first").val()); });
@@ -1075,7 +1050,7 @@ export class PessoaComponent implements OnInit {
 
       $("select[name^=DC_Ocupacao]").val($("select[name^=DC_Ocupacao] option:first").val());
 
-      this.pessoaService.BindOcupacao().subscribe(data => {
+      this.pessoaService.BindOcupacao().subscribe(async (data: Return) => {
         this.listaOcupacao = data.result;
 
         if (this.Ocupacao != null) {
@@ -1096,7 +1071,7 @@ export class PessoaComponent implements OnInit {
 
       $("select[name^=DC_PaisDeOrigem]").val($("select[name^=DC_PaisDeOrigem] option:first").val());
 
-      this.pessoaService.BindPais().subscribe(data => {
+      this.pessoaService.BindPais().subscribe(async (data: Return) => {
         this.listaPais = data.result;
 
         if (this.Pais != null) {
@@ -1116,7 +1091,7 @@ export class PessoaComponent implements OnInit {
 
       $("select[name^=DC_TipoCertidao]").val($("select[name^=DC_TipoCertidao] option:first").val());
 
-      this.pessoaService.BindTipoCertidao().subscribe(data => {
+      this.pessoaService.BindTipoCertidao().subscribe(async (data: Return) => {
         this.listaTipoCertidao = data.result;
 
         if (this.TipoCertidao != null) {
@@ -1137,7 +1112,7 @@ export class PessoaComponent implements OnInit {
     if (this.listaEscolaridade.length === 0) {
 
 
-      this.pessoaService.BindEscolaridade().subscribe(data => {
+      this.pessoaService.BindEscolaridade().subscribe(async (data: Return) => {
         this.listaEscolaridade = data.result.sort(sortBy('codigoEscolaridade'));
 
         for (let i = 0; i < this.listaEscolaridade.length; i++) {
@@ -1168,7 +1143,7 @@ export class PessoaComponent implements OnInit {
     if (this.listaSituacaoFamiliarConjugal.length === 0) {
 
 
-      this.pessoaService.BindSituacaoFamiliarConjugal().subscribe(data => {
+      this.pessoaService.BindSituacaoFamiliarConjugal().subscribe(async (data: Return) => {
         this.listaSituacaoFamiliarConjugal = data.result.sort(sortBy('codigoSituacaoFamiliarConjugal'));
 
         for (let i = 0; i < this.listaSituacaoFamiliarConjugal.length; i++) {
@@ -1196,62 +1171,12 @@ export class PessoaComponent implements OnInit {
   }
   //end::  Carregamento Dados Complementares
 
-  //begin:: Carregamento Informacoes Contato / Adiciona novos campos de contato ao clicar no botao adicionar
-  onAdicionaNovosCamposContato() {
-
-
-    if (this.listaContatos.length < 4) {
-      var pessoacontato: PessoaContato = {};
-      this.listaContatos.push(pessoacontato);
-
-
-      var idDivBody = "box_newcontact" + this.listaContatos.length;
-      var idDivColumnTelefone = idDivBody + "_telefone" + this.listaContatos.length;
-      var idDivColumnCelular = idDivBody + "_celular" + this.listaContatos.length;
-      var idDivColumnEmail = idDivBody + "_email" + this.listaContatos.length;
-      var idDivColumnButton = idDivBody + "_button" + this.listaContatos.length;
-
-
-      if ($('#bodyContact').find('#' + idDivBody).length == 0) {
-
-        $("#bodyContact").append("<div class='form-group row' id='" + idDivBody + "'></div>");
-
-        $("#" + idDivBody).append("<div class='col-lg-3' id='" + idDivColumnTelefone + "'></div>");
-
-        $("#" + idDivColumnTelefone).append("<label>Telefone</label>");
-        $("#" + idDivColumnTelefone).append("<input type='text' class='form-control mask_phone_contato' name='Cont_Telefone" + this.listaContatos.length + "' maxlength='20' value='' tabindex='21'>");
-
-        $("#" + idDivBody).append("<div class='col-lg-3' id='" + idDivColumnCelular + "'></div>");
-        $("#" + idDivColumnCelular).append("<label>Celular</label>");
-        $("#" + idDivColumnCelular).append("<input type='text' class='form-control mask_mobile_contato' name='Cont_Celular" + this.listaContatos.length + "' maxlength='20' value='' tabindex='22'>");
-
-        $("#" + idDivBody).append("<div class='col-lg-5' id='" + idDivColumnEmail + "'></div>");
-        $("#" + idDivColumnEmail).append("<label>E-mail</label>");
-        $("#" + idDivColumnEmail).append("<input type='email' class='form-control minus' style='text-transform:lowercase;' name='Cont_Email" + this.listaContatos.length + "' value='' tabindex='23'>");
-        $("#" + idDivColumnEmail).append("<span class='form-text text-muted'>Campo obrigatório após preenchimento de Dados Profissionais</span>");
-
-
-        $("#" + idDivBody).append("<div class='col-lg-1' id='" + idDivColumnButton + "'></div>");
-        $("#" + idDivColumnButton).append("<label class='d-block'>&nbsp;</label>");
-        $("#" + idDivColumnButton).append("<button class='btn btn-outline-secondary' type='button' title='Excluir' id='btnExcluirContato" + this.listaContatos.length + "'><i class='fa fa-trash fa-fw'></i></button>");
-
-
-        //As mascaras genéricas não funcionam com html dinâmico, por isso, é aplicado o script para cada div gerada pelo append.
-
-        var code = "<script> $(document).ready(function () {  $('.mask_phone_contato').mask('(99)9999-9999'); $('.mask_mobile_contato').mask('(99)99999-9999'); $('#btnExcluirContato" + this.listaContatos.length + "').click(function(){ swal({title: 'Deseja excluir esse contato?', text: '', type: 'warning', showCancelButton: true, cancelButtonText:'Não', confirmButtonText: 'Sim' }).then(function(result) { if (result.value) {  $('#" + idDivBody + "').remove(); } }); });   }); </script>";
-
-        $("#" + idDivBody).append($(code)[0]);
-      }
-    }
-  }
-  //end::  Carregamento Informacoes Contato
-
   //begin:: Adiciona Lotacao Profissional / Adiciona uma nova lotação ao profissional na aba profissional
   onAdicionaLotacao() {
 
     if (this.TipoProfissional !== undefined) {
 
-      var numeroconselho = $("input[name^='Prof_NumConselho']").val();
+      var numeroconselho = $("input[name^=Prof_NumConselho]").val();
 
       var lotacaoProfissional: LotacaoProfissional = {
 
@@ -1339,7 +1264,7 @@ export class PessoaComponent implements OnInit {
   //begin:: Limpa Campos lotacao Profissional / Limpa os campos ao adicionar e editar da lotação do profissional na aba profissional
   onLimparCamposProfissional() {
 
-    $("input[name='Prof_NumConselho']").val("");
+    $("input[name^=Prof_NumConselho]").val("");
     this.TipoProfissional = undefined;
     this.UfProfissional = undefined;
     this.OrgaoEmissorProfissional = undefined;
@@ -1381,7 +1306,7 @@ export class PessoaComponent implements OnInit {
 
 
       this.pessoaService.BuscarCep(cep)
-        .subscribe(data => {
+        .subscribe(async (data: Cep) => {
 
           if (data.logradouro === undefined) {
             this.mensagemService.Mensagens("warning", "CEP não encontrado");
@@ -1417,7 +1342,7 @@ export class PessoaComponent implements OnInit {
           //$('#divPesquisaLogradouro').removeClass('oculta');
           $('#divPesquisaLogradouro').addClass('show');
           this.pessoaService.BuscarCepPorLogradouro(cep)
-            .subscribe(data => {
+            .subscribe(async (data: Array<Cep>) => {
 
               this.listaCep = data;
             }, (error: HttpErrorResponse) => {
@@ -1470,6 +1395,9 @@ export class PessoaComponent implements OnInit {
     var tituloEleitor = $("input[name^=DC_TituloEleitor]").val();
     var escolaridadeId = $('input[type=radio][name=DC_Escolaridade]:checked').attr('id');
     var situacaoFamiliarConjugalId = $('input[type=radio][name=DC_SituacaoFamiliar]:checked').attr('id');
+    var contato1 = $("input[name^=Cont_Contato1]").val();
+    var contato2 = $("input[name^=Cont_Contato2]").val();
+    var contato3 = $("input[name^=Cont_Contato3]").val();
 
     if (p.value.DP_NaoIdentificado === true) {
 
@@ -1552,6 +1480,17 @@ export class PessoaComponent implements OnInit {
     if (this.UfIdentidade !== undefined)
       pessoa.uf = this.UfIdentidade.uf;
 
+    if(contato1 !== "")
+      pessoa.contato1 = contato1.replace('(', '').replace(')', '').replace('-', '');
+
+    if (contato2 !== "")
+      pessoa.contato2 = contato2.replace('(', '').replace(')', '').replace('-', '');
+
+    if (contato3 !== "")
+      pessoa.contato3 = contato3.replace('(', '').replace(')', '').replace('-', '');
+
+    if (p.value.Cont_Email !== "")
+      pessoa.email = p.value.Cont_Email.toUpperCase();
 
     if (cep !== "")
       pessoa.cep = cep.replace('-', '');
@@ -1649,13 +1588,12 @@ export class PessoaComponent implements OnInit {
       if (this.listaLotacaoProfissional.length > 0) {
 
         pessoaProfissional = {};
-        this.AdicionarContato(pessoa);
         pessoaProfissional = pessoa;
 
         pessoaProfissional.lotacoesProfissional = [];
         pessoaProfissional.lotacoesProfissional = this.listaLotacaoProfissional;
 
-        this.pessoaService.SalvarPessoaProfissional(pessoaProfissional).subscribe(data => {
+        this.pessoaService.SalvarPessoaProfissional(pessoaProfissional).subscribe(async (data: Return) => {
 
           if (data.statusCode == "409") {
             swal("Profissional já cadastrado!", "CPF ou CNS ou PIS/PASEP já existente na Base", "error");
@@ -1676,10 +1614,6 @@ export class PessoaComponent implements OnInit {
       } else {
 
         pessoaPaciente = {};
-
-        if (this.listaContatos.length > 0)
-          this.AdicionarContato(pessoa);
-
         pessoaPaciente = pessoa;
 
         pessoaPaciente.recemNascido = p.value.DP_RecemNascido === true;
@@ -1691,7 +1625,7 @@ export class PessoaComponent implements OnInit {
           pessoaPaciente.descricaoNaoIdentificado = p.value.DP_Descricao_Nao_Identificado.toUpperCase();
 
 
-        this.pessoaService.SalvarPessoaPaciente(pessoaPaciente).subscribe(data => {
+        this.pessoaService.SalvarPessoaPaciente(pessoaPaciente).subscribe(async (data: Return) => {
 
           this.mensagemService.Mensagens("sucesso", "Paciente salvo com sucesso");
           this.LimparCampos(p);
@@ -1705,40 +1639,6 @@ export class PessoaComponent implements OnInit {
     }
   }
   //end:: Salvar Pessoa
-
-  //begin:: Adicionar Pessoa Contato / Obtêm as informações de contato e aplica ao array
-  public AdicionarContato(pessoa: Pessoa) {
-
-    pessoa.pessoaContatos = [];
-
-    for (let i = 0; i <= this.listaContatos.length; i++) {
-
-      var telefone = $("input[name='Cont_Telefone" + i + "']").val();
-      var celular = $("input[name='Cont_Celular" + i + "']").val();
-      var email = $("input[name='Cont_Email" + i + "']").val();
-
-      if (telefone !== "" || celular !== "" || email !== "") {
-
-        var pessoacontato: PessoaContato = {
-          ativo: true
-        }
-
-        if (telefone !== "")
-          pessoacontato.telefone = telefone.replace('(', '').replace(')', '').replace('-', '');
-
-        if (celular !== "")
-          pessoacontato.celular = celular.replace('(', '').replace(')', '').replace('-', '');
-
-        if (email !== "")
-          pessoacontato.email = email.replace('(', '').replace(')', '').replace('-', '');
-
-        pessoa.pessoaContatos.push(pessoacontato);
-
-      }
-    }
-
-  }
-  //end:: Adicionar Pessoa Contato
 
   //begin:: Limpa Campos/ Mensagens responsáveis pelos avisos com integrações externas
   public LimparCampos(p: NgForm) {
@@ -1754,7 +1654,6 @@ export class PessoaComponent implements OnInit {
     p.value.DP_NomeMae = "";
     p.value.DP_NomePai = "";
 
-    this.listaContatos = new Array<PessoaContato>();
     this.listaEtnia = new Array<Etnia>();
     this.listaCidade = new Array<Cidade>();
     this.listaLotacaoProfissional = new Array<LotacaoProfissional>();

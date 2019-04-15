@@ -1,7 +1,6 @@
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+
 import { Injectable } from '@angular/core';
-import { Return } from 'src/app/model/Return';
-import * as toastr from 'toastr';
+import * as Toastr from 'toastr';
 
 @Injectable({
   providedIn: 'root',
@@ -11,7 +10,7 @@ export class MensagemService {
 
   constructor() {
 
-    toastr.options = {
+    Toastr.options = {
       "closeButton": true,
       "debug": false,
       "newestOnTop": false,
@@ -38,19 +37,19 @@ export class MensagemService {
 
     switch (tipo) {
       case "sucesso": {
-        toastr.success(mensagem);
+        Toastr.success(mensagem);
         break;
       }
       case "erro": {
-        toastr.error(mensagem);
+        Toastr.error(mensagem);
         break;
       }
       case "info": {
-        toastr.info(mensagem);
+        Toastr.info(mensagem);
         break;
       }
       case "warning": {
-        toastr.warning(mensagem);
+        Toastr.warning(mensagem);
         break;
       }
       default: {

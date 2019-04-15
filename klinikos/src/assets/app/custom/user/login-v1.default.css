@@ -145,7 +145,7 @@ $k-media-breakpoints: (
             padding: 1rem 3.5rem;
             border-radius: 60px;
             color: #fff;
-            background-color: #ff146c;
+            background-color: #28866c;
             font-size: 1.1rem; }
         .k-login-v1 .k-login-v1__body .k-login-v1__body-wrapper .k-login-v1__body-container .k-login-v1__body-divider {
           margin: 3rem 0; }
@@ -207,27 +207,27 @@ $k-media-breakpoints: (
       font-size: 1rem;
       color: #717ce6; }
   .k-login-v1 .k-login-v1__body .k-login-v1__body-wrapper .k-login-v1__body-container .k-login-v1__body-action .btn:hover {
-    background-color: #ef005a; }
+    background-color: #656565; }
   .k-login-v1 .k-login-v1__body .k-login-v1__body-wrapper .k-login-v1__body-container .k-login-v1__body-action .btn:hover {
-    background-color: #ef005a; }
+    background-color: #656565; }
   .k-login-v1 .k-login-v1__body .k-login-v1__body-wrapper .k-login-v1__body-container .k-login-v1__body-action .btn:hover {
-    background-color: #ef005a; }
+    background-color: #656565; }
   .k-login-v1 .k-login-v1__body .k-login-v1__body-wrapper .k-login-v1__body-container .k-login-v1__body-action .btn:hover {
-    background-color: #ef005a; }
+    background-color: #656565; }
   .k-login-v1 .k-login-v1__body .k-login-v1__body-wrapper .k-login-v1__body-container .k-login-v1__body-action .btn:hover {
-    background-color: #ef005a; }
+    background-color: #656565; }
   .k-login-v1 .k-login-v1__body .k-login-v1__body-wrapper .k-login-v1__body-container .k-login-v1__body-action .btn:hover {
-    background-color: #ef005a; }
+    background-color: #656565; }
   .k-login-v1 .k-login-v1__body .k-login-v1__body-wrapper .k-login-v1__body-container .k-login-v1__body-action .btn:hover {
-    background-color: #ef005a; }
+    background-color: #656565; }
   .k-login-v1 .k-login-v1__body .k-login-v1__body-wrapper .k-login-v1__body-container .k-login-v1__body-action .btn:hover {
-    background-color: #ef005a; }
+    background-color: #656565; }
   .k-login-v1 .k-login-v1__body .k-login-v1__body-wrapper .k-login-v1__body-container .k-login-v1__body-action .btn:hover {
-    background-color: #ef005a; }
+    background-color: #656565; }
   .k-login-v1 .k-login-v1__body .k-login-v1__body-wrapper .k-login-v1__body-container .k-login-v1__body-action .btn:hover {
-    background-color: #ef005a; }
+    background-color: #656565; }
   .k-login-v1 .k-login-v1__body .k-login-v1__body-wrapper .k-login-v1__body-container .k-login-v1__body-action .btn:hover {
-    background-color: #ef005a; }
+    background-color: #656565; }
 
 @media (max-width: 1024px) {
   .k-login-v1 {

@@ -8,9 +8,7 @@ import { Estado } from '../../../model/Estado';
 import { Cidade } from '../../../model/Cidade';
 import { Cep } from '../../../model/Cep';
 import { PessoaPaciente } from '../../../model/PessoaPaciente';
-import { PessoaContato } from '../../../model/PessoaContato';
 import { PessoaProfissional } from 'src/app/model/PessoaProfissional';
-import { Pessoa } from 'src/app/model/Pessoa';
 import { Observable } from 'rxjs';
 
 @Injectable({
@@ -99,9 +97,7 @@ export class PessoaService {
   ConsultaLotacoesProfissional(pessoaId: string) {
     return this.http.get<Return>(`${this.baseUrl}lotacaoprofissional/consultalotacoesprofissional/` + pessoaId, this.httpOptions);
   }
-  ConsultaContatosProfissional(pessoaId: string) {
-    return this.http.get<Return>(`${this.baseUrl}/pessoa/pessoacontato/` + pessoaId, this.httpOptions);
-  }
+
   SalvarPessoaPaciente(pessoapaciente: PessoaPaciente) {
 
     return this.http.post<Return>(`${this.baseUrl}pessoa/pessoapaciente/incluir`, pessoapaciente, this.httpOptions);

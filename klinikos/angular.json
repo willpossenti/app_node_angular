@@ -23,6 +23,7 @@
               "src/assets"
             ],
             "styles": [
+              "src/assets/app/custom/user/login-v1.default.css",
               "src/assets/vendors/custom/fullcalendar/fullcalendar.bundle.css",
               "src/assets/vendors/general/perfect-scrollbar/css/perfect-scrollbar.css",
               "src/assets/vendors/general/tether/dist/css/tether.css",

@@ -6,7 +6,7 @@ import { Especialidade } from '../../model/Especialidade';
 import { TipoChegada } from '../../model/TipoChegada';
 import { TipoOcorrencia } from 'src/app/model/TipoOcorrencia';
 import { HttpErrorResponse } from '@angular/common/http';
-import { MensagemService } from '../util/mensagem.service';
+import { MensagemService } from '../Util/mensagem.service';
 import { Estado } from '../../model/Estado';
 import { Cidade } from '../../model/Cidade';
 import { Cep } from '../../model/Cep';
@@ -18,8 +18,8 @@ import { RegistroBoletim } from '../../model/RegistroBoletim';
 import { Pessoa } from '../../model/Pessoa';
 import { PessoaPaciente } from '../../model/PessoaPaciente';
 import { PessoaProfissional } from '../../model/PessoaProfissional';
-import { PessoaContato } from 'src/app/model/PessoaContato';
-import { transformAll } from '@angular/compiler/src/render3/r3_ast';
+import * as moment from 'moment';
+import { Return } from '../../model/Return';
 
 
 @Component({
@@ -55,12 +55,12 @@ export class RegistroBoletimComponent implements OnInit {
 
   public ngOnInit() {
 
-    var page = this;
 
     $(document).ready(function () {
 
       document.title = 'Registro Boletim | Klinikos';
 
+      //$("#k_subheader").css("margin-top", "75px");
 
       $("#divPesquisaNomeCompleto")
         .mouseover(function () {
@@ -71,7 +71,7 @@ export class RegistroBoletimComponent implements OnInit {
         });
 
       $("input[name^=IB_NomePaciente]").focus(function () {
-        if (page.listaPessoaProfissional.length > 0 || page.listaPessoaPaciente.length > 0)
+        if ($('input[name^=IB_NomePaciente]').val().length > 2 && $('input[name^=IB_NomePaciente]').is(':hover') === true)
           $("#divPesquisaNomeCompleto").addClass('show');
       });
 
@@ -96,7 +96,7 @@ export class RegistroBoletimComponent implements OnInit {
 
 
       $("input[name^=IB_NomeSocial]").focus(function () {
-        if (page.listaPessoaProfissional.length > 0 || page.listaPessoaPaciente.length > 0)
+        if ($('input[name^=IB_NomeSocial]').val().length > 2 && $('input[name^=IB_NomeSocial]').is(':hover') === true)
           $("#divPesquisaNomeCompleto").addClass('show');
       });
 
@@ -121,7 +121,7 @@ export class RegistroBoletimComponent implements OnInit {
 
 
       $("input[name^=DO_CEP]").focus(function () {
-        if (page.listaPessoaProfissional.length > 0 || page.listaPessoaPaciente.length > 0)
+        if ($('input[name^=DO_CEP]').val().length > 2 && $('input[name^=DO_CEP]').is(':hover') === true)
           $("#divPesquisaLogradouro").addClass('show');
       });
 
@@ -135,9 +135,20 @@ export class RegistroBoletimComponent implements OnInit {
 
     });
 
-    $(document).ready(function () { $("select[name^=DP_Endereco_Cidade]").val($("select[name^=DP_Endereco_Cidade] option:first").val()); });
+    var dataAtual = moment(new Date()).format('DD/MM/YYYY');
+    var horaAtual = moment(new Date()).format('HH:mm');
 
-    this.registroBoletimService.BindEspecialidade().subscribe(data => {
+    $(document).ready(function () {
+      $("input[name^=IB_Data]").val(dataAtual);
+      $("input[name^=IB_Hora]").val(horaAtual);
+      $("select[name^=DP_Endereco_Cidade]").val($("select[name^=DP_Endereco_Cidade] option:first").val());
+    });
+
+
+
+
+
+    this.registroBoletimService.BindEspecialidade().subscribe(async (data: Return) => {
       this.listaEspecialidade = data.result;
 
       $(document).ready(function () { $("select[name^=IB_Especialidade]").val($("select[name^=IB_Especialidade] option:first").val()); });
@@ -146,7 +157,7 @@ export class RegistroBoletimComponent implements OnInit {
       console.log(`Error. ${error.message}.`);
     });
 
-    this.registroBoletimService.BindTipoChegada().subscribe(data => {
+    this.registroBoletimService.BindTipoChegada().subscribe(async (data: Return) => {
       this.listaTipoChegada = data.result;
 
       $(document).ready(function () { $("select[name^=IB_ComoChegou]").val($("select[name^=IB_ComoChegou] option:first").val()); });
@@ -155,7 +166,7 @@ export class RegistroBoletimComponent implements OnInit {
       console.log(`Error. ${error.message}.`);
     });
 
-    this.registroBoletimService.BindTipoOcorrencia().subscribe(data => {
+    this.registroBoletimService.BindTipoOcorrencia().subscribe(async (data: Return) => {
       this.listaTipoOcorrencia = data.result;
 
       $(document).ready(function () { $("select[name^=DO_TipoOcorrencia]").val($("select[name^=DO_TipoOcorrencia] option:first").val()); });
@@ -164,7 +175,7 @@ export class RegistroBoletimComponent implements OnInit {
       console.log(`Error. ${error.message}.`);
     });
 
-    this.registroBoletimService.BindEstado().subscribe(data => {
+    this.registroBoletimService.BindEstado().subscribe(async (data: Return) => {
       this.listaEstado = data.result;
 
       $(document).ready(function () { $("select[name^=DP_Endereco_Estado]").val($("select[name^=DP_Endereco_Estado] option:first").val()); });
@@ -181,7 +192,7 @@ export class RegistroBoletimComponent implements OnInit {
 
     $(document).ready(function () { $("select[name^=DP_Endereco_Cidade]").val($("select[name^=DP_Endereco_Cidade] option:first").val()); });
 
-    this.registroBoletimService.BindCidade(this.Estado).subscribe(data => {
+    this.registroBoletimService.BindCidade(this.Estado).subscribe(async (data: Return) => {
       this.listaCidade = data.result;
 
       $(document).ready(function () { $("select[name^=DP_Endereco_Cidade]").val($("select[name^=DP_Endereco_Cidade] option:first").val()); });
@@ -193,8 +204,6 @@ export class RegistroBoletimComponent implements OnInit {
 
 
   }
-
-
 
   //begin:: Consulta Cep / Consulta tanto o CEP, quanto o logradouro e atribui aos campos correspondentes
   onBuscaCep() {
@@ -309,7 +318,7 @@ export class RegistroBoletimComponent implements OnInit {
 
         this.pessoaService.ConsultaCpfPaciente(cpf).subscribe(data => {
           if (data.statusCode == "302") {
-            this.mensagemService.Mensagens("sucesso", "Paciente encontrado");
+            this.mensagemService.Mensagens("info", "Paciente encontrado");
 
             var paciente = data.result;
             this.CarregaPessoa(paciente);
@@ -330,6 +339,9 @@ export class RegistroBoletimComponent implements OnInit {
 
     this.Pessoa = pessoa;
 
+    if (pessoa.cpf !== "")
+      $("input[name^=P_CPF]").val([pessoa.cpf.slice(0, 3)] + "." + [pessoa.cpf.slice(3, 6)] + "." + [pessoa.cpf.slice(6, 9)] + "-" + [pessoa.cpf.slice(9, 11)]);
+
 
     $("input[name^=IB_NomePaciente]").val(pessoa.nomeCompleto);
 
@@ -343,7 +355,13 @@ export class RegistroBoletimComponent implements OnInit {
       $("input[name^=IB_Nascimento]").val(("0" + day).slice(-2) + "/" + ("0" + month).slice(-2) + "/" + year);
     }
 
-    $("input[name^=DP_Telefone]").val(pessoa.telefone);
+    if (pessoa.contato1.length === 10)
+      $("input[name^=DP_Telefone]").val("(" + [pessoa.contato1.slice(0, 2)] + ")" + [pessoa.contato1.slice(2, 6)] + "-" + [pessoa.contato1.slice(6, 10)]);
+    else
+      $("input[name^=DP_Telefone]").val("(" + [pessoa.contato1.slice(0, 2)] + ")" + [pessoa.contato1.slice(2, 7)] + "-" + [pessoa.contato1.slice(7, 11)]);
+
+
+
     $("input[name^=IB_NomeSocial]").val(pessoa.nomeSocial);
     $("input[name^=DP_Logradouro]").val(pessoa.logradouro);
     $("input[name^=DP_Numero]").val(pessoa.numero);
@@ -364,7 +382,7 @@ export class RegistroBoletimComponent implements OnInit {
     var dataOcorrencia = $("input[name^=DO_Data]").val();
     var horaOcorrencia = $("input[name^=DO_Hora]").val();
     var cepOcorrencia = $("input[name^=DO_CEP]").val();
-
+    var telefoneInformante = $("input[name^=IN_Telefone]").val();
 
     if (dataBoletim !== "") {
       var data = dataBoletim.split("/");
@@ -384,10 +402,10 @@ export class RegistroBoletimComponent implements OnInit {
     pessoa.ativo = true;
 
 
-    var cpf = $("input[name^=IB_CPF]").val();
+    var cpf = $("input[name^=P_CPF]").val();
     var nascimento = $("input[name^=IB_Nascimento]").val();
     var telefone = $("input[name^=DP_Telefone]").val();
-    var nome = $("input[name^=IB_NomePaciente]").val()
+    var nome = $("input[name^=IB_NomePaciente]").val();
 
     if (nome !== "")
       pessoa.nomeCompleto = nome.toUpperCase();
@@ -402,6 +420,8 @@ export class RegistroBoletimComponent implements OnInit {
 
     }
 
+    if (telefone !== "")
+      pessoa.contato1 = telefone.replace('(', '').replace(')', '').replace('-', '').replace(' ', '');
 
     if (rb.value.IB_NomeSocial !== "")
       pessoa.nomeSocial = rb.value.IB_NomeSocial.toUpperCase();
@@ -428,13 +448,14 @@ export class RegistroBoletimComponent implements OnInit {
     if (rb.value.IN_Endereco !== "")
       registroboletim.enderecoInformante = rb.value.IN_Endereco.toUpperCase();
 
-    registroboletim.telefoneInformante = rb.value.telefone;
+    if (telefoneInformante !== "")
+      registroboletim.telefoneInformante = telefoneInformante.replace('(', '').replace(')', '').replace('-', '');
 
     if (rb.value.IN_GrauParentesco !== "")
       registroboletim.grauParentesco = rb.value.IN_GrauParentesco.toUpperCase();
 
-    if (rb.value.IN_GrauParentesco !== "")
-      registroboletim.procedencia = rb.value.IN_GrauParentesco;
+    if (rb.value.DO_Procedencia !== "")
+      registroboletim.procedencia = rb.value.DO_Procedencia;
 
     registroboletim.TipoOcorrencia = this.TipoOcorrencia;
 
@@ -443,10 +464,10 @@ export class RegistroBoletimComponent implements OnInit {
       var newData = new Date(data[2] + '-' + data[1] + '-' + data[0]);
 
       if (horaOcorrencia !== "") {
-        newData.setHours(newData.getHours() + parseInt(horaOcorrencia.substring(0, 2)));
-        newData.setMinutes(newData.getMinutes() + parseInt(horaOcorrencia.substring(2, 4)));
+        var hora = horaOcorrencia.split(":");
+        newData.setHours(newData.getHours() + parseInt(hora[0]));
+        newData.setMinutes(newData.getMinutes() + parseInt(hora[1]));
       }
-
       registroboletim.dataOcorrencia = newData;
     }
 
@@ -458,16 +479,23 @@ export class RegistroBoletimComponent implements OnInit {
       registroboletim.tipoPerfuracao = "PAF";
 
     if (cepOcorrencia !== "")
-      pessoa.cep = cepOcorrencia.replace('-', '');
+      registroboletim.cep = cepOcorrencia.replace('.', '').replace('-', '');
+
 
     if (rb.value.DO_Logradouro !== "")
       registroboletim.logradouro = rb.value.DO_Logradouro;
+
+    console.log(rb.value.DO_Logradouro);
 
     if (rb.value.DO_Numero !== "")
       registroboletim.numero = rb.value.DO_Numero;
 
     if (rb.value.DO_Complemento !== "")
       registroboletim.complemento = rb.value.DO_Complemento;
+
+
+    if (rb.value.DO_Bairro !== "")
+      registroboletim.bairro = rb.value.DO_Bairro;
 
     registroboletim.Estado = this.Estado;
     registroboletim.Cidade = this.Cidade;
@@ -480,7 +508,6 @@ export class RegistroBoletimComponent implements OnInit {
 
       this.registroBoletimService.AlterarRegistroPessoa(pessoa).subscribe(data => {
 
-
         registroboletim.Pessoa = pessoa;
 
       }, (error: HttpErrorResponse) => {
@@ -491,11 +518,15 @@ export class RegistroBoletimComponent implements OnInit {
 
     }
 
+    console.log(JSON.stringify(registroboletim));
+
 
     this.registroBoletimService.SalvarRegistroBoletim(registroboletim).subscribe(data => {
 
-      this.mensagemService.Mensagens("sucesso", "Registro salvo com sucesso");
+      this.mensagemService.Mensagens("sucesso", "Registro Boletim salvo com sucesso");
 
+
+      $("input[name^=IB_NumeroBoletim]").val(data.result.numeroBoletim);
       this.LimparCampos(rb);
 
     }, (error: HttpErrorResponse) => {
@@ -579,8 +610,7 @@ export class RegistroBoletimComponent implements OnInit {
   //begin:: Carregamento do Profissional pela Busca
   onSelectedProfissional(profissional: PessoaProfissional) {
 
-    $("input[name^=DP_CPF]").val(profissional.cpf);
-
+    this.mensagemService.Mensagens("info", "Profissional carregado");
 
     this.CarregaPessoa(profissional);
     $("#divPesquisaNomeCompleto").removeClass('show');
@@ -592,7 +622,7 @@ export class RegistroBoletimComponent implements OnInit {
   //begin:: Carregamento do Paciente pela Busca
   onSelectedPaciente(paciente: PessoaPaciente) {
 
-    $("input[name^=DP_CPF]").val(paciente.cpf);
+    this.mensagemService.Mensagens("info", "Paciente carregado");
 
     this.CarregaPessoa(paciente);
 
@@ -605,7 +635,6 @@ export class RegistroBoletimComponent implements OnInit {
   //begin:: Limpa Campos/ Mensagens responsáveis pelos avisos com integrações externas
   public LimparCampos(rb: NgForm) {
 
-    $("#btn_formclear").trigger("click");
 
     this.Pessoa = undefined;
 
