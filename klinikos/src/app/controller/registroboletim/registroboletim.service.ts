@@ -14,7 +14,8 @@ export class RegistroBoletimService {
 
   private httpOptions = {
     headers: new HttpHeaders({
-      'Content-Type': 'application/json'
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer ' + localStorage['token_accessToken']
     })
   };
 
@@ -34,8 +35,8 @@ export class RegistroBoletimService {
     return this.http.post<Return>(`${this.baseUrl}registroboletim/incluir`, registroboletim, this.httpOptions);
   }
 
- AlterarRegistroPessoa(paciente: PessoaPaciente) {
+  AlterarRegistroPessoa(paciente: PessoaPaciente) {
 
-   return this.http.put<Return>(`${this.baseUrl}pessoa/pessoapaciente/alterar`, paciente, this.httpOptions);
+    return this.http.put<Return>(`${this.baseUrl}pessoa/pessoapaciente/alterar`, paciente, this.httpOptions);
   }
 }

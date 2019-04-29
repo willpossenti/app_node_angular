@@ -26,7 +26,8 @@ export class PessoaService {
 
   private httpOptions = {
     headers: new HttpHeaders({
-      'Content-Type': 'application/json'
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer ' + localStorage['token_accessToken']
     })
   };
 

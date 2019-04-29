@@ -4,6 +4,6 @@ export interface Return {
   message: string;
   statusCode: string;
   result: any;
-
+  token: any;
 
 }
