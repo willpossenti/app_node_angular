@@ -6,7 +6,6 @@ import { Especialidade } from '../../model/Especialidade';
 import { TipoChegada } from '../../model/TipoChegada';
 import { TipoOcorrencia } from 'src/app/model/TipoOcorrencia';
 import { HttpErrorResponse } from '@angular/common/http';
-import { MensagemService } from '../Util/mensagem.service';
 import { Estado } from '../../model/Estado';
 import { Cidade } from '../../model/Cidade';
 import { Cep } from '../../model/Cep';
@@ -20,7 +19,7 @@ import { PessoaPaciente } from '../../model/PessoaPaciente';
 import { PessoaProfissional } from '../../model/PessoaProfissional';
 import * as moment from 'moment';
 import { Return } from '../../model/Return';
-
+import * as Toastr from 'toastr';
 
 @Component({
   selector: 'app-registroboletim',
@@ -47,7 +46,8 @@ export class RegistroBoletimComponent implements OnInit {
   orderUf: string = 'uf';
   Pessoa: any;
 
-  constructor(private registroBoletimService: RegistroBoletimService, private mensagemService: MensagemService, private pessoaService: PessoaService, private cpfService: CpfService, private router: Router) {
+  constructor(private registroBoletimService: RegistroBoletimService,
+    private pessoaService: PessoaService, private cpfService: CpfService, private router: Router) {
 
 
   }
@@ -153,7 +153,7 @@ export class RegistroBoletimComponent implements OnInit {
 
       $(document).ready(function () { $("select[name^=IB_Especialidade]").val($("select[name^=IB_Especialidade] option:first").val()); });
     }, (error: HttpErrorResponse) => {
-      this.mensagemService.Mensagens("erro", "Falha ao carregar Especialidades na aba Informações do boletim");
+      Toastr.error("Falha ao carregar Especialidades na aba Informações do boletim");
       console.log(`Error. ${error.message}.`);
     });
 
@@ -162,7 +162,7 @@ export class RegistroBoletimComponent implements OnInit {
 
       $(document).ready(function () { $("select[name^=IB_ComoChegou]").val($("select[name^=IB_ComoChegou] option:first").val()); });
     }, (error: HttpErrorResponse) => {
-      this.mensagemService.Mensagens("erro", "Falha ao carregar tipos de chegada na aba Informações do boletim");
+      Toastr.error("Falha ao carregar tipos de chegada na aba Informações do boletim");
       console.log(`Error. ${error.message}.`);
     });
 
@@ -171,7 +171,7 @@ export class RegistroBoletimComponent implements OnInit {
 
       $(document).ready(function () { $("select[name^=DO_TipoOcorrencia]").val($("select[name^=DO_TipoOcorrencia] option:first").val()); });
     }, (error: HttpErrorResponse) => {
-      this.mensagemService.Mensagens("erro", "Falha ao carregar tipos de chegada na aba Informações do boletim");
+      Toastr.error("Falha ao carregar tipos de chegada na aba Informações do boletim");
       console.log(`Error. ${error.message}.`);
     });
 
@@ -180,7 +180,7 @@ export class RegistroBoletimComponent implements OnInit {
 
       $(document).ready(function () { $("select[name^=DP_Endereco_Estado]").val($("select[name^=DP_Endereco_Estado] option:first").val()); });
     }, (error: HttpErrorResponse) => {
-      this.mensagemService.Mensagens("erro", "Falha ao carregar os estados na aba Informações do boletim");
+      Toastr.error("Falha ao carregar os estados na aba Informações do boletim");
       console.log(`Error. ${error.message}.`);
     });
 
@@ -198,7 +198,7 @@ export class RegistroBoletimComponent implements OnInit {
       $(document).ready(function () { $("select[name^=DP_Endereco_Cidade]").val($("select[name^=DP_Endereco_Cidade] option:first").val()); });
 
     }, (error: HttpErrorResponse) => {
-      this.mensagemService.Mensagens("erro", "Falha ao carregar UF(s) na aba Dados Pessoais");
+      Toastr.error("Falha ao carregar UF(s) na aba Dados Pessoais");
       console.log(`Error. ${error.message}.`);
     });
 
@@ -233,7 +233,7 @@ export class RegistroBoletimComponent implements OnInit {
         .subscribe(data => {
 
           if (data.logradouro === undefined) {
-            this.mensagemService.Mensagens("warning", "CEP não encontrado");
+            Toastr.warning("CEP não encontrado");
           } else {
 
 
@@ -252,13 +252,13 @@ export class RegistroBoletimComponent implements OnInit {
 
 
             }, (error: HttpErrorResponse) => {
-              this.mensagemService.Mensagens("erro", "Falha ao carregar cidades na aba endereço");
+              Toastr.error("Falha ao carregar cidades na aba endereço");
               console.log(`Error. ${error.message}.`);
             });
 
           }
         }, (error: HttpErrorResponse) => {
-          //this.Mensagens("erro", "Falha ao consultar cep na aba endereço");
+          Toastr.error("Falha ao consultar cep na aba endereço");
           console.log(`Error. ${error.message}.`);
         });
     } else {
@@ -273,7 +273,7 @@ export class RegistroBoletimComponent implements OnInit {
 
               this.listaCep = data;
             }, (error: HttpErrorResponse) => {
-              //this.Mensagens("erro", "Falha ao consultar cep na aba endereço");
+              Toastr.error("Falha ao consultar cep na aba endereço");
               console.log(`Error. ${error.message}.`);
             });
 
@@ -318,14 +318,12 @@ export class RegistroBoletimComponent implements OnInit {
 
         this.pessoaService.ConsultaCpfPaciente(cpf).subscribe(data => {
           if (data.statusCode == "302") {
-            this.mensagemService.Mensagens("info", "Paciente encontrado");
-
+            Toastr.info("Paciente encontrado");
             var paciente = data.result;
             this.CarregaPessoa(paciente);
           }
         }, (error: HttpErrorResponse) => {
-
-          this.mensagemService.Mensagens("erro", "Falha ao carregar Raças na aba Dados Pessoais");
+          Toastr.error("Falha ao carregar Raças na aba Dados Pessoais");
           console.log(`Error. ${error.message}.`);
         });
       }
@@ -511,7 +509,7 @@ export class RegistroBoletimComponent implements OnInit {
         registroboletim.Pessoa = pessoa;
 
       }, (error: HttpErrorResponse) => {
-        this.mensagemService.Mensagens("erro", "Falha ao comunicar com API");
+        Toastr.error("Falha ao comunicar com API");
         console.log(`Error. ${error.message}.`);
       },
       );
@@ -523,14 +521,13 @@ export class RegistroBoletimComponent implements OnInit {
 
     this.registroBoletimService.SalvarRegistroBoletim(registroboletim).subscribe(data => {
 
-      this.mensagemService.Mensagens("sucesso", "Registro Boletim salvo com sucesso");
-
+      Toastr.success("Registro Boletim salvo com sucesso");
 
       $("input[name^=IB_NumeroBoletim]").val(data.result.numeroBoletim);
       this.LimparCampos(rb);
 
     }, (error: HttpErrorResponse) => {
-      this.mensagemService.Mensagens("erro", "Falha ao comunicar com API");
+      Toastr.error("Falha ao comunicar com API");
       console.log(`Error. ${error.message}.`);
     },
     );
@@ -562,7 +559,7 @@ export class RegistroBoletimComponent implements OnInit {
         this.listaPessoaPaciente = data.result;
 
       }, (error: HttpErrorResponse) => {
-        //this.Mensagens("erro", "Falha ao consultar cep na aba endereço");
+        Toastr.error("Falha ao consultar cep na aba endereço");
         console.log(`Error. ${error.message}.`);
       });
 
@@ -598,7 +595,7 @@ export class RegistroBoletimComponent implements OnInit {
         this.listaPessoaPaciente = data.result;
 
       }, (error: HttpErrorResponse) => {
-        //this.Mensagens("erro", "Falha ao consultar cep na aba endereço");
+        Toastr.error("Falha ao consultar cep na aba endereço");
         console.log(`Error. ${error.message}.`);
       });
 
@@ -610,8 +607,7 @@ export class RegistroBoletimComponent implements OnInit {
   //begin:: Carregamento do Profissional pela Busca
   onSelectedProfissional(profissional: PessoaProfissional) {
 
-    this.mensagemService.Mensagens("info", "Profissional carregado");
-
+    Toastr.info("Profissional carregado");
     this.CarregaPessoa(profissional);
     $("#divPesquisaNomeCompleto").removeClass('show');
     $("#divPesquisaNomeSocial").removeClass('show');
@@ -622,8 +618,7 @@ export class RegistroBoletimComponent implements OnInit {
   //begin:: Carregamento do Paciente pela Busca
   onSelectedPaciente(paciente: PessoaPaciente) {
 
-    this.mensagemService.Mensagens("info", "Paciente carregado");
-
+    Toastr.info("Paciente carregado");
     this.CarregaPessoa(paciente);
 
     $("#divPesquisaNomeCompleto").removeClass('show');
@@ -632,7 +627,7 @@ export class RegistroBoletimComponent implements OnInit {
   //end::  Carregamento do Paciente pela Busca
 
 
-  //begin:: Limpa Campos/ Mensagens responsáveis pelos avisos com integrações externas
+  //begin:: Limpa Campos/ mensagens responsáveis pelos avisos com integrações externas
   public LimparCampos(rb: NgForm) {
 
 

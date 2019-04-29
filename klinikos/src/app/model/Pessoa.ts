@@ -69,6 +69,7 @@ export interface Pessoa  {
   codigoLogin?: string;
   login?: string;
   senha?: string;
+  foto?: string;
   ativo?: boolean;
 
 

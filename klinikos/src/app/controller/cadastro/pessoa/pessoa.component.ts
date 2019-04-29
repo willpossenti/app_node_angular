@@ -27,9 +27,9 @@ import { Return } from '../../../model/Return';
 import { AgeFromDate } from 'age-calculator';
 import * as swal from '../../../../assets/vendors/general/sweetalert2/dist/sweetalert2.js';
 import { Cep } from '../../../model/Cep';
-import { MensagemService } from '../../util/mensagem.service';
 import { CpfService } from '../../util/cpf.service';
 import * as moment from 'moment';
+import * as Toastr from 'toastr';
 
 
 @Component({
@@ -82,9 +82,11 @@ export class PessoaComponent implements OnInit {
   LotacaoProfissional: LotacaoProfissional;
   Escolaridade: Escolaridade;
   SituacaoFamiliarConjugal: SituacaoFamiliarConjugal;
+  foto: string;
 
 
-  constructor(private pessoaService: PessoaService, private mensagemService: MensagemService, private cpfService: CpfService, private router: Router) {
+  constructor(private pessoaService: PessoaService,
+    private cpfService: CpfService, private router: Router) {
     this.listaLotacaoProfissional = new Array<LotacaoProfissional>();
     this.listaOcupacao = new Array<Ocupacao>();
     this.listaPais = new Array<Pais>();
@@ -93,6 +95,24 @@ export class PessoaComponent implements OnInit {
     this.listaEscolaridade = new Array<Escolaridade>();
     this.listaSituacaoFamiliarConjugal = new Array<SituacaoFamiliarConjugal>();
     this.Pessoa = null;
+
+    Toastr.options = {
+      "closeButton": true,
+      "debug": false,
+      "newestOnTop": false,
+      "progressBar": false,
+      "positionClass": "toast-top-right",
+      "preventDuplicates": false,
+      "onclick": null,
+      "showDuration": "300",
+      "hideDuration": "1000",
+      "timeOut": "5000",
+      "extendedTimeOut": "1000",
+      "showEasing": "swing",
+      "hideEasing": "linear",
+      "showMethod": "fadeIn",
+      "hideMethod": "fadeOut"
+    };
 
   }
 
@@ -104,10 +124,6 @@ export class PessoaComponent implements OnInit {
     var dataAtual = moment(new Date()).format('DD/MM/YYYY');
     var horaAtual = moment(new Date()).format('HH:mm:ss');
 
-
-
-    console.log(dataAtual + " "+horaAtual);
-
     this.pessoaService.BindRaca().subscribe(async (data: Return) => {
       this.listaRaca = data.result;
 
@@ -115,8 +131,7 @@ export class PessoaComponent implements OnInit {
 
 
     }, (error: HttpErrorResponse) => {
-
-      this.mensagemService.Mensagens("erro", "Falha ao carregar Raças na aba Dados Pessoais");
+      Toastr.error("Falha ao carregar Raças na aba Dados Pessoais");
       console.log(`Error. ${error.message}.`);
     });
 
@@ -126,7 +141,7 @@ export class PessoaComponent implements OnInit {
 
       $(document).ready(function () { $("select[name^=DP_JustificativaCPF]").val($("select[name^=DP_JustificativaCPF] option:first").val()); });
     }, (error: HttpErrorResponse) => {
-      this.mensagemService.Mensagens("erro", "Falha ao carregar Justificativas na aba Dados Pessoais");
+      Toastr.error("Falha ao carregar Justificativas na aba Dados Pessoais");
       console.log(`Error. ${error.message}.`);
     });
 
@@ -137,7 +152,7 @@ export class PessoaComponent implements OnInit {
       $(document).ready(function () { $("select[name^=DP_Nacionalidade]").val($("select[name^=DP_Nacionalidade] option:first").val()); });
 
     }, (error: HttpErrorResponse) => {
-      this.mensagemService.Mensagens("erro", "Falha ao carregar Nacionalidades na aba Dados Pessoais");
+      Toastr.error("Falha ao carregar Nacionalidades na aba Dados Pessoais");
       console.log(`Error. ${error.message}.`);
     });
 
@@ -157,9 +172,11 @@ export class PessoaComponent implements OnInit {
       });
 
     }, (error: HttpErrorResponse) => {
-      this.mensagemService.Mensagens("erro", "Falha ao carregar Estados Naturalidade na aba Dados Pessoais");
+      Toastr.error("Falha ao carregar Estados Naturalidade na aba Dados Pessoais");
       console.log(`Error. ${error.message}.`);
     });
+
+
 
 
     this.pessoaService.BindOrgaoEmissor().subscribe(async (data: Return) => {
@@ -170,9 +187,10 @@ export class PessoaComponent implements OnInit {
       });
 
     }, (error: HttpErrorResponse) => {
-      this.mensagemService.Mensagens("erro", "Falha ao carregar Orgãos Emissores na aba Dados Pessoais");
+      Toastr.error("Falha ao carregar Orgãos Emissores na aba Dados Pessoais");
       console.log(`Error. ${error.message}.`);
     });
+
 
 
     $(document).ready(function () {
@@ -180,6 +198,9 @@ export class PessoaComponent implements OnInit {
       document.title = 'Cadastro | Klinikos';
 
       $("select[name^=DP_Etnia]").val($("select[name^=DP_Etnia] option:first").val());
+
+      $("select[name^=DP_OrgaoEmissor]").val($("select[name^=DP_OrgaoEmissor] option:first").val());
+      $("select[name^=DP_Prof_OrgaoEmissor]").val($("select[name^=DP_Prof_OrgaoEmissor] option:first").val());
 
       $('#k_table_1').on('click', 'input[name^=Prof_Coord]', function () {
         var id = '#' + $(this).attr('id') + '';
@@ -222,32 +243,36 @@ export class PessoaComponent implements OnInit {
         }
       });
 
-      //confirmação na linha 0 para caso o usuário deseja excluir o contato, os demais são gerados dinamicamente
-      $("#btnExcluirContato0").click(function () {
-        swal({ title: 'Deseja excluir esse contato?', text: '', type: 'warning', showCancelButton: true, cancelButtonText: 'Não', confirmButtonText: 'Sim' })
-          .then(function (result) {
-            if (result.value) {
-              $("input[name='Cont_Telefone0']").val("");
-              $("input[name='Cont_Celular0']").val("");
-              $("input[name='Cont_Email0']").val("");
-            }
-          });
+
+      var _URL = window.URL;
+
+
+      $('input[type^=file]').change(function () {
+
+        var file = $(this)[0].files[0];
+
+        var reader = new FileReader();
+        reader.readAsDataURL(this.files[0]);
+        reader.onload = function () {
+
+          var imagem = new Image();
+          imagem.src = _URL.createObjectURL(file);
+
+          imagem.onload = function () {
+
+            if ($(this)[0].width === $(this)[0].height)
+              $('.k-avatar__holder').css('background-size', '120px 120px');
+            else
+              $('.k-avatar__holder').css('background-size', '160px 120px');
+          };
+
+          page.foto = reader.result.toString();
+          $('.k-avatar__holder').css('background-image', 'url("' + reader.result + '")');
+
+          $('.k-avatar__holder').css('background-position', 'center');
+        };
+
       });
-
-      //Informa o usuário se já existe uma lotação para aquele cadastro
-      $("#btnAddNovaLotacao").click(function () {
-
-        var tipoprofissional = $("#idProfTipo option:selected").text();
-
-        $('#tableLotacaoProfissional1 tr').each(function () {
-          if ($(this).find('td').eq(0).text() === tipoprofissional) {
-            swal('Já existe esse tipo de profissional');
-          }
-        });
-
-      });
-
-
 
     });
 
@@ -255,9 +280,6 @@ export class PessoaComponent implements OnInit {
     var dataAtual2 = moment(new Date()).format('DD/MM/YYYY');
     var horaAtual2 = moment(new Date()).format('HH:mm:ss');
 
-
-
-    console.log(dataAtual2 + " " + horaAtual2);
 
   }
   //end:: Carregamento Básico da tela
@@ -287,7 +309,7 @@ export class PessoaComponent implements OnInit {
         this.listaPessoaPaciente = data.result;
 
       }, (error: HttpErrorResponse) => {
-        //this.Mensagens("erro", "Falha ao consultar cep na aba endereço");
+        Toastr.error("Falha ao consultar cep na aba endereço");
         console.log(`Error. ${error.message}.`);
       });
 
@@ -323,7 +345,6 @@ export class PessoaComponent implements OnInit {
         this.listaPessoaPaciente = data.result;
 
       }, (error: HttpErrorResponse) => {
-        //this.Mensagens("erro", "Falha ao consultar cep na aba endereço");
         console.log(`Error. ${error.message}.`);
       });
 
@@ -554,7 +575,8 @@ export class PessoaComponent implements OnInit {
             this.pessoaService.ConsultaCpfPaciente(cpf).subscribe(async (subdata: Return) => {
 
               if (subdata.statusCode == "302") {
-                this.mensagemService.Mensagens("info", "Paciente encontrado");
+
+                Toastr.info("Paciente encontrado");
 
                 var paciente = subdata.result;
 
@@ -571,21 +593,18 @@ export class PessoaComponent implements OnInit {
                 this.CarregaPessoa(paciente);
               }
             }, (error: HttpErrorResponse) => {
-
-              this.mensagemService.Mensagens("erro", "Falha ao carregar Raças na aba Dados Pessoais");
+              Toastr.error("Falha ao carregar Raças na aba Dados Pessoais");
               console.log(`Error. ${error.message}.`);
             });
           } else {
 
 
             this.onSelectedProfissional(data.result);
-
-            this.mensagemService.Mensagens("info", "Profissional encontrado");
+            Toastr.info("Profissional encontrado");
           }
 
         }, (error: HttpErrorResponse) => {
-
-          this.mensagemService.Mensagens("erro", "Falha ao carregar Raças na aba Dados Pessoais");
+          Toastr.error("Falha ao carregar Raças na aba Dados Pessoais");
           console.log(`Error. ${error.message}.`);
         });
       }
@@ -619,8 +638,7 @@ export class PessoaComponent implements OnInit {
           this.pessoaService.ConsultaCnsPaciente(dp_cns).subscribe(async (subdata: Return) => {
 
             if (subdata.statusCode == "302") {
-              this.mensagemService.Mensagens("info", "Paciente encontrado");
-
+              Toastr.info("Paciente encontrado");
 
               var paciente = subdata.result;
 
@@ -637,21 +655,18 @@ export class PessoaComponent implements OnInit {
               this.CarregaPessoa(paciente);
             }
           }, (error: HttpErrorResponse) => {
-
-            this.mensagemService.Mensagens("erro", "Falha ao carregar Raças na aba Dados Pessoais");
+            Toastr.error("Falha ao carregar Pessoas na aba Dados Pessoais");
             console.log(`Error. ${error.message}.`);
           });
         } else {
 
 
           this.onSelectedProfissional(data.result);
-
-          this.mensagemService.Mensagens("info", "Profissional encontrado");
+          Toastr.info("Profissional encontrado");
         }
 
       }, (error: HttpErrorResponse) => {
-
-        this.mensagemService.Mensagens("erro", "Falha ao carregar Raças na aba Dados Pessoais");
+        Toastr.error("Falha ao carregar Raças na aba Dados Pessoais");
         console.log(`Error. ${error.message}.`);
       });
 
@@ -686,8 +701,7 @@ export class PessoaComponent implements OnInit {
           this.pessoaService.ConsultaPisPaciente(dp_pis).subscribe(async (subdata: Return) => {
 
             if (subdata.statusCode == "302") {
-              this.mensagemService.Mensagens("info", "Paciente encontrado");
-
+              Toastr.info("Paciente encontrado");
               var paciente = subdata.result;
 
               if (paciente.recemnascido == true) {
@@ -703,21 +717,18 @@ export class PessoaComponent implements OnInit {
               this.CarregaPessoa(paciente);
             }
           }, (error: HttpErrorResponse) => {
-
-            this.mensagemService.Mensagens("erro", "Falha ao carregar Raças na aba Dados Pessoais");
+            Toastr.error("Falha ao carregar Raças na aba Dados Pessoais");
             console.log(`Error. ${error.message}.`);
           });
         } else {
 
 
           this.onSelectedProfissional(data.result);
-          this.mensagemService.Mensagens("info", "Profissional encontrado");
-
+          Toastr.info("Falha ao carregar Raças na aba Dados Pessoais");
         }
 
       }, (error: HttpErrorResponse) => {
-
-        this.mensagemService.Mensagens("erro", "Falha ao carregar Raças na aba Dados Pessoais");
+        Toastr.error("Falha ao carregar Raças na aba Dados Pessoais");
         console.log(`Error. ${error.message}.`);
       });
 
@@ -732,8 +743,7 @@ export class PessoaComponent implements OnInit {
 
     $("input[name^=DP_CPF]").val(profissional.cpf);
 
-
-   // this.CarregaPessoa(profissional);
+    this.CarregaPessoa(profissional);
 
     $('#DP_TipoCadastro').prop('checked', true);
     $('#box_dadosprof').removeClass('oculta');
@@ -742,9 +752,9 @@ export class PessoaComponent implements OnInit {
 
       this.listaLotacaoProfissional = data.result;
     }, error => {
-      this.mensagemService.Mensagens("erro", "Falha ao carregar Etnias na aba Dados Pessoais");
+      Toastr.error("Falha ao carregar Raças na aba Dados Pessoais");
       console.log(`Error. ${error._body}.`);;
-      });
+    });
 
 
     this.onFechaPesquisa();
@@ -754,6 +764,7 @@ export class PessoaComponent implements OnInit {
 
   //begin:: Carregamento do Paciente pela Busca
   onSelectedPaciente(paciente: PessoaPaciente) {
+
 
     $("input[name^=DP_CPF]").val(paciente.cpf);
 
@@ -780,9 +791,30 @@ export class PessoaComponent implements OnInit {
 
     this.Pessoa = pessoa;
 
-
     $("input[name^=DP_NomeCompleto]").val(pessoa.nomeCompleto);
     $("input[name^=DP_NomeSocial]").val(pessoa.nomeSocial);
+
+
+    if (pessoa.foto !== null) {
+
+      var _URL = window.URL;
+
+      var imagem = new Image();
+      imagem.src = pessoa.foto;
+
+      imagem.onload = function () {
+
+        $('.k-avatar__holder').css('background-image', 'url("' + pessoa.foto + '")');
+
+        if ($(this)[0].width === $(this)[0].height)
+          $('.k-avatar__holder').css('background-size', '120px 120px');
+        else
+          $('.k-avatar__holder').css('background-size', '160px 120px');
+      };
+
+      $('.k-avatar__holder').css('background-position', 'center');
+    }
+
 
     if (pessoa.sexo === "M")
       $("label[for^=DP_Sexo_Masculino]").addClass("active");
@@ -965,7 +997,7 @@ export class PessoaComponent implements OnInit {
           $(document).ready(function () { $("select[name^=DP_Etnia]").val($("select[name^=DP_Etnia] option:first").val()); });
 
       }, error => {
-        this.mensagemService.Mensagens("erro", "Falha ao carregar Etnias na aba Dados Pessoais");
+        Toastr.error("Falha ao carregar Etnias na aba Dados Pessoais");
         console.log(`Error. ${error._body}.`);;
       });
 
@@ -992,7 +1024,7 @@ export class PessoaComponent implements OnInit {
         $(document).ready(function () { $("select[name^=DP_NaturalidadeCidade]").val($("select[name^=DP_NaturalidadeCidade] option:first").val()); });
 
     }, (error: HttpErrorResponse) => {
-      this.mensagemService.Mensagens("erro", "Falha ao carregar UF(s) na aba Dados Pessoais");
+      Toastr.error("Falha ao carregar UF(s) na aba Dados Pessoais");
       console.log(`Error. ${error.message}.`);
     });
 
@@ -1017,7 +1049,7 @@ export class PessoaComponent implements OnInit {
         $(document).ready(function () { $("select[name^=DP_Endereco_Cidade]").val($("select[name^=DP_Endereco_Cidade] option:first").val()); });
 
     }, (error: HttpErrorResponse) => {
-      this.mensagemService.Mensagens("erro", "Falha ao carregar os Estados na aba Dados Pessoais");
+      Toastr.error("Falha ao carregar os Estados na aba Dados Pessoais");
       console.log(`Error. ${error.message}.`);
     });
 
@@ -1034,7 +1066,7 @@ export class PessoaComponent implements OnInit {
 
       $(document).ready(function () { $("select[name^=DP_ProfTipo]").val($("select[name^=DP_ProfTipo] option:first").val()); });
     }, (error: HttpErrorResponse) => {
-      this.mensagemService.Mensagens("erro", "Falha ao carregar Paises na aba Dados Complementares");
+      Toastr.error("Falha ao carregar Paises na aba Dados Complementares");
       console.log(`Error. ${error.message}.`);
     });
 
@@ -1061,7 +1093,7 @@ export class PessoaComponent implements OnInit {
         else
           $(document).ready(function () { $("select[name^=DC_Ocupacao]").val($("select[name^=DC_Ocupacao] option:first").val()); });
       }, (error: HttpErrorResponse) => {
-        this.mensagemService.Mensagens("erro", "Falha ao carregar Ocupações na aba Dados Complementares");
+        Toastr.error("Falha ao carregar Ocupações na aba Dados Complementares");
         console.log(`Error. ${error.message}.`);
       });
     }
@@ -1082,7 +1114,7 @@ export class PessoaComponent implements OnInit {
         else
           $(document).ready(function () { $("select[name^=DC_PaisDeOrigem]").val($("select[name^=DC_PaisDeOrigem] option:first").val()); });
       }, (error: HttpErrorResponse) => {
-        this.mensagemService.Mensagens("erro", "Falha ao carregar Paises na aba Dados Complementares");
+        Toastr.error("Falha ao carregar Paises na aba Dados Complementares");
         console.log(`Error. ${error.message}.`);
       });
     }
@@ -1103,7 +1135,7 @@ export class PessoaComponent implements OnInit {
           $(document).ready(function () { $("select[name^=DC_TipoCertidao]").val($("select[name^=DC_TipoCertidao] option:first").val()); });
 
       }, (error: HttpErrorResponse) => {
-        this.mensagemService.Mensagens("erro", "Falha ao carregar Paises na aba Dados Complementares");
+        Toastr.error("Falha ao carregar Paises na aba Dados Complementares");
         console.log(`Error. ${error.message}.`);
       });
 
@@ -1135,7 +1167,7 @@ export class PessoaComponent implements OnInit {
 
 
       }, (error: HttpErrorResponse) => {
-        this.mensagemService.Mensagens("erro", "Falha ao carregar Paises na aba Dados Complementares");
+        Toastr.error("Falha ao carregar Escolaridade na aba Dados Complementares");
         console.log(`Error. ${error.message}.`);
       });
     }
@@ -1161,7 +1193,7 @@ export class PessoaComponent implements OnInit {
 
 
       }, (error: HttpErrorResponse) => {
-        this.mensagemService.Mensagens("erro", "Falha ao carregar Paises na aba Dados Complementares");
+        Toastr.error("Falha ao carregar Situação Familiar na aba Dados Complementares");
         console.log(`Error. ${error.message}.`);
       });
 
@@ -1175,6 +1207,13 @@ export class PessoaComponent implements OnInit {
   onAdicionaLotacao() {
 
     if (this.TipoProfissional !== undefined) {
+
+      if (this.listaLotacaoProfissional.find(x => x.TipoProfissional.tipoProfissionalId === this.TipoProfissional.tipoProfissionalId) !== undefined) {
+
+        $(document).ready(function () { swal('Já existe esse tipo de profissional'); });
+      }
+
+
 
       var numeroconselho = $("input[name^=Prof_NumConselho]").val();
 
@@ -1193,10 +1232,16 @@ export class PessoaComponent implements OnInit {
       if (this.OrgaoEmissorProfissional !== undefined)
         lotacaoProfissional.OrgaoEmissorProfissional = this.OrgaoEmissorProfissional;
 
+
+
       if (this.listaLotacaoProfissional.find(x => x.TipoProfissional === this.TipoProfissional) === undefined && this.LotacaoProfissional === undefined) {
+
+        console.log(lotacaoProfissional);
 
         this.listaLotacaoProfissional.push(lotacaoProfissional);
         this.onLimparCamposProfissional();
+
+
       } else if (this.LotacaoProfissional !== undefined) {
 
         if (this.LotacaoProfissional.TipoProfissional != lotacaoProfissional.TipoProfissional)
@@ -1207,6 +1252,10 @@ export class PessoaComponent implements OnInit {
         lotacaoProfissional.coordenador = this.LotacaoProfissional.coordenador;
         this.listaLotacaoProfissional[index] = lotacaoProfissional;
         this.onLimparCamposProfissional();
+
+
+
+
       }
 
     } else {
@@ -1235,6 +1284,7 @@ export class PessoaComponent implements OnInit {
 
   }
   //end::  Edita Lotacao Profissional
+
 
   //begin:: Exibe Mensagem Excluir / Alerta o usuário da confirmação da exclusão na aba profissional
   onExibeMensagemExcluir(lotacaoprofissional: LotacaoProfissional) {
@@ -1309,7 +1359,8 @@ export class PessoaComponent implements OnInit {
         .subscribe(async (data: Cep) => {
 
           if (data.logradouro === undefined) {
-            this.mensagemService.Mensagens("warning", "CEP não encontrado");
+            Toastr.warning("CEP não encontrado");
+
           } else {
             $("input[name^=DP_Logradouro]").val(data.logradouro.toUpperCase())
             $("input[name^=DP_Bairro]").val(data.bairro.toUpperCase())
@@ -1326,13 +1377,13 @@ export class PessoaComponent implements OnInit {
 
 
             }, (error: HttpErrorResponse) => {
-              this.mensagemService.Mensagens("erro", "Falha ao carregar cidades na aba endereço");
+              Toastr.error("Falha ao carregar cidades na aba endereço");
               console.log(`Error. ${error.message}.`);
             });
 
           }
         }, (error: HttpErrorResponse) => {
-          //this.Mensagens("erro", "Falha ao consultar cep na aba endereço");
+          Toastr.error("Falha ao consultar cep na aba endereço");
           console.log(`Error. ${error.message}.`);
         });
     } else {
@@ -1346,7 +1397,7 @@ export class PessoaComponent implements OnInit {
 
               this.listaCep = data;
             }, (error: HttpErrorResponse) => {
-              //this.Mensagens("erro", "Falha ao consultar cep na aba endereço");
+              Toastr.error("Falha ao consultar cep na aba endereço");
               console.log(`Error. ${error.message}.`);
             });
 
@@ -1375,15 +1426,18 @@ export class PessoaComponent implements OnInit {
 
     $("#k_scrolltop").trigger("click");
 
+    var cpf = $("input[name^=DP_CPF]").val();
+
+
+
     var pessoa: Pessoa = {};
     var pessoaPaciente: PessoaPaciente;
     var pessoaProfissional: PessoaProfissional;
 
-
     var recemNascido = p.value.DP_RecemNascido === "" ? false : true;
     var nascimento = $("input[name^=DP_Nascimento]").val();
     var emissao = $("input[name^=DP_OrgaoEmissorData]").val();
-    var cpf = $("input[name^=DP_CPF]").val();
+
     var identidade = $("input[name^=DP_Identidade]").val();
     var cns = $("input[name^=DP_CNS]").val();
     var cep = $("input[name^=DP_CEP]").val();
@@ -1480,7 +1534,7 @@ export class PessoaComponent implements OnInit {
     if (this.UfIdentidade !== undefined)
       pessoa.uf = this.UfIdentidade.uf;
 
-    if(contato1 !== "")
+    if (contato1 !== "")
       pessoa.contato1 = contato1.replace('(', '').replace(')', '').replace('-', '');
 
     if (contato2 !== "")
@@ -1581,7 +1635,23 @@ export class PessoaComponent implements OnInit {
     if (p.value.DP_Prof_Login !== "")
       pessoa.login = p.value.DP_Prof_Login.toUpperCase();
 
+    if (this.foto !== "")
+      pessoa.foto = this.foto;
+
     pessoa.ativo = true;
+
+    var msgCamposObrigatorios = "";
+
+    if (pessoa.nomeCompleto === "")
+      msgCamposObrigatorios = "Informe o nome\n";
+
+    if (this.listaLotacaoProfissional.length > 0 && cpf === "")
+      msgCamposObrigatorios = msgCamposObrigatorios + "CPF para o profissional";
+
+    if (msgCamposObrigatorios !== "") {
+      swal("Campos Obrigatórios", msgCamposObrigatorios, "error");
+      return;
+    }
 
     if (this.Pessoa == null) {
 
@@ -1599,13 +1669,12 @@ export class PessoaComponent implements OnInit {
             swal("Profissional já cadastrado!", "CPF ou CNS ou PIS/PASEP já existente na Base", "error");
 
           } else {
-
-            this.mensagemService.Mensagens("sucesso", "Profissional salvo com sucesso");
+            Toastr.success("Profissional salvo com sucesso");
             this.LimparCampos(p);
 
           }
         }, (error: HttpErrorResponse) => {
-          this.mensagemService.Mensagens("erro", "Falha ao comunicar com API");
+          Toastr.error("Falha ao comunicar com API");
           console.log(`Error. ${error.message}.`);
         },
         );
@@ -1626,12 +1695,11 @@ export class PessoaComponent implements OnInit {
 
 
         this.pessoaService.SalvarPessoaPaciente(pessoaPaciente).subscribe(async (data: Return) => {
-
-          this.mensagemService.Mensagens("sucesso", "Paciente salvo com sucesso");
+          Toastr.success("Paciente salvo com sucesso");
           this.LimparCampos(p);
 
         }, (error: HttpErrorResponse) => {
-          this.mensagemService.Mensagens("erro", "Falha ao comunicar com API");
+          Toastr.error("Falha ao comunicar com API");
           console.log(`Error. ${error.message}.`);
         },
         );
@@ -1663,6 +1731,7 @@ export class PessoaComponent implements OnInit {
     $("div").find("#box_newcontact3").remove();
     $("div").find("#box_newcontact4").remove();
     $("div").find("#box_newcontact5").remove();
+    $('.k-avatar__holder').css('background-image', 'url(../../assets/media/users/default.jpg)');
   }
   //end:: Limpa Campos
 

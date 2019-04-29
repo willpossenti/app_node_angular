@@ -2,6 +2,10 @@ import { Component, OnInit } from '@angular/core';
 import * as $ from 'jquery';
 import { NgForm } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
+import { HttpErrorResponse } from '@angular/common/http';
+import { LoginService } from './login.service';
+import { User } from '../../model/User';
+import { Return } from '../../model/Return';
 
 @Component({
   selector: 'app-login',
@@ -10,7 +14,10 @@ import { Router, ActivatedRoute } from '@angular/router';
 })
 export class LoginComponent implements OnInit {
 
-  constructor(private readonly router: Router, private readonly route: ActivatedRoute) { }
+  constructor(private readonly router: Router, private loginService: LoginService) {
+
+    localStorage.clear();
+  }
 
   ngOnInit() {
 
@@ -26,8 +33,58 @@ export class LoginComponent implements OnInit {
 
   public onLogar(p: NgForm) {
 
-   
-    this.router.navigate(['/home', { outlets: ['cadastro'] }]);
+
+    if (p.value.usuario.trim() === "") {
+      $('.form-group').find('span').text('Informe o usuário');
+      return;
+    }
+
+    if (p.value.senha.trim() === "") {
+      $('.form-group').find('span').text('Informe a senha');
+      return;
+    }
+
+    var user: User = {
+
+      username: p.value.usuario,
+      password: p.value.senha
+    };
+
+    this.loginService.Authenticate(user).subscribe(async (data: any) => {
+
+
+      if (data.statusCode === 404 || data.statusCode === 401) {
+        $('.form-group').find('span').text(data.message);
+      } else {
+        var RegExp = /["|']/g;
+        localStorage.setItem('user', JSON.stringify(data.result));
+        localStorage.setItem('token_accessToken', data.token.accessToken.replace(RegExp, ""));
+        localStorage.setItem('token_expiracao', data.token.expiration.toString());
+
+
+        const defaltOnSameUrlNavigation = this.router.navigate(['klinikos'])
+        this.router.onSameUrlNavigation = 'reload';
+        this.router.navigateByUrl(this.router.url, {
+          replaceUrl: true
+        });
+
+        setTimeout(() =>
+
+          //this.router.navigate(['klinikos'])
+          window.location.replace("http://localhost:4200/klinikos")
+
+
+          , 1000);
+
+
+
+      }
+
+    }, (error: HttpErrorResponse) => {
+
+      $('.form-group').find('span').text('Erro ao comunicar com a API');
+      console.log(error);
+    });
   }
 
 }
