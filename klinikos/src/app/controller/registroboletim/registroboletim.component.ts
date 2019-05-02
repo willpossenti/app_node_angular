@@ -59,8 +59,7 @@ export class RegistroBoletimComponent implements OnInit {
     $(document).ready(function () {
 
       document.title = 'Registro Boletim | Klinikos';
-
-      //$("#k_subheader").css("margin-top", "75px");
+      $("h3[class^=k-subheader__title]").html("Registro Boletim");
 
       $("#divPesquisaNomeCompleto")
         .mouseover(function () {

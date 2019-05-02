@@ -1,0 +1,751 @@
+  <!-- begin:: Content -->
+<div class="k-content k-grid__item k-grid__item--fluid" id="k_content">
+  <div class="row">
+    <div class="col-lg-12">
+
+      <!--begin::Form-->
+      <form class="k-form k-form--label-right clean_on">
+
+        <!--begin: Portlet Main-->
+        <div class="k-portlet">
+          <div class="k-portlet__body">
+
+            <!--begin::Accordion-->
+            <div class="accordion accordion-light" id="accordionExample1">
+
+              <!--begin: Card 1 : Classificação -->
+              <div class="card">
+                <div class="card-header" id="headingOne1">
+                  <div class="card-title" data-target="#collapseOne1" data-toggle="collapse" aria-expanded="false" aria-controls="collapseOne1">
+                    <i class="fa fa-heartbeat fa-fw"></i> Classificação
+                  </div>
+                </div>
+                <!-- show -->
+                <div id="collapseOne1" class="collapse show" aria-labelledby="headingOne1" data-parent="#accordionExample1" style="">
+                  <div class="card-body">
+
+                    <!--begin::Portlet 1-->
+                    <div class="k-portlet">
+                      <!--
+                      <div class="k-portlet__head">
+                          <div class="k-portlet__head-label">
+                              <h3 class="k-portlet__head-title">
+                                  Classificação
+                              </h3>
+                          </div>
+                      </div>
+                      -->
+                      <div class="k-portlet__body p-1">
+                        <div class="form-group row">
+                          <div class="col-lg-8">
+                            <label>Descrição da Queixa</label>
+                            <input type="text" class="form-control" name="DescricaoQueixa" placeholder="" value="">
+                          </div>
+                          <div class="col-lg-4">
+                            <label>Causa Externa</label>
+
+
+
+                            <select class="form-control" name="CausaExterna" tabindex="12" [(ngModel)]="CausaExterna">
+                              <option value="-1">-- Selecione --</option>
+                              <option *ngFor="let causaexterna of listaCausasExterna | orderBy: orderDescricao" [ngValue]="causaexterna">{{causaexterna.descricao}}</option>
+                            </select>
+
+
+                          </div>
+                        </div>
+
+                        <div class="form-group row">
+                          <!-- begin:: Bloco 1 -->
+                          <div class="col-lg-8 rounded">
+                            <label class="d-block w-100 mb-3 text-left">Escala de Dor</label>
+
+                            <div class="col-lg-2 col-md-6 col-sm-6 mb-2 float-left">
+                              <div class="text-center pb-2">
+                                <img src="../assets/media/icons/ed-azul.png" class="smile" alt="Ausente">
+                              </div>
+                              <div class="btn-group btn-group-toggle mt-1 mb-1 w-100" data-toggle="buttons">
+                                <label class="btn ed ed-0 ed-opac text-light text-center p-1 cp clear" for="EscalaDor0" *ngFor="let escalador of listaEscalasDor | orderBy: orderDescricao ">
+                                  <input type="radio" name="escalador" [value]="escalador.escalaDorId" [(ngModel)]="escalador"> {{escalador.codigoEscalaDor}}
+                                  <!--<input type="radio" name="EscalaDor" id="EscalaDor0" autocomplete="off" value="0" tabindex=""> 0-->
+                                </label>
+                              </div>
+                              <div class="text-center p-1">
+                                <span class="ed-text">Sem Dor</span>
+                              </div>
+                            </div>
+
+                            <div class="col-lg-2 col-md-6 col-sm-6 mb-2 float-left">
+                              <div class="text-center pb-2">
+                                <img src="../assets/media/icons/ed-verde.png" class="smile" alt="Leve">
+                              </div>
+                              <div class="btn-group btn-group-toggle mt-1 mb-1 w-100" data-toggle="buttons">
+                                <label class="btn ed ed-1 ed-opac text-light text-center p-1 cp clear" for="EscalaDor1">
+                                  <input type="radio" name="EscalaDor" id="EscalaDor1" autocomplete="off" value="0" tabindex=""> 1
+                                </label>
+                                <label class="btn ed ed-2 ed-opac text-light text-center p-1 cp clear" for="EscalaDor2">
+                                  <input type="radio" name="EscalaDor" id="EscalaDor2" autocomplete="off" value="0" tabindex=""> 2
+                                </label>
+                              </div>
+                              <div class="text-center p-1 rounded">
+                                <span class="ed-text">Leve</span>
+                              </div>
+                            </div>
+
+                            <div class="col-lg-2 col-md-6 col-sm-6 mb-2 float-left">
+                              <div class="text-center pb-2">
+                                <img src="../assets/media/icons/ed-amarelo.png" class="smile" alt="Moderada">
+                              </div>
+                              <div class="btn-group btn-group-toggle mt-1 mb-1 w-100" data-toggle="buttons">
+                                <label class="btn ed ed-3 ed-opac text-light text-center p-1 cp clear" for="EscalaDor3">
+                                  <input type="radio" name="EscalaDor" id="EscalaDor3" autocomplete="off" value="0" tabindex=""> 3
+                                </label>
+                                <label class="btn ed ed-4 ed-opac text-light text-center p-1 cp clear" for="EscalaDor4">
+                                  <input type="radio" name="EscalaDor" id="EscalaDor4" autocomplete="off" value="0" tabindex=""> 4
+                                </label>
+                                <label class="btn ed ed-5 ed-opac text-light text-center p-1 cp clear" for="EscalaDor5">
+                                  <input type="radio" name="EscalaDor" id="EscalaDor5" autocomplete="off" value="0" tabindex=""> 5
+                                </label>
+                              </div>
+                              <div class="text-center p-1 rounded">
+                                <span class="ed-text">Moderada</span>
+                              </div>
+                            </div>
+
+                            <div class="col-lg-2 col-md-6 col-sm-6 mb-2 float-left">
+                              <div class="text-center pb-2">
+                                <img src="../assets/media/icons/ed-laranja.png" class="smile" alt="Forte">
+                              </div>
+                              <div class="btn-group btn-group-toggle mt-1 mb-1 w-100" data-toggle="buttons">
+                                <label class="btn ed ed-6 ed-opac text-light text-center p-1 cp clear" for="EscalaDor6">
+                                  <input type="radio" name="EscalaDor" id="EscalaDor6" autocomplete="off" value="0" tabindex=""> 6
+                                </label>
+                                <label class="btn ed ed-7 ed-opac text-light text-center p-1 cp clear" for="EscalaDor7">
+                                  <input type="radio" name="EscalaDor" id="EscalaDor7" autocomplete="off" value="0" tabindex=""> 7
+                                </label>
+                                <label class="btn ed ed-8 ed-opac text-light text-center p-1 cp clear" for="EscalaDor8">
+                                  <input type="radio" name="EscalaDor" id="EscalaDor8" autocomplete="off" value="0" tabindex=""> 8
+                                </label>
+                              </div>
+                              <div class="text-center p-1 rounded">
+                                <span class="ed-text">Forte</span>
+                              </div>
+                            </div>
+
+                            <div class="col-lg-2 col-md-6 col-sm-6 mb-2 float-left">
+                              <div class="text-center pb-2">
+                                <img src="../assets/media/icons/ed-vermelho.png" class="smile" alt="Forte">
+                              </div>
+                              <div class="btn-group btn-group-toggle mt-1 mb-1 w-100" data-toggle="buttons">
+                                <label class="btn ed ed-9 ed-opac text-light text-center p-1 cp clear" for="EscalaDor9">
+                                  <input type="radio" name="EscalaDor" id="EscalaDor9" autocomplete="off" value="0" tabindex=""> 9
+                                </label>
+                                <label class="btn ed ed-10 ed-opac text-light text-center p-1 cp clear" for="EscalaDor10">
+                                  <input type="radio" name="EscalaDor" id="EscalaDor10" autocomplete="off" value="0" tabindex=""> 10
+                                </label>
+                              </div>
+                              <div class="text-center p-1 rounded">
+                                <span class="ed-text">Intensa</span>
+                              </div>
+                            </div>
+
+                            <div class="col-lg-10 mt-5 float-left">
+                              <label class="d-block text-left">Níveis de Consciência</label>
+
+                              <div class="btn-group btn-group-toggle" data-toggle="buttons">
+                                <label class="btn btn-outline-dark cp"  *ngFor="let nivelconsciencia of listaNiveisConsciencia | orderBy: orderDescricao">
+                                  <input type="radio" name="nivelConsciencia" [value]="nivelconsciencia.nivelConscienciaId" [(ngModel)]="nivelconsciencia"> {{nivelconsciencia.descricao}}
+                                </label>
+                              </div>
+                            </div>
+
+                            <div class="col-lg-2 mt-5 float-left">
+                              <label>&nbsp;</label>
+                              <div class="k-checkbox-list mt-2 pl-3">
+                                <label class="k-checkbox k-checkbox--brand">
+                                  <input type="checkbox" name="Sutura">Sutura<span></span>
+                                </label>
+                              </div>
+                            </div>
+                          </div>
+                          <!-- begin:: Bloco 1 -->
+                          <!-- begin:: Bloco 2 -->
+                          <div class="col-lg-4">
+
+                            <div class="col-lg-12 float-left">
+                              <label>Peso, Altura = IMC</label>
+                              <div class="input-group-lg">
+                                <div class="input-group-prepend">
+                                  <input type="text" class="form-control sn w-25" name="SV_Peso" id="SV_Peso" maxlength="3" placeholder="(kg)" value="">
+                                  <input type="text" class="form-control sn w-25" name="SV_Altura" id="SV_Altura" maxlength="3" placeholder="(cm)" value="">
+                                  <input type="text" class="form-control ch w-100" name="SV_IMC" id="SV_IMC" placeholder="IMC" data-content="" data-toggle="popover" data-placement="top" data-trigger="hover" style="background:#E9E8E8;" readonly value="">
+                                </div>
+                                <div class="form-text text-danger" style="height:15px !important;"><span class="oculta">Message Error</span></div>
+                              </div>
+                            </div>
+
+                            <!--
+                                                                    <div class="col-lg-6 float-left">
+                                                                        <label>IMC</label>
+                                                                        <input type="text" class="form-control ch" name="SV_IMC" id="SV_IMC" data-content="" data-toggle="popover" data-placement="top" data-trigger="hover" style="background:#E9E8E8;" readonly value="">
+                                                                        <div class="form-text text-danger" style="height:15px !important;"><span class="oculta">Message Error</span></div>
+                                                                    </div>
+                            -->
+
+                            <div class="col-lg-6 float-left">
+                              <label>Temperatura</label>
+                              <input type="text" class="form-control sn" name="SV_Temperatura" maxlength="2" placeholder="(ºC)" value="">
+                              <div class="form-text text-danger" style="height:15px !important;"><span class="oculta">Message Error</span></div>
+                            </div>
+
+                            <div class="col-lg-6 float-left">
+                              <label>Pre. Arterial (mmHg)</label>
+                              <div class="input-group-lg">
+                                <div class="input-group-prepend">
+                                  <input type="text" class="form-control sn" name="SV_PreArterialDiastolica" maxlength="3" placeholder="Diastólica" title="Diastólica" value="">
+                                  <input type="text" class="form-control sn" name="SV_PreArterialSistolica" maxlength="3" placeholder="Sistólica" title="Sistólica" value="">
+                                </div>
+                                <div class="form-text text-danger" style="height:15px !important;"><span class="oculta">Message Error</span></div>
+                              </div>
+                            </div>
+
+                            <div class="col-lg-6 float-left">
+                              <label>Pulso</label>
+                              <input type="text" class="form-control sn" name="Pulso" placeholder="(bpm)" maxlength="3" value="">
+                              <div class="form-text text-danger" style="height:15px !important;"><span class="oculta">Message Error</span></div>
+                            </div>
+
+                            <div class="col-lg-6 float-left">
+                              <label>Freq. Respiratória</label>
+                              <input type="text" class="form-control sn" name="FreqRespiratoria" placeholder="(rpm)" maxlength="3" value="">
+                              <div class="form-text text-danger" style="height:15px !important;"><span class="oculta">Message Error</span></div>
+                            </div>
+
+                            <div class="col-lg-6 float-left">
+                              <label>Saturação O2(%)</label>
+                              <input type="text" class="form-control sn" name="Saturacao" placeholder="(%)" maxlength="3" value="">
+                              <div class="form-text text-danger" style="height:15px !important;"><span class="oculta">Message Error</span></div>
+                            </div>
+
+                            <div class="col-lg-6 mb-3 float-left">
+                              <label class="d-block">&nbsp;</label>
+                              <button type="button" class="btn btn-accent m-0" data-toggle="popover" data-placement="top" data-trigger="hover" data-content="Capturar Sinais Vitais"><i class="fa fa-heartbeat"></i> Capturar</button>
+                            </div>
+
+                          </div>
+                          <!-- begin:: Bloco 2 -->
+
+
+                        </div>
+                        <!-- end: form-row-->
+                      </div>
+
+                    </div>
+                    <!--end::Portlet 1-->
+
+                  </div>
+                </div>
+              </div>
+              <!--end: Card 1 -->
+              <!--begin: Card 2 : Doenças Pré-Existentes -->
+              <div class="card">
+                <div class="card-header" id="headingOne2">
+                  <div class="card-title" data-toggle="collapse" data-target="#collapseOne2" aria-expanded="false" aria-controls="collapseOne2">
+                    <i class="fab fa-medrt fa-fw"></i> Doenças Pré-Existentes
+                  </div>
+                </div>
+                <div id="collapseOne2" class="collapse show" aria-labelledby="headingOne2" data-parent="#accordionExample1" style="">
+                  <div class="card-body">
+
+                    <!--begin::Portlet 2-->
+                    <div class="k-portlet">
+                      <!--
+                      <div class="k-portlet__head">
+                          <div class="k-portlet__head-label">
+                              <h3 class="k-portlet__head-title">
+                                  Doenças Pré-Existentes
+                              </h3>
+                          </div>
+                      </div>
+                      -->
+                      <div class="k-portlet__body p-1">
+
+                        <div class="form-group row">
+
+                          <div class="col-lg-12 pt-3 pr-3 pb-3 pl-3 d-lg-flex">
+                            <div class="k-checkbox-list">
+                              <label class="k-checkbox k-checkbox--brand">
+                                <input type="checkbox" name="DPE_Hipertensao" value="">Hipertensão<span></span>
+                              </label>
+                            </div>
+                            <div class="k-checkbox-list ml-lg-4">
+                              <label class="k-checkbox k-checkbox--brand">
+                                <input type="checkbox" name="DPE_Diabete" value="">Diabete<span></span>
+                              </label>
+                            </div>
+                            <div class="k-checkbox-list ml-lg-4">
+                              <label class="k-checkbox k-checkbox--brand">
+                                <input type="checkbox" name="DPE_Cardiopata" value="">Cardiopata<span></span>
+                              </label>
+                            </div>
+                            <div class="k-checkbox-list ml-lg-4">
+                              <label class="k-checkbox k-checkbox--brand">
+                                <input type="checkbox" name="DPE_RenalCronico" value="">Renal Crônico<span></span>
+                              </label>
+                            </div>
+                            <div class="k-checkbox-list ml-lg-4">
+                              <label class="k-checkbox k-checkbox--brand" id="dpe_respcron">
+                                <input type="checkbox" name="DPE_RespCronico" value="">Respiratória Crônica<span></span>
+                              </label>
+                            </div>
+                            <div class="k-checkbox-list ml-lg-4">
+                              <label class="k-checkbox k-checkbox--brand" id="dpe_outros">
+                                <input type="checkbox" name="DPE_Outros" value="">Outros<span></span>
+                              </label>
+                            </div>
+                          </div>
+
+                          <div class="col-lg-12 oculta" id="dpe_respcron_box">
+                            <label>Respiratória Crônica</label>
+                            <textarea class="form-control" name="DoencaPreExistRespCron" rows="2" style="resize:none;"></textarea>
+                          </div>
+                          <div class="col-lg-12 oculta" id="dpe_outros_box">
+                            <label>Outros</label>
+                            <textarea class="form-control" name="DoencaPreExistOutros" rows="2" style="resize:none;"></textarea>
+                          </div>
+
+                          <div class="col-lg-12 mt-3">
+                            <label>Avaliação</label>
+                            <textarea class="form-control" name="DoencaPreExistAvaliacao" rows="3" style="resize:none;"></textarea>
+                          </div>
+                        </div>
+
+                        <div class="form-group row">
+                          <div class="col-lg-6">
+                            <label>Como Chegou?</label>
+                            <select class="form-control">
+                              <option value="">-- Selecione --</option>
+                            </select>
+                          </div>
+                          <div class="col-lg-6">
+                            <label>Especialidade</label>
+                            <select class="form-control">
+                              <option value="">-- Selecione --</option>
+                            </select>
+                          </div>
+                        </div>
+
+                        <div class="form-group row">
+                          <div class="col-lg-3">
+                            <label>Possui Alergia?</label>
+                            <select class="form-control" name="PossuiAlergia" id="PossuiAlergia">
+                              <option value="">-- Selecione --</option>
+                              <option value="1">Sim</option>
+                              <option value="2">Não</option>
+                              <option value="3">Não Informado</option>
+                            </select>
+                          </div>
+                        </div>
+
+                      </div>
+                    </div>
+                    <!--end::Portlet 2-->
+
+                  </div>
+                </div>
+              </div>
+              <!--end: Card 2 -->
+              <!--begin: Card 3 : Alergia -->
+              <div class="card oculta" id="AlergiaCard">
+                <div class="card-header" id="headingOne3">
+                  <div class="card-title" data-toggle="collapse" data-target="#collapseOne3" aria-expanded="false" aria-controls="collapseOne3">
+                    <i class="fa fa-allergies fa-fw"></i> Alergia
+                  </div>
+                </div>
+                <div id="collapseOne3" class="collapse" aria-labelledby="headingOne3" data-parent="#accordionExample1" style="">
+                  <div class="card-body">
+
+                    <!--begin::Portlet 1-->
+                    <div class="k-portlet">
+                      <!--
+                      <div class="k-portlet__head">
+                          <div class="k-portlet__head-label">
+                              <h3 class="k-portlet__head-title">Alergia</h3>
+                          </div>
+                      </div>
+                      -->
+                      <div class="k-portlet__body p-1">
+
+                        <div class="form-group row">
+                          <div class="col-lg-4">
+                            <label>Tipo de Alergia</label>
+                            <select class="form-control" name="AlergiaTipo">
+                              <option value="">-- Selecione --</option>
+                            </select>
+                          </div>
+                          <div class="col-lg-4">
+                            <label>Alergia</label>
+                            <select class="form-control" name="AlergiaNome">
+                              <option value="">-- Selecione --</option>
+                            </select>
+                          </div>
+                          <div class="col-lg-4">
+                            <label>Localização</label>
+                            <select class="form-control" name="AlergiaLocalizacao">
+                              <option value="">-- Selecione --</option>
+                            </select>
+                          </div>
+                        </div>
+
+                        <div class="form-group row">
+                          <div class="col-lg-4">
+                            <label>Reação</label>
+                            <select class="form-control" name="AlergiaReacao">
+                              <option value="">-- Selecione --</option>
+                            </select>
+                          </div>
+                          <div class="col-lg-4">
+                            <label>Severidade</label>
+                            <select class="form-control" name="AlergiaSeveridade">
+                              <option value="">-- Selecione --</option>
+                            </select>
+                          </div>
+                          <div class="col-lg-2">
+                            <label>Data dos Sintomas</label>
+                            <input type="text" class="form-control mask_data" name="AlergiaData" placeholder="00/00/0000" value="">
+                          </div>
+                          <div class="col-lg-2">
+                            <div class="k-checkbox-list">
+                              <label>Status</label>
+                              <label class="k-checkbox k-checkbox--brand mt-2">
+                                <input type="checkbox" name="AlergiaAtivo">Ativo<span></span>
+                              </label>
+                            </div>
+                          </div>
+                        </div>
+
+                        <div class="form-group row">
+                          <div class="col">
+                            <button type="button" class="btn btn-success"><i class="fa fa-plus fa-fw"></i> Adicionar</button>
+                          </div>
+                        </div>
+
+                        <div class="form-group row">
+                          <div class="col">
+                            <table class="table">
+                              <thead class="thead-light">
+                                <tr class="text-center">
+                                  <th>Alergia</th>
+                                  <th>Localização</th>
+                                  <th>Reação</th>
+                                  <th>Severidade</th>
+                                  <th>Data</th>
+                                  <th>Situações</th>
+                                  <th colspan="2">Ações</th>
+                                </tr>
+                              </thead>
+                              <tbody>
+                                <tr class="text-center">
+                                  <td>Bactrim</td>
+                                  <td>Pele</td>
+                                  <td>Coceira</td>
+                                  <td>Suave</td>
+                                  <td>25/04/2019</td>
+                                  <td>Situação</td>
+                                  <td><a href="#"><i class="fa fa-pen fa-fw" title="Editar"></i></a></td>
+                                  <td><a href="#"><i class="fa fa-trash fa-fw" title="Excluir"></i></a></td>
+                                </tr>
+                              </tbody>
+                            </table>
+                          </div>
+                        </div>
+
+                      </div>
+                    </div>
+                    <!--end::Portlet 1-->
+
+                  </div>
+                </div>
+              </div>
+              <!--end: Card 3 -->
+              <!--begin: Card 4 : Escala de Glasgow -->
+              <div class="card">
+                <div class="card-header" id="headingOne4">
+                  <div class="card-title" data-toggle="collapse" data-target="#collapseOne4" aria-expanded="false" aria-controls="collapseOne4">
+                    <i class="fa fa-diagnoses fa-fw"></i> Escala de Glasgow
+                  </div>
+                </div>
+                <div id="collapseOne4" class="collapse" aria-labelledby="headingOne4" data-parent="#accordionExample1" style="">
+                  <div class="card-body">
+
+                    <!--begin::Portlet 2-->
+                    <div class="k-portlet">
+                      <!--
+                      <div class="k-portlet__head">
+                          <div class="k-portlet__head-label">
+                              <h3 class="k-portlet__head-title">
+                                  Escala de Glasgow
+                              </h3>
+                          </div>
+                      </div>
+                      -->
+                      <div class="k-portlet__body p-1">
+
+                        <div class="form-group row">
+
+                          <div class="col-lg-3">
+                            <label>Abertura Ocular</label>
+                            <select class="form-control" name="EG_AberturaOcular">
+                              <option value="">-- Selecione --</option>
+                              <option value="">Espontâneo</option>
+                              <option value="">Ao som</option>
+                              <option value="">À pressão</option>
+                              <option value="">Ausente</option>
+                              <option value="">Não testável</option>
+                            </select>
+                          </div>
+                          <div class="col-lg-3">
+                            <label>Resposta Verbal</label>
+                            <select class="form-control" name="EG_RespostaVerbal">
+                              <option value="">-- Selecione --</option>
+                              <option value="">Orientada</option>
+                              <option value="">Confusa</option>
+                              <option value="">Palavras</option>
+                              <option value="">Sons</option>
+                              <option value="">Ausente</option>
+                              <option value="">Não testável</option>
+                            </select>
+                          </div>
+                          <div class="col-lg-3">
+                            <label>Resposta Motora</label>
+                            <select class="form-control" name="EG_RespostaMotora">
+                              <option value="">-- Selecione --</option>
+                              <option value="">Às ordens</option>
+                              <option value="">Localizadora</option>
+                              <option value="">Flexão normal</option>
+                              <option value="">Flexão anormal</option>
+                              <option value="">Extensão</option>
+                              <option value="">Ausente</option>
+                              <option value="">Não testável</option>
+                            </select>
+                          </div>
+                          <div class="col-lg-3">
+                            <label>Status</label>
+                            <div class="input-group">
+                              <input type="text" class="form-control" placeholder="" value="">
+                              <div class="input-group-append">
+                                <button class="btn btn-secondary text-center" type="button" title="Limpar opções da Escala de Glasgow"><i class="fa fa-trash-alt fa-fw"></i></button>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+
+                      </div>
+                    </div>
+                    <!--end::Portlet 2-->
+
+                  </div>
+                </div>
+              </div>
+              <!--end: Card 4 -->
+              <!--begin: Card 5 : Dados da Ocorrência -->
+              <div class="card">
+                <div class="card-header" id="headingOne5">
+                  <div class="card-title" data-toggle="collapse" data-target="#collapseOne5" aria-expanded="false" aria-controls="collapseOne5"> <i class="flaticon-placeholder-3"></i> Dados da Ocorrência </div>
+                </div>
+                <div id="collapseOne5" class="collapse" aria-labelledby="headingOne5" data-parent="#accordionExample1" style="">
+                  <div class="card-body">
+
+                    <!--begin::Portlet 2-->
+                    <div class="k-portlet">
+                      <!--
+                      <div class="k-portlet__head">
+                          <div class="k-portlet__head-label">
+                              <h3 class="k-portlet__head-title">
+                                  Ocorrência
+                              </h3>
+                          </div>
+                      </div>
+                      -->
+                      <div class="k-portlet__body p-1">
+
+                        <div class="form-group row">
+                          <div class="col-lg-4">
+                            <label>Procedência</label>
+                            <input type="text" class="form-control" name="DO_Procedencia" placeholder="" maxlength="" value="" tabindex="21">
+                            <span class="form-text text-danger oculta">Message Error</span>
+                          </div>
+                          <div class="col-lg-3">
+                            <label>Tipo de Ocorrência</label>
+                            <select name="DO_TipoOcorrencia" class="form-control" tabindex="22">
+                              <option value="">-- Selecione --</option>
+                              <option value="">Acidente de Trabalho</option>
+                              <option value="">Afogamentos </option>
+                              <option value="">Agressões (outras idades)</option>
+                              <option value="">Agressões ao idoso (60 anos ou mais)</option>
+                              <option value="">Agressões às crianças (menores de 12 anos)</option>
+                              <option value="">Atropelamentos</option>
+                            </select>
+                            <span class="form-text text-danger oculta">Message Error</span>
+                          </div>
+                          <div class="col-lg-2">
+                            <label>Data</label>
+                            <input type="text" class="form-control mask_data" name="DO_Data" placeholder="" maxlength="" value="" tabindex="22">
+                            <span class="form-text text-danger oculta">Message Error</span>
+                          </div>
+                          <div class="col-lg-1">
+                            <label>Hora</label>
+                            <input type="text" class="form-control mask_hour" name="DO_Hora" placeholder="" maxlength="" value="" tabindex="23">
+                            <span class="form-text text-danger oculta">Message Error</span>
+                          </div>
+                          <div class="col-lg-2">
+                            <label class="d-block">&nbsp;</label>
+                            <div class="btn-group btn-group-toggle" data-toggle="buttons">
+                              <label class="btn btn-outline-info clear" for="M" style="cursor:pointer;" data-toggle="popover" data-placement="top" data-trigger="hover" data-content="Perfuração por Arma Branca">
+                                <input type="checkbox" name="DO_PAB" autocomplete="off" value=""> PAB
+                              </label>
+                              <label class="btn btn-outline-info clear" for="F" style="cursor:pointer;" data-toggle="popover" data-placement="top" data-trigger="hover" data-content="Perfuração por Arma de Fogo">
+                                <input type="checkbox" name="DO_PAF" autocomplete="off" value=""> PAF
+                              </label>
+                            </div>
+                          </div>
+                        </div>
+
+                        <div class="form-group row">
+                          <div class="col-lg-2">
+                            <label>CEP</label>
+                            <input type="text" class="form-control mask_cep" name="DO_CEP" placeholder="00000-000" value="" tabindex="24">
+                          </div>
+                          <div class="col-lg-6">
+                            <label>Logradouro</label>
+                            <input type="text" class="form-control" name="DO_Logradouro" placeholder="" maxlength="150" value="" tabindex="25">
+                          </div>
+                          <div class="col-lg-2">
+                            <label>Número</label>
+                            <input type="text" class="form-control" name="DO_Numero" placeholder="" maxlength="5" value="" tabindex="26">
+                          </div>
+                          <div class="col-lg-2">
+                            <label>Complemento</label>
+                            <input type="text" class="form-control" name="DO_Complemento" placeholder="" maxlength="30" value="" tabindex="27">
+                          </div>
+                        </div>
+                        <div class="form-group row">
+                          <div class="col-lg-6">
+                            <label>Bairro</label>
+                            <select class="form-control" name="DO_Bairro" tabindex="28">
+                              <option>-Selecione-</option>
+                            </select>
+                          </div>
+                          <div class="col-lg-4">
+                            <label>Munícipio</label>
+                            <select class="form-control" name="DO_Municipio" tabindex="29">
+                              <option>-Selecione-</option>
+                            </select>
+                          </div>
+                          <div class="col-lg-2">
+                            <label>Estado</label>
+                            <select class="form-control" name="DO_Estado" tabindex="30">
+                              <option>-Selecione-</option>
+                            </select>
+                          </div>
+                        </div>
+
+                      </div>
+                    </div>
+                    <!--end::Portlet 2-->
+
+                  </div>
+                </div>
+              </div>
+              <!--end: Card 5 -->
+              <!--begin: Card 6 : Risco -->
+              <div class="card">
+                <div class="card-header" id="headingOne6">
+                  <div class="card-title" data-toggle="collapse" data-target="#collapseOne6" aria-expanded="false" aria-controls="collapseOne6">
+                    <i class="flaticon-users-1"></i> Risco do Paciente
+                  </div>
+                </div>
+                <div id="collapseOne6" class="collapse show" aria-labelledby="headingOne6" data-parent="#accordionExample1" style="">
+                  <div class="card-body">
+
+                    <!--begin::Portlet 2-->
+                    <div class="k-portlet">
+                      <!--
+                      <div class="k-portlet__head">
+                          <div class="k-portlet__head-label">
+                              <h3 class="k-portlet__head-title">
+                                  Risco
+                              </h3>
+                          </div>
+                      </div>
+                      -->
+                      <div class="k-portlet__body p-1">
+
+                        <div class="form-group row">
+                          <div class="col-lg-6">
+                            <label class="d-block float-left">Risco</label>
+
+                            <div class="btn-group btn-group-toggle" data-toggle="buttons">
+                              <label class="btn risco-azul cp clear" data-toggle="popover" data-placement="top" data-trigger="hover" data-content="">
+                                <input type="radio" name="Risco" autocomplete="off" value=""> Azul
+                              </label>
+                              <label class="btn risco-verde cp clear" for="" data-toggle="popover" data-placement="top" data-trigger="hover" data-content="">
+                                <input type="radio" name="Risco" autocomplete="off" value=""> Verde
+                              </label>
+                              <label class="btn risco-amarelo cp clear d-flex" for="" data-toggle="popover" data-placement="top" data-trigger="hover" data-content="Consultório">
+                                <input type="radio" name="Risco" autocomplete="off" value=""><i class="fa fa-user-md fa-fw d-block mr-1"></i><span class="d-block"> Amarelo</span>
+                              </label>
+                              <label class="btn risco-amarelo cp clear d-flex" for="" data-toggle="popover" data-placement="top" data-trigger="hover" data-content="Observação">
+                                <input type="radio" name="Risco" autocomplete="off" value=""><i class="fa fa-eye fa-fw d-block mr-1"></i><span class="d-block"> Amarelo</span>
+                              </label>
+                              <label class="btn risco-laranja cp clear" for="" data-toggle="popover" data-placement="top" data-trigger="hover" data-content="">
+                                <input type="radio" name="Risco" autocomplete="off" value=""> Laranja
+                              </label>
+                              <label class="btn risco-vermelho cp clear" for="" data-toggle="popover" data-placement="top" data-trigger="hover" data-content="">
+                                <input type="radio" name="Risco" autocomplete="off" value=""> Vermelho
+                              </label>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <!--end::Portlet 2-->
+
+                  </div>
+                </div>
+              </div>
+              <!--end: Card 6 -->
+
+
+            </div>
+            <!--end::Accordion-->
+          </div>
+          <!--end::Portlet-body -->
+
+        </div>
+        <!--begin::Portlet Main-->
+        <!--begin:: Form Buttons -->
+        <div class="k-portlet__foot">
+          <div class="k-form__actions">
+            <div class="row">
+              <div class="col-lg-6">
+                <!--<button type="button" class="btn btn-accent">Biometria</button>-->
+                <button type="button" id="btn_formclear" class="btn btn-metal" data-toggle="popover" data-placement="top" data-trigger="hover" data-content="Limpar Campos do Formulário">Limpar</button>
+              </div>
+              <div class="col-lg-6 text-right">
+                <button type="reset" class="btn btn-primary" tabindex="64">Salvar</button>
+                <button type="reset" class="btn btn-metal" tabindex="65">Cancelar</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!--end:: Form Buttons -->
+
+
+      </form>
+      <!--end::Form-->
+    </div>
+  </div>
+
+</div>
+<!-- end:: Content -->

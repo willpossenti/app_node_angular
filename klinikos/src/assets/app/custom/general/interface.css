@@ -3,33 +3,182 @@
 
 /* placeholders browsers colors : -------------- */
 /* Chrome/Opera/Safari */
-::-webkit-input-placeholder { color: #C6C6C6 !important; }
+::-webkit-input-placeholder {
+  color: #C6C6C6 !important;
+}
 /* Firefox 19+ */
-::-moz-placeholder { color: #C6C6C6 !important; }
+::-moz-placeholder {
+  color: #C6C6C6 !important;
+}
 /* IE 10+ */
-:-ms-input-placeholder { color: #C6C6C6 !important; }
+:-ms-input-placeholder {
+  color: #C6C6C6 !important;
+}
 /* Firefox 18- */
-:-moz-placeholder { color: #C6C6C6 !important; }
+:-moz-placeholder {
+  color: #C6C6C6 !important;
+}
 /* fields */
 input[type="text"], input[type="password"], input[type="email"], input[type="date"], select, textarea {
-	border: 1px solid #D6D6D6 !important;
+  border: 1px solid #D6D6D6 !important;
 }
-input[type="text"]:focus, input[type="password"]:focus, input[type="email"]:focus, input[type="date"]:focus, select:focus, textarea:focus {
-	border-color: #A5B6FF !important;
-	-webkit-box-shadow: 3px 3px 36px -13px rgba(38,72,204,1) !important;
-	-moz-box-shadow: 3px 3px 36px -13px rgba(38,72,204,1) !important;
-	box-shadow: 3px 3px 36px -13px rgba(38,72,204,1) !important;
-}
+
+  input[type="text"]:focus, input[type="password"]:focus, input[type="email"]:focus, input[type="date"]:focus, select:focus, textarea:focus {
+    border-color: #A5B6FF !important;
+    -webkit-box-shadow: 3px 3px 36px -13px rgba(38,72,204,1) !important;
+    -moz-box-shadow: 3px 3px 36px -13px rgba(38,72,204,1) !important;
+    box-shadow: 3px 3px 36px -13px rgba(38,72,204,1) !important;
+  }
 
 /* Campos de formulário */
 .oculta {
-	display: none !important;
+  display: none !important;
 }
+
 .maisc {
-	text-transform: uppercase !important;
+  text-transform: uppercase !important;
 }
+
 .minus {
-	text-transform: lowercase !important;
+  text-transform: lowercase !important;
+}
+/* Cursor */
+.cp {
+  cursor: pointer;
 }
 
+.ch {
+  cursor: help;
+}
+/* Campo Obrigatório*/
+.fld-obg {
+  color: red;
+  font-weight: 400;
+  font-size: 1.1em;
+  cursor: help;
+}
 
+/*= Classificação de Risco : ----------------------------------- */
+/*Escala de Dor */
+.smile {
+  width: 85px !important;
+  height: 85px !important;
+}
+
+.ed-0 {
+  background: #097BC3 !important;
+}
+
+.ed-1 {
+  background: #11D01B !important;
+}
+
+.ed-2 {
+  background: #308A01 !important;
+
+}
+
+.ed-3 {
+  background: #E0D101 !important;
+}
+
+.ed-4 {
+  background: #C8C702 !important;
+
+}
+
+.ed-5 {
+  background: #CFA100 !important;
+
+}
+
+.ed-6 {
+  background: #FF9E00 !important;
+
+}
+
+.ed-7 {
+  background: #C87710 !important;
+
+}
+
+.ed-8 {
+  background: #AD6100 !important;
+
+}
+
+.ed-9 {
+  background: #FF0004 !important;
+
+}
+
+.ed-10 {
+  background: #9C0709 !important;
+
+}
+
+.ed-opac {
+  opacity: 0.4 !important;
+
+}
+
+.ed-text {
+  font-size: 0.9em;
+  font-weight: 400 !important;
+  color: #333;
+}
+
+/*Opções de Risco */
+.risco-azul {
+  border: 1px solid #269AE3 !important;
+  color: #666;
+}
+
+  .risco-azul.active {
+    background: #269AE3 !important;
+    color: #fff !important;
+  }
+
+.risco-verde {
+  border: 1px solid #45B91C !important;
+  color: #666;
+}
+
+  .risco-verde.active {
+    background: #45B91C !important;
+    color: #fff !important;
+
+  }
+
+.risco-amarelo {
+  border: 1px solid #F4DC06 !important;
+  color: #666;
+}
+
+  .risco-amarelo.active {
+    background: #F4DC06 !important;
+    color: #000 !important;
+
+  }
+
+.risco-laranja {
+  border: 1px solid #F4B42B !important;
+  color: #666;
+}
+
+  .risco-laranja.active {
+    background: #F4B42B !important;
+    color: #fff !important;
+
+  }
+
+.risco-vermelho {
+  border: 1px solid #E10B0B !important;
+  color: #666;
+}
+
+  .risco-vermelho.active {
+    background: #E10B0B !important;
+    color: #fff !important;
+
+  }

@@ -11,14 +11,15 @@ import { RegistroBoletimComponent } from './controller/registroboletim/registrob
 import { LoginService } from './controller/login/login.service';
 import { PessoaService } from './controller/cadastro/pessoa/pessoa.service';
 import { RegistroBoletimService } from './controller/registroboletim/registroboletim.service';
+import { AcolhimentoService } from './controller/acolhimento/acolhimento.service';
+import { ClassificaoRiscoService } from './controller/classificacaorisco/classificacaorisco.service';
 
 import { OrderModule } from 'ngx-order-pipe';
 import { CpfService } from './controller/util/cpf.service';
 import { LoginComponent } from './controller/login/login.component';
 import { MasterComponent } from './controller/master/master.component';
-
-
-
+import { AcolhimentoComponent } from './controller/acolhimento/acolhimento.component';
+import { ClassificacaoRiscoComponent } from './controller/classificacaorisco/classificacaorisco.component';
 
 const appRoutes: Routes = [
   { path: '', redirectTo: '/login', pathMatch: 'full' },
@@ -27,7 +28,9 @@ const appRoutes: Routes = [
   {
     path: 'klinikos', component: MasterComponent, canActivate: [AuthGuard], runGuardsAndResolvers: 'always', children: [
       { path: 'cadastro', component: PessoaComponent },
-      { path: 'registroboletim', component: RegistroBoletimComponent }
+      { path: 'registroboletim', component: RegistroBoletimComponent },
+      { path: 'acolhimento', component: AcolhimentoComponent },
+      { path: 'classificacaorisco', component: ClassificacaoRiscoComponent }
     ]
   },
 
@@ -43,6 +46,8 @@ const appRoutes: Routes = [
     RegistroBoletimComponent,
     LoginComponent,
     MasterComponent,
+    AcolhimentoComponent,
+    ClassificacaoRiscoComponent,
 
   ],
   imports: [
@@ -58,7 +63,9 @@ const appRoutes: Routes = [
     PessoaService,
     RegistroBoletimService,
     LoginService,
-    CpfService
+    CpfService,
+    AcolhimentoService,
+    ClassificaoRiscoService
   ],
   bootstrap: [AppComponent]
 })
