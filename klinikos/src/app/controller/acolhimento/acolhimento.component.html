@@ -1,0 +1,224 @@
+<!-- begin:: Content -->
+<div class="k-content k-grid__item k-grid__item--fluid" id="k_content">
+  <div class="row">
+    <div class="col-lg-12">
+
+      <!--begin::Form-->
+      <form class="clean_on k-form k-form--label-right">
+
+        <!--begin: Portlet Main-->
+        <div class="k-portlet">
+          <!--
+            <div class="k-portlet__head">
+                <div class="k-portlet__head-label">
+                    <h3 class="k-portlet__head-title">
+                        Entrada
+                    </h3>
+                </div>
+            </div>
+            -->
+
+          <div class="k-portlet__body">
+
+            <div class="form-group row">
+              <div class="col-lg-6">
+                <label>Nome do Paciente <span class="fld-obg" title="Obrigatório">*</span></label>
+                <input type="text" class="form-control maisc" name="NomeDoPaciente" maxlength="140" placeholder="CPF, CNS, Nome ou Nome Social" value="" tabindex="1">
+                <!--<span class="form-text text-muted">Please enter your full name</span>-->
+              </div>
+              <div class="col-lg-6">
+                <label>Nome Social</label>
+                <input type="text" class="form-control maisc" name="NomeSocial" maxlength="140" value="" tabindex="2">
+                <!--<span class="form-text text-muted">Please enter your full name</span>-->
+              </div>
+            </div>
+
+            <div class="form-group row">
+              <div class="col-lg-6">
+                <label>Especialidade <span class="fld-obg" title="Obrigatório">*</span></label>
+                <select class="form-control" name="Especialidade" tabindex="3">
+                  <option>- Selecione -</option>
+                  <option value="">Lorem ipsum dolor sit amet, consetetur sadipscing elitr</option>
+                  <option value="">Lorem ipsum dolor sadipscing elitr</option>
+                  <option value="">Lorem elitr</option>
+                  <option value="">Lorem ipsum sadipscing elitr</option>
+                </select>
+                <!--<span class="form-text text-muted">Please enter your full name</span>-->
+              </div>
+
+              <div class="col-lg-6">
+                <label class="text-left d-block">Prioridade</label>
+                <div class="btn-group btn-group-toggle" data-toggle="buttons">
+                  <label class="btn btn-outline-info clear" for="" data-toggle="popover" data-placement="top" data-trigger="hover" data-content="Cadeirante">
+                    <input type="radio" name="Prioridade" autocomplete="off" value="" tabindex="">
+                    <i class="fab fa-accessible-icon" style="font-size:1.7em;"> </i>
+                  </label>
+                  <label class="btn btn-outline-info clear" for="" data-toggle="popover" data-placement="top" data-trigger="hover" data-content="Gestante">
+                    <input type="radio" name="Prioridade" autocomplete="off" value="" tabindex="">
+                    <i class="fa fa-male fa-fw p-0" style="font-size:1.5em;"> </i>
+                  </label>
+                  <label class="btn btn-outline-info clear" for="" data-toggle="popover" data-placement="top" data-trigger="hover" data-content="Idoso acima de 60 anos">
+                    <input type="radio" name="Prioridade" autocomplete="off" value="" tabindex="">
+                    <i class="fa fa-male fa-fw p-0" style="font-size:1.5em;"> </i>
+                  </label>
+                  <label class="btn btn-outline-info clear" for="" data-toggle="popover" data-placement="top" data-trigger="hover" data-content="Idoso acima de 80 anos">
+                    <input type="radio" name="Prioridade" autocomplete="off" value="" tabindex="">
+                    <i class="fa fa-male fa-fw p-0" style="font-size:1.5em;"> </i>
+                  </label>
+                </div>
+                <!--<span class="form-text text-muted">Please enter your full name</span>-->
+              </div>
+            </div>
+
+            <div class="form-group row">
+              <div class="col-lg-12">
+                <label>Queixa Principal</label>
+                <textarea class="form-control" rows="4" style="resize:none;"></textarea>
+                <!-- <span class="form-text text-muted">Campo de preenchimento obrigatório</span> -->
+              </div>
+            </div>
+          </div>
+          <!--end::Portlet-body -->
+
+        </div>
+        <!--end::Portlet Main-->
+        <!--begin: Portlet Main : Avaliação de Sinais Vitais -->
+        <div class="k-portlet">
+          <div class="k-portlet__head">
+            <div class="k-portlet__head-label">
+              <h3 class="k-portlet__head-title">
+                Avaliações de Sinais Vitais
+              </h3>
+            </div>
+          </div>
+
+          <div class="k-portlet__body">
+
+            <div class="form-group row mb-0 pb-0">
+              <div class="col-lg-4 col-md-12">
+                <label>Pressão Arterial</label>
+                <div class="input-group-lg">
+                  <div class="input-group-prepend">
+                    <input type="text" class="form-control sn" name="SV_PressaoArterial_1" maxlength="3" placeholder="Sistólica" value="">
+                    <input type="text" class="form-control sn" name="SV_PressaoArterial_2" maxlength="3" placeholder="Diastólica" value="">
+                  </div>
+                </div>
+                <span class="form-text text-info oculta cm" id="msg_pa1_a"><b>Sistólica:</b> Indicado valores entre 60 à 180</span>
+                <span class="form-text text-danger oculta cm" id="msg_pa1_b"><b>Sistólica:</b> Não permitido menor que 50 e maior que 250</span>
+
+                <span class="form-text text-info oculta cm" id="msg_pa2_a"><b>Diastólica:</b> Indicado valores entre 30 à 110</span>
+                <span class="form-text text-danger oculta cm" id="msg_pa2_b"><b>Diastólica:</b> Não permitido menor que 20 e maior que 160</span>
+              </div>
+
+              <div class="col-lg-2">
+                <label>Pulso (bpm)</label>
+                <input type="text" class="form-control sn" name="SV_Pulso" maxlength="3" value="">
+                <span class="form-text text-info oculta cm" id="msg_pulso_a">Indicado valores entre 60 à 120</span>
+                <span class="form-text text-danger oculta cm" id="msg_pulso_b">Não permitido menor que 40 e maior que 150</span>
+              </div>
+              <div class="col-lg-2">
+                <label>Temperatura (&deg;C)</label>
+                <input type="text" class="form-control" name="SV_Temperatura" id="SV_Temperatura" maxlength="3" value="">
+                <span class="form-text text-info oculta cm" id="msg_temp_a">Indicado valores entre 35º à 40º</span>
+                <span class="form-text text-danger oculta cm" id="msg_temp_b">Não permitido menor que 33º e maior que 45º</span>
+              </div>
+              <div class="col-lg-2">
+                <label>Saturação O2 (%)</label>
+                <input type="text" class="form-control" name="SV_Saturacao" id="SV_Saturacao" maxlength="3" value="">
+                <span class="form-text text-info oculta cm" id="msg_sat_a">Indicado valor acima de 85%</span>
+                <span class="form-text text-danger oculta cm" id="msg_sat_b">Não permitido maior que 100%</span>
+              </div>
+              <div class="col-lg-2">
+                <label>Freq. Resp. (rpm)</label>
+                <input type="text" class="form-control sn" name="SV_FreqResp" maxlength="2" value="">
+                <span class="form-text text-info oculta cm" id="msg_freqresp_a">Indicado valores entre 12 e 60 (rpm)</span>
+                <span class="form-text text-danger oculta cm" id="msg_freqresp_b">Não permitido menor que 10 e maior que 66</span>
+              </div>
+            </div>
+
+            <div class="form-group row mb-0 pb-0 pt-4">
+              <div class="col-lg-4">
+                <button type="button" class="btn btn-sm btn-accent m-0" data-toggle="popover" data-placement="top" data-trigger="hover" data-content="Capturar Sinais Vitais"><i class="fa fa-heartbeat"></i> Capturar</button>
+              </div>
+            </div>
+          </div>
+          <!--end::Portlet-body -->
+
+        </div>
+        <!--begin::Portlet Main-->
+        <!--begin: Portlet Main-->
+        <div class="k-portlet">
+          <div class="k-portlet__head">
+            <div class="k-portlet__head-label">
+              <h3 class="k-portlet__head-title">
+                Outros
+              </h3>
+            </div>
+          </div>
+
+          <div class="k-portlet__body">
+
+            <div class="form-group row">
+              <div class="col-lg-4">
+                <label>&nbsp;</label>
+                <div class="k-checkbox-list mt-2">
+                  <label class="k-checkbox k-checkbox--brand" id="PacGuiaRefer">
+                    <input type="checkbox" name="PacGuiaRefer">Paciente com Guia de Referência<span></span>
+                  </label>
+                </div>
+              </div>
+
+              <div class="col-lg-4">
+                <label>Unidade Referência</label>
+                <select class="form-control" name="Especialidade" id="Especialidade" disabled>
+                  <option value="">- Selecione -</option>
+                </select>
+              </div>
+
+              <div class="col-lg-4">
+                <label class="text-left d-block">Outras Condições</label>
+                <div class="btn-group btn-group-toggle" data-toggle="buttons">
+                  <label class="btn btn-outline-dark clear" style="cursor:pointer;" for="OC_Risco" id="OC_Risco">
+                    <input type="checkbox" name="OC_Risco" autocomplete="off" value="" tabindex=""> Risco
+                  </label>
+                  <label class="btn btn-outline-dark clear" style="cursor:pointer;" for="OC_Sutura">
+                    <input type="checkbox" name="OC_Sutura" autocomplete="off" value="" tabindex=""> Sutura
+                  </label>
+                  <label class="btn btn-outline-dark clear" style="cursor:pointer;" for="OC_DorToracica" id="OC_DorToracica">
+                    <input type="checkbox" name="OC_DorToracica" autocomplete="off" value="" tabindex=""> Dor Torácica
+                  </label>
+                </div>
+
+              </div>
+
+            </div>
+
+          </div>
+          <!--end::Portlet-body -->
+
+        </div>
+        <!--begin::Portlet Main-->
+        <!--begin:: Form Buttons -->
+        <div class="k-portlet__foot">
+          <div class="k-form__actions">
+            <div class="row">
+              <div class="col-lg-6">
+                <!--<button type="button" class="btn btn-accent">Biometria</button>-->
+                <button type="button" class="btn btn-metal" id="btn_formclear" data-toggle="popover" data-placement="top" data-trigger="hover" data-content="Limpar Campos do Formulário">Limpar</button>
+              </div>
+              <div class="col-lg-6 text-right">
+                <button type="reset" class="btn btn-primary">Salvar</button>
+                <button type="reset" class="btn btn-metal">Cancelar</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!--end:: Form Buttons -->
+
+      </form>
+      <!--end::Form-->
+    </div>
+  </div>
+
+</div>
+<!-- end:: Content -->

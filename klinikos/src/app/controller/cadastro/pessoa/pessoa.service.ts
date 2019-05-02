@@ -18,10 +18,6 @@ export class PessoaService {
 
   private baseUrl: string;
   private cepUrl: string;
-  private raca: Raca;
-  private etnia: Etnia;
-  private justificativa: Justificativa;
-  private estado: Estado;
 
 
   private httpOptions = {
