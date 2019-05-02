@@ -39,9 +39,9 @@
                           <div class="col-lg-2">
                             <div class="k-avatar k-avatar--circle">
                               <div class="k-avatar__holder" style="background-image: url(../../assets/media/users/default.jpg); "></div>
-                              <label class="k-avatar__upload" data-toggle="k-tooltip" title="Alterar Foto">
-                                <i class="fa fa-pen"></i>
-                                <input type="file" name="DP_Avatar" accept=".png, .jpg, .jpeg" />
+                              <label class="k-avatar__upload" data-toggle="k-tooltip" title="Alterar Foto" for="imgFoto">
+                                <i class="flaticon-photo-camera"></i>
+                                <!--<input type="file" name="DP_Avatar" accept=".png, .jpg, .jpeg" />-->
                               </label>
                               <span class="k-avatar__cancel" data-toggle="k-tooltip" title="Cancel avatar">
                                 <i class="fa fa-times"></i>
@@ -120,7 +120,7 @@
 
                             <div class="k-checkbox-list mt-2">
                               <label class="k-checkbox k-checkbox--bold" id="btn_recemnasc">
-                                <input type="checkbox" name="DP_RecemNascido" tabindex="3" ngModel>Recém Nascido<span></span>
+                                <input type="checkbox" name="DP_RecemNascido" tabindex="3" (focus)="onFechaPesquisa()" ngModel>Recém Nascido<span></span>
                               </label>
                             </div>
                             <!-- <span class="form-text text-muted">Please enter your full name</span> -->
@@ -209,11 +209,11 @@
 
                             <div class="btn-group btn-group-toggle" data-toggle="buttons" id="sexo">
                               <label class="btn btn-outline-info clear" for="DP_Sexo_Masculino" style="cursor:pointer;" data-toggle="popover" data-placement="top" data-trigger="hover">
-                                <input type="radio" name="DP_Sexo" autocomplete="off" tabindex="8" value="M">
+                                <input type="radio" name="DP_Sexo" autocomplete="off" tabindex="8" value="M" (focus)="onFechaPesquisa()">
                                 <i class="fa fa-male fa-fw" style="font-size:1.5em;"> </i>
                               </label>
                               <label class="btn btn-outline-focus clear" for="DP_Sexo_Feminino" style="cursor:pointer;" data-toggle="popover" data-placement="top" data-trigger="hover">
-                                <input type="radio" name="DP_Sexo" autocomplete="off" tabindex="9" value="F">
+                                <input type="radio" name="DP_Sexo" autocomplete="off" tabindex="9" value="F" (focus)="onFechaPesquisa()">
                                 <i class="fa fa-female fa-fw p-0" style="font-size:1.5em;"> </i>
                               </label>
 
@@ -224,12 +224,12 @@
                           </div>
                           <div class="col-lg-2">
                             <label>Nascimento</label>
-                            <input type="text" class="form-control mask_data" name="DP_Nascimento" placeholder="00/00/0000" tabindex="10" (blur)="onCalculaIdade()">
+                            <input type="text" class="form-control mask_data" name="DP_Nascimento" placeholder="00/00/0000" tabindex="10" (blur)="onCalculaIdade()" (focus)="onFechaPesquisa()">
                           </div>
                           <div class="col-lg-2">
                             <label>Idade Aparente</label>
                             <div class="k-input-icon">
-                              <input type="text" class="form-control" name="DP_IdadeAparente" placeholder="" tabindex="11" ngModel>
+                              <input type="text" class="form-control" name="DP_IdadeAparente" placeholder="" tabindex="11" (focus)="onFechaPesquisa()" ngModel>
                               <!--
                               <span class="k-input-icon__icon k-input-icon__icon--right">
                                   <span><i class="la la-calendar"></i></span>
@@ -241,7 +241,7 @@
                           <div class="col-lg-2">
                             <label class="">Cor</label>
                             <div class="k-input-icon">
-                              <select class="form-control" name="DP_Cor" tabindex="12" [(ngModel)]="Raca" (change)="onSelectedRaca()">
+                              <select class="form-control" name="DP_Cor" tabindex="12" [(ngModel)]="Raca" (change)="onSelectedRaca()" (focus)="onFechaPesquisa()">
                                 <option value="-1">-- Selecione --</option>
                                 <option *ngFor="let raca of listaRaca | orderBy: orderNome" [ngValue]="raca">{{raca.nome}}</option>
                               </select>
@@ -263,12 +263,12 @@
                         <div class="form-group row">
                           <div class="col-lg-6">
                             <label>Nome do Pai</label>
-                            <input type="text" class="form-control maisc" name="DP_NomePai" placeholder="" maxlength="70" tabindex="14" ngModel>
+                            <input type="text" class="form-control maisc" name="DP_NomePai" placeholder="" maxlength="70" tabindex="14" (focus)="onFechaPesquisa()" ngModel>
                             <!-- <span class="form-text text-muted">Please enter your full name</span> -->
                           </div>
                           <div class="col-lg-6">
                             <label>Nome do Mãe</label>
-                            <input type="text" class="form-control maisc" name="DP_NomeMae" placeholder="" maxlength="70" tabindex="15" ngModel>
+                            <input type="text" class="form-control maisc" name="DP_NomeMae" placeholder="" maxlength="70" tabindex="15" (focus)="onFechaPesquisa()" ngModel>
                             <span id="msg_mae" class="form-text text-danger oculta">Informe o nome da mãe</span>
                           </div>
                         </div>
@@ -276,12 +276,12 @@
                         <div class="form-group row">
                           <div class="col-lg-3">
                             <label>CPF</label>
-                            <input type="text" class="form-control mask_cpf" name="DP_CPF" id="DP_CPF" placeholder="000.000.000-00" maxlength="11" value="" tabindex="16" (blur)="onConsultaCpf($event)" ngModel>
+                            <input type="text" class="form-control mask_cpf" name="DP_CPF" id="DP_CPF" placeholder="000.000.000-00" maxlength="11" value="" tabindex="16" (blur)="onConsultaCpf($event)" (focus)="onFechaPesquisa()" ngModel>
                             <span id="msg_cpf" class="form-text text-danger oculta">Informe um CPF válido</span>
                           </div>
                           <div class="col-lg-3">
                             <label>Justificativa CPF</label>
-                            <select class="form-control" name="DP_JustificativaCPF" tabindex="17" [(ngModel)]="Justificativa">
+                            <select class="form-control" name="DP_JustificativaCPF" tabindex="17" [(ngModel)]="Justificativa" (focus)="onFechaPesquisa()">
                               <option value="-1">-- Selecione --</option>
                               <option *ngFor="let justificativa of listaJustificativa | orderBy: orderDescricao" [ngValue]="justificativa">{{justificativa.descricao}}</option>
 
@@ -292,7 +292,7 @@
                             <label>Nacionalidade</label>
 
 
-                            <select class="form-control" name="DP_Nacionalidade" tabindex="18" [(ngModel)]="Nacionalidade">
+                            <select class="form-control" name="DP_Nacionalidade" tabindex="18" [(ngModel)]="Nacionalidade" (focus)="onFechaPesquisa()">
                               <option value="-1">-- Selecione --</option>
                               <option *ngFor="let nacionalidade of listaNacionalidade" [ngValue]="nacionalidade">{{nacionalidade.descricao}}</option>
                               <!--| orderBy: orderDescricao-->
@@ -304,12 +304,12 @@
                             <div class="input-group">
                               <div class="input-group-prepend">
 
-                                <select class="form-control" name="DP_NaturalidadeUF" tabindex="19" [(ngModel)]="Estado" (change)="onSelectedUf()">
+                                <select class="form-control" name="DP_NaturalidadeUF" tabindex="19" [(ngModel)]="Estado" (change)="onSelectedUf()" (focus)="onFechaPesquisa()">
                                   <option value="-1">-- Selecione --</option>
                                   <option *ngFor="let estado of listaEstado | orderBy: orderUf" [ngValue]="estado">{{estado.uf}}</option>
                                 </select>
 
-                                <select class="form-control" name="DP_NaturalidadeCidade" tabindex="20" [(ngModel)]="Cidade">
+                                <select class="form-control" name="DP_NaturalidadeCidade" tabindex="20" [(ngModel)]="Cidade" (focus)="onFechaPesquisa()">
                                   <option value="-1">-- Selecione --</option>
                                   <option *ngFor="let cidade of listaCidade| orderBy: orderNome" [ngValue]="cidade">{{cidade.nome}}</option>
                                 </select>
@@ -321,12 +321,12 @@
                         <div class="form-group row">
                           <div class="col-lg-3">
                             <label>Identidade</label>
-                            <input type="text" class="form-control mask_rg" name="DP_Identidade" placeholder="" tabindex="21" ngModel>
+                            <input type="text" class="form-control mask_rg" name="DP_Identidade" placeholder="" tabindex="21" (focus)="onFechaPesquisa()" ngModel>
                           </div>
                           <div class="col-lg-3">
                             <label>UF da Identidade</label>
 
-                            <select class="form-control" name="DP_IdentidadeUF" tabindex="22" [(ngModel)]="UfIdentidade">
+                            <select class="form-control" name="DP_IdentidadeUF" tabindex="22" [(ngModel)]="UfIdentidade" (focus)="onFechaPesquisa()">
                               <option value="-1">-- Selecione --</option>
                               <option *ngFor="let UfIdentidade of listaUFIdentidade| orderBy: orderUf" [ngValue]="UfIdentidade">{{UfIdentidade.uf}}</option>
 
@@ -336,21 +336,21 @@
                           <div class="col-lg-4">
                             <label>Órgão Emissor</label>
 
-                            <select class="form-control" name="DP_OrgaoEmissor" tabindex="23" [(ngModel)]="OrgaoEmissor">
+                            <select class="form-control" name="DP_OrgaoEmissor" tabindex="23" [(ngModel)]="OrgaoEmissor" (focus)="onFechaPesquisa()">
                               <option value="-1">-- Selecione --</option>
                               <option *ngFor="let OrgaoEmissor of listaOrgaoEmissor | orderBy: orderDescricao" [ngValue]="OrgaoEmissor">{{OrgaoEmissor.descricao}}</option>
                             </select>
                           </div>
                           <div class="col-lg-2">
                             <label>Emissão</label>
-                            <input type="text" class="form-control mask_data" name="DP_OrgaoEmissorData" tabindex="24" placeholder="00/00/0000">
+                            <input type="text" class="form-control mask_data" name="DP_OrgaoEmissorData" tabindex="24" (focus)="onFechaPesquisa()" placeholder="00/00/0000">
                           </div>
                         </div>
 
                         <div class="form-group row">
                           <div class="col-lg-6">
                             <label>Cartão Nacional de Saúde</label>
-                            <input type="text" class="form-control mask_cns" name="DP_CNS" id="DP_CNS" value="" tabindex="25" maxlength="15" (blur)="onConsultaCns($event)" ngModel>
+                            <input type="text" class="form-control mask_cns" name="DP_CNS" id="DP_CNS" value="" tabindex="25" maxlength="15" (blur)="onConsultaCns($event)" (focus)="onFechaPesquisa()" ngModel>
                             <span id="msg_cns" class="form-text text-danger oculta">Informe um CNS válido</span>
                           </div>
 
@@ -358,7 +358,7 @@
                             <label>Tipo de Cadastro</label>
                             <div class="k-checkbox-list mt-2">
                               <label class="k-checkbox k-checkbox--brand" id="btn_dadosprof" data-toggle="popover" data-placement="top" data-trigger="hover" data-content="Mostra/Oculta campos de registro de Dados Profissionais">
-                                <input type="checkbox" name="DP_TipoCadastro" id="DP_TipoCadastro" value="" (click)="onHabilitaProfissional()" tabindex="26">Preencher informações do Profissional<span></span>
+                                <input type="checkbox" name="DP_TipoCadastro" id="DP_TipoCadastro" value="" (click)="onHabilitaProfissional()" tabindex="26" (focus)="onFechaPesquisa()">Preencher informações do Profissional<span></span>
                               </label>
                             </div>
                           </div>

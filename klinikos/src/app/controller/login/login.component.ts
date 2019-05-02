@@ -7,6 +7,7 @@ import { LoginService } from './login.service';
 import { User } from '../../model/User';
 import { Return } from '../../model/Return';
 
+
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
@@ -16,7 +17,7 @@ export class LoginComponent implements OnInit {
 
   constructor(private readonly router: Router, private loginService: LoginService) {
 
-    localStorage.clear();
+
   }
 
   ngOnInit() {
@@ -61,24 +62,20 @@ export class LoginComponent implements OnInit {
         localStorage.setItem('token_accessToken', data.token.accessToken.replace(RegExp, ""));
         localStorage.setItem('token_expiracao', data.token.expiration.toString());
 
-
-        const defaltOnSameUrlNavigation = this.router.navigate(['klinikos'])
-        this.router.onSameUrlNavigation = 'reload';
-        this.router.navigateByUrl(this.router.url, {
-          replaceUrl: true
-        });
-
         setTimeout(() =>
 
           //this.router.navigate(['klinikos'])
+
+
+
           window.location.replace("http://localhost:4200/klinikos")
 
 
           , 1000);
 
-
-
       }
+
+
 
     }, (error: HttpErrorResponse) => {
 
