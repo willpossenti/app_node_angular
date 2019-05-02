@@ -72,8 +72,8 @@ export class PessoaComponent implements OnInit {
   orderUf: string = 'uf';
   EstadoEndereco: Estado;
   CidadeEndereco: Cidade;
-  Ocupacao: Ocupacao
-  Pais: Pais
+  Ocupacao: Ocupacao;
+  Pais: Pais;
   TipoCertidao: TipoCertidao;
   UfCtps: Estado;
   UfProfissional: Estado;
