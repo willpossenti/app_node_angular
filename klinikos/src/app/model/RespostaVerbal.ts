@@ -2,7 +2,7 @@ export interface RespostaVerbal {
 
   respostaVerbalId?: string;
   variavel?: string;
-  escore?: string;
+  escore?: number;
   ativo?: boolean;
 
 }

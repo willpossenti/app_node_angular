@@ -8,7 +8,6 @@ import * as Toastr from 'toastr';
 import { EscalaDor } from '../../model/EscalaDor';
 import { NivelConsciencia } from '../../model/NivelConsciencia';
 import { ClassificacaoRiscoPipe } from './classificacaorisco.pipe';
-import { DoencaPreExistente } from '../../model/DoencaPreExistente';
 import { TipoChegada } from '../../model/TipoChegada';
 import { Especialidade } from '../../model/Especialidade';
 import { TipoAlergia } from '../../model/TipoAlergia';
@@ -19,6 +18,17 @@ import { SeveridadeAlergia } from '../../model/SeveridadeAlergia';
 import { AberturaOcular } from '../../model/AberturaOcular';
 import { RespostaVerbal } from '../../model/RespostaVerbal';
 import { RespostaMotora } from '../../model/RespostaMotora';
+import { TipoOcorrencia } from '../../model/TipoOcorrencia';
+import { Estado } from '../../model/Estado';
+import { PessoaService } from '../cadastro/pessoa/pessoa.service';
+import { Cep } from '../../model/Cep';
+import { Cidade } from '../../model/Cidade';
+import * as RemoveAcentos from 'remove-accents';
+import { Risco } from '../../model/risco';
+import { NgForm } from '@angular/forms';
+import { ClassificacaoRisco } from '../../model/ClassificacaoRisco';
+import { ClassificacaoRiscoAlergia } from '../../model/ClassificacaoRiscoAlergia';
+import * as swal from '../../../assets/vendors/general/sweetalert2/dist/sweetalert2.js';
 
 
 @Component({
@@ -35,7 +45,6 @@ export class ClassificacaoRiscoComponent implements OnInit {
   listaCausasExterna: Array<CausaExterna>;
   listaEscalasDor: Array<EscalaDor>;
   listaNiveisConsciencia: Array<NivelConsciencia>;
-  listaDoencasPreExitente: Array<DoencaPreExistente>;
   listaTiposChegada: Array<TipoChegada>;
   listaEspecialidade: Array<Especialidade>;
   ListaPossuiAlergia: any;
@@ -47,8 +56,15 @@ export class ClassificacaoRiscoComponent implements OnInit {
   listaAberturaOcular: Array<AberturaOcular>;
   listaRespostaVerbal: Array<RespostaVerbal>;
   listaRespostaMotora: Array<RespostaMotora>;
+  listaTipoOcorrencia: Array<TipoOcorrencia>;
+  listaEstado: Array<Estado>;
+  listaCidade: Array<Cidade>;
+  listaCep: Array<Cep>;
+  listaRisco: Array<Risco>;
+  listaClassificacaoRiscoAlergia: Array<ClassificacaoRiscoAlergia>;
 
   CausaExterna: CausaExterna;
+  NivelConsciencia: NivelConsciencia;
   TipoChegada: TipoChegada;
   Especialidade: Especialidade;
   PossuiAlergia: any;
@@ -60,11 +76,17 @@ export class ClassificacaoRiscoComponent implements OnInit {
   AberturaOcular: AberturaOcular;
   RespostaVerbal: RespostaVerbal;
   RespostaMotora: RespostaMotora;
+  TipoOcorrencia: TipoOcorrencia;
+  Estado: Estado;
+  Cidade: Cidade;
+  ClassificacaoRiscoAlergia: ClassificacaoRiscoAlergia;
   orderDescricao: string = 'descricao';
   orderNome: string = 'nome';
   orderVariavel: string = 'variavel';
 
-  constructor(private classificacaoriscoservice: ClassificaoRiscoService) { }
+  constructor(private classificacaoriscoservice: ClassificaoRiscoService, private pessoaService: PessoaService) {
+    this.listaClassificacaoRiscoAlergia = new Array<ClassificacaoRiscoAlergia>();
+  }
 
   ngOnInit() {
 
@@ -72,6 +94,8 @@ export class ClassificacaoRiscoComponent implements OnInit {
 
       document.title = 'Classificação de Risco | Klinikos';
       $("h3[class^=k-subheader__title]").html("Classificação de Risco");
+
+      $("select[name^=DP_Endereco_Cidade]").val($("select[name^=DP_Endereco_Cidade] option:first").val());
 
     });
 
@@ -90,41 +114,7 @@ export class ClassificacaoRiscoComponent implements OnInit {
     this.classificacaoriscoservice.BindEscalaDor().subscribe(async (data: Return) => {
       this.listaEscalasDor = data.result;
 
-      var orderby = this.listaEscalasDor.sort((n1, n2) => {
-        if (n1.codigoEscalaDor > n2.codigoEscalaDor) {
-          return 1;
-        }
 
-        if (n1.codigoEscalaDor < n2.codigoEscalaDor) {
-          return -1;
-        }
-
-        return 0;
-      });
-
-
-      $(document).ready(function () {
-        $("#EscalaDor0").val(orderby[0].codigoEscalaDor);
-        $("#lblSemDor").append(orderby[0].descricao);
-
-        $("#EscalaDor1").val(orderby[1].codigoEscalaDor);
-        $("#EscalaDor2").val(orderby[2].codigoEscalaDor);
-        $("#lblleve").append(orderby[1].descricao);
-
-        $("#EscalaDor3").val(orderby[3].codigoEscalaDor);
-        $("#EscalaDor4").val(orderby[4].codigoEscalaDor);
-        $("#EscalaDor5").val(orderby[5].codigoEscalaDor);
-        $("#lblmoderada").append(orderby[3].descricao);
-
-        $("#EscalaDor6").val(orderby[6].codigoEscalaDor);
-        $("#EscalaDor7").val(orderby[7].codigoEscalaDor);
-        $("#EscalaDor8").val(orderby[8].codigoEscalaDor);
-        $("#lblforte").append(orderby[5].descricao);
-
-        $("#EscalaDor9").val(orderby[9].codigoEscalaDor);
-        $("#EscalaDor10").val(orderby[10].codigoEscalaDor);
-        $("#lblintensa").append(orderby[7].descricao);
-      });
 
     }, (error: HttpErrorResponse) => {
       Toastr.error("Falha ao carregar Escala de Dor na aba Classificação de Risco");
@@ -137,15 +127,6 @@ export class ClassificacaoRiscoComponent implements OnInit {
 
     }, (error: HttpErrorResponse) => {
       Toastr.error("Falha ao carregar Nível de Consciência na aba Classificação de Risco");
-      console.log(`Error. ${error.message}.`);
-    });
-
-    this.classificacaoriscoservice.BindDoencaPreExistente().subscribe(async (data: Return) => {
-      this.listaDoencasPreExitente = data.result;
-
-
-    }, (error: HttpErrorResponse) => {
-      Toastr.error("Falha ao carregar Doença Pré Existente na aba Classificação de Risco");
       console.log(`Error. ${error.message}.`);
     });
 
@@ -182,7 +163,7 @@ export class ClassificacaoRiscoComponent implements OnInit {
     }, (error: HttpErrorResponse) => {
       Toastr.error("Falha ao carregar Abertura Ocular na aba Alergia");
       console.log(`Error. ${error.message}.`);
-      });
+    });
 
     this.classificacaoriscoservice.BindRespostaVerbal().subscribe(async (data: Return) => {
       this.listaRespostaVerbal = data.result;
@@ -211,35 +192,36 @@ export class ClassificacaoRiscoComponent implements OnInit {
       Toastr.error("Falha ao carregar Resposta Motora na aba Escala de Glasgow");
       console.log(`Error. ${error.message}.`);
     });
+
+    this.classificacaoriscoservice.BindTipoOcorrencia().subscribe(async (data: Return) => {
+      this.listaTipoOcorrencia = data.result;
+      console.log(data.result);
+
+      $(document).ready(function () { $("select[name^=DO_TipoOcorrencia]").val($("select[name^=DO_TipoOcorrencia] option:first").val()); });
+    }, (error: HttpErrorResponse) => {
+      Toastr.error("Falha ao carregar tipos de chegada na aba Informações do boletim");
+      console.log(`Error. ${error.message}.`);
+    });
+
+    this.pessoaService.BindEstado().subscribe(async (data: Return) => {
+      this.listaEstado = data.result;
+
+      $(document).ready(function () { $("select[name^=DP_Endereco_Estado]").val($("select[name^=DP_Endereco_Estado] option:first").val()); });
+    }, (error: HttpErrorResponse) => {
+      Toastr.error("Falha ao carregar os estados na aba Informações do boletim");
+      console.log(`Error. ${error.message}.`);
+    });
+
+    this.classificacaoriscoservice.BindRisco().subscribe(async (data: Return) => {
+      this.listaRisco = data.result;
+
+    }, (error: HttpErrorResponse) => {
+      Toastr.error("Falha ao carregar os estados na aba Informações do boletim");
+      console.log(`Error. ${error.message}.`);
+    });
   }
 
 
-  onSelectDoencaPreExistente(e) {
-
-
-    if (e.target.id === "inputdoencapreexistente5") {
-
-      if (e.target.checked === true) {
-        $('#dpe_respcron_box').removeClass('oculta');
-        $('textarea[name="DoencaPreExistRespCron"]').focus();
-      } else {
-        $('#dpe_respcron_box').addClass('oculta');
-      }
-
-    }
-
-    if (e.target.id === "inputdoencapreexistente3") {
-
-      if (e.target.checked === true) {
-        $('#dpe_outros_box').removeClass('oculta');
-        $('textarea[name="DoencaPreExistOutros"]').focus();
-      } else {
-        $('#dpe_outros_box').addClass('oculta');
-      }
-
-    }
-
-  }
 
 
   onPossuiAlergia() {
@@ -282,7 +264,7 @@ export class ClassificacaoRiscoComponent implements OnInit {
       }, (error: HttpErrorResponse) => {
         Toastr.error("Falha ao carregar Alergia na aba Alergia");
         console.log(`Error. ${error.message}.`);
-        });
+      });
 
       this.classificacaoriscoservice.BindSeveridade().subscribe(async (data: Return) => {
         this.listaSeveridadeAlergia = data.result;
@@ -293,8 +275,10 @@ export class ClassificacaoRiscoComponent implements OnInit {
         console.log(`Error. ${error.message}.`);
       });
 
-      
-      
+
+
+
+
       // show card : Alergia
       $('#AlergiaCard').removeClass('oculta');
       $('#collapseOne3').addClass('show');
@@ -306,6 +290,497 @@ export class ClassificacaoRiscoComponent implements OnInit {
     }
 
   }
+
+  //begin:: Consulta Cep / Consulta tanto o CEP, quanto o logradouro e atribui aos campos correspondentes
+  onBuscaCep() {
+
+    var dp_cep = $("input[name^=DO_CEP]").val().replace('-', '');
+    var dp_logradouro = $.trim($("input[name^=DO_Logradouro]").val());
+
+    var cep: Cep = {}
+
+    if ($.isNumeric(dp_cep) && dp_cep.length === 8)
+      cep.cep = dp_cep;
+
+    if (this.Estado != undefined)
+      cep.uf = this.Estado.uf.toLowerCase();
+
+    if (this.Cidade != undefined)
+      cep.localidade = this.Cidade.nome.toLowerCase();
+
+    if (dp_logradouro !== "")
+      cep.logradouro = dp_logradouro.toLowerCase();
+
+
+    if ($.isNumeric(dp_cep) && dp_cep.length === 8 && dp_logradouro === "") {
+
+
+      this.pessoaService.BuscarCep(cep)
+        .subscribe(data => {
+
+          if (data.logradouro === undefined) {
+            Toastr.warning("CEP não encontrado");
+          } else {
+
+
+            $("input[name^=DO_Logradouro]").val(data.logradouro.toUpperCase())
+            $("input[name^=DO_Bairro]").val(data.bairro.toUpperCase())
+
+            this.Estado = this.listaEstado.find(x => x.uf == data.uf.toUpperCase())
+
+            this.pessoaService.BindCidade(this.Estado).subscribe(subdata => {
+
+              this.listaCidade = subdata.result;
+
+              var cidadeSelecionada = RemoveAcentos.remove(data.localidade);
+
+              this.Cidade = this.listaCidade.find(x => x.nome == cidadeSelecionada.toUpperCase());
+
+
+            }, (error: HttpErrorResponse) => {
+              Toastr.error("Falha ao carregar cidades na aba endereço");
+              console.log(`Error. ${error.message}.`);
+            });
+
+          }
+        }, (error: HttpErrorResponse) => {
+          Toastr.error("Falha ao consultar cep na aba endereço");
+          console.log(`Error. ${error.message}.`);
+        });
+    } else {
+
+      if (dp_logradouro !== "" && !$.isNumeric(dp_cep) && dp_cep.length === 0) {
+
+        if (dp_logradouro.length > 3) {
+          //$('#divPesquisaLogradouro').removeClass('oculta');
+          $('#divPesquisaLogradouro').addClass('show');
+          this.pessoaService.BuscarCepPorLogradouro(cep)
+            .subscribe(data => {
+
+              this.listaCep = data;
+            }, (error: HttpErrorResponse) => {
+              Toastr.error("Falha ao consultar cep na aba endereço");
+              console.log(`Error. ${error.message}.`);
+            });
+
+        } else {
+          $('#divPesquisaLogradouro').removeClass('show');
+          //$('#divPesquisaLogradouro').addClass('oculta');
+        }
+
+
+
+      }
+    }
+  }
+  //end:: Consulta Cep
+
+  //begin:: Fecha as pesquisas
+  onFechaPesquisa() {
+
+    if ($("#divPesquisaNomeCompleto").hasClass('show'))
+      $("#divPesquisaNomeCompleto").removeClass('show');
+
+    if ($("#divPesquisaLogradouro").hasClass('show'))
+      $("#divPesquisaLogradouro").removeClass('show');
+
+    if ($("#divPesquisaNomeSocial").hasClass('show'))
+      $("#divPesquisaNomeSocial").removeClass('show');
+  }
+  //end:: Fecha as pesquisas
+
+  //begin:: Seleciona Endereco / Responsável por selecionar o cep vindo da consulta cep logradouro
+  public onSelectedCep(cep: any) {
+
+    $("input[name^=DO_CEP]").val(cep.cep);
+    $("input[name^=DO_Logradouro]").val(cep.logradouro.toUpperCase());
+    $("input[name^=DO_Bairro]").val(cep.bairro.toUpperCase());
+    $("input[name^=DO_Complemento]").val(cep.complemento.toUpperCase());
+    $('#divPesquisaLogradouro').addClass('oculta');
+  }
+  //end:: Seleciona Endereco
+
+  onSelectedUf() {
+
+    $(document).ready(function () { $("select[name^=DP_Endereco_Cidade]").val($("select[name^=DP_Endereco_Cidade] option:first").val()); });
+
+    this.pessoaService.BindCidade(this.Estado).subscribe(async (data: Return) => {
+      this.listaCidade = data.result;
+
+      $(document).ready(function () { $("select[name^=DP_Endereco_Cidade]").val($("select[name^=DP_Endereco_Cidade] option:first").val()); });
+
+    }, (error: HttpErrorResponse) => {
+      Toastr.error("Falha ao carregar UF(s) na aba Dados Pessoais");
+      console.log(`Error. ${error.message}.`);
+    });
+
+
+  }
+
+
+  public onSalvarClassificacaoRisco(cr: NgForm) {
+
+
+    $("#k_scrolltop").trigger("click");
+
+
+    var imc = $("input[name^=SV_IMC]").val();
+    var nivelConsciencia = $("input[name^=nivelConsciencia]:checked").val();
+    var escalaGlasgow = $("input[name^=EscalaGlasgow]").val();
+    var dataOcorrencia = $("input[name^=DO_Data]").val();
+    var horaOcorrencia = $("input[name^=DO_Hora]").val();
+    var cep = $("input[name^=DO_CEP]").val();
+
+    var classificacaorisco: ClassificacaoRisco = {};
+
+    if (cr.value.DescricaoQueixa !== "")
+      classificacaorisco.descricaoQueixa = cr.value.DescricaoQueixa.toUpperCase();
+
+    if (this.CausaExterna !== null)
+      classificacaorisco.CausaExterna = this.CausaExterna;
+
+    if ($("label[for^=EscalaDor0]").hasClass("active"))
+      classificacaorisco.EscalaDor = this.listaEscalasDor.find(x => x.codigoEscalaDor === 0);
+
+    if ($("label[for^=EscalaDor1]").hasClass("active"))
+      classificacaorisco.EscalaDor = this.listaEscalasDor.find(x => x.codigoEscalaDor === 1);
+
+    if ($("label[for^=EscalaDor2]").hasClass("active"))
+      classificacaorisco.EscalaDor = this.listaEscalasDor.find(x => x.codigoEscalaDor === 2);
+
+    if ($("label[for^=EscalaDor3]").hasClass("active"))
+      classificacaorisco.EscalaDor = this.listaEscalasDor.find(x => x.codigoEscalaDor === 3);
+
+    if ($("label[for^=EscalaDor4]").hasClass("active"))
+      classificacaorisco.EscalaDor = this.listaEscalasDor.find(x => x.codigoEscalaDor === 4);
+
+    if ($("label[for^=EscalaDor5]").hasClass("active"))
+      classificacaorisco.EscalaDor = this.listaEscalasDor.find(x => x.codigoEscalaDor === 5);
+
+    if ($("label[for^=EscalaDor6]").hasClass("active"))
+      classificacaorisco.EscalaDor = this.listaEscalasDor.find(x => x.codigoEscalaDor === 6);
+
+    if ($("label[for^=EscalaDor7]").hasClass("active"))
+      classificacaorisco.EscalaDor = this.listaEscalasDor.find(x => x.codigoEscalaDor === 7);
+
+    if ($("label[for^=EscalaDor8]").hasClass("active"))
+      classificacaorisco.EscalaDor = this.listaEscalasDor.find(x => x.codigoEscalaDor === 8);
+
+    if ($("label[for^=EscalaDor9]").hasClass("active"))
+      classificacaorisco.EscalaDor = this.listaEscalasDor.find(x => x.codigoEscalaDor === 9);
+
+    if ($("label[for^=EscalaDor10]").hasClass("active"))
+      classificacaorisco.EscalaDor = this.listaEscalasDor.find(x => x.codigoEscalaDor === 10);
+
+    if (cr.value.SV_Peso !== "")
+      classificacaorisco.peso = cr.value.SV_Peso + " kg";
+
+    if (cr.value.SV_Altura !== "")
+      classificacaorisco.altura = cr.value.SV_Altura + " cm";
+
+    if (imc !== "")
+      classificacaorisco.imc = imc.toUpperCase();
+
+    if (cr.value.SV_Temperatura !== "")
+      classificacaorisco.temperatura = cr.value.SV_Temperatura + " °C";
+
+    if (cr.value.SV_PreArterialDiastolica !== "")
+      classificacaorisco.pressaoArterialDiastolica = cr.value.SV_PreArterialDiastolica + " mmHg";
+
+    if (cr.value.SV_PreArterialSistolica !== "")
+      classificacaorisco.pressaoArterialSistolica = cr.value.SV_PreArterialSistolica + " mmHg";
+
+    if (cr.value.Pulso !== "")
+      classificacaorisco.pulso = cr.value.Pulso + " bpm";
+
+    if (cr.value.FreqRespiratoria !== "")
+      classificacaorisco.frequenciaRespiratoria = cr.value.FreqRespiratoria + " rpm";
+
+
+    if (nivelConsciencia !== undefined)
+      classificacaorisco.NivelConsciencia = this.listaNiveisConsciencia.find(x => x.nivelConscienciaId === nivelConsciencia);
+
+    classificacaorisco.sutura = cr.value.Sutura !== "" ? true : false;
+
+    if (cr.value.Saturacao !== "")
+      classificacaorisco.saturacao = cr.value.Saturacao + " %";
+
+    classificacaorisco.hipertensao = cr.value.DPE_Hipertensao !== "" ? true : false;
+    classificacaorisco.diabete = cr.value.DPE_Diabete !== "" ? true : false;
+    classificacaorisco.cardiopata = cr.value.DPE_Cardiopata !== "" ? true : false;
+    classificacaorisco.renalCronico = cr.value.DPE_RenalCronico !== "" ? true : false;
+    classificacaorisco.respiratoriaCronica = cr.value.DPE_RespCronico !== "" ? true : false;
+    classificacaorisco.outros = cr.value.DPE_Outros !== "" ? true : false;
+
+    if (cr.value.DPE_RespCronico === true && cr.value.DoencaPreExistRespCron !== "")
+      classificacaorisco.observacaoRespiratoriaCronica = cr.value.DoencaPreExistRespCron;
+
+    if (cr.value.DPE_Outros === true && cr.value.DoencaPreExistOutros !== "")
+      classificacaorisco.observacaoOutros = cr.value.DoencaPreExistOutros;
+
+
+
+    if (this.TipoChegada !== null)
+      classificacaorisco.TipoChegada = this.TipoChegada;
+
+    if (this.Especialidade !== null)
+      classificacaorisco.Especialidade = this.Especialidade;
+
+    if ($("label[for^=riscoazul]").hasClass("active"))
+      classificacaorisco.Risco = this.listaRisco.find(x => x.descricao === "AZUL");
+
+    if ($("label[for^=riscoverde]").hasClass("active"))
+      classificacaorisco.Risco = this.listaRisco.find(x => x.descricao === "VERDE");
+
+    if ($("label[for^=riscoamareloconsultorio]").hasClass("active"))
+      classificacaorisco.Risco = this.listaRisco.find(x => x.descricao === "AMARELO CONSULTÓRIO");
+
+    if ($("label[for^=riscoamareloobservacao]").hasClass("active"))
+      classificacaorisco.Risco = this.listaRisco.find(x => x.descricao === "AMARELO OBSERVAÇÃO");
+
+    if ($("label[for^=riscolaranja]").hasClass("active"))
+      classificacaorisco.Risco = this.listaRisco.find(x => x.descricao === "LARANJA");
+
+    if ($("label[for^=riscovermelho]").hasClass("active"))
+      classificacaorisco.Risco = this.listaRisco.find(x => x.descricao === "VERMELHO");
+
+    console.log(localStorage['token_accessToken']);
+
+
+
+    if (this.listaClassificacaoRiscoAlergia.length > 0) {
+
+      classificacaorisco.ClassificacoesRiscoAlergia = [];
+      classificacaorisco.ClassificacoesRiscoAlergia = this.listaClassificacaoRiscoAlergia;
+    }
+
+    if (this.AberturaOcular !== null)
+      classificacaorisco.AberturaOcular = this.AberturaOcular;
+
+    if (this.RespostaVerbal !== null)
+      classificacaorisco.RespostaVerbal = this.RespostaVerbal;
+
+    if (this.RespostaMotora !== null)
+      classificacaorisco.RespostaMotora = this.RespostaMotora;
+
+    if (this.AberturaOcular !== null && this.RespostaVerbal !== null && this.RespostaMotora !== null)
+      classificacaorisco.status = escalaGlasgow;
+
+    if (cr.value.DO_Procedencia !== "")
+      classificacaorisco.procedencia = cr.value.DO_Procedencia.toUpperCase();
+
+    if (this.listaTipoOcorrencia !== null)
+      classificacaorisco.TipoOcorrencia = this.TipoOcorrencia;
+
+
+    if (dataOcorrencia !== "") {
+      var data = dataOcorrencia.split("/");
+      var newData = new Date(data[2] + '-' + data[1] + '-' + data[0]);
+
+      if (horaOcorrencia !== "") {
+        var hora = horaOcorrencia.split(":");
+        newData.setHours(newData.getHours() + parseInt(hora[0]));
+        newData.setMinutes(newData.getMinutes() + parseInt(hora[1]));
+      }
+      classificacaorisco.dataOcorrencia = newData;
+    }
+
+    classificacaorisco.pab = $("label[for^=PAB]").hasClass("active") ? true : false;
+    classificacaorisco.paf = $("label[for^=PAF]").hasClass("active") ? true : false;
+
+    if (cep !== "")
+      classificacaorisco.cep = cep.replace('-', '');
+
+    if (cr.value.DO_Logradouro !== "")
+      classificacaorisco.logradouro = cr.value.DO_Logradouro.toUpperCase();
+
+    if (cr.value.DO_Numero !== "")
+      classificacaorisco.numero = cr.value.DO_Numero.toUpperCase();
+
+    if (cr.value.DO_Complemento !== "")
+      classificacaorisco.complemento = cr.value.DO_Complemento.toUpperCase();
+
+    if (this.Estado !== null)
+      classificacaorisco.Estado = this.Estado;
+
+    if (this.Cidade !== null)
+      classificacaorisco.Cidade = this.Cidade;
+
+    if (cr.value.DO_Bairro !== "")
+      classificacaorisco.bairro = cr.value.DO_Bairro.toUpperCase();
+
+    console.log(JSON.stringify(classificacaorisco));
+
+    this.classificacaoriscoservice.SalvarClassificacaoRisco(classificacaorisco).subscribe(async (data: Return) => {
+      this.listaSeveridadeAlergia = data.result;
+
+      Toastr.success("Classificação de Risco salvo com sucesso");
+
+      this.LimparCampos(cr);
+
+    }, (error: HttpErrorResponse) => {
+      Toastr.error("Falha ao comunicar com API");
+      console.log(`Error. ${error.message}.`);
+    });
+
+
+  }
+
+
+
+  onAdicionaAlergia() {
+
+    if (this.TipoAlergia !== null && this.Alergia !== null) {
+
+
+      var datasintomas = $("input[name^=AlergiaData]").val();
+
+      var alergiaSituacao = $('input[type=checkbox][name^=AlergiaAtivo]').prop("checked");
+
+      var classificacaoriscoAlergia: ClassificacaoRiscoAlergia = {};
+
+      classificacaoriscoAlergia.TipoAlergia = this.TipoAlergia;
+      classificacaoriscoAlergia.Alergia = this.Alergia;
+
+      if (this.LocalizacaoAlergia !== null)
+        classificacaoriscoAlergia.LocalizacaoAlergia = this.LocalizacaoAlergia;
+
+      if (this.ReacaoAlergia !== null)
+        classificacaoriscoAlergia.ReacaoAlergia = this.ReacaoAlergia;
+
+      if (this.SeveridadeAlergia !== null)
+        classificacaoriscoAlergia.SeveridadeAlergia = this.SeveridadeAlergia;
+
+
+      if (datasintomas !== "") {
+
+        var data = datasintomas.split("/");
+        classificacaoriscoAlergia.dataSintomas = new Date(data[2] + '/' + data[1] + '/' + data[0]);
+      }
+
+      classificacaoriscoAlergia.alergiaSituacao = alergiaSituacao;
+
+      this.listaClassificacaoRiscoAlergia.push(classificacaoriscoAlergia);
+    }
+
+
+    console.log(this.listaClassificacaoRiscoAlergia);
+    this.onLimparCamposAlergia();
+  }
+
+  onLimparCamposAlergia() {
+
+    $("input[name^=Prof_NumConselho]").val("");
+    this.TipoAlergia = undefined;
+    this.Alergia = undefined;
+    this.LocalizacaoAlergia = undefined;
+    this.ReacaoAlergia = undefined;
+    this.SeveridadeAlergia = undefined;
+
+    $(document).ready(function () {
+      $("select[name^=TipoAlergia]").val($("select[name^=TipoAlergia] option:first").val());
+      $("select[name^=Alergia]").val($("select[name^=Alergia] option:first").val());
+      $("select[name^=LocalizacaoAlergia]").val($("select[name^=LocalizacaoAlergia] option:first").val());
+      $("select[name^=ReacaoAlergia]").val($("select[name^=ReacaoAlergia] option:first").val());
+      $("select[name^=SeveridadeAlergia]").val($("select[name^=SeveridadeAlergia] option:first").val());
+      $("input[name^=AlergiaData]").val("");
+      $("input[name^=AlergiaAtivo]").prop("checked", false);
+      //$('#msg_tipoprofissional').addClass('oculta');
+      $('#btnCancelarAlergia').addClass('oculta');
+      $("#btnAddNovaAlergia").html('<i class="fa fa-plus"></i>Adicionar');
+    });
+  }
+
+  onCalculaStatusEscalaGlasgow() {
+
+    if (this.AberturaOcular != null && this.RespostaVerbal != null && this.RespostaMotora != null) {
+
+      var totalRespostas = this.AberturaOcular.escore + this.RespostaVerbal.escore + this.RespostaMotora.escore;
+
+      if (8 >= totalRespostas)
+        $("input[name^=EscalaGlasgow]").val(totalRespostas + " - Trauma Grave");
+      else if (12 >= totalRespostas)
+        $("input[name^=EscalaGlasgow]").val(totalRespostas + " - Trauma Moderado");
+      else if (15 >= totalRespostas)
+        $("input[name^=EscalaGlasgow]").val(totalRespostas + " - Trauma Leve");
+    }
+  }
+
+  onLimpaCamposGlasgow() {
+
+    this.AberturaOcular = null;
+    this.RespostaVerbal = null;
+    this.RespostaMotora = null;
+    $("input[name^=EscalaGlasgow]").val("");
+
+    $(document).ready(function () {
+
+      $("select[name^=AberturaOcular]").val($("select[name^=AberturaOcular] option:first").val());
+      $("select[name^=RespostaVerbal]").val($("select[name^=RespostaVerbal] option:first").val());
+      $("select[name^=RespostaMotora]").val($("select[name^=RespostaMotora] option:first").val());
+
+    });
+  }
+
+  public LimparCampos(p: NgForm) {
+
+    $("#btn_formclear").trigger("click");
+  }
+
+  //begin:: Edita Lotacao Profissional / Permite o usuário editar as lotações lançadas na aba profissional
+  onEditarAlergia(classificacaoRiscoAlergia: ClassificacaoRiscoAlergia) {
+
+    this.TipoAlergia = classificacaoRiscoAlergia.TipoAlergia;
+    this.Alergia = classificacaoRiscoAlergia.Alergia;
+    this.LocalizacaoAlergia = classificacaoRiscoAlergia.LocalizacaoAlergia;
+    this.ReacaoAlergia = classificacaoRiscoAlergia.ReacaoAlergia;
+    this.SeveridadeAlergia = classificacaoRiscoAlergia.SeveridadeAlergia;
+
+    if (classificacaoRiscoAlergia.dataSintomas != null) {
+
+      var dataSintomas = new Date(classificacaoRiscoAlergia.dataSintomas),
+        month = '' + (dataSintomas.getMonth() + 1),
+        day = '' + dataSintomas.getDate(),
+        year = dataSintomas.getFullYear();
+
+      $("input[name^=AlergiaData]").val(("0" + day).slice(-2) + "/" + ("0" + month).slice(-2) + "/" + year);
+    }
+
+    $("input[name^=AlergiaAtivo]").prop("checked", false);
+
+    this.ClassificacaoRiscoAlergia = classificacaoRiscoAlergia;
+
+    $("#btnAddNovaAlergia").html("<i class='fa fa-plus'></i>Salvar");
+    $('#btnCancelarAlergia').removeClass('oculta');
+
+  }
+  //end::  Edita Lotacao Profissional
+
+
+  //begin:: Exibe Mensagem Excluir / Alerta o usuário da confirmação da exclusão na aba profissional
+  onExibeMensagemExcluir(classificacaoRiscoAlergia: ClassificacaoRiscoAlergia) {
+
+    var page = this;
+
+    return swal({ title: 'Deseja excluir essa alergia?', text: '', type: 'warning', showCancelButton: true, cancelButtonText: 'Não', confirmButtonText: 'Sim' })
+
+      .then(function (result) {
+        if (result.value) {
+          page.onExcluirAlergia(classificacaoRiscoAlergia);
+        }
+
+      });
+
+  }
+  //end:: Exibe Mensagem Excluir
+
+  //begin:: Exclui lotacao Profissional / Alerta o usuário da confirmação da exclusão na aba profissional
+  onExcluirAlergia(classificacaoRiscoAlergia: ClassificacaoRiscoAlergia) {
+
+    var index = this.listaClassificacaoRiscoAlergia.findIndex(x => x.Alergia === classificacaoRiscoAlergia.Alergia);
+    this.listaClassificacaoRiscoAlergia.splice(index, 1);
+  }
+  //end:: Exibe Mensagem Excluir
 
 }
 

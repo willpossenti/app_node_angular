@@ -2,6 +2,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders  } from '@angular/common/http';
 import { Return } from '../../model/Return';
+import { ClassificacaoRisco } from '../../model/ClassificacaoRisco';
 
 
 @Injectable({
@@ -37,4 +38,11 @@ export class ClassificaoRiscoService {
   BindAberturaOcular() { return this.http.get<Return>(`${this.baseUrl}aberturaocular`, this.httpOptions); }
   BindRespostaVerbal() { return this.http.get<Return>(`${this.baseUrl}respostaverbal`, this.httpOptions); }
   BindRespostaMotora() { return this.http.get<Return>(`${this.baseUrl}respostamotora`, this.httpOptions); }
+  BindTipoOcorrencia() { return this.http.get<Return>(`${this.baseUrl}tipoocorrencia`, this.httpOptions); }
+  BindRisco() { return this.http.get<Return>(`${this.baseUrl}risco`, this.httpOptions); }
+
+  SalvarClassificacaoRisco(classificacaorisco: ClassificacaoRisco) {
+
+    return this.http.post<Return>(`${this.baseUrl}classificacaorisco/incluir`, classificacaorisco, this.httpOptions);
+  }
 }

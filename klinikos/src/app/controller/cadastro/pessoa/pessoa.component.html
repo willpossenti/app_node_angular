@@ -303,7 +303,7 @@
                             <label>Naturalidade</label>
                             <div class="input-group">
                               <div class="input-group-prepend">
-
+                                
                                 <select class="form-control" name="DP_NaturalidadeUF" tabindex="19" [(ngModel)]="Estado" (change)="onSelectedUf()" (focus)="onFechaPesquisa()">
                                   <option value="-1">-- Selecione --</option>
                                   <option *ngFor="let estado of listaEstado | orderBy: orderUf" [ngValue]="estado">{{estado.uf}}</option>
@@ -446,7 +446,7 @@
                           </div>
                           <!-- Grid -->
                           <table class="table table-striped- table-bordered table-hover table-checkable" id="k_table_1">
-                            <thead>
+                            <thead class="thead-light">
                               <tr class="text-center">
                                 <th>Tipo Profissional</th>
                                 <th>Número Conselho</th>

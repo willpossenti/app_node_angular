@@ -17,16 +17,5 @@ export interface RegistroBoletim {
   enderecoInformante?: string;
   telefoneInformante?: string;
   grauParentesco?: string;
-  procedencia?: string;
-  TipoOcorrencia?: TipoOcorrencia;
-  dataOcorrencia?: Date;
-  tipoPerfuracao?: string;
-  cep?: string;
-  logradouro?: string;
-  numero?: string;
-  complemento?: string;
-  bairro?: string;
-  Estado?: Estado;
-  Cidade?: Cidade;
   ativo?: boolean;
 }

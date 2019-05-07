@@ -2,7 +2,7 @@ export interface AberturaOcular {
 
   aberturaOcularId?: string;
   variavel?: string;
-  escore?: string;
+  escore?: number;
   ativo?: boolean;
 
 }
