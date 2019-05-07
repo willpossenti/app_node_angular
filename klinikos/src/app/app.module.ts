@@ -21,6 +21,9 @@ import { MasterComponent } from './controller/master/master.component';
 import { AcolhimentoComponent } from './controller/acolhimento/acolhimento.component';
 import { ClassificacaoRiscoComponent } from './controller/classificacaorisco/classificacaorisco.component';
 
+
+import { ClassificacaoRiscoPipe } from './controller/classificacaorisco/classificacaorisco.pipe';
+
 const appRoutes: Routes = [
   { path: '', redirectTo: '/login', pathMatch: 'full' },
   { path: 'login', component: LoginComponent },
@@ -48,7 +51,7 @@ const appRoutes: Routes = [
     MasterComponent,
     AcolhimentoComponent,
     ClassificacaoRiscoComponent,
-
+    ClassificacaoRiscoPipe
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),
