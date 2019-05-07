@@ -6,11 +6,9 @@ import { Especialidade } from '../../model/Especialidade';
 import { TipoChegada } from '../../model/TipoChegada';
 import { TipoOcorrencia } from 'src/app/model/TipoOcorrencia';
 import { HttpErrorResponse } from '@angular/common/http';
-import { Estado } from '../../model/Estado';
-import { Cidade } from '../../model/Cidade';
 import { Cep } from '../../model/Cep';
 import { PessoaService } from '../cadastro/pessoa/pessoa.service';
-import * as RemoveAcentos from 'remove-accents';
+
 import { CpfService } from '../util/cpf.service';
 import { NgForm } from '@angular/forms';
 import { RegistroBoletim } from '../../model/RegistroBoletim';
@@ -29,18 +27,12 @@ export class RegistroBoletimComponent implements OnInit {
 
   listaEspecialidade: Array<Especialidade>;
   listaTipoChegada: Array<TipoChegada>;
-  listaTipoOcorrencia: Array<TipoOcorrencia>;
-  listaEstado: Array<Estado>;
-  listaCidade: Array<Cidade>;
-  listaCep: Array<Cep>;
   listaPessoaProfissional: Array<PessoaProfissional>;
   listaPessoaPaciente: Array<PessoaPaciente>;
 
   Especialidade: Especialidade;
   TipoChegada: TipoChegada;
   TipoOcorrencia: TipoOcorrencia;
-  Estado: Estado;
-  Cidade: Cidade;
   orderNome: string = 'nome';
   orderDescricao: string = 'descricao';
   orderUf: string = 'uf';
@@ -165,128 +157,13 @@ export class RegistroBoletimComponent implements OnInit {
       console.log(`Error. ${error.message}.`);
     });
 
-    this.registroBoletimService.BindTipoOcorrencia().subscribe(async (data: Return) => {
-      this.listaTipoOcorrencia = data.result;
+   
 
-      $(document).ready(function () { $("select[name^=DO_TipoOcorrencia]").val($("select[name^=DO_TipoOcorrencia] option:first").val()); });
-    }, (error: HttpErrorResponse) => {
-      Toastr.error("Falha ao carregar tipos de chegada na aba Informações do boletim");
-      console.log(`Error. ${error.message}.`);
-    });
-
-    this.registroBoletimService.BindEstado().subscribe(async (data: Return) => {
-      this.listaEstado = data.result;
-
-      $(document).ready(function () { $("select[name^=DP_Endereco_Estado]").val($("select[name^=DP_Endereco_Estado] option:first").val()); });
-    }, (error: HttpErrorResponse) => {
-      Toastr.error("Falha ao carregar os estados na aba Informações do boletim");
-      console.log(`Error. ${error.message}.`);
-    });
+   
 
 
   }
 
-
-  onSelectedUf() {
-
-    $(document).ready(function () { $("select[name^=DP_Endereco_Cidade]").val($("select[name^=DP_Endereco_Cidade] option:first").val()); });
-
-    this.registroBoletimService.BindCidade(this.Estado).subscribe(async (data: Return) => {
-      this.listaCidade = data.result;
-
-      $(document).ready(function () { $("select[name^=DP_Endereco_Cidade]").val($("select[name^=DP_Endereco_Cidade] option:first").val()); });
-
-    }, (error: HttpErrorResponse) => {
-      Toastr.error("Falha ao carregar UF(s) na aba Dados Pessoais");
-      console.log(`Error. ${error.message}.`);
-    });
-
-
-  }
-
-  //begin:: Consulta Cep / Consulta tanto o CEP, quanto o logradouro e atribui aos campos correspondentes
-  onBuscaCep() {
-
-    var dp_cep = $("input[name^=DO_CEP]").val().replace('-', '');
-    var dp_logradouro = $.trim($("input[name^=DO_Logradouro]").val());
-
-    var cep: Cep = {}
-
-    if ($.isNumeric(dp_cep) && dp_cep.length === 8)
-      cep.cep = dp_cep;
-
-    if (this.Estado != undefined)
-      cep.uf = this.Estado.uf.toLowerCase();
-
-    if (this.Cidade != undefined)
-      cep.localidade = this.Cidade.nome.toLowerCase();
-
-    if (dp_logradouro !== "")
-      cep.logradouro = dp_logradouro.toLowerCase();
-
-
-    if ($.isNumeric(dp_cep) && dp_cep.length === 8 && dp_logradouro === "") {
-
-
-      this.pessoaService.BuscarCep(cep)
-        .subscribe(data => {
-
-          if (data.logradouro === undefined) {
-            Toastr.warning("CEP não encontrado");
-          } else {
-
-
-            $("input[name^=DO_Logradouro]").val(data.logradouro.toUpperCase())
-            $("input[name^=DO_Bairro]").val(data.bairro.toUpperCase())
-
-            this.Estado = this.listaEstado.find(x => x.uf == data.uf.toUpperCase())
-
-            this.pessoaService.BindCidade(this.Estado).subscribe(subdata => {
-
-              this.listaCidade = subdata.result;
-
-              var cidadeSelecionada = RemoveAcentos.remove(data.localidade);
-
-              this.Cidade = this.listaCidade.find(x => x.nome == cidadeSelecionada.toUpperCase());
-
-
-            }, (error: HttpErrorResponse) => {
-              Toastr.error("Falha ao carregar cidades na aba endereço");
-              console.log(`Error. ${error.message}.`);
-            });
-
-          }
-        }, (error: HttpErrorResponse) => {
-          Toastr.error("Falha ao consultar cep na aba endereço");
-          console.log(`Error. ${error.message}.`);
-        });
-    } else {
-
-      if (dp_logradouro !== "" && !$.isNumeric(dp_cep) && dp_cep.length === 0) {
-
-        if (dp_logradouro.length > 3) {
-          //$('#divPesquisaLogradouro').removeClass('oculta');
-          $('#divPesquisaLogradouro').addClass('show');
-          this.pessoaService.BuscarCepPorLogradouro(cep)
-            .subscribe(data => {
-
-              this.listaCep = data;
-            }, (error: HttpErrorResponse) => {
-              Toastr.error("Falha ao consultar cep na aba endereço");
-              console.log(`Error. ${error.message}.`);
-            });
-
-        } else {
-          $('#divPesquisaLogradouro').removeClass('show');
-          //$('#divPesquisaLogradouro').addClass('oculta');
-        }
-
-
-
-      }
-    }
-  }
-  //end:: Consulta Cep
 
   //begin:: Seleciona Endereco / Responsável por selecionar o cep vindo da consulta cep logradouro
   public onSelectedCep(cep: any) {
@@ -404,6 +281,7 @@ export class RegistroBoletimComponent implements OnInit {
     var telefone = $("input[name^=DP_Telefone]").val();
     var nome = $("input[name^=IB_NomePaciente]").val();
 
+
     if (nome !== "")
       pessoa.nomeCompleto = nome.toUpperCase();
 
@@ -451,52 +329,6 @@ export class RegistroBoletimComponent implements OnInit {
     if (rb.value.IN_GrauParentesco !== "")
       registroboletim.grauParentesco = rb.value.IN_GrauParentesco.toUpperCase();
 
-    if (rb.value.DO_Procedencia !== "")
-      registroboletim.procedencia = rb.value.DO_Procedencia;
-
-    registroboletim.TipoOcorrencia = this.TipoOcorrencia;
-
-    if (dataOcorrencia !== "") {
-      var data = dataOcorrencia.split("/");
-      var newData = new Date(data[2] + '-' + data[1] + '-' + data[0]);
-
-      if (horaOcorrencia !== "") {
-        var hora = horaOcorrencia.split(":");
-        newData.setHours(newData.getHours() + parseInt(hora[0]));
-        newData.setMinutes(newData.getMinutes() + parseInt(hora[1]));
-      }
-      registroboletim.dataOcorrencia = newData;
-    }
-
-
-    if ($("label[for^=PAB]").hasClass("active"))
-      registroboletim.tipoPerfuracao = "PAB";
-
-    if ($("label[for^=PAF]").hasClass("active"))
-      registroboletim.tipoPerfuracao = "PAF";
-
-    if (cepOcorrencia !== "")
-      registroboletim.cep = cepOcorrencia.replace('.', '').replace('-', '');
-
-
-    if (rb.value.DO_Logradouro !== "")
-      registroboletim.logradouro = rb.value.DO_Logradouro;
-
-    console.log(rb.value.DO_Logradouro);
-
-    if (rb.value.DO_Numero !== "")
-      registroboletim.numero = rb.value.DO_Numero;
-
-    if (rb.value.DO_Complemento !== "")
-      registroboletim.complemento = rb.value.DO_Complemento;
-
-
-    if (rb.value.DO_Bairro !== "")
-      registroboletim.bairro = rb.value.DO_Bairro;
-
-    registroboletim.Estado = this.Estado;
-    registroboletim.Cidade = this.Cidade;
-
     if (this.Pessoa === undefined)
       registroboletim.Pessoa = pessoa;
     else {
@@ -514,9 +346,6 @@ export class RegistroBoletimComponent implements OnInit {
       );
 
     }
-
-    console.log(JSON.stringify(registroboletim));
-
 
     this.registroBoletimService.SalvarRegistroBoletim(registroboletim).subscribe(data => {
 

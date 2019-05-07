@@ -1,0 +1,63 @@
+import { CausaExterna } from './CausaExterna';
+import { NivelConsciencia } from './NivelConsciencia';
+import { EscalaDor } from './EscalaDor';
+import { TipoChegada } from './TipoChegada';
+import { Especialidade } from './Especialidade';
+import { Risco } from './risco';
+import { ClassificacaoRiscoAlergia } from './ClassificacaoRiscoAlergia';
+import { AberturaOcular } from './AberturaOcular';
+import { RespostaVerbal } from './RespostaVerbal';
+import { RespostaMotora } from './RespostaMotora';
+import { TipoOcorrencia } from './TipoOcorrencia';
+import { Estado } from './Estado';
+import { Cidade } from './Cidade';
+
+export interface ClassificacaoRisco {
+
+  classificacaoRiscoId?: string;
+  descricaoQueixa?: string;
+  CausaExterna?: CausaExterna;
+  NivelConsciencia?: NivelConsciencia;
+  EscalaDor?: EscalaDor;
+  sutura?: boolean;
+  peso?: string;
+  altura?: string;
+  imc?: string;
+  temperatura?: string;
+  pressaoArterialDiastolica?: string;
+  pressaoArterialSistolica?: string;
+  pulso?: string;
+  frequenciaRespiratoria?: string;
+  saturacao?: string;
+  cardiopata?: boolean;
+  diabete?: boolean;
+  hipertensao?: boolean;
+  outros?: boolean;
+  observacaoOutros?: string;
+  renalCronico?: boolean;
+  respiratoriaCronica?: boolean;
+  observacaoRespiratoriaCronica?: string;
+  avaliacao?: string;
+  TipoChegada?: TipoChegada;
+  Especialidade?: Especialidade;
+  Risco?: Risco;
+  ClassificacoesRiscoAlergia?: Array<ClassificacaoRiscoAlergia>;
+  AberturaOcular?: AberturaOcular;
+  RespostaVerbal?: RespostaVerbal;
+  RespostaMotora?: RespostaMotora;
+  status?: string;
+  procedencia?: string;
+  TipoOcorrencia?: TipoOcorrencia;
+  dataOcorrencia?: Date;
+  pab?: boolean;
+  paf?: boolean;
+  cep?: string;
+  logradouro?: string;
+  numero?: string;
+  complemento?: string;
+  bairro?: string;
+  Estado?: Estado;
+  Cidade?: Cidade;
+  ativo?: boolean;
+}
+

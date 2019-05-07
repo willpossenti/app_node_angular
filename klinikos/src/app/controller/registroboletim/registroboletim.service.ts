@@ -26,8 +26,6 @@ export class RegistroBoletimService {
 
   BindEspecialidade() { return this.http.get<Return>(`${this.baseUrl}especialidade`, this.httpOptions); }
   BindTipoChegada() { return this.http.get<Return>(`${this.baseUrl}tipochegada`, this.httpOptions); }
-  BindTipoOcorrencia() { return this.http.get<Return>(`${this.baseUrl}tipoocorrencia`, this.httpOptions); }
-  BindEstado() { return this.http.get<Return>(`${this.baseUrl}estado`, this.httpOptions); }
   BindCidade(estado: Estado) { return this.http.post<Return>(`${this.baseUrl}cidade/GetByEstado`, estado, this.httpOptions); }
 
   SalvarRegistroBoletim(registroboletim: RegistroBoletim) {

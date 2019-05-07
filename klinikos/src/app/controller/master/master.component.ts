@@ -26,12 +26,6 @@ export class MasterComponent implements OnInit {
   constructor(private router: ActivatedRoute,
     private route: Router, private location: Location, private pessoaService: PessoaService) {
 
-    //var classname = document.getElementsByClassName("k-grid-nav-v2__item");
-
-    //for (var i = 0; i < classname.length; i++) {
-    //  classname[i].addEventListener('click', (e: Event) => this.getpage(e));
-    //}
-
 
 
   }

@@ -4,7 +4,7 @@
     <div class="col-lg-12">
 
       <!--begin::Form-->
-      <form class="k-form k-form--label-right clean_on">
+      <form class="k-form k-form--label-right clean_on" #classificacaorisco="ngForm" (ngSubmit)="onSalvarClassificacaoRisco(classificacaorisco);">
 
         <!--begin: Portlet Main-->
         <div class="k-portlet">
@@ -39,7 +39,7 @@
                         <div class="form-group row">
                           <div class="col-lg-8">
                             <label>Descrição da Queixa</label>
-                            <input type="text" class="form-control" name="DescricaoQueixa" placeholder="" value="">
+                            <input type="text" class="form-control" name="DescricaoQueixa" placeholder="" value="" ngModel>
                           </div>
                           <div class="col-lg-4">
                             <label>Causa Externa</label>
@@ -65,13 +65,14 @@
                                 <img src="../assets/media/icons/ed-azul.png" class="smile" alt="Ausente">
                               </div>
                               <div class="btn-group btn-group-toggle mt-1 mb-1 w-100" data-toggle="buttons">
-                                <label class="btn ed ed-0 ed-opac text-light text-center p-1 cp clear" for="EscalaDor0" *ngFor="let escalador of listaEscalasDor | orderBy: orderDescricao ">
-                                  <input type="radio" name="escalador" [value]="escalador.escalaDorId" [(ngModel)]="escalador"> {{escalador.codigoEscalaDor}}
-                                  <!--<input type="radio" name="EscalaDor" id="EscalaDor0" autocomplete="off" value="0" tabindex=""> 0-->
+
+                                <label class="btn ed ed-0 ed-opac text-light text-center p-1 cp clear" for="EscalaDor0">
+                                  <input type="radio" name="EscalaDor" id="EscalaDor0" autocomplete="off" tabindex=""> 0
                                 </label>
+
                               </div>
                               <div class="text-center p-1">
-                                <span class="ed-text">Sem Dor</span>
+                                <span class="ed-text">SEM DOR</span>
                               </div>
                             </div>
 
@@ -81,14 +82,14 @@
                               </div>
                               <div class="btn-group btn-group-toggle mt-1 mb-1 w-100" data-toggle="buttons">
                                 <label class="btn ed ed-1 ed-opac text-light text-center p-1 cp clear" for="EscalaDor1">
-                                  <input type="radio" name="EscalaDor" id="EscalaDor1" autocomplete="off" value="0" tabindex=""> 1
+                                  <input type="radio" name="EscalaDor" id="EscalaDor1" autocomplete="off" value="" tabindex=""> 1
                                 </label>
                                 <label class="btn ed ed-2 ed-opac text-light text-center p-1 cp clear" for="EscalaDor2">
-                                  <input type="radio" name="EscalaDor" id="EscalaDor2" autocomplete="off" value="0" tabindex=""> 2
+                                  <input type="radio" name="EscalaDor" id="EscalaDor2" autocomplete="off" value="" tabindex=""> 2
                                 </label>
                               </div>
                               <div class="text-center p-1 rounded">
-                                <span class="ed-text">Leve</span>
+                                <span class="ed-text">DOR LEVE</span>
                               </div>
                             </div>
 
@@ -98,17 +99,17 @@
                               </div>
                               <div class="btn-group btn-group-toggle mt-1 mb-1 w-100" data-toggle="buttons">
                                 <label class="btn ed ed-3 ed-opac text-light text-center p-1 cp clear" for="EscalaDor3">
-                                  <input type="radio" name="EscalaDor" id="EscalaDor3" autocomplete="off" value="0" tabindex=""> 3
+                                  <input type="radio" name="EscalaDor" id="EscalaDor3" autocomplete="off" value="" tabindex=""> 3
                                 </label>
                                 <label class="btn ed ed-4 ed-opac text-light text-center p-1 cp clear" for="EscalaDor4">
-                                  <input type="radio" name="EscalaDor" id="EscalaDor4" autocomplete="off" value="0" tabindex=""> 4
+                                  <input type="radio" name="EscalaDor" id="EscalaDor4" autocomplete="off" value="" tabindex=""> 4
                                 </label>
                                 <label class="btn ed ed-5 ed-opac text-light text-center p-1 cp clear" for="EscalaDor5">
-                                  <input type="radio" name="EscalaDor" id="EscalaDor5" autocomplete="off" value="0" tabindex=""> 5
+                                  <input type="radio" name="EscalaDor" id="EscalaDor5" autocomplete="off" value="" tabindex=""> 5
                                 </label>
                               </div>
                               <div class="text-center p-1 rounded">
-                                <span class="ed-text">Moderada</span>
+                                <span class="ed-text">DOR MODERADA</span>
                               </div>
                             </div>
 
@@ -118,17 +119,17 @@
                               </div>
                               <div class="btn-group btn-group-toggle mt-1 mb-1 w-100" data-toggle="buttons">
                                 <label class="btn ed ed-6 ed-opac text-light text-center p-1 cp clear" for="EscalaDor6">
-                                  <input type="radio" name="EscalaDor" id="EscalaDor6" autocomplete="off" value="0" tabindex=""> 6
+                                  <input type="radio" name="EscalaDor" id="EscalaDor6" autocomplete="off" value="" tabindex=""> 6
                                 </label>
                                 <label class="btn ed ed-7 ed-opac text-light text-center p-1 cp clear" for="EscalaDor7">
-                                  <input type="radio" name="EscalaDor" id="EscalaDor7" autocomplete="off" value="0" tabindex=""> 7
+                                  <input type="radio" name="EscalaDor" id="EscalaDor7" autocomplete="off" value="" tabindex=""> 7
                                 </label>
                                 <label class="btn ed ed-8 ed-opac text-light text-center p-1 cp clear" for="EscalaDor8">
-                                  <input type="radio" name="EscalaDor" id="EscalaDor8" autocomplete="off" value="0" tabindex=""> 8
+                                  <input type="radio" name="EscalaDor" id="EscalaDor8" autocomplete="off" value="" tabindex=""> 8
                                 </label>
                               </div>
                               <div class="text-center p-1 rounded">
-                                <span class="ed-text">Forte</span>
+                                <span class="ed-text">DOR FORTE</span>
                               </div>
                             </div>
 
@@ -138,14 +139,14 @@
                               </div>
                               <div class="btn-group btn-group-toggle mt-1 mb-1 w-100" data-toggle="buttons">
                                 <label class="btn ed ed-9 ed-opac text-light text-center p-1 cp clear" for="EscalaDor9">
-                                  <input type="radio" name="EscalaDor" id="EscalaDor9" autocomplete="off" value="0" tabindex=""> 9
+                                  <input type="radio" name="EscalaDor" id="EscalaDor9" autocomplete="off" value="" tabindex=""> 9
                                 </label>
                                 <label class="btn ed ed-10 ed-opac text-light text-center p-1 cp clear" for="EscalaDor10">
-                                  <input type="radio" name="EscalaDor" id="EscalaDor10" autocomplete="off" value="0" tabindex=""> 10
+                                  <input type="radio" name="EscalaDor" id="EscalaDor10" autocomplete="off" value="" tabindex=""> 10
                                 </label>
                               </div>
                               <div class="text-center p-1 rounded">
-                                <span class="ed-text">Intensa</span>
+                                <span class="ed-text">DOR INTENSA</span>
                               </div>
                             </div>
 
@@ -153,8 +154,8 @@
                               <label class="d-block text-left">Níveis de Consciência</label>
 
                               <div class="btn-group btn-group-toggle" data-toggle="buttons">
-                                <label class="btn btn-outline-dark cp"  *ngFor="let nivelconsciencia of listaNiveisConsciencia | orderBy: orderDescricao">
-                                  <input type="radio" name="nivelConsciencia" [value]="nivelconsciencia.nivelConscienciaId" [(ngModel)]="nivelconsciencia"> {{nivelconsciencia.descricao}}
+                                <label class="btn btn-outline-dark cp" *ngFor="let nivelconsciencia of listaNiveisConsciencia | orderBy: orderDescricao">
+                                  <input type="radio" name="nivelConsciencia" value="{{nivelconsciencia.nivelConscienciaId}}"> {{nivelconsciencia.descricao}}
                                 </label>
                               </div>
                             </div>
@@ -163,7 +164,7 @@
                               <label>&nbsp;</label>
                               <div class="k-checkbox-list mt-2 pl-3">
                                 <label class="k-checkbox k-checkbox--brand">
-                                  <input type="checkbox" name="Sutura">Sutura<span></span>
+                                  <input type="checkbox" name="Sutura" ngModel>Sutura<span></span>
                                 </label>
                               </div>
                             </div>
@@ -173,12 +174,12 @@
                           <div class="col-lg-4">
 
                             <div class="col-lg-12 float-left">
-                              <label>Peso, Altura = IMC</label>
+                              <label>Peso, Altura, IMC</label>
                               <div class="input-group-lg">
                                 <div class="input-group-prepend">
-                                  <input type="text" class="form-control sn w-25" name="SV_Peso" id="SV_Peso" maxlength="3" placeholder="(kg)" value="">
-                                  <input type="text" class="form-control sn w-25" name="SV_Altura" id="SV_Altura" maxlength="3" placeholder="(cm)" value="">
-                                  <input type="text" class="form-control ch w-100" name="SV_IMC" id="SV_IMC" placeholder="IMC" data-content="" data-toggle="popover" data-placement="top" data-trigger="hover" style="background:#E9E8E8;" readonly value="">
+                                  <input type="text" class="form-control sn w-25" name="SV_Peso" id="SV_Peso" maxlength="3" placeholder="(kg)" ngModel>
+                                  <input type="text" class="form-control sn w-25" name="SV_Altura" id="SV_Altura" maxlength="3" placeholder="(cm)" ngModel>
+                                  <input type="text" class="form-control ch w-100" name="SV_IMC" id="SV_IMC" placeholder="IMC" data-content="" data-toggle="popover" data-placement="top" data-trigger="hover" style="background:#E9E8E8;" readonly>
                                 </div>
                                 <div class="form-text text-danger" style="height:15px !important;"><span class="oculta">Message Error</span></div>
                               </div>
@@ -194,7 +195,7 @@
 
                             <div class="col-lg-6 float-left">
                               <label>Temperatura</label>
-                              <input type="text" class="form-control sn" name="SV_Temperatura" maxlength="2" placeholder="(ºC)" value="">
+                              <input type="text" class="form-control sn" name="SV_Temperatura" maxlength="2" placeholder="(ºC)" ngModel>
                               <div class="form-text text-danger" style="height:15px !important;"><span class="oculta">Message Error</span></div>
                             </div>
 
@@ -202,8 +203,8 @@
                               <label>Pre. Arterial (mmHg)</label>
                               <div class="input-group-lg">
                                 <div class="input-group-prepend">
-                                  <input type="text" class="form-control sn" name="SV_PreArterialDiastolica" maxlength="3" placeholder="Diastólica" title="Diastólica" value="">
-                                  <input type="text" class="form-control sn" name="SV_PreArterialSistolica" maxlength="3" placeholder="Sistólica" title="Sistólica" value="">
+                                  <input type="text" class="form-control sn" name="SV_PreArterialDiastolica" maxlength="3" placeholder="Diastólica" title="Diastólica" ngModel>
+                                  <input type="text" class="form-control sn" name="SV_PreArterialSistolica" maxlength="3" placeholder="Sistólica" title="Sistólica" ngModel>
                                 </div>
                                 <div class="form-text text-danger" style="height:15px !important;"><span class="oculta">Message Error</span></div>
                               </div>
@@ -211,19 +212,19 @@
 
                             <div class="col-lg-6 float-left">
                               <label>Pulso</label>
-                              <input type="text" class="form-control sn" name="Pulso" placeholder="(bpm)" maxlength="3" value="">
+                              <input type="text" class="form-control sn" name="Pulso" placeholder="(bpm)" maxlength="3" ngModel>
                               <div class="form-text text-danger" style="height:15px !important;"><span class="oculta">Message Error</span></div>
                             </div>
 
                             <div class="col-lg-6 float-left">
                               <label>Freq. Respiratória</label>
-                              <input type="text" class="form-control sn" name="FreqRespiratoria" placeholder="(rpm)" maxlength="3" value="">
+                              <input type="text" class="form-control sn" name="FreqRespiratoria" placeholder="(rpm)" maxlength="3" ngModel>
                               <div class="form-text text-danger" style="height:15px !important;"><span class="oculta">Message Error</span></div>
                             </div>
 
                             <div class="col-lg-6 float-left">
                               <label>Saturação O2(%)</label>
-                              <input type="text" class="form-control sn" name="Saturacao" placeholder="(%)" maxlength="3" value="">
+                              <input type="text" class="form-control sn" name="Saturacao" placeholder="(%)" maxlength="3" ngModel>
                               <div class="form-text text-danger" style="height:15px !important;"><span class="oculta">Message Error</span></div>
                             </div>
 
@@ -273,77 +274,92 @@
                         <div class="form-group row">
 
                           <div class="col-lg-12 pt-3 pr-3 pb-3 pl-3 d-lg-flex">
-                            <div class="k-checkbox-list">
+                            <div class="k-checkbox-list ml-lg-4">
                               <label class="k-checkbox k-checkbox--brand">
-                                <input type="checkbox" name="DPE_Hipertensao" value="">Hipertensão<span></span>
+                                <input type="checkbox" name="DPE_Hipertensao" ngModel>Hipertensão<span></span>
                               </label>
                             </div>
                             <div class="k-checkbox-list ml-lg-4">
                               <label class="k-checkbox k-checkbox--brand">
-                                <input type="checkbox" name="DPE_Diabete" value="">Diabete<span></span>
+                                <input type="checkbox" name="DPE_Diabete" ngModel>Diabete<span></span>
                               </label>
                             </div>
                             <div class="k-checkbox-list ml-lg-4">
                               <label class="k-checkbox k-checkbox--brand">
-                                <input type="checkbox" name="DPE_Cardiopata" value="">Cardiopata<span></span>
+                                <input type="checkbox" name="DPE_Cardiopata" ngModel>Cardiopata<span></span>
                               </label>
                             </div>
                             <div class="k-checkbox-list ml-lg-4">
                               <label class="k-checkbox k-checkbox--brand">
-                                <input type="checkbox" name="DPE_RenalCronico" value="">Renal Crônico<span></span>
+                                <input type="checkbox" name="DPE_RenalCronico" ngModel>Renal Crônico<span></span>
                               </label>
                             </div>
                             <div class="k-checkbox-list ml-lg-4">
                               <label class="k-checkbox k-checkbox--brand" id="dpe_respcron">
-                                <input type="checkbox" name="DPE_RespCronico" value="">Respiratória Crônica<span></span>
+                                <input type="checkbox" name="DPE_RespCronico" ngModel>Respiratória Crônica<span></span>
                               </label>
                             </div>
                             <div class="k-checkbox-list ml-lg-4">
                               <label class="k-checkbox k-checkbox--brand" id="dpe_outros">
-                                <input type="checkbox" name="DPE_Outros" value="">Outros<span></span>
+                                <input type="checkbox" name="DPE_Outros" ngModel>Outros<span></span>
                               </label>
                             </div>
                           </div>
 
                           <div class="col-lg-12 oculta" id="dpe_respcron_box">
                             <label>Respiratória Crônica</label>
-                            <textarea class="form-control" name="DoencaPreExistRespCron" rows="2" style="resize:none;"></textarea>
+                            <textarea class="form-control" name="DoencaPreExistRespCron" rows="2" style="resize:none;" ngModel></textarea>
                           </div>
                           <div class="col-lg-12 oculta" id="dpe_outros_box">
                             <label>Outros</label>
-                            <textarea class="form-control" name="DoencaPreExistOutros" rows="2" style="resize:none;"></textarea>
+                            <textarea class="form-control" name="DoencaPreExistOutros" rows="2" style="resize:none;" ngModel></textarea>
                           </div>
 
                           <div class="col-lg-12 mt-3">
                             <label>Avaliação</label>
-                            <textarea class="form-control" name="DoencaPreExistAvaliacao" rows="3" style="resize:none;"></textarea>
+                            <textarea class="form-control" name="DoencaPreExistAvaliacao" rows="3" style="resize:none;" ngModel></textarea>
                           </div>
                         </div>
 
                         <div class="form-group row">
                           <div class="col-lg-6">
                             <label>Como Chegou?</label>
-                            <select class="form-control">
-                              <option value="">-- Selecione --</option>
+                            <select class="form-control" name="TipoChegada" tabindex="12" [(ngModel)]="TipoChegada">
+                              <option value="-1">-- Selecione --</option>
+                              <option *ngFor="let tipochegada of listaTiposChegada | orderBy: orderDescricao" [ngValue]="tipochegada">{{tipochegada.descricao}}</option>
                             </select>
+
+
+
+                            <!--<select class="form-control">
+                              <option value="">-- Selecione --</option>
+                            </select>-->
                           </div>
                           <div class="col-lg-6">
                             <label>Especialidade</label>
-                            <select class="form-control">
+                            <!--<select class="form-control">
                               <option value="">-- Selecione --</option>
+                            </select>-->
+
+                            <select class="form-control" name="Especialidade" tabindex="12" [(ngModel)]="Especialidade">
+                              <option value="-1">-- Selecione --</option>
+                              <option *ngFor="let especialidade of listaEspecialidade | orderBy: orderDescricao" [ngValue]="especialidade">{{especialidade.descricao}}</option>
                             </select>
+
                           </div>
                         </div>
 
                         <div class="form-group row">
                           <div class="col-lg-3">
                             <label>Possui Alergia?</label>
-                            <select class="form-control" name="PossuiAlergia" id="PossuiAlergia">
-                              <option value="">-- Selecione --</option>
-                              <option value="1">Sim</option>
-                              <option value="2">Não</option>
-                              <option value="3">Não Informado</option>
+
+
+                            <select class="form-control" name="PossuiAlergia" tabindex="12" [(ngModel)]="PossuiAlergia" (change)="onPossuiAlergia()">
+                              <option value="-1">-- Selecione --</option>
+                              <option *ngFor="let possuialergia of ListaPossuiAlergia" [ngValue]="possuialergia">{{possuialergia.descricao}}</option>
                             </select>
+
+
                           </div>
                         </div>
 
@@ -379,20 +395,35 @@
                         <div class="form-group row">
                           <div class="col-lg-4">
                             <label>Tipo de Alergia</label>
-                            <select class="form-control" name="AlergiaTipo">
-                              <option value="">-- Selecione --</option>
+                            <select class="form-control" name="TipoAlergia" tabindex="12" [(ngModel)]="TipoAlergia">
+                              <option value="-1">-- Selecione --</option>
+                              <option *ngFor="let tipoAlergia of listaTipoAlergia | orderBy: orderDescricao" [ngValue]="tipoAlergia">{{tipoAlergia.descricao}}</option>
                             </select>
+
+
+                            <!--<select class="form-control" name="AlergiaTipo">
+                              <option value="">-- Selecione --</option>
+                            </select>-->
                           </div>
                           <div class="col-lg-4">
                             <label>Alergia</label>
-                            <select class="form-control" name="AlergiaNome">
+                            <!--<select class="form-control" name="AlergiaNome">
                               <option value="">-- Selecione --</option>
+                            </select>-->
+                            <select class="form-control" name="Alergia" tabindex="12" [(ngModel)]="Alergia">
+                              <option value="-1">-- Selecione --</option>
+                              <option *ngFor="let alergia of listaAlergia | orderBy: orderNome" [ngValue]="alergia">{{alergia.nome}}</option>
                             </select>
                           </div>
                           <div class="col-lg-4">
                             <label>Localização</label>
-                            <select class="form-control" name="AlergiaLocalizacao">
+                            <!--<select class="form-control" name="AlergiaLocalizacao">
                               <option value="">-- Selecione --</option>
+                            </select>-->
+
+                            <select class="form-control" name="LocalizacaoAlergia" tabindex="12" [(ngModel)]="LocalizacaoAlergia">
+                              <option value="-1">-- Selecione --</option>
+                              <option *ngFor="let localizacaoalergia of listaLocalizacaoAlergia | orderBy: orderNome" [ngValue]="localizacaoalergia">{{localizacaoalergia.nome}}</option>
                             </select>
                           </div>
                         </div>
@@ -400,25 +431,35 @@
                         <div class="form-group row">
                           <div class="col-lg-4">
                             <label>Reação</label>
-                            <select class="form-control" name="AlergiaReacao">
+                            <!--<select class="form-control" name="AlergiaReacao">
                               <option value="">-- Selecione --</option>
+                            </select>-->
+
+                            <select class="form-control" name="ReacaoAlergia" tabindex="12" [(ngModel)]="ReacaoAlergia">
+                              <option value="-1">-- Selecione --</option>
+                              <option *ngFor="let reacaoalergia of listaReacaoAlergia | orderBy: orderDescricao" [ngValue]="reacaoalergia">{{reacaoalergia.descricao}}</option>
                             </select>
                           </div>
                           <div class="col-lg-4">
                             <label>Severidade</label>
-                            <select class="form-control" name="AlergiaSeveridade">
+                            <!--<select class="form-control" name="AlergiaSeveridade">
                               <option value="">-- Selecione --</option>
+                            </select>-->
+                            <select class="form-control" name="SeveridadeAlergia" tabindex="12" [(ngModel)]="SeveridadeAlergia">
+                              <option value="-1">-- Selecione --</option>
+                              <option *ngFor="let severidadeAlergia of listaSeveridadeAlergia | orderBy: orderNome" [ngValue]="severidadeAlergia">{{severidadeAlergia.nome}}</option>
                             </select>
                           </div>
                           <div class="col-lg-2">
                             <label>Data dos Sintomas</label>
                             <input type="text" class="form-control mask_data" name="AlergiaData" placeholder="00/00/0000" value="">
+
                           </div>
                           <div class="col-lg-2">
                             <div class="k-checkbox-list">
                               <label>Status</label>
                               <label class="k-checkbox k-checkbox--brand mt-2">
-                                <input type="checkbox" name="AlergiaAtivo">Ativo<span></span>
+                                <input type="checkbox" name="AlergiaAtivo" >Ativo<span></span>
                               </label>
                             </div>
                           </div>
@@ -426,7 +467,11 @@
 
                         <div class="form-group row">
                           <div class="col">
-                            <button type="button" class="btn btn-success"><i class="fa fa-plus fa-fw"></i> Adicionar</button>
+                            <!--<button type="button" class="btn btn-success"><i class="fa fa-plus fa-fw"></i> Adicionar</button>-->
+                            <button type="button" tabindex="33" class="btn btn-metal" data-toggle="popover" data-placement="top" data-trigger="hover" data-content="Adicionar uma nova alergia" style="float: right; margin-left: 10px;" (click)="onAdicionaAlergia()" id="btnAddNovaAlergia"><i class="fa fa-plus"></i>Adicionar</button>
+                            <button type="button" class="btn btn-metal oculta" data-toggle="popover" data-placement="top" data-trigger="hover" data-content="Cancelar a edição da lotação" style="float: right;" (click)="onLimparCamposProfissional()" id="btnCancelarAlergia"><i class="fa fa-plus"></i>Cancelar</button>
+
+
                           </div>
                         </div>
 
@@ -444,17 +489,40 @@
                                   <th colspan="2">Ações</th>
                                 </tr>
                               </thead>
-                              <tbody>
-                                <tr class="text-center">
-                                  <td>Bactrim</td>
-                                  <td>Pele</td>
-                                  <td>Coceira</td>
-                                  <td>Suave</td>
-                                  <td>25/04/2019</td>
-                                  <td>Situação</td>
-                                  <td><a href="#"><i class="fa fa-pen fa-fw" title="Editar"></i></a></td>
-                                  <td><a href="#"><i class="fa fa-trash fa-fw" title="Excluir"></i></a></td>
+                              <!--<tbody>
+    <tr class="text-center">
+      <td>Bactrim</td>
+      <td>Pele</td>
+      <td>Coceira</td>
+      <td>Suave</td>
+      <td>25/04/2019</td>
+      <td>Situação</td>
+      <td><a href="#"><i class="fa fa-pen fa-fw" title="Editar"></i></a></td>
+      <td><a href="#"><i class="fa fa-trash fa-fw" title="Excluir"></i></a></td>
+    </tr>
+  </tbody>-->
+                              <tbody id="tableAlergia" *ngFor="let item of listaClassificacaoRiscoAlergia; let i = index">
+
+
+                                <tr class="text-center" id="row{{i}}">
+                                  <td>{{ item.Alergia? item.Alergia.nome: '' }}</td>
+                                  <td>{{ item.LocalizacaoAlergia? item.LocalizacaoAlergia.nome: '' }}</td>
+                                  <td>{{ item.ReacaoAlergia? item.ReacaoAlergia.descricao: '' }}</td>
+                                  <td>{{ item.SeveridadeAlergia? item.SeveridadeAlergia.nome: '' }}</td>
+                                  <td>{{ item.dataSintomas | date: 'dd/MM/yyyy'}}</td>
+                                  <td>{{ item.alergiaSituacao === true? 'Ativo': 'Inativa'}}</td>
+                                  <!--<td>
+    <label class="k-checkbox k-checkbox--bold">
+      <input type="checkbox" class="form-control" name="Prof_Ativo" id="ckativo{{i}}" [checked]="item.ativo"> <span></span>
+    </label>
+  </td>-->
+                                  <td id="lotacaoActions">
+                                    <button class="btn p-2 border-0 btn-sm btn-outline-secondary" type="button" title="Editar"><i class="fa fa-pen fa-fw" (click)="onEditarAlergia(item)"></i></button>
+                                    <button class="btn p-2 border-0 btn-sm btn-outline-secondary" name="btn_excluir_lotacao" type="button" title="Editar" (click)="onExibeMensagemExcluir(item)"><i class="fa fa-trash fa-fw"></i></button>
+
+                                  </td>
                                 </tr>
+
                               </tbody>
                             </table>
                           </div>
@@ -495,18 +563,22 @@
 
                           <div class="col-lg-3">
                             <label>Abertura Ocular</label>
-                            <select class="form-control" name="EG_AberturaOcular">
+                            <!--<select class="form-control" name="EG_AberturaOcular">
                               <option value="">-- Selecione --</option>
                               <option value="">Espontâneo</option>
                               <option value="">Ao som</option>
                               <option value="">À pressão</option>
                               <option value="">Ausente</option>
                               <option value="">Não testável</option>
+                            </select>-->
+                            <select class="form-control" name="AberturaOcular" tabindex="12" [(ngModel)]="AberturaOcular" (change)="onCalculaStatusEscalaGlasgow()">
+                              <option value="-1">-- Selecione --</option>
+                              <option *ngFor="let aberturaocular of listaAberturaOcular | orderBy: orderVariavel" [ngValue]="aberturaocular">{{aberturaocular.variavel}}</option>
                             </select>
                           </div>
                           <div class="col-lg-3">
                             <label>Resposta Verbal</label>
-                            <select class="form-control" name="EG_RespostaVerbal">
+                            <!--<select class="form-control" name="EG_RespostaVerbal">
                               <option value="">-- Selecione --</option>
                               <option value="">Orientada</option>
                               <option value="">Confusa</option>
@@ -514,11 +586,15 @@
                               <option value="">Sons</option>
                               <option value="">Ausente</option>
                               <option value="">Não testável</option>
+                            </select>-->
+                            <select class="form-control" name="RespostaVerbal" tabindex="12" [(ngModel)]="RespostaVerbal" (change)="onCalculaStatusEscalaGlasgow()">
+                              <option value="-1">-- Selecione --</option>
+                              <option *ngFor="let respostaverbal of listaRespostaVerbal | orderBy: orderVariavel" [ngValue]="respostaverbal">{{respostaverbal.variavel}}</option>
                             </select>
                           </div>
                           <div class="col-lg-3">
                             <label>Resposta Motora</label>
-                            <select class="form-control" name="EG_RespostaMotora">
+                            <!--<select class="form-control" name="EG_RespostaMotora">
                               <option value="">-- Selecione --</option>
                               <option value="">Às ordens</option>
                               <option value="">Localizadora</option>
@@ -527,14 +603,18 @@
                               <option value="">Extensão</option>
                               <option value="">Ausente</option>
                               <option value="">Não testável</option>
+                            </select>-->
+                            <select class="form-control" name="RespostaMotora" tabindex="12" [(ngModel)]="RespostaMotora" (change)="onCalculaStatusEscalaGlasgow()">
+                              <option value="-1">-- Selecione --</option>
+                              <option *ngFor="let respostamotora of listaRespostaMotora | orderBy: orderVariavel" [ngValue]="respostamotora">{{respostamotora.variavel}}</option>
                             </select>
                           </div>
                           <div class="col-lg-3">
                             <label>Status</label>
                             <div class="input-group">
-                              <input type="text" class="form-control" placeholder="" value="">
+                              <input type="text" class="form-control" name="EscalaGlasgow" id="EscalaGlasgow" style="background:#E9E8E8;" readonly ngModel>
                               <div class="input-group-append">
-                                <button class="btn btn-secondary text-center" type="button" title="Limpar opções da Escala de Glasgow"><i class="fa fa-trash-alt fa-fw"></i></button>
+                                <button class="btn btn-secondary text-center" type="button" id="EG_Clean" title="Limpar opções da Escala de Glasgow" (click)="onLimpaCamposGlasgow()"><i class="fa fa-trash-alt fa-fw"></i></button>
                               </div>
                             </div>
                           </div>
@@ -558,95 +638,109 @@
 
                     <!--begin::Portlet 2-->
                     <div class="k-portlet">
-                      <!--
-                      <div class="k-portlet__head">
-                          <div class="k-portlet__head-label">
-                              <h3 class="k-portlet__head-title">
-                                  Ocorrência
-                              </h3>
-                          </div>
-                      </div>
-                      -->
                       <div class="k-portlet__body p-1">
 
                         <div class="form-group row">
                           <div class="col-lg-4">
                             <label>Procedência</label>
-                            <input type="text" class="form-control" name="DO_Procedencia" placeholder="" maxlength="" value="" tabindex="21">
-                            <span class="form-text text-danger oculta">Message Error</span>
+                            <input type="text" class="form-control" name="DO_Procedencia" placeholder="" value="" tabindex="18" ngModel>
                           </div>
                           <div class="col-lg-3">
                             <label>Tipo de Ocorrência</label>
-                            <select name="DO_TipoOcorrencia" class="form-control" tabindex="22">
-                              <option value="">-- Selecione --</option>
-                              <option value="">Acidente de Trabalho</option>
-                              <option value="">Afogamentos </option>
-                              <option value="">Agressões (outras idades)</option>
-                              <option value="">Agressões ao idoso (60 anos ou mais)</option>
-                              <option value="">Agressões às crianças (menores de 12 anos)</option>
-                              <option value="">Atropelamentos</option>
+
+
+                            <select class="form-control" name="DO_TipoOcorrencia" tabindex="19" [(ngModel)]="TipoOcorrencia">
+                              <option value="-1">-- Selecione --</option>
+                              <option *ngFor="let tipoOcorrencia of listaTipoOcorrencia | orderBy: orderDescricao" [ngValue]="tipoOcorrencia">{{tipoOcorrencia.descricao}}</option>
                             </select>
-                            <span class="form-text text-danger oculta">Message Error</span>
                           </div>
                           <div class="col-lg-2">
                             <label>Data</label>
-                            <input type="text" class="form-control mask_data" name="DO_Data" placeholder="" maxlength="" value="" tabindex="22">
-                            <span class="form-text text-danger oculta">Message Error</span>
+                            <input type="text" class="form-control mask_data" name="DO_Data" placeholder="" tabindex="20" ngModel>
                           </div>
                           <div class="col-lg-1">
                             <label>Hora</label>
-                            <input type="text" class="form-control mask_hour" name="DO_Hora" placeholder="" maxlength="" value="" tabindex="23">
-                            <span class="form-text text-danger oculta">Message Error</span>
+                            <input type="text" class="form-control mask_hour" name="DO_Hora" placeholder="" tabindex="21" ngModel>
                           </div>
                           <div class="col-lg-2">
                             <label class="d-block">&nbsp;</label>
                             <div class="btn-group btn-group-toggle" data-toggle="buttons">
-                              <label class="btn btn-outline-info clear" for="M" style="cursor:pointer;" data-toggle="popover" data-placement="top" data-trigger="hover" data-content="Perfuração por Arma Branca">
+                              <label class="btn btn-outline-info clear" for="PAB" style="cursor:pointer;" data-toggle="popover" data-placement="top" data-trigger="hover" data-content="Perfuração por Arma Branca">
                                 <input type="checkbox" name="DO_PAB" autocomplete="off" value=""> PAB
                               </label>
-                              <label class="btn btn-outline-info clear" for="F" style="cursor:pointer;" data-toggle="popover" data-placement="top" data-trigger="hover" data-content="Perfuração por Arma de Fogo">
+                              <label class="btn btn-outline-info clear" for="PAF" style="cursor:pointer;" data-toggle="popover" data-placement="top" data-trigger="hover" data-content="Perfuração por Arma de Fogo">
                                 <input type="checkbox" name="DO_PAF" autocomplete="off" value=""> PAF
                               </label>
                             </div>
                           </div>
                         </div>
-
                         <div class="form-group row">
                           <div class="col-lg-2">
                             <label>CEP</label>
-                            <input type="text" class="form-control mask_cep" name="DO_CEP" placeholder="00000-000" value="" tabindex="24">
+                            <input type="text" class="form-control mask_cep" name="DO_CEP" id="DP_CEP" maxlength="11" value="" tabindex="23" (blur)="onBuscaCep()">
+                            <span id="msg_cep" class="form-text text-danger oculta">Informe um CEP válido</span>
                           </div>
                           <div class="col-lg-6">
                             <label>Logradouro</label>
-                            <input type="text" class="form-control" name="DO_Logradouro" placeholder="" maxlength="150" value="" tabindex="25">
+                            <input type="text" class="form-control" name="DO_Logradouro" placeholder="" tabindex="24" (keypress)="onBuscaCep()" ngModel>
+
+                            <div class="dropdown-menu dropdown-menu-fit dropdown-menu-right dropdown-menu-top-unround dropdown-menu-anim dropdown-menu-lg" x-placement="bottom-end" style="position: absolute; left: 10px;  width: 95%; will-change: transform; top: 65px;" id="divPesquisaLogradouro">
+
+                              <div class="k-quick-search k-quick-search--dropdown k-quick-search--result-compact k-quick-search--has-result" id="k_quick_search_dropdown">
+
+                                <div class="k-quick-search__wrapper k-scroll ps ps--active-y m-0 p-0" data-scroll="true" data-height="325" data-mobile-height="200" style="overflow: hidden; height: 325px;">
+
+                                  <!--begin::k-quick-search__result-->
+                                  <div class="k-quick-search__result">
+
+                                    <div class="k-quick-search__category border-bottom text-primary">Endereços</div>
+                                    <div class="k-quick-search__section p-0 mb-1" *ngFor="let cep of listaCep;">
+                                      <div class="k-quick-search__item">
+                                        <div class="k-quick-search__item-img k-quick-search__item-img--file">
+                                          <i class="fa fa-map-marker-alt ml-2" style="font-size:1.5em; color:#069;"></i>
+                                        </div>
+                                        <div class="k-quick-search__item-wrapper">
+                                          <a class="k-quick-search__item-title" style="cursor:pointer;" (click)="onSelectedCep(cep)">
+                                            {{cep.logradouro}}
+                                          </a>
+                                          <div class="k-quick-search__item-desc">
+                                            {{cep.bairro}} - {{cep.cep}}
+                                          </div>
+                                        </div>
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
                           </div>
                           <div class="col-lg-2">
                             <label>Número</label>
-                            <input type="text" class="form-control" name="DO_Numero" placeholder="" maxlength="5" value="" tabindex="26">
+                            <input type="text" class="form-control" name="DO_Numero" placeholder="" maxlength="5" value="" tabindex="25" ngModel>
                           </div>
                           <div class="col-lg-2">
                             <label>Complemento</label>
-                            <input type="text" class="form-control" name="DO_Complemento" placeholder="" maxlength="30" value="" tabindex="27">
+                            <input type="text" class="form-control" name="DO_Complemento" placeholder="" maxlength="30" value="" tabindex="26" ngModel>
                           </div>
                         </div>
                         <div class="form-group row">
-                          <div class="col-lg-6">
-                            <label>Bairro</label>
-                            <select class="form-control" name="DO_Bairro" tabindex="28">
-                              <option>-Selecione-</option>
+                          <div class="col-lg-4">
+                            <label>Estado</label>
+                            <select class="form-control" name="DP_Endereco_Estado" tabindex="27" [(ngModel)]="Estado" (change)="onSelectedUf()">
+                              <option value="-1">-- Selecione --</option>
+                              <option *ngFor="let estado of listaEstado| orderBy: orderNome" [ngValue]="estado">{{estado.nome}}</option>
                             </select>
                           </div>
                           <div class="col-lg-4">
                             <label>Munícipio</label>
-                            <select class="form-control" name="DO_Municipio" tabindex="29">
-                              <option>-Selecione-</option>
+                            <select class="form-control" name="DP_Endereco_Cidade" tabindex="28" [(ngModel)]="Cidade">
+                              <option value="-1">-- Selecione --</option>
+                              <option *ngFor="let cidade of listaCidade | orderBy: orderNome" [ngValue]="cidade">{{cidade.nome}}</option>
                             </select>
                           </div>
-                          <div class="col-lg-2">
-                            <label>Estado</label>
-                            <select class="form-control" name="DO_Estado" tabindex="30">
-                              <option>-Selecione-</option>
-                            </select>
+                          <div class="col-lg-4">
+                            <label>Bairro</label>
+                            <input type="text" class="form-control" name="DO_Bairro" placeholder="" maxlength="100" value="" tabindex="29" ngModel>
                           </div>
                         </div>
 
@@ -686,23 +780,23 @@
                             <label class="d-block float-left">Risco</label>
 
                             <div class="btn-group btn-group-toggle" data-toggle="buttons">
-                              <label class="btn risco-azul cp clear" data-toggle="popover" data-placement="top" data-trigger="hover" data-content="">
-                                <input type="radio" name="Risco" autocomplete="off" value=""> Azul
+                              <label class="btn risco-azul cp clear" data-toggle="popover" data-placement="top" data-trigger="hover" data-content="" for="riscoazul">
+                                <input type="radio" name="Risco" autocomplete="off" value="" id="riscoazul"> AZUL
                               </label>
-                              <label class="btn risco-verde cp clear" for="" data-toggle="popover" data-placement="top" data-trigger="hover" data-content="">
-                                <input type="radio" name="Risco" autocomplete="off" value=""> Verde
+                              <label class="btn risco-verde cp clear" data-toggle="popover" data-placement="top" data-trigger="hover" data-content="" for="riscoverde">
+                                <input type="radio" name="Risco" autocomplete="off" value="" id="riscoverde"> VERDE
                               </label>
-                              <label class="btn risco-amarelo cp clear d-flex" for="" data-toggle="popover" data-placement="top" data-trigger="hover" data-content="Consultório">
-                                <input type="radio" name="Risco" autocomplete="off" value=""><i class="fa fa-user-md fa-fw d-block mr-1"></i><span class="d-block"> Amarelo</span>
+                              <label class="btn risco-amarelo cp clear d-flex" data-toggle="popover" data-placement="top" data-trigger="hover" data-content="Consultório" for="riscoamareloconsultorio">
+                                <input type="radio" name="Risco" autocomplete="off" value="" id="riscoamareloconsultorio"><i class="fa fa-user-md fa-fw d-block mr-1"></i><span class="d-block"> AMARELO</span>
                               </label>
-                              <label class="btn risco-amarelo cp clear d-flex" for="" data-toggle="popover" data-placement="top" data-trigger="hover" data-content="Observação">
-                                <input type="radio" name="Risco" autocomplete="off" value=""><i class="fa fa-eye fa-fw d-block mr-1"></i><span class="d-block"> Amarelo</span>
+                              <label class="btn risco-amarelo cp clear d-flex" data-toggle="popover" data-placement="top" data-trigger="hover" data-content="Observação" for="riscoamareloobservacao">
+                                <input type="radio" name="Risco" autocomplete="off" value="" id="riscoamareloobservacao"><i class="fa fa-eye fa-fw d-block mr-1"></i><span class="d-block"> AMARELO</span>
                               </label>
-                              <label class="btn risco-laranja cp clear" for="" data-toggle="popover" data-placement="top" data-trigger="hover" data-content="">
-                                <input type="radio" name="Risco" autocomplete="off" value=""> Laranja
+                              <label class="btn risco-laranja cp clear" data-toggle="popover" data-placement="top" data-trigger="hover" data-content="" for="riscolaranja">
+                                <input type="radio" name="Risco" autocomplete="off" value="" id="riscolaranja"> LARANJA
                               </label>
-                              <label class="btn risco-vermelho cp clear" for="" data-toggle="popover" data-placement="top" data-trigger="hover" data-content="">
-                                <input type="radio" name="Risco" autocomplete="off" value=""> Vermelho
+                              <label class="btn risco-vermelho cp clear" data-toggle="popover" data-placement="top" data-trigger="hover" data-content="" for="riscovermelho">
+                                <input type="radio" name="Risco" autocomplete="off" value="" id="riscovermelho"> VERMELHO
                               </label>
                             </div>
                           </div>
@@ -733,7 +827,7 @@
                 <button type="button" id="btn_formclear" class="btn btn-metal" data-toggle="popover" data-placement="top" data-trigger="hover" data-content="Limpar Campos do Formulário">Limpar</button>
               </div>
               <div class="col-lg-6 text-right">
-                <button type="reset" class="btn btn-primary" tabindex="64">Salvar</button>
+                <button type="submit" class="btn btn-primary" tabindex="64">Salvar</button>
                 <button type="reset" class="btn btn-metal" tabindex="65">Cancelar</button>
               </div>
             </div>
