@@ -660,11 +660,31 @@ export class ClassificacaoRiscoComponent implements OnInit {
 
       classificacaoriscoAlergia.alergiaSituacao = alergiaSituacao;
 
-      this.listaClassificacaoRiscoAlergia.push(classificacaoriscoAlergia);
+
+      if (this.listaClassificacaoRiscoAlergia.find(x => x.TipoAlergia === this.TipoAlergia && x.Alergia === this.Alergia) === undefined && this.ClassificacaoRiscoAlergia === undefined) {
+
+        this.listaClassificacaoRiscoAlergia.push(classificacaoriscoAlergia);
+
+      } else if (this.ClassificacaoRiscoAlergia !== undefined) {
+
+        if (this.ClassificacaoRiscoAlergia.TipoAlergia != classificacaoriscoAlergia.TipoAlergia && this.ClassificacaoRiscoAlergia.Alergia != classificacaoriscoAlergia.Alergia) 
+          if (this.listaClassificacaoRiscoAlergia.find(x => x.TipoAlergia === this.TipoAlergia && x.Alergia === this.Alergia))
+            return;
+        
+        var index = this.listaClassificacaoRiscoAlergia.findIndex(x => x.TipoAlergia === this.TipoAlergia || x.Alergia === this.Alergia);
+        this.listaClassificacaoRiscoAlergia[index] = classificacaoriscoAlergia;
+
+      }
+    } else {
+
+      $(document).ready(function () {
+
+        //$('#msg_tipoprofissional').removeClass('oculta');
+      });
+
     }
 
 
-    console.log(this.listaClassificacaoRiscoAlergia);
     this.onLimparCamposAlergia();
   }
 
@@ -676,6 +696,7 @@ export class ClassificacaoRiscoComponent implements OnInit {
     this.LocalizacaoAlergia = undefined;
     this.ReacaoAlergia = undefined;
     this.SeveridadeAlergia = undefined;
+    this.ClassificacaoRiscoAlergia = undefined;
 
     $(document).ready(function () {
       $("select[name^=TipoAlergia]").val($("select[name^=TipoAlergia] option:first").val());

@@ -39,13 +39,54 @@
                           <div class="col-lg-2">
                             <div class="k-avatar k-avatar--circle">
                               <div class="k-avatar__holder" style="background-image: url(../../assets/media/users/default.jpg); "></div>
-                              <label class="k-avatar__upload" data-toggle="k-tooltip" title="Alterar Foto" for="imgFoto">
+                              <label class="k-avatar__upload" data-toggle="modal" title="Alterar Foto" for="imgFoto" data-target="#exampleModalLong" (click)="onHabilitarWebCam()">
                                 <i class="flaticon-photo-camera"></i>
                                 <!--<input type="file" name="DP_Avatar" accept=".png, .jpg, .jpeg" />-->
                               </label>
                               <span class="k-avatar__cancel" data-toggle="k-tooltip" title="Cancel avatar">
                                 <i class="fa fa-times"></i>
                               </span>
+
+
+
+                              <!--<div class="k-section">
+                                                       <div class="k-section__content k-section__content--border">-->
+                                  <!-- Button trigger modal -->
+
+                                  <!-- Modal -->
+                                  <div class="modal fade" id="exampleModalLong" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
+                                    <div class="modal-dialog modal-dialog-scrollable" role="document">
+                                      <div class="modal-content p-0 border-0" style="background-color:rgba(255, 255, 255, 10) !important;">
+                                        <div class="modal-header border-0">
+                                          <h5 class="modal-title text-info" id="exampleModalLongTitle">
+                                            Foto do Perfil
+                                          </h5>
+                                          <button type="button" class="close" data-dismiss="modal" aria-label="Fechar"> <span aria-hidden="true">&times;</span> </button>
+                                        </div>
+                                        <div class="modal-body p-0 m-0">
+
+                                          <div id="app" class="m-0 p-0">
+                                            <div><video #video id="video"  class="m-0 p-0 w-100" autoplay></video></div>
+
+                                            <canvas #canvas id="canvas" width="430" height="480"></canvas>
+                                            <!--<ul>
+      <li *ngFor="let c of captures">
+        <img src="{{ c }}" height="50" />
+      </li>
+    </ul>-->
+                                          </div>
+                                        </div>
+                                        <div class="modal-footer border-0">
+                                          <button type="button" class="btn btn-sm btn-metal" data-dismiss="modal" (click)="onPararTransmissaoWebcam()">Fechar</button>
+                                          <button type="button" class="btn btn-sm btn-accent" id="snap" (click)="capture()">Capturar</button>
+                                        </div>
+                                      </div>
+                                    </div>
+                                  </div>
+                                <!--</div>
+                              </div>-->
+
+
 
                             </div>
                             <div class="k-checkbox-list mt-2" data-toggle="popover" data-trigger="hover" tabindex="7" data-placement="top" data-content="Remove a obrigatoriedade dos demais campos e impõe o preenchimento do campo [Descrição]">

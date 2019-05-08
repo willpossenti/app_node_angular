@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef  } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import * as $ from 'jquery';
 import { Raca } from '../../../model/Raca';
@@ -83,6 +83,12 @@ export class PessoaComponent implements OnInit {
   Escolaridade: Escolaridade;
   SituacaoFamiliarConjugal: SituacaoFamiliarConjugal;
   foto: string;
+
+  @ViewChild("video")
+  public video: ElementRef;
+
+  @ViewChild("canvas")
+  public canvas: ElementRef;
 
 
   constructor(private pessoaService: PessoaService,
@@ -247,42 +253,38 @@ export class PessoaComponent implements OnInit {
       });
 
 
-      var _URL = window.URL;
+      //var _URL = window.URL;
 
 
-      $('input[type^=file]').change(function () {
+      //$('input[type^=file]').change(function () {
 
-        var file = $(this)[0].files[0];
+      //  var file = $(this)[0].files[0];
 
-        var reader = new FileReader();
-        reader.readAsDataURL(this.files[0]);
-        reader.onload = function () {
+      //  var reader = new FileReader();
+      //  reader.readAsDataURL(this.files[0]);
+      //  reader.onload = function () {
 
-          var imagem = new Image();
-          imagem.src = _URL.createObjectURL(file);
+      //    var imagem = new Image();
+      //    imagem.src = _URL.createObjectURL(file);
 
-          imagem.onload = function () {
+      //    imagem.onload = function () {
 
-            if ($(this)[0].width === $(this)[0].height)
-              $('.k-avatar__holder').css('background-size', '120px 120px');
-            else
-              $('.k-avatar__holder').css('background-size', '160px 120px');
-          };
+      //      if ($(this)[0].width === $(this)[0].height)
+      //        $('.k-avatar__holder').css('background-size', '120px 120px');
+      //      else
+      //        $('.k-avatar__holder').css('background-size', '160px 120px');
+      //    };
 
-          page.foto = reader.result.toString();
-          $('.k-avatar__holder').css('background-image', 'url("' + reader.result + '")');
+      //    page.foto = reader.result.toString();
+      //    $('.k-avatar__holder').css('background-image', 'url("' + reader.result + '")');
 
-          $('.k-avatar__holder').css('background-position', 'center');
-        };
+      //    $('.k-avatar__holder').css('background-position', 'center');
+      //  };
 
-      });
+      //});
 
-      var labelID;
-
-      $('label[for^=imgFoto]').click(function () {
-        alert('teste');
-      });
-
+     
+     
     });
 
 
@@ -296,8 +298,60 @@ export class PessoaComponent implements OnInit {
   }
   //end:: Carregamento Básico da tela
 
+  public ngAfterViewInit() {
+//    if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+
+//      navigator.mediaDevices.getUserMedia({ video: true }).then(stream => {
 
 
+//        //$("#video").prop("src", window.URL.createObjectURL(stream));
+//        //$("#video").play();
+
+//        this.video.nativeElement.srcObject = stream;
+//          //window.URL.createObjectURL(stream);
+//        this.video.nativeElement.play();
+//      }).catch(e => {
+//    console.log(e);
+//});;
+//    }
+  }
+
+
+  onHabilitarWebCam() {
+
+
+    if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+
+      navigator.mediaDevices.getUserMedia({ video: true }).then(stream => {
+
+
+        //$("#video").prop("src", window.URL.createObjectURL(stream));
+        //$("#video").play();
+
+        this.video.nativeElement.srcObject = stream;
+        //window.URL.createObjectURL(stream);
+        this.video.nativeElement.play();
+      }).catch(e => {
+        console.log(e);
+      });;
+    }
+
+  }
+
+  onPararTransmissaoWebcam() {
+
+    this.video.nativeElement.pause();
+  }
+
+  public capture() {
+
+    var context = this.canvas.nativeElement.getContext("2d").drawImage(this.video.nativeElement, 0, 0, 480, 480);
+    //this.captures.push(this.canvas.nativeElement.toDataURL("image/png"));
+    this.foto = this.canvas.nativeElement.toDataURL("image/png");
+    $('.k-avatar__holder').css('background-image', 'url("' + this.foto + '")');
+    $('.k-avatar__holder').css('background-size', '120px 120px');
+    $('.k-avatar__holder').css('background-position', 'center');
+  }
 
   //begin:: Consulta o nome do paciente/ Consulta e monta um grid com as opções
   onConsultaNomeCompleto() {
@@ -1253,7 +1307,7 @@ export class PessoaComponent implements OnInit {
         console.log(lotacaoProfissional);
 
         this.listaLotacaoProfissional.push(lotacaoProfissional);
-        this.onLimparCamposProfissional();
+        //this.onLimparCamposProfissional();
 
 
       } else if (this.LotacaoProfissional !== undefined) {
@@ -1265,7 +1319,7 @@ export class PessoaComponent implements OnInit {
         var index = this.listaLotacaoProfissional.findIndex(x => x.TipoProfissional === this.LotacaoProfissional.TipoProfissional);
         lotacaoProfissional.coordenador = this.LotacaoProfissional.coordenador;
         this.listaLotacaoProfissional[index] = lotacaoProfissional;
-        this.onLimparCamposProfissional();
+        //this.onLimparCamposProfissional();
 
 
 
@@ -1278,6 +1332,8 @@ export class PessoaComponent implements OnInit {
 
         $('#msg_tipoprofissional').removeClass('oculta');
       });
+
+      this.onLimparCamposProfissional();
 
     }
   }
@@ -1446,8 +1502,6 @@ export class PessoaComponent implements OnInit {
     $("#k_scrolltop").trigger("click");
 
     var cpf = $("input[name^=DP_CPF]").val();
-
-
 
     var pessoa: Pessoa = {};
     var pessoaPaciente: PessoaPaciente;
