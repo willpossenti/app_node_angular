@@ -218,24 +218,24 @@
           <!-- <div id="k_header_menu" class="k-header-menu k-header-menu-mobile k-header-menu--layout-"></div> -->
 
           <div class="bs-avatar mr-2 ml-2">
-            <img src="../../assets/media/users/default.jpg" title="Dados do Paciente" class="m-1" alt="avatar">
+            <img src="../../assets/media/users/default.jpg" title="Dados do Paciente" class="m-1" alt="avatar" id="imgAvatar">
           </div>
           <div class="bs-nomes">
-            <span class="maior d-block mt-3 mr-2 mb-0 ml-2">Marcela de Souza</span>
-            <span class="menor d-block ml-2 mr-2">Fernando Gomes Rosas de Souza</span>
+            <span class="maior d-block mt-3 mr-2 mb-0 ml-2" id="nomePaciente">Nome Social</span>
+            <span class="menor d-block ml-2 mr-2" id="nomeCompletoPaciente">Nome completo do paciente</span>
           </div>
           <div class="bs-icones">
-            <span class="idade mt-2 pl-2 p-0 d-block float-left border-left">28</span>
+            <span class="idade mt-2 pl-2 p-0 d-block float-left border-left" id="idade">00</span>
             <span class="sexo mt-3 d-block text-primary"><i class="fa fa-female fa-fw" title="Feminino"></i></span>
           </div>
 
           <div class="bs-infopac mt-3 ml-2 pr-3 border-right">
-            <span><strong>Código: </strong>068794489798</span>
-            <span><strong>Prontuário: </strong>164321</span>
+            <span><strong>Código: </strong>000000000000</span>
+            <span><strong>Prontuário: </strong>000000</span>
           </div>
           <div class="bs-infopac mt-3 ml-2 pl-2">
-            <span><strong>CNS: </strong>65416568787167</span>
-            <span><strong>Boletim: </strong>33465</span>
+            <span id="cns"><strong>CNS: </strong>0000000000000</span>
+            <span><strong>Boletim: </strong>000000</span>
           </div>
 
           <div class="bs-infopac mt-3 ml-2 pt-1 pl-3 border-left">
@@ -255,19 +255,60 @@
               <span class="k-header__topbar-icon"><i class="flaticon2-search-1"></i></span>
             </div>
             <div class="dropdown-menu dropdown-menu-fit dropdown-menu-right dropdown-menu-top-unround dropdown-menu-anim dropdown-menu-lg">
-              <div class="k-quick-search k-quick-search--dropdown k-quick-search--result-compact" id="k_quick_search_dropdown">
-                <form method="get" class="k-quick-search__form">
-                  <div class="input-group">
-                    <div class="input-group-prepend">
-                      <span class="input-group-text"><i class="flaticon2-search-1"></i></span>
-                    </div>
-                    <input type="text" class="form-control k-quick-search__input" placeholder="Search...">
-                    <div class="input-group-append">
-                      <span class="input-group-text"><i class="la la-close k-quick-search__close"></i></span>
+              <div class="k-quick-search k-quick-search--dropdown k-quick-search--result-compact" id="k_quick_search_dropdown1">
+                <!--<form>-->
+                <div class="input-group">
+                  <div class="input-group-prepend">
+                    <span class="input-group-text"><i class="flaticon2-search-1"></i></span>
+                  </div>
+                  <input type="text" class="form-control k-quick-search__input" placeholder="Search..." name="DP_NomeCompleto_PesquisaGeral" (keyup)="onConsultaNome()">
+
+
+
+
+                  <div class="dropdown-menu dropdown-menu-fit dropdown-menu-right dropdown-menu-top-unround dropdown-menu-anim dropdown-menu-lg" x-placement="bottom-end" style="position: absolute; left: 10px;  width: 95%; will-change: transform; top: 65px;" id="divPesquisaNome">
+
+                    <div class="k-quick-search k-quick-search--dropdown k-quick-search--result-compact k-quick-search--has-result" id="k_quick_search_dropdown">
+
+                      <div class="k-quick-search__wrapper k-scroll ps ps--active-y m-0 p-0" data-scroll="true" data-height="325" data-mobile-height="200" style="overflow: hidden; height: 325px;">
+
+                        <!--begin::k-quick-search__result-->
+                        <div class="k-quick-search__result">
+
+
+                          <div class="k-quick-search__category mt-2 border-bottom text-primary">Pacientes</div>
+                          <div class="k-quick-search__section p-0 mb-1" *ngFor="let paciente of listaPessoaPaciente;">
+                            <div class="k-quick-search__item">
+                              <div class="k-quick-search__item-img k-quick-search__item-img--file">
+                                <i class="fa fa-user ml-2" style="font-size:1.5em; color:#999;"></i>
+                              </div>
+                              <div class="k-quick-search__item-wrapper">
+                                <a class="k-quick-search__item-title" style="cursor:pointer;" (click)="onSelectedPaciente(paciente)">
+                                  {{paciente.nomeCompleto}}  - {{paciente.nascimento | date: 'dd/MM/yyyy'}}
+                                </a>
+                                <div class="k-quick-search__item-desc">
+                                  {{paciente.nomeMae}}
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
                     </div>
                   </div>
-                </form>
-                <div class="k-quick-search__wrapper k-scroll" data-scroll="true" data-height="325" data-mobile-height="200"></div>
+
+
+
+
+
+
+
+                  <!--<div class="input-group-append">
+                    <span class="input-group-text"><i class="la la-close k-quick-search__close"></i></span>
+                  </div>-->
+                </div>
+                <!--</form>-->
+                <!--<div class="k-quick-search__wrapper k-scroll" data-scroll="true" data-height="325" data-mobile-height="200"></div>-->
               </div>
             </div>
           </div>
@@ -444,7 +485,7 @@
         <div class="k-subheader k-grid__item" id="k_subheader">
           <div class="k-subheader__main">
             <h3 class="k-subheader__title">
-              Cadastro
+              Klinikos
             </h3>
             <span class="k-subheader__separator k-hidden"></span>
             <div class="k-subheader__breadcrumbs">

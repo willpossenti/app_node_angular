@@ -196,6 +196,9 @@ export class PessoaComponent implements OnInit {
     $(document).ready(function () {
 
       document.title = 'Cadastro | Klinikos';
+      $("h3[class^=k-subheader__title]").html("Cadastro");
+
+
 
       $("select[name^=DP_Etnia]").val($("select[name^=DP_Etnia] option:first").val());
 
@@ -274,6 +277,12 @@ export class PessoaComponent implements OnInit {
 
       });
 
+      var labelID;
+
+      $('label[for^=imgFoto]').click(function () {
+        alert('teste');
+      });
+
     });
 
 
@@ -281,8 +290,14 @@ export class PessoaComponent implements OnInit {
     var horaAtual2 = moment(new Date()).format('HH:mm:ss');
 
 
+
+
+
   }
   //end:: Carregamento Básico da tela
+
+
+
 
   //begin:: Consulta o nome do paciente/ Consulta e monta um grid com as opções
   onConsultaNomeCompleto() {
@@ -309,7 +324,6 @@ export class PessoaComponent implements OnInit {
         this.listaPessoaPaciente = data.result;
 
       }, (error: HttpErrorResponse) => {
-        Toastr.error("Falha ao consultar cep na aba endereço");
         console.log(`Error. ${error.message}.`);
       });
 
@@ -1362,6 +1376,9 @@ export class PessoaComponent implements OnInit {
             Toastr.warning("CEP não encontrado");
 
           } else {
+
+            console.log('1');
+
             $("input[name^=DP_Logradouro]").val(data.logradouro.toUpperCase())
             $("input[name^=DP_Bairro]").val(data.bairro.toUpperCase())
 
@@ -1390,7 +1407,9 @@ export class PessoaComponent implements OnInit {
 
       if (dp_logradouro !== "" && !$.isNumeric(dp_cep) && dp_cep.length === 0) {
         if (dp_logradouro.length > 3) {
-          //$('#divPesquisaLogradouro').removeClass('oculta');
+
+
+          $('#divPesquisaLogradouro').removeClass('oculta');
           $('#divPesquisaLogradouro').addClass('show');
           this.pessoaService.BuscarCepPorLogradouro(cep)
             .subscribe(async (data: Array<Cep>) => {
@@ -1452,6 +1471,7 @@ export class PessoaComponent implements OnInit {
     var contato1 = $("input[name^=Cont_Contato1]").val();
     var contato2 = $("input[name^=Cont_Contato2]").val();
     var contato3 = $("input[name^=Cont_Contato3]").val();
+    var idadeAparente = $("input[name^=DP_IdadeAparente]").val();
 
     if (p.value.DP_NaoIdentificado === true) {
 
@@ -1507,8 +1527,8 @@ export class PessoaComponent implements OnInit {
     if (p.value.DP_NomePai !== "")
       pessoa.nomepai = p.value.DP_NomePai.toUpperCase();
 
-    if (p.value.DP_IdadeAparente !== "")
-      pessoa.idadeAparente = p.value.DP_IdadeAparente.toUpperCase();
+    if (idadeAparente !== "")
+      pessoa.idadeAparente = idadeAparente.toUpperCase();
 
     if (this.Raca !== undefined)
       pessoa.Raca = this.Raca;
