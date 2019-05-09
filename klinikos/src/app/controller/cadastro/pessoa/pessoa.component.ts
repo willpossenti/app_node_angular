@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, ElementRef  } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import * as $ from 'jquery';
 import { Raca } from '../../../model/Raca';
@@ -30,7 +30,7 @@ import { Cep } from '../../../model/Cep';
 import { CpfService } from '../../util/cpf.service';
 import * as moment from 'moment';
 import * as Toastr from 'toastr';
-
+import * as RecordRTC from 'recordrtc';
 
 @Component({
   selector: 'app-pessoa',
@@ -283,8 +283,8 @@ export class PessoaComponent implements OnInit {
 
       //});
 
-     
-     
+
+
     });
 
 
@@ -299,21 +299,21 @@ export class PessoaComponent implements OnInit {
   //end:: Carregamento Básico da tela
 
   public ngAfterViewInit() {
-//    if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+    //    if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
 
-//      navigator.mediaDevices.getUserMedia({ video: true }).then(stream => {
+    //      navigator.mediaDevices.getUserMedia({ video: true }).then(stream => {
 
 
-//        //$("#video").prop("src", window.URL.createObjectURL(stream));
-//        //$("#video").play();
+    //        //$("#video").prop("src", window.URL.createObjectURL(stream));
+    //        //$("#video").play();
 
-//        this.video.nativeElement.srcObject = stream;
-//          //window.URL.createObjectURL(stream);
-//        this.video.nativeElement.play();
-//      }).catch(e => {
-//    console.log(e);
-//});;
-//    }
+    //        this.video.nativeElement.srcObject = stream;
+    //          //window.URL.createObjectURL(stream);
+    //        this.video.nativeElement.play();
+    //      }).catch(e => {
+    //    console.log(e);
+    //});;
+    //    }
   }
 
 
@@ -324,13 +324,14 @@ export class PessoaComponent implements OnInit {
 
       navigator.mediaDevices.getUserMedia({ video: true }).then(stream => {
 
-
-        //$("#video").prop("src", window.URL.createObjectURL(stream));
-        //$("#video").play();
+      
 
         this.video.nativeElement.srcObject = stream;
-        //window.URL.createObjectURL(stream);
         this.video.nativeElement.play();
+
+
+
+
       }).catch(e => {
         console.log(e);
       });;
@@ -340,7 +341,9 @@ export class PessoaComponent implements OnInit {
 
   onPararTransmissaoWebcam() {
 
-    this.video.nativeElement.pause();
+    this.video.nativeElement.srcObject = null;
+    this.video.nativeElement.stop();
+
   }
 
   public capture() {
