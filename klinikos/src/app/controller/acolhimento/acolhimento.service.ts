@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { Return } from '../../model/Return';
 import { Acolhimento } from '../../model/Acolhimento';
 import { PessoaPaciente } from '../../model/PessoaPaciente';
-import { Prioridade } from '../../model/Prioridade';
+import { Preferencial } from '../../model/Preferencial';
 
 @Injectable({
   providedIn: 'root',
@@ -25,7 +25,7 @@ export class AcolhimentoService {
   }
 
   BindEspecialidade() { return this.http.get<Return>(`${this.baseUrl}especialidade`, this.httpOptions); }
-  BindPrioridade() { return this.http.get<Return>(`${this.baseUrl}prioridade`, this.httpOptions); }
+  BindPreferencial() { return this.http.get<Return>(`${this.baseUrl}preferencial`, this.httpOptions); }
 
   SalvarAcolhimento(acolhimento: Acolhimento) {
 

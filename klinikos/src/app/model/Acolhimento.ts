@@ -1,22 +1,22 @@
 import { Especialidade } from './Especialidade';
-import { Prioridade } from './Prioridade';
+import { Preferencial } from './Preferencial';
 import { PessoaPaciente } from './PessoaPaciente';
 
 export interface Acolhimento {
 
   acolhimentoId?: string;
-  Pessoa?: PessoaPaciente;
+  PessoaPaciente?: PessoaPaciente;
   Especialidade?: Especialidade;
-  Prioridade?: Prioridade;
+  Preferencial?: Preferencial;
   risco?: boolean;
-  peso?: number;
-  altura?: number;
+  peso?: string;
+  altura?: string;
   imc?: string;
-  temperatura?: number;
-  PressaoArterialSistolica?: number;
-  PressaoArterialDiastolica?: number;
-  pulso?: number;
-  frequenciaRespiratoria?: number;
-  saturacao?: number;
+  temperatura?: string;
+  PressaoArterialSistolica?: string;
+  PressaoArterialDiastolica?: string;
+  pulso?: string;
+  frequenciaRespiratoria?: string;
+  saturacao?: string;
   ativo?: boolean;
 }

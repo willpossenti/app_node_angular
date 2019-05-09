@@ -37,13 +37,13 @@
               <div class="col-lg-6">
                 <label>Especialidade <span class="fld-obg" title="Obrigatório">*</span></label>
                 <!--<select class="form-control" name="Especialidade" tabindex="3">
-    <option>- Selecione -</option>
-    <option value="">Clínica Médica</option>
-    <option value="">Pediatria</option>
-    <option value="">Serviço Social</option>
-    <option value="">Ginecologia</option>
-    <option value="">Odontologia</option>
-  </select>-->
+      <option>- Selecione -</option>
+      <option value="">Clínica Médica</option>
+      <option value="">Pediatria</option>
+      <option value="">Serviço Social</option>
+      <option value="">Ginecologia</option>
+      <option value="">Odontologia</option>
+    </select>-->
                 <!--<span class="form-text text-muted">Please enter your full name</span>-->
 
                 <select class="form-control" name="Especialidade" tabindex="13" [(ngModel)]="Especialidade">
@@ -54,35 +54,35 @@
 
 
               <!--<div class="col-lg-3 mt-5">
-                <label class="text-left d-block">Prioridade</label>
-                <div class="btn-group btn-group-toggle" data-toggle="buttons">
-                  <label class="btn btn-outline-info cp clear" *ngFor="let prioridade of listaPrioridade | orderBy: orderNome" >
-                    <input type="radio" name="prioridade"  [value]={{prioridade.codigo}}> <i class="fab fa-accessible-icon fa-fw"></i>
-                  </label>
-                </div>
-              </div>-->
-
-              <div class="col-lg-3">
-    <label class="text-left d-block">Prioridade</label>
+    <label class="text-left d-block">Preferencial</label>
     <div class="btn-group btn-group-toggle" data-toggle="buttons">
-      <label class="btn btn-outline-info cp clear" for="Cadeirante" data-toggle="popover" data-placement="top" data-trigger="hover" data-content="Cadeirante">
-        <input type="radio" name="Prioridade" autocomplete="off" value="" tabindex="">
-        <i class="fab fa-accessible-icon fa-fw"></i>
-      </label>
-      <label class="btn btn-outline-info cp clear" for="Gestante" data-toggle="popover" data-placement="top" data-trigger="hover" data-content="Gestante">
-        <input type="radio" name="Prioridade" autocomplete="off" value="" tabindex="">
-        <i class="fab fa-accessible-icon fa-fw"></i>
-      </label>
-      <label class="btn btn-outline-info cp clear" for="Idoso60" data-toggle="popover" data-placement="top" data-trigger="hover" data-content="Idoso acima de 60 anos">
-        <input type="radio" name="Prioridade" autocomplete="off" value="" tabindex="">
-        <i class="fab fa-accessible-icon fa-fw"></i>
-      </label>
-      <label class="btn btn-outline-info cp clear" for="Idoso80" data-toggle="popover" data-placement="top" data-trigger="hover" data-content="Idoso acima de 80 anos">
-        <input type="radio" name="Prioridade" autocomplete="off" value="" tabindex="">
-        <i class="fab fa-accessible-icon fa-fw"></i>
+      <label class="btn btn-outline-info cp clear" *ngFor="let preferencial of listaPreferencial | orderBy: orderNome" >
+        <input type="radio" name="preferencial"  [value]={{preferencial.codigo}}> <i class="fab fa-accessible-icon fa-fw"></i>
       </label>
     </div>
-              <!--<span class="form-text text-muted">Please enter your full name</span>-->
+  </div>-->
+
+              <div class="col-lg-3">
+                <label class="text-left d-block">Preferencial</label>
+                <div class="btn-group btn-group-toggle" data-toggle="buttons">
+                  <label class="btn btn-outline-info cp clear" for="Cadeirante" data-toggle="popover" data-placement="top" data-trigger="hover" data-content="Cadeirante">
+                    <input type="radio" name="Preferencial" autocomplete="off" value="" tabindex="">
+                    <i class="fab fa-accessible-icon fa-fw"></i>
+                  </label>
+                  <label class="btn btn-outline-info cp clear" for="Gestante" data-toggle="popover" data-placement="top" data-trigger="hover" data-content="Gestante">
+                    <input type="radio" name="Preferencial" autocomplete="off" value="" tabindex="">
+                    <i class="fab fa-accessible-icon fa-fw"></i>
+                  </label>
+                  <label class="btn btn-outline-info cp clear" for="Idoso60" data-toggle="popover" data-placement="top" data-trigger="hover" data-content="Idoso acima de 60 anos">
+                    <input type="radio" name="Preferencial" autocomplete="off" value="" tabindex="">
+                    <i class="fab fa-accessible-icon fa-fw"></i>
+                  </label>
+                  <label class="btn btn-outline-info cp clear" for="Idoso80" data-toggle="popover" data-placement="top" data-trigger="hover" data-content="Idoso acima de 80 anos">
+                    <input type="radio" name="Preferencial" autocomplete="off" value="" tabindex="">
+                    <i class="fab fa-accessible-icon fa-fw"></i>
+                  </label>
+                </div>
+                <!--<span class="form-text text-muted">Please enter your full name</span>-->
               </div>
 
               <div class="col-lg-3">

@@ -20,7 +20,7 @@ import { PessoaProfissional } from '../../model/PessoaProfissional';
 import * as moment from 'moment';
 import { Return } from '../../model/Return';
 import * as Toastr from 'toastr';
-import { Prioridade } from '../../model/Prioridade';
+import { Preferencial } from '../../model/Preferencial';
 
 @Component({
   selector: 'app-acolhimento',
@@ -29,11 +29,11 @@ import { Prioridade } from '../../model/Prioridade';
 export class AcolhimentoComponent implements OnInit {
 
   listaEspecialidade: Array<Especialidade>;
-  listaPrioridade: Array<Prioridade>;
+  listaPreferencial: Array<Preferencial>;
   listaPessoaPaciente: Array<PessoaPaciente>;
 
   Especialidade: Especialidade;
-  Prioridade: Prioridade;
+  Preferencial: Preferencial;
   orderNome: string = 'nome';
   orderDescricao: string = 'descricao';
   Pessoa: any;
@@ -41,7 +41,8 @@ export class AcolhimentoComponent implements OnInit {
   constructor(private AcolhimentoService: AcolhimentoService,
     private pessoaService: PessoaService, private cpfService: CpfService, private router: Router) {
 
-
+    this.listaPreferencial = new Array<Preferencial>();
+    this.listaEspecialidade = new Array<Especialidade>();
   }
 
 
@@ -118,13 +119,13 @@ export class AcolhimentoComponent implements OnInit {
       console.log(`Error. ${error.message}.`);
     });
 
-    this.AcolhimentoService.BindPrioridade().subscribe(async (data: Return) => {
-      this.listaPrioridade = data.result;
+    this.AcolhimentoService.BindPreferencial().subscribe(async (data: Return) => {
+      this.listaPreferencial = data.result;
 
       
-      $(document).ready(function () { $("select[name^=Prioridade]").val($("select[name^=Prioridade] option:first").val()); });
+      $(document).ready(function () { $("select[name^=Preferencial]").val($("select[name^=Preferencial] option:first").val()); });
     }, (error: HttpErrorResponse) => {
-      Toastr.error("Falha ao carregar Prioridades na aba Informações do acolhimento");
+      Toastr.error("Falha ao carregar Preferenciais na aba Informações do acolhimento");
       console.log(`Error. ${error.message}.`);
     });
 
@@ -203,43 +204,43 @@ export class AcolhimentoComponent implements OnInit {
     acolhimento.Especialidade = this.Especialidade;
 
     if ($("label[for^=Cadeirante]").hasClass("active"))
-      acolhimento.Prioridade = this.listaPrioridade.find(x => x.nome === "DEFICIENTE FISICO");
+      acolhimento.Preferencial = this.listaPreferencial.find(x => x.nome === "DEFICIENTE FISICO");
 
     if ($("label[for^=Gestante]").hasClass("active"))
-      acolhimento.Prioridade = this.listaPrioridade.find(x => x.nome === "GESTANTE");
+      acolhimento.Preferencial = this.listaPreferencial.find(x => x.nome === "GESTANTE");
 
     if ($("label[for^=Idoso60]").hasClass("active"))
-      acolhimento.Prioridade = this.listaPrioridade.find(x => x.nome === "IDOSO 60 ANOS: PESSOA COM IDADE ENTRE 60 E 79 ANOS");
+      acolhimento.Preferencial = this.listaPreferencial.find(x => x.nome === "IDOSO 60 ANOS: PESSOA COM IDADE ENTRE 60 E 79 ANOS");
 
     if ($("label[for^=Idoso80]").hasClass("active"))
-      acolhimento.Prioridade = this.listaPrioridade.find(x => x.nome === "IDOSO 80 ANOS: PESSOA COM IDADE IGUAL OU SUPERIOR A 80 ANOS");
+      acolhimento.Preferencial = this.listaPreferencial.find(x => x.nome === "IDOSO 80 ANOS: PESSOA COM IDADE IGUAL OU SUPERIOR A 80 ANOS");
 
     if (rb.value.SV_Peso !== "")
-      acolhimento.peso = parseInt(rb.value.SV_Peso);
+      acolhimento.peso = rb.value.SV_Peso;
 
     if (rb.value.SV_Altura !== "")
-      acolhimento.altura = parseInt(rb.value.SV_Altura);
+      acolhimento.altura = rb.value.SV_Altura;
 
     if (imc !== "")
       acolhimento.imc = imc;
 
     if (rb.value.SV_Temperatura !== "")
-      acolhimento.temperatura = parseInt(rb.value.SV_Temperatura);
+      acolhimento.temperatura = rb.value.SV_Temperatura;
 
     if (rb.value.SV_PressaoArterial_Sistolica !== "")
-      acolhimento.PressaoArterialSistolica = parseInt(rb.value.SV_PressaoArterial_Sistolica);
+      acolhimento.PressaoArterialSistolica = rb.value.SV_PressaoArterial_Sistolica;
 
     if (rb.value.SV_PressaoArterial_Diastolica !== "")
-      acolhimento.PressaoArterialDiastolica = parseInt(rb.value.SV_PressaoArterial_Diastolica);
+      acolhimento.PressaoArterialDiastolica = rb.value.SV_PressaoArterial_Diastolica;
 
     if (rb.value.SV_Pulso !== "")
-      acolhimento.pulso = parseInt(rb.value.SV_Pulso);
+      acolhimento.pulso = rb.value.SV_Pulso;
 
     if (rb.value.SV_FreqResp !== "")
-      acolhimento.frequenciaRespiratoria = parseInt(rb.value.SV_FreqResp);
+      acolhimento.frequenciaRespiratoria = rb.value.SV_FreqResp;
 
     if (rb.value.SV_Saturacao !== "")
-      acolhimento.saturacao = parseInt(rb.value.SV_Saturacao);
+      acolhimento.saturacao = rb.value.SV_Saturacao;
 
     if ($("label[for^=PacienteRisco]").hasClass("active"))
       acolhimento.risco = true;
@@ -249,7 +250,7 @@ export class AcolhimentoComponent implements OnInit {
 
 
     //if (this.Pessoa === undefined)
-      acolhimento.Pessoa = pessoa;
+      acolhimento.PessoaPaciente = pessoa;
     //else {
 
     //  pessoa.pessoaId = this.Pessoa.pessoaId;
