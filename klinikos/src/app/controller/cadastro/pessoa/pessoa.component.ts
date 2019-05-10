@@ -83,6 +83,7 @@ export class PessoaComponent implements OnInit {
   Escolaridade: Escolaridade;
   SituacaoFamiliarConjugal: SituacaoFamiliarConjugal;
   foto: string;
+  stream: any;
 
   @ViewChild("video")
   public video: ElementRef;
@@ -298,23 +299,6 @@ export class PessoaComponent implements OnInit {
   }
   //end:: Carregamento Básico da tela
 
-  public ngAfterViewInit() {
-    //    if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
-
-    //      navigator.mediaDevices.getUserMedia({ video: true }).then(stream => {
-
-
-    //        //$("#video").prop("src", window.URL.createObjectURL(stream));
-    //        //$("#video").play();
-
-    //        this.video.nativeElement.srcObject = stream;
-    //          //window.URL.createObjectURL(stream);
-    //        this.video.nativeElement.play();
-    //      }).catch(e => {
-    //    console.log(e);
-    //});;
-    //    }
-  }
 
 
   onHabilitarWebCam() {
@@ -324,13 +308,9 @@ export class PessoaComponent implements OnInit {
 
       navigator.mediaDevices.getUserMedia({ video: true }).then(stream => {
 
-      
-
+        this.stream = stream;
         this.video.nativeElement.srcObject = stream;
         this.video.nativeElement.play();
-
-
-
 
       }).catch(e => {
         console.log(e);
@@ -342,7 +322,10 @@ export class PessoaComponent implements OnInit {
   onPararTransmissaoWebcam() {
 
     this.video.nativeElement.srcObject = null;
-    this.video.nativeElement.stop();
+    this.video.nativeElement.pause();
+
+    var track = this.stream.getTracks()[0];
+    track.stop();
 
   }
 
