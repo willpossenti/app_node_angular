@@ -100,6 +100,7 @@
     "popper.js": "^1.14.7",
     "prismjs": "^1.8.4",
     "raphael": "^2.2.7",
+    "recordrtc": "^5.5.4",
     "remove-accents": "^0.4.2",
     "ribble": "^1.0.4",
     "rxjs": "^6.3.3",
