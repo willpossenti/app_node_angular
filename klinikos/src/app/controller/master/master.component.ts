@@ -108,13 +108,13 @@ export class MasterComponent implements OnInit {
 
   onConsultaNome() {
 
-    var dp_nomecompleto = $("input[name^=DP_NomeCompleto_PesquisaGeral]").val().trim().toUpperCase();
+    var dp_nomecompletoPesquisaGeral = $("input[name^=DP_NomeCompleto_PesquisaGeral]").val().trim().toUpperCase();
 
     $('#divPesquisaNome').addClass('show');
 
+    alert($("input[name ^= DP_NomeCompleto_PesquisaGeral]").val());
 
-
-    this.pessoaService.ConsultaNomeCompletoPaciente(dp_nomecompleto)
+    this.pessoaService.ConsultaNomeCompletoPaciente(dp_nomecompletoPesquisaGeral)
       .subscribe(data => {
 
         this.listaPessoaPaciente = data.result;

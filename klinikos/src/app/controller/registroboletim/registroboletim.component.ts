@@ -18,6 +18,7 @@ import { PessoaProfissional } from '../../model/PessoaProfissional';
 import * as moment from 'moment';
 import { Return } from '../../model/Return';
 import * as Toastr from 'toastr';
+import { AuthGuard } from '../../controller/auth/auth.guard';
 
 @Component({
   selector: 'app-registroboletim',
@@ -39,7 +40,7 @@ export class RegistroBoletimComponent implements OnInit {
   Pessoa: any;
 
   constructor(private registroBoletimService: RegistroBoletimService,
-    private pessoaService: PessoaService, private cpfService: CpfService, private router: Router) {
+    private pessoaService: PessoaService, private cpfService: CpfService, private router: Router, private auth: AuthGuard) {
 
 
   }
@@ -136,7 +137,8 @@ export class RegistroBoletimComponent implements OnInit {
     });
 
 
-
+    if (this.auth.canActivate())
+      this.auth.onSessaoAcrescimoTempo();
 
 
     this.registroBoletimService.BindEspecialidade().subscribe(async (data: Return) => {
@@ -144,8 +146,7 @@ export class RegistroBoletimComponent implements OnInit {
 
       $(document).ready(function () { $("select[name^=IB_Especialidade]").val($("select[name^=IB_Especialidade] option:first").val()); });
     }, (error: HttpErrorResponse) => {
-      Toastr.error("Falha ao carregar Especialidades na aba Informações do boletim");
-      console.log(`Error. ${error.message}.`);
+        this.auth.onSessaoInvalida(error);
     });
 
     this.registroBoletimService.BindTipoChegada().subscribe(async (data: Return) => {
@@ -153,8 +154,7 @@ export class RegistroBoletimComponent implements OnInit {
 
       $(document).ready(function () { $("select[name^=IB_ComoChegou]").val($("select[name^=IB_ComoChegou] option:first").val()); });
     }, (error: HttpErrorResponse) => {
-      Toastr.error("Falha ao carregar tipos de chegada na aba Informações do boletim");
-      console.log(`Error. ${error.message}.`);
+        this.auth.onSessaoInvalida(error);
     });
 
    
@@ -179,6 +179,9 @@ export class RegistroBoletimComponent implements OnInit {
   //begin:: validacao e consulta de CPF
   onConsultaCpf(e) {
 
+    if (this.auth.canActivate())
+      this.auth.onSessaoAcrescimoTempo();
+
     var cpf = e.target.value;
 
     if (cpf !== '___.___.___-__') {
@@ -199,8 +202,7 @@ export class RegistroBoletimComponent implements OnInit {
             this.CarregaPessoa(paciente);
           }
         }, (error: HttpErrorResponse) => {
-          Toastr.error("Falha ao carregar Raças na aba Dados Pessoais");
-          console.log(`Error. ${error.message}.`);
+            this.auth.onSessaoInvalida(error);
         });
       }
     }
@@ -246,6 +248,9 @@ export class RegistroBoletimComponent implements OnInit {
   //end:: carregamento padrão de campos para a tela
 
   public onSalvarRegistroBoletim(rb: NgForm) {
+
+    if (this.auth.canActivate())
+      this.auth.onSessaoAcrescimoTempo();
 
     $("#k_scrolltop").trigger("click");
 
@@ -340,8 +345,7 @@ export class RegistroBoletimComponent implements OnInit {
         registroboletim.Pessoa = pessoa;
 
       }, (error: HttpErrorResponse) => {
-        Toastr.error("Falha ao comunicar com API");
-        console.log(`Error. ${error.message}.`);
+          this.auth.onSessaoInvalida(error);
       },
       );
 
@@ -355,8 +359,7 @@ export class RegistroBoletimComponent implements OnInit {
       this.LimparCampos(rb);
 
     }, (error: HttpErrorResponse) => {
-      Toastr.error("Falha ao comunicar com API");
-      console.log(`Error. ${error.message}.`);
+        this.auth.onSessaoInvalida(error);
     },
     );
 
@@ -364,6 +367,9 @@ export class RegistroBoletimComponent implements OnInit {
 
   //begin:: Consulta o nome do paciente/ Consulta e monta um grid com as opções
   onConsultaNomeCompleto() {
+
+    if (this.auth.canActivate())
+      this.auth.onSessaoAcrescimoTempo();
 
     var dp_nomecompleto = $("input[name^=IB_NomePaciente]").val().trim().toUpperCase();
 
@@ -376,7 +382,7 @@ export class RegistroBoletimComponent implements OnInit {
 
 
       }, (error: HttpErrorResponse) => {
-        console.log(`Error. ${error.message}.`);
+          this.auth.onSessaoInvalida(error);
       });
 
 
@@ -387,8 +393,7 @@ export class RegistroBoletimComponent implements OnInit {
         this.listaPessoaPaciente = data.result;
 
       }, (error: HttpErrorResponse) => {
-        Toastr.error("Falha ao consultar cep na aba endereço");
-        console.log(`Error. ${error.message}.`);
+          this.auth.onSessaoInvalida(error);
       });
 
 
@@ -399,6 +404,9 @@ export class RegistroBoletimComponent implements OnInit {
 
   //begin:: Consulta o nome social do paciente/ Consulta e monta um grid com as opções
   onConsultaNomeSocial() {
+
+    if (this.auth.canActivate())
+      this.auth.onSessaoAcrescimoTempo();
 
     var dp_nomesocial = $("input[name^=IB_NomeSocial]").val().trim().toUpperCase();
 
@@ -412,7 +420,7 @@ export class RegistroBoletimComponent implements OnInit {
 
 
       }, (error: HttpErrorResponse) => {
-        console.log(`Error. ${error.message}.`);
+          this.auth.onSessaoInvalida(error);
       });
 
 
@@ -423,8 +431,7 @@ export class RegistroBoletimComponent implements OnInit {
         this.listaPessoaPaciente = data.result;
 
       }, (error: HttpErrorResponse) => {
-        Toastr.error("Falha ao consultar cep na aba endereço");
-        console.log(`Error. ${error.message}.`);
+          this.auth.onSessaoInvalida(error);
       });
 
     console.log(this.listaPessoaProfissional);
@@ -434,6 +441,9 @@ export class RegistroBoletimComponent implements OnInit {
 
   //begin:: Carregamento do Profissional pela Busca
   onSelectedProfissional(profissional: PessoaProfissional) {
+
+    if (this.auth.canActivate())
+      this.auth.onSessaoAcrescimoTempo();
 
     Toastr.info("Profissional carregado");
     this.CarregaPessoa(profissional);
@@ -445,6 +455,9 @@ export class RegistroBoletimComponent implements OnInit {
 
   //begin:: Carregamento do Paciente pela Busca
   onSelectedPaciente(paciente: PessoaPaciente) {
+
+    if (this.auth.canActivate())
+      this.auth.onSessaoAcrescimoTempo();
 
     Toastr.info("Paciente carregado");
     this.CarregaPessoa(paciente);

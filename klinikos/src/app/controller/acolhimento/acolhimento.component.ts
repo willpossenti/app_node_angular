@@ -21,6 +21,7 @@ import * as moment from 'moment';
 import { Return } from '../../model/Return';
 import * as Toastr from 'toastr';
 import { Preferencial } from '../../model/Preferencial';
+import { AuthGuard } from '../../controller/auth/auth.guard';
 
 @Component({
   selector: 'app-acolhimento',
@@ -39,10 +40,28 @@ export class AcolhimentoComponent implements OnInit {
   Pessoa: any;
 
   constructor(private AcolhimentoService: AcolhimentoService,
-    private pessoaService: PessoaService, private cpfService: CpfService, private router: Router) {
+    private pessoaService: PessoaService, private cpfService: CpfService, private router: Router, private auth: AuthGuard) {
 
     this.listaPreferencial = new Array<Preferencial>();
     this.listaEspecialidade = new Array<Especialidade>();
+
+    Toastr.options = {
+      "closeButton": true,
+      "debug": false,
+      "newestOnTop": false,
+      "progressBar": false,
+      "positionClass": "toast-top-right",
+      "preventDuplicates": false,
+      "onclick": null,
+      "showDuration": "300",
+      "hideDuration": "1000",
+      "timeOut": "5000",
+      "extendedTimeOut": "1000",
+      "showEasing": "swing",
+      "hideEasing": "linear",
+      "showMethod": "fadeIn",
+      "hideMethod": "fadeOut"
+    };
   }
 
 
@@ -109,14 +128,16 @@ export class AcolhimentoComponent implements OnInit {
 
     console.log(localStorage['token_accessToken']);
 
+    if (this.auth.canActivate())
+      this.auth.onSessaoAcrescimoTempo();
+
 
     this.AcolhimentoService.BindEspecialidade().subscribe(async (data: Return) => {
       this.listaEspecialidade = data.result;
 
       $(document).ready(function () { $("select[name^=Especialidade]").val($("select[name^=Especialidade] option:first").val()); });
     }, (error: HttpErrorResponse) => {
-      Toastr.error("Falha ao carregar Especialidades na aba Informações do acolhimento");
-      console.log(`Error. ${error.message}.`);
+        this.auth.onSessaoInvalida(error);
     });
 
     this.AcolhimentoService.BindPreferencial().subscribe(async (data: Return) => {
@@ -125,62 +146,34 @@ export class AcolhimentoComponent implements OnInit {
       
       $(document).ready(function () { $("select[name^=Preferencial]").val($("select[name^=Preferencial] option:first").val()); });
     }, (error: HttpErrorResponse) => {
-      Toastr.error("Falha ao carregar Preferenciais na aba Informações do acolhimento");
-      console.log(`Error. ${error.message}.`);
+        this.auth.onSessaoInvalida(error);
     });
 
 
   }
 
 
-  //begin:: validacao e consulta de CPF
-  onConsultaCpf(e) {
 
-    var cpf = e.target.value;
-
-    if (cpf !== '___.___.___-__') {
-
-      var verifica = this.cpfService.validarCPF(cpf);
-
-      if (verifica === false) {
-        $('#msg_cpf').removeClass('oculta');
-      } else {
-        $('#msg_cpf').addClass('oculta');
-
-        var cpf = cpf.replace('.', '').replace('.', '').replace('.', '').replace('-', '');
-
-        this.pessoaService.ConsultaCpfPaciente(cpf).subscribe(data => {
-          if (data.statusCode == "302") {
-            Toastr.info("Paciente encontrado");
-            var paciente = data.result;
-            this.CarregaPessoa(paciente);
-          }
-        }, (error: HttpErrorResponse) => {
-          Toastr.error("Falha ao carregar Cpf na aba acolhimento");
-          console.log(`Error. ${error.message}.`);
-        });
-      }
-    }
-
-  }
-  //end:: validacao e consulta de CPF
 
   //begin:: carregamento padrão de campos para a tela
   CarregaPessoa(pessoa: any) {
 
     this.Pessoa = pessoa;
 
-    if (pessoa.cpf !== "")
-      $("input[name^=P_CPF]").val([pessoa.cpf.slice(0, 3)] + "." + [pessoa.cpf.slice(3, 6)] + "." + [pessoa.cpf.slice(6, 9)] + "-" + [pessoa.cpf.slice(9, 11)]);
+    if (pessoa.nomeCompleto !== "")
+      $("input[name^=IdentificacaoPacienteAcolhimento]").val(pessoa.nomeCompleto);
 
-
-    $("input[name^=NomeDoPaciente]").val(pessoa.nomeCompleto);
+    if (pessoa.nomeSocial !== "")
+      $("input[name^=NomeSocial]").val(pessoa.nomeSocial);
 
 
   }
   //end:: carregamento padrão de campos para a tela
 
-  public onSalvarAcolhimento(rb: NgForm) {
+  public onSalvarAcolhimento(a: NgForm) {
+
+    if (this.auth.canActivate())
+      this.auth.onSessaoAcrescimoTempo();
 
     $("#k_scrolltop").trigger("click");
 
@@ -193,12 +186,12 @@ export class AcolhimentoComponent implements OnInit {
 
     var imc = $("input[name^=SV_IMC]").val();
 
-    if (rb.value.IdentificacaoPaciente !== "")
-      pessoa.nomeCompleto = rb.value.IdentificacaoPaciente.toUpperCase();
+    if (a.value.IdentificacaoPaciente !== "")
+      pessoa.nomeCompleto = a.value.IdentificacaoPaciente.toUpperCase();
 
 
-    if (rb.value.NomeSocial !== "")
-      pessoa.nomeSocial = rb.value.NomeSocial.toUpperCase();
+    if (a.value.NomeSocial !== "")
+      pessoa.nomeSocial = a.value.NomeSocial.toUpperCase();
 
 
     acolhimento.Especialidade = this.Especialidade;
@@ -215,69 +208,41 @@ export class AcolhimentoComponent implements OnInit {
     if ($("label[for^=Idoso80]").hasClass("active"))
       acolhimento.Preferencial = this.listaPreferencial.find(x => x.nome === "IDOSO 80 ANOS: PESSOA COM IDADE IGUAL OU SUPERIOR A 80 ANOS");
 
-    if (rb.value.SV_Peso !== "")
-      acolhimento.peso = rb.value.SV_Peso;
+    if (a.value.SV_Peso !== "")
+      acolhimento.peso = a.value.SV_Peso + " kg";
 
-    if (rb.value.SV_Altura !== "")
-      acolhimento.altura = rb.value.SV_Altura;
+    if (a.value.SV_Altura !== "")
+      acolhimento.altura = a.value.SV_Altura + " cm";
 
     if (imc !== "")
       acolhimento.imc = imc;
 
-    if (rb.value.SV_Temperatura !== "")
-      acolhimento.temperatura = rb.value.SV_Temperatura;
+    if (a.value.SV_Temperatura !== "")
+      acolhimento.temperatura = a.value.SV_Temperatura + " °C";
 
-    if (rb.value.SV_PressaoArterial_Sistolica !== "")
-      acolhimento.PressaoArterialSistolica = rb.value.SV_PressaoArterial_Sistolica;
+    if (a.value.SV_PressaoArterial_Sistolica !== "")
+      acolhimento.PressaoArterialSistolica = a.value.SV_PressaoArterial_Sistolica + " mmHg";
 
-    if (rb.value.SV_PressaoArterial_Diastolica !== "")
-      acolhimento.PressaoArterialDiastolica = rb.value.SV_PressaoArterial_Diastolica;
+    if (a.value.SV_PressaoArterial_Diastolica !== "")
+      acolhimento.PressaoArterialDiastolica = a.value.SV_PressaoArterial_Diastolica + " mmHg";
 
-    if (rb.value.SV_Pulso !== "")
-      acolhimento.pulso = rb.value.SV_Pulso;
+    if (a.value.SV_Pulso !== "")
+      acolhimento.pulso = a.value.SV_Pulso + " bpm";
 
-    if (rb.value.SV_FreqResp !== "")
-      acolhimento.frequenciaRespiratoria = rb.value.SV_FreqResp;
+    if (a.value.SV_FreqResp !== "")
+      acolhimento.frequenciaRespiratoria = a.value.SV_FreqResp + " rpm";
 
-    if (rb.value.SV_Saturacao !== "")
-      acolhimento.saturacao = rb.value.SV_Saturacao;
+    if (a.value.SV_Saturacao !== "")
+      acolhimento.saturacao = a.value.SV_Saturacao + " %";
 
     if ($("label[for^=PacienteRisco]").hasClass("active"))
       acolhimento.risco = true;
     else
       acolhimento.risco = false;
 
-
-
-    //if (this.Pessoa === undefined)
       acolhimento.PessoaPaciente = pessoa;
-    //else {
-
-    //  pessoa.pessoaId = this.Pessoa.pessoaId;
-
-    //  this.AcolhimentoService.AlterarRegistroPessoa(pessoa).subscribe(data => {
-
-    //    acolhimento.Pessoa = pessoa;
-
-    //  }, (error: HttpErrorResponse) => {
-    //    Toastr.error("Falha ao comunicar com API");
-    //    console.log(`Error. ${error.message}.`);
-    //  },
-    //  );
 
 
-
-      //this.pessoaService.SalvarPessoaPaciente(pessoa).subscribe(data => {
-
-      //  acolhimento.Pessoa = pessoa;
-
-      //}, (error: HttpErrorResponse) => {
-      //  Toastr.error("Falha ao comunicar com API");
-      //  console.log(`Error. ${error.message}.`);
-      //},
-      //);
-
-    //}
     console.log(JSON.stringify(acolhimento));
 
     console.log(localStorage['token_accessToken']);
@@ -285,81 +250,87 @@ export class AcolhimentoComponent implements OnInit {
 
     this.AcolhimentoService.SalvarAcolhimento(acolhimento).subscribe(data => {
 
+
       Toastr.success("Acolhimento salvo com sucesso");
 
+      this.LimparCampos(a);
+
     }, (error: HttpErrorResponse) => {
-      Toastr.error("Falha ao comunicar com API");
-      console.log(`Error. ${error.message}.`);
+        this.auth.onSessaoInvalida(error);
     },
     );
 
   }
 
-  //begin:: Consulta o nome do paciente/ Consulta e monta um grid com as opções
-  onConsultaNomeCompleto() {
-
-    var dp_nomecompleto = $("input[name^=NomeDoPaciente]").val().trim().toUpperCase();
-
-    $('#divPesquisaNomeCompleto').addClass('show');
-
-
-
-    this.pessoaService.ConsultaNomeCompletoPaciente(dp_nomecompleto)
-      .subscribe(data => {
-
-        this.listaPessoaPaciente = data.result;
-
-      }, (error: HttpErrorResponse) => {
-        Toastr.error("Falha ao consultar o come completo do paciente");
-        console.log(`Error. ${error.message}.`);
-      });
-
-
-
-
-  }
-  //end:: Consulta o nome do paciente
-
-  //begin:: Consulta o nome social do paciente/ Consulta e monta um grid com as opções
-  onConsultaNomeSocial() {
-
-    var dp_nomesocial = $("input[name^=NomeSocial]").val().trim().toUpperCase();
-
-    $('#divPesquisaNomeSocial').addClass('show');
-    $('#divPesquisaNomeCompleto').removeClass('show');
-
-    this.pessoaService.ConsultaNomeSocialPaciente(dp_nomesocial)
-      .subscribe(data => {
-
-        this.listaPessoaPaciente = data.result;
-
-      }, (error: HttpErrorResponse) => {
-        Toastr.error("Falha ao consultar o nome social");
-        console.log(`Error. ${error.message}.`);
-      });
-    console.log(this.listaPessoaPaciente);
-  }
-  //end:: Consulta o nome do paciente
 
   //begin:: Carregamento do Paciente pela Busca
   onSelectedPaciente(paciente: PessoaPaciente) {
 
+    if (this.auth.canActivate())
+      this.auth.onSessaoAcrescimoTempo();
+
     Toastr.info("Paciente carregado");
     this.CarregaPessoa(paciente);
 
-    $("#divPesquisaNomeCompleto").removeClass('show');
-    $("#divPesquisaNomeSocial").removeClass('show');
+    $("#divPesquisaNomeAcolhimento").removeClass('show');
+
   }
   //end::  Carregamento do Paciente pela Busca
 
+  //begin:: Fecha as pesquisas
+  onFechaPesquisa() {
+
+    if ($("#divPesquisaNomeAcolhimento").hasClass('show'))
+      $("#divPesquisaNomeAcolhimento").removeClass('show');
+
+
+  }
+  //end:: Fecha as pesquisas
+
 
   //begin:: Limpa Campos/ mensagens responsáveis pelos avisos com integrações externas
-  public LimparCampos(rb: NgForm) {
+  public LimparCampos(a: NgForm) {
 
-
+    $("#btn_formclear").trigger("click");
     this.Pessoa = undefined;
+    a.value.IdentificacaoPaciente = "";
+    a.value.NomeSocial = "";
+    a.value.SV_Peso = "";
+    a.value.SV_Altura = "";
+    a.value.SV_Temperatura = "";
+    a.value.SV_PressaoArterial_Sistolica = "";
+    a.value.SV_PressaoArterial_Diastolica = "";
+    a.value.SV_Pulso = "";
+    a.value.SV_FreqResp = "";
+    a.value.SV_Saturacao = "";
   }
   //end:: Limpa Campos
+
+
+  onConsultaNome() {
+
+    if (this.auth.canActivate())
+      this.auth.onSessaoAcrescimoTempo();
+
+    var identificacaoPaciente = $("input[name^=IdentificacaoPacienteAcolhimento]").val().trim().toUpperCase();
+
+    $('#divPesquisaNomeAcolhimento').addClass('show');
+
+
+
+    this.AcolhimentoService.ConsultaPacienteAcolhimento(identificacaoPaciente)
+      .subscribe(data => {
+
+        this.listaPessoaPaciente = data.result;
+
+      }, (error: HttpErrorResponse) => {
+          this.auth.onSessaoInvalida(error);
+      });
+
+
+  }
+
+
 
 
 }

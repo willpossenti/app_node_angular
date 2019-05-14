@@ -23,12 +23,47 @@
             <div class="form-group row">
               <div class="col-lg-6">
                 <label>Nome do Paciente <span class="fld-obg" title="Obrigatório">*</span></label>
-                <input type="text" class="form-control maisc" name="IdentificacaoPaciente" maxlength="140" placeholder="CPF, CNS, Nome ou Nome Social" value="" tabindex="1" ngModel>
+                <input type="text" class="form-control maisc" name="IdentificacaoPacienteAcolhimento" maxlength="140" placeholder="CPF, CNS, Nome ou Nome Social" value="" tabindex="1" (keyup)="onConsultaNome()">
                 <!--<span class="form-text text-muted">Please enter your full name</span>-->
+
+
+
+                <div class="dropdown-menu dropdown-menu-fit dropdown-menu-right dropdown-menu-top-unround dropdown-menu-anim dropdown-menu-lg" x-placement="bottom-end" style="position: absolute; left: 10px;  width: 95%; will-change: transform; top: 65px;" id="divPesquisaNomeAcolhimento">
+
+                  <div class="k-quick-search k-quick-search--dropdown k-quick-search--result-compact k-quick-search--has-result" id="k_quick_search_dropdown">
+
+                    <div class="k-quick-search__wrapper k-scroll ps ps--active-y m-0 p-0" data-scroll="true" data-height="325" data-mobile-height="200" style="overflow: hidden; height: 325px;">
+
+                      <!--begin::k-quick-search__result-->
+                      <div class="k-quick-search__result">
+
+
+                        <div class="k-quick-search__category mt-2 border-bottom text-primary">Pacientes</div>
+                        <div class="k-quick-search__section p-0 mb-1" *ngFor="let paciente of listaPessoaPaciente;">
+                          <div class="k-quick-search__item">
+                            <div class="k-quick-search__item-img k-quick-search__item-img--file">
+                              <i class="fa fa-user ml-2" style="font-size:1.5em; color:#999;"></i>
+                            </div>
+                            <div class="k-quick-search__item-wrapper">
+                              <a class="k-quick-search__item-title" style="cursor:pointer;" (click)="onSelectedPaciente(paciente)">
+                                {{paciente.nomeCompleto}}  - {{paciente.nascimento | date: 'dd/MM/yyyy'}}
+                              </a>
+                              <div class="k-quick-search__item-desc">
+                                {{paciente.nomeMae}}
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+
               </div>
               <div class="col-lg-6">
                 <label>Nome Social</label>
-                <input type="text" class="form-control maisc" name="NomeSocial" maxlength="140" value="" tabindex="2" ngModel>
+                <input type="text" class="form-control maisc" name="NomeSocial" maxlength="140" value="" tabindex="2" (focus)="onFechaPesquisa()" ngModel>
                 <!--<span class="form-text text-muted">Please enter your full name</span>-->
               </div>
             </div>

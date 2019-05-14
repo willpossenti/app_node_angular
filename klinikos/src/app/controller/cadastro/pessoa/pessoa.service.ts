@@ -32,7 +32,12 @@ export class PessoaService {
     this.baseUrl = 'https://localhost:44307/api/';
     this.cepUrl = 'https://viacep.com.br/ws/';
 
+
+
+
   }
+
+
 
 
   BindRaca() { return this.http.get<Return>(`${this.baseUrl}raca`, this.httpOptions); }
@@ -80,9 +85,12 @@ export class PessoaService {
     return this.http.get<Return>(`${this.baseUrl}pessoa/pessoapaciente/consultapis/` + pis, this.httpOptions);
   }
   ConsultaNomeCompletoPaciente(nome: string) {
+
     return this.http.get<Return>(`${this.baseUrl}pessoa/pessoapaciente/consultanome/` + nome, this.httpOptions);
   }
   ConsultaNomeCompletoProfissional(nome: string) {
+
+    
     return this.http.get<Return>(`${this.baseUrl}pessoa/pessoaprofissional/consultanome/` + nome, this.httpOptions);
   }
   ConsultaNomeSocialPaciente(nome: string) {

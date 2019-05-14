@@ -29,6 +29,7 @@ import { NgForm } from '@angular/forms';
 import { ClassificacaoRisco } from '../../model/ClassificacaoRisco';
 import { ClassificacaoRiscoAlergia } from '../../model/ClassificacaoRiscoAlergia';
 import * as swal from '../../../assets/vendors/general/sweetalert2/dist/sweetalert2.js';
+import { AuthGuard } from '../../controller/auth/auth.guard';
 
 
 @Component({
@@ -84,7 +85,7 @@ export class ClassificacaoRiscoComponent implements OnInit {
   orderNome: string = 'nome';
   orderVariavel: string = 'variavel';
 
-  constructor(private classificacaoriscoservice: ClassificaoRiscoService, private pessoaService: PessoaService) {
+  constructor(private classificacaoriscoservice: ClassificaoRiscoService, private pessoaService: PessoaService, private auth: AuthGuard) {
     this.listaClassificacaoRiscoAlergia = new Array<ClassificacaoRiscoAlergia>();
   }
 
@@ -99,6 +100,9 @@ export class ClassificacaoRiscoComponent implements OnInit {
 
     });
 
+    if (this.auth.canActivate())
+      this.auth.onSessaoAcrescimoTempo();
+
     this.classificacaoriscoservice.BindCausaExterna().subscribe(async (data: Return) => {
       this.listaCausasExterna = data.result;
 
@@ -107,8 +111,7 @@ export class ClassificacaoRiscoComponent implements OnInit {
 
 
     }, (error: HttpErrorResponse) => {
-      Toastr.error("Falha ao carregar Raças na aba Classificação de Risco");
-      console.log(`Error. ${error.message}.`);
+        this.auth.onSessaoInvalida(error);
     });
 
     this.classificacaoriscoservice.BindEscalaDor().subscribe(async (data: Return) => {
@@ -117,8 +120,7 @@ export class ClassificacaoRiscoComponent implements OnInit {
 
 
     }, (error: HttpErrorResponse) => {
-      Toastr.error("Falha ao carregar Escala de Dor na aba Classificação de Risco");
-      console.log(`Error. ${error.message}.`);
+        this.auth.onSessaoInvalida(error);
     });
 
     this.classificacaoriscoservice.BindNivelConsciencia().subscribe(async (data: Return) => {
@@ -126,8 +128,7 @@ export class ClassificacaoRiscoComponent implements OnInit {
 
 
     }, (error: HttpErrorResponse) => {
-      Toastr.error("Falha ao carregar Nível de Consciência na aba Classificação de Risco");
-      console.log(`Error. ${error.message}.`);
+        this.auth.onSessaoInvalida(error);
     });
 
 
@@ -136,8 +137,7 @@ export class ClassificacaoRiscoComponent implements OnInit {
       $(document).ready(function () { $("select[name^=TipoChegada]").val($("select[name^=TipoChegada] option:first").val()); });
 
     }, (error: HttpErrorResponse) => {
-      Toastr.error("Falha ao carregar Tipo de Chegada na aba Classificação de Risco");
-      console.log(`Error. ${error.message}.`);
+        this.auth.onSessaoInvalida(error);
     });
 
 
@@ -147,8 +147,7 @@ export class ClassificacaoRiscoComponent implements OnInit {
       $(document).ready(function () { $("select[name^=Especialidade]").val($("select[name^=Especialidade] option:first").val()); });
 
     }, (error: HttpErrorResponse) => {
-      Toastr.error("Falha ao carregar Especialidade na aba Classificação de Risco");
-      console.log(`Error. ${error.message}.`);
+        this.auth.onSessaoInvalida(error);
     });
 
 
@@ -161,8 +160,7 @@ export class ClassificacaoRiscoComponent implements OnInit {
       $(document).ready(function () { $("select[name^=AberturaOcular]").val($("select[name^=AberturaOcular] option:first").val()); });
 
     }, (error: HttpErrorResponse) => {
-      Toastr.error("Falha ao carregar Abertura Ocular na aba Alergia");
-      console.log(`Error. ${error.message}.`);
+        this.auth.onSessaoInvalida(error);
     });
 
     this.classificacaoriscoservice.BindRespostaVerbal().subscribe(async (data: Return) => {
@@ -170,8 +168,7 @@ export class ClassificacaoRiscoComponent implements OnInit {
       $(document).ready(function () { $("select[name^=RespostaVerbal]").val($("select[name^=RespostaVerbal] option:first").val()); });
 
     }, (error: HttpErrorResponse) => {
-      Toastr.error("Falha ao carregar Resposta Verbal na aba Escala de Glasgow");
-      console.log(`Error. ${error.message}.`);
+        this.auth.onSessaoInvalida(error);
     });
 
     this.classificacaoriscoservice.BindRespostaVerbal().subscribe(async (data: Return) => {
@@ -179,8 +176,7 @@ export class ClassificacaoRiscoComponent implements OnInit {
       $(document).ready(function () { $("select[name^=RespostaVerbal]").val($("select[name^=RespostaVerbal] option:first").val()); });
 
     }, (error: HttpErrorResponse) => {
-      Toastr.error("Falha ao carregar Resposta Verbal na aba Escala de Glasgow");
-      console.log(`Error. ${error.message}.`);
+        this.auth.onSessaoInvalida(error);
     });
 
 
@@ -189,8 +185,7 @@ export class ClassificacaoRiscoComponent implements OnInit {
       $(document).ready(function () { $("select[name^=RespostaMotora]").val($("select[name^=RespostaMotora] option:first").val()); });
 
     }, (error: HttpErrorResponse) => {
-      Toastr.error("Falha ao carregar Resposta Motora na aba Escala de Glasgow");
-      console.log(`Error. ${error.message}.`);
+        this.auth.onSessaoInvalida(error);
     });
 
     this.classificacaoriscoservice.BindTipoOcorrencia().subscribe(async (data: Return) => {
@@ -199,8 +194,7 @@ export class ClassificacaoRiscoComponent implements OnInit {
 
       $(document).ready(function () { $("select[name^=DO_TipoOcorrencia]").val($("select[name^=DO_TipoOcorrencia] option:first").val()); });
     }, (error: HttpErrorResponse) => {
-      Toastr.error("Falha ao carregar tipos de chegada na aba Informações do boletim");
-      console.log(`Error. ${error.message}.`);
+        this.auth.onSessaoInvalida(error);
     });
 
     this.pessoaService.BindEstado().subscribe(async (data: Return) => {
@@ -208,16 +202,14 @@ export class ClassificacaoRiscoComponent implements OnInit {
 
       $(document).ready(function () { $("select[name^=DP_Endereco_Estado]").val($("select[name^=DP_Endereco_Estado] option:first").val()); });
     }, (error: HttpErrorResponse) => {
-      Toastr.error("Falha ao carregar os estados na aba Informações do boletim");
-      console.log(`Error. ${error.message}.`);
+        this.auth.onSessaoInvalida(error);
     });
 
     this.classificacaoriscoservice.BindRisco().subscribe(async (data: Return) => {
       this.listaRisco = data.result;
 
     }, (error: HttpErrorResponse) => {
-      Toastr.error("Falha ao carregar os estados na aba Informações do boletim");
-      console.log(`Error. ${error.message}.`);
+        this.auth.onSessaoInvalida(error);
     });
   }
 
@@ -225,6 +217,9 @@ export class ClassificacaoRiscoComponent implements OnInit {
 
 
   onPossuiAlergia() {
+
+    if (this.auth.canActivate())
+      this.auth.onSessaoAcrescimoTempo();
 
     if (this.PossuiAlergia.id == 0) {
 
@@ -234,8 +229,7 @@ export class ClassificacaoRiscoComponent implements OnInit {
         $(document).ready(function () { $("select[name^=TipoAlergia]").val($("select[name^=TipoAlergia] option:first").val()); });
 
       }, (error: HttpErrorResponse) => {
-        Toastr.error("Falha ao carregar Tipo da Alergia na aba Alergia");
-        console.log(`Error. ${error.message}.`);
+          this.auth.onSessaoInvalida(error);
       });
 
       this.classificacaoriscoservice.BindAlergia().subscribe(async (data: Return) => {
@@ -243,8 +237,7 @@ export class ClassificacaoRiscoComponent implements OnInit {
         $(document).ready(function () { $("select[name^=Alergia]").val($("select[name^=Alergia] option:first").val()); });
 
       }, (error: HttpErrorResponse) => {
-        Toastr.error("Falha ao carregar Alergia na aba Alergia");
-        console.log(`Error. ${error.message}.`);
+          this.auth.onSessaoInvalida(error);
       });
 
 
@@ -253,8 +246,7 @@ export class ClassificacaoRiscoComponent implements OnInit {
         $(document).ready(function () { $("select[name^=LocalizacaoAlergia]").val($("select[name^=LocalizacaoAlergia] option:first").val()); });
 
       }, (error: HttpErrorResponse) => {
-        Toastr.error("Falha ao carregar Localização Alergia na aba Alergia");
-        console.log(`Error. ${error.message}.`);
+          this.auth.onSessaoInvalida(error);
       });
 
       this.classificacaoriscoservice.BindReacaoAlergia().subscribe(async (data: Return) => {
@@ -262,8 +254,7 @@ export class ClassificacaoRiscoComponent implements OnInit {
         $(document).ready(function () { $("select[name^=ReacaoAlergia]").val($("select[name^=ReacaoAlergia] option:first").val()); });
 
       }, (error: HttpErrorResponse) => {
-        Toastr.error("Falha ao carregar Alergia na aba Alergia");
-        console.log(`Error. ${error.message}.`);
+          this.auth.onSessaoInvalida(error);
       });
 
       this.classificacaoriscoservice.BindSeveridade().subscribe(async (data: Return) => {
@@ -271,8 +262,7 @@ export class ClassificacaoRiscoComponent implements OnInit {
         $(document).ready(function () { $("select[name^=SeveridadeAlergia]").val($("select[name^=SeveridadeAlergia] option:first").val()); });
 
       }, (error: HttpErrorResponse) => {
-        Toastr.error("Falha ao carregar Severidade na aba Alergia");
-        console.log(`Error. ${error.message}.`);
+          this.auth.onSessaoInvalida(error);
       });
 
 
@@ -293,6 +283,9 @@ export class ClassificacaoRiscoComponent implements OnInit {
 
   //begin:: Consulta Cep / Consulta tanto o CEP, quanto o logradouro e atribui aos campos correspondentes
   onBuscaCep() {
+
+    if (this.auth.canActivate())
+      this.auth.onSessaoAcrescimoTempo();
 
     var dp_cep = $("input[name^=DO_CEP]").val().replace('-', '');
     var dp_logradouro = $.trim($("input[name^=DO_Logradouro]").val());
@@ -338,14 +331,12 @@ export class ClassificacaoRiscoComponent implements OnInit {
 
 
             }, (error: HttpErrorResponse) => {
-              Toastr.error("Falha ao carregar cidades na aba endereço");
-              console.log(`Error. ${error.message}.`);
+                this.auth.onSessaoInvalida(error);
             });
 
           }
         }, (error: HttpErrorResponse) => {
-          Toastr.error("Falha ao consultar cep na aba endereço");
-          console.log(`Error. ${error.message}.`);
+            this.auth.onSessaoInvalida(error);
         });
     } else {
 
@@ -359,8 +350,7 @@ export class ClassificacaoRiscoComponent implements OnInit {
 
               this.listaCep = data;
             }, (error: HttpErrorResponse) => {
-              Toastr.error("Falha ao consultar cep na aba endereço");
-              console.log(`Error. ${error.message}.`);
+                this.auth.onSessaoInvalida(error);
             });
 
         } else {
@@ -402,6 +392,9 @@ export class ClassificacaoRiscoComponent implements OnInit {
 
   onSelectedUf() {
 
+    if (this.auth.canActivate())
+      this.auth.onSessaoAcrescimoTempo();
+
     $(document).ready(function () { $("select[name^=DP_Endereco_Cidade]").val($("select[name^=DP_Endereco_Cidade] option:first").val()); });
 
     this.pessoaService.BindCidade(this.Estado).subscribe(async (data: Return) => {
@@ -410,8 +403,7 @@ export class ClassificacaoRiscoComponent implements OnInit {
       $(document).ready(function () { $("select[name^=DP_Endereco_Cidade]").val($("select[name^=DP_Endereco_Cidade] option:first").val()); });
 
     }, (error: HttpErrorResponse) => {
-      Toastr.error("Falha ao carregar UF(s) na aba Dados Pessoais");
-      console.log(`Error. ${error.message}.`);
+        this.auth.onSessaoInvalida(error);
     });
 
 
@@ -419,6 +411,9 @@ export class ClassificacaoRiscoComponent implements OnInit {
 
 
   public onSalvarClassificacaoRisco(cr: NgForm) {
+
+    if (this.auth.canActivate())
+      this.auth.onSessaoAcrescimoTempo();
 
 
     $("#k_scrolltop").trigger("click");
@@ -619,8 +614,7 @@ export class ClassificacaoRiscoComponent implements OnInit {
       this.LimparCampos(cr);
 
     }, (error: HttpErrorResponse) => {
-      Toastr.error("Falha ao comunicar com API");
-      console.log(`Error. ${error.message}.`);
+        this.auth.onSessaoInvalida(error);
     });
 
 
@@ -629,6 +623,9 @@ export class ClassificacaoRiscoComponent implements OnInit {
 
 
   onAdicionaAlergia() {
+
+    if (this.auth.canActivate())
+      this.auth.onSessaoAcrescimoTempo();
 
     if (this.TipoAlergia !== null && this.Alergia !== null) {
 
@@ -743,13 +740,38 @@ export class ClassificacaoRiscoComponent implements OnInit {
     });
   }
 
-  public LimparCampos(p: NgForm) {
+  public LimparCampos(cr: NgForm) {
 
     $("#btn_formclear").trigger("click");
+    cr.value.DescricaoQueixa = "";
+    cr.value.SV_Peso = "";
+    cr.value.SV_Altura = "";
+    cr.value.SV_Temperatura = "";
+    cr.value.SV_PreArterialDiastolica = "";
+    cr.value.SV_PreArterialSistolica = "";
+    cr.value.FreqRespiratoria = "";
+    cr.value.Sutura = "";
+    cr.value.Saturacao = "";
+    cr.value.DPE_Hipertensao = "";
+    cr.value.DPE_Diabete = "";
+    cr.value.DPE_Cardiopata = "";
+    cr.value.DPE_RenalCronico = "";
+    cr.value.DPE_RespCronico = "";
+    cr.value.DPE_Outros = "";
+    cr.value.DoencaPreExistRespCron = "";
+    cr.value.DoencaPreExistOutros = "";
+    cr.value.DO_Procedencia = "";
+    cr.value.DO_Logradouro = "";
+    cr.value.DO_Numero = "";
+    cr.value.DO_Complemento = "";
+    cr.value.DO_Bairro = "";
   }
 
   //begin:: Edita Lotacao Profissional / Permite o usuário editar as lotações lançadas na aba profissional
   onEditarAlergia(classificacaoRiscoAlergia: ClassificacaoRiscoAlergia) {
+
+    if (this.auth.canActivate())
+      this.auth.onSessaoAcrescimoTempo();
 
     this.TipoAlergia = classificacaoRiscoAlergia.TipoAlergia;
     this.Alergia = classificacaoRiscoAlergia.Alergia;
@@ -780,6 +802,9 @@ export class ClassificacaoRiscoComponent implements OnInit {
 
   //begin:: Exibe Mensagem Excluir / Alerta o usuário da confirmação da exclusão na aba profissional
   onExibeMensagemExcluir(classificacaoRiscoAlergia: ClassificacaoRiscoAlergia) {
+
+    if (this.auth.canActivate())
+      this.auth.onSessaoAcrescimoTempo();
 
     var page = this;
 

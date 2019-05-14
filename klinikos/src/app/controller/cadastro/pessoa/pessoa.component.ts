@@ -31,6 +31,7 @@ import { CpfService } from '../../util/cpf.service';
 import * as moment from 'moment';
 import * as Toastr from 'toastr';
 import * as RecordRTC from 'recordrtc';
+import { AuthGuard } from '../../../controller/auth/auth.guard';
 
 @Component({
   selector: 'app-pessoa',
@@ -93,7 +94,7 @@ export class PessoaComponent implements OnInit {
 
 
   constructor(private pessoaService: PessoaService,
-    private cpfService: CpfService, private router: Router) {
+    private cpfService: CpfService, private router: Router, private auth: AuthGuard) {
     this.listaLotacaoProfissional = new Array<LotacaoProfissional>();
     this.listaOcupacao = new Array<Ocupacao>();
     this.listaPais = new Array<Pais>();
@@ -121,6 +122,8 @@ export class PessoaComponent implements OnInit {
       "hideMethod": "fadeOut"
     };
 
+    console.log(localStorage['token_expiracao']);
+
   }
 
   //begin:: Carregamento Básico da tela
@@ -131,15 +134,22 @@ export class PessoaComponent implements OnInit {
     var dataAtual = moment(new Date()).format('DD/MM/YYYY');
     var horaAtual = moment(new Date()).format('HH:mm:ss');
 
+    if (this.auth.canActivate())
+      this.auth.onSessaoAcrescimoTempo();
+
     this.pessoaService.BindRaca().subscribe(async (data: Return) => {
+
       this.listaRaca = data.result;
 
       $(document).ready(function () { $("select[name^=DP_Cor]").val($("select[name^=DP_Cor] option:first").val()); });
 
 
     }, (error: HttpErrorResponse) => {
-      Toastr.error("Falha ao carregar Raças na aba Dados Pessoais");
-      console.log(`Error. ${error.message}.`);
+
+      this.auth.onSessaoInvalida(error);
+
+      //Toastr.error("Falha ao carregar Raças na aba Dados Pessoais");
+      //console.log(`Error. ${error.message}.`);
     });
 
 
@@ -148,8 +158,8 @@ export class PessoaComponent implements OnInit {
 
       $(document).ready(function () { $("select[name^=DP_JustificativaCPF]").val($("select[name^=DP_JustificativaCPF] option:first").val()); });
     }, (error: HttpErrorResponse) => {
-      Toastr.error("Falha ao carregar Justificativas na aba Dados Pessoais");
-      console.log(`Error. ${error.message}.`);
+      this.auth.onSessaoInvalida(error);
+
     });
 
     this.pessoaService.BindNacionalidade().subscribe(async (data: Return) => {
@@ -159,8 +169,7 @@ export class PessoaComponent implements OnInit {
       $(document).ready(function () { $("select[name^=DP_Nacionalidade]").val($("select[name^=DP_Nacionalidade] option:first").val()); });
 
     }, (error: HttpErrorResponse) => {
-      Toastr.error("Falha ao carregar Nacionalidades na aba Dados Pessoais");
-      console.log(`Error. ${error.message}.`);
+      this.auth.onSessaoInvalida(error);
     });
 
     this.pessoaService.BindEstado().subscribe(async (data: Return) => {
@@ -179,8 +188,7 @@ export class PessoaComponent implements OnInit {
       });
 
     }, (error: HttpErrorResponse) => {
-      Toastr.error("Falha ao carregar Estados Naturalidade na aba Dados Pessoais");
-      console.log(`Error. ${error.message}.`);
+      this.auth.onSessaoInvalida(error);
     });
 
 
@@ -194,8 +202,7 @@ export class PessoaComponent implements OnInit {
       });
 
     }, (error: HttpErrorResponse) => {
-      Toastr.error("Falha ao carregar Orgãos Emissores na aba Dados Pessoais");
-      console.log(`Error. ${error.message}.`);
+      this.auth.onSessaoInvalida(error);
     });
 
 
@@ -342,7 +349,10 @@ export class PessoaComponent implements OnInit {
   //begin:: Consulta o nome do paciente/ Consulta e monta um grid com as opções
   onConsultaNomeCompleto() {
 
-    var dp_nomecompleto = $("input[name^=DP_NomeCompleto]").val().trim().toUpperCase();
+    if (this.auth.canActivate())
+      this.auth.onSessaoAcrescimoTempo();
+
+    var dp_nomecompleto = $("input[name^=DP_NomeCompleto_Pessoa]").val().trim().toUpperCase();
 
     $('#divPesquisaNomeCompleto').addClass('show');
 
@@ -353,9 +363,8 @@ export class PessoaComponent implements OnInit {
 
 
       }, (error: HttpErrorResponse) => {
-        console.log(`Error. ${error.message}.`);
+        this.auth.onSessaoInvalida(error);
       });
-
 
 
     this.pessoaService.ConsultaNomeCompletoPaciente(dp_nomecompleto)
@@ -364,7 +373,7 @@ export class PessoaComponent implements OnInit {
         this.listaPessoaPaciente = data.result;
 
       }, (error: HttpErrorResponse) => {
-        console.log(`Error. ${error.message}.`);
+        this.auth.onSessaoInvalida(error);
       });
 
 
@@ -375,6 +384,9 @@ export class PessoaComponent implements OnInit {
 
   //begin:: Consulta o nome social do paciente/ Consulta e monta um grid com as opções
   onConsultaNomeSocial() {
+
+    if (this.auth.canActivate())
+      this.auth.onSessaoAcrescimoTempo();
 
     var dp_nomesocial = $("input[name^=DP_NomeSocial]").val().trim().toUpperCase();
 
@@ -388,7 +400,7 @@ export class PessoaComponent implements OnInit {
 
 
       }, (error: HttpErrorResponse) => {
-        console.log(`Error. ${error.message}.`);
+        this.auth.onSessaoInvalida(error);
       });
 
 
@@ -399,7 +411,7 @@ export class PessoaComponent implements OnInit {
         this.listaPessoaPaciente = data.result;
 
       }, (error: HttpErrorResponse) => {
-        console.log(`Error. ${error.message}.`);
+        this.auth.onSessaoInvalida(error);
       });
 
   }
@@ -609,6 +621,9 @@ export class PessoaComponent implements OnInit {
   //begin:: validacao e consulta de CPF
   onConsultaCpf(e) {
 
+    if (this.auth.canActivate())
+      this.auth.onSessaoAcrescimoTempo();
+
     var cpf = e.target.value;
 
     if (cpf !== '___.___.___-__') {
@@ -647,8 +662,7 @@ export class PessoaComponent implements OnInit {
                 this.CarregaPessoa(paciente);
               }
             }, (error: HttpErrorResponse) => {
-              Toastr.error("Falha ao carregar Raças na aba Dados Pessoais");
-              console.log(`Error. ${error.message}.`);
+              this.auth.onSessaoInvalida(error);
             });
           } else {
 
@@ -658,8 +672,7 @@ export class PessoaComponent implements OnInit {
           }
 
         }, (error: HttpErrorResponse) => {
-          Toastr.error("Falha ao carregar Raças na aba Dados Pessoais");
-          console.log(`Error. ${error.message}.`);
+          this.auth.onSessaoInvalida(error);
         });
       }
     }
@@ -669,6 +682,9 @@ export class PessoaComponent implements OnInit {
 
   //begin:: validacao e consulta de CNS
   onConsultaCns(e) {
+
+    if (this.auth.canActivate())
+      this.auth.onSessaoAcrescimoTempo();
 
     // var
     var dp_cns = e.target.value.replace(' ', '').replace(' ', '').replace(' ', '').replace('_', '');
@@ -709,8 +725,7 @@ export class PessoaComponent implements OnInit {
               this.CarregaPessoa(paciente);
             }
           }, (error: HttpErrorResponse) => {
-            Toastr.error("Falha ao carregar Pessoas na aba Dados Pessoais");
-            console.log(`Error. ${error.message}.`);
+            this.auth.onSessaoInvalida(error);
           });
         } else {
 
@@ -720,8 +735,7 @@ export class PessoaComponent implements OnInit {
         }
 
       }, (error: HttpErrorResponse) => {
-        Toastr.error("Falha ao carregar Raças na aba Dados Pessoais");
-        console.log(`Error. ${error.message}.`);
+        this.auth.onSessaoInvalida(error);
       });
 
     }
@@ -732,6 +746,9 @@ export class PessoaComponent implements OnInit {
 
   //begin:: validacao e consulta de PIS
   onConsultaPis(e) {
+
+    if (this.auth.canActivate())
+      this.auth.onSessaoAcrescimoTempo();
 
     // var
     var dp_pis = e.target.value.replace('.', '').replace('.', '').replace('-', '').replace('_', '');
@@ -771,8 +788,7 @@ export class PessoaComponent implements OnInit {
               this.CarregaPessoa(paciente);
             }
           }, (error: HttpErrorResponse) => {
-            Toastr.error("Falha ao carregar Raças na aba Dados Pessoais");
-            console.log(`Error. ${error.message}.`);
+            this.auth.onSessaoInvalida(error);
           });
         } else {
 
@@ -782,8 +798,7 @@ export class PessoaComponent implements OnInit {
         }
 
       }, (error: HttpErrorResponse) => {
-        Toastr.error("Falha ao carregar Raças na aba Dados Pessoais");
-        console.log(`Error. ${error.message}.`);
+        this.auth.onSessaoInvalida(error);
       });
 
     }
@@ -794,6 +809,9 @@ export class PessoaComponent implements OnInit {
 
   //begin:: Carregamento do Profissional pela Busca
   onSelectedProfissional(profissional: PessoaProfissional) {
+
+    if (this.auth.canActivate())
+      this.auth.onSessaoAcrescimoTempo();
 
     $("input[name^=DP_CPF]").val(profissional.cpf);
 
@@ -806,8 +824,7 @@ export class PessoaComponent implements OnInit {
 
       this.listaLotacaoProfissional = data.result;
     }, error => {
-      Toastr.error("Falha ao carregar Raças na aba Dados Pessoais");
-      console.log(`Error. ${error._body}.`);;
+      this.auth.onSessaoInvalida(error);
     });
 
 
@@ -819,6 +836,8 @@ export class PessoaComponent implements OnInit {
   //begin:: Carregamento do Paciente pela Busca
   onSelectedPaciente(paciente: PessoaPaciente) {
 
+    if (this.auth.canActivate())
+      this.auth.onSessaoAcrescimoTempo();
 
     $("input[name^=DP_CPF]").val(paciente.cpf);
 
@@ -1035,6 +1054,9 @@ export class PessoaComponent implements OnInit {
   //begin:: Habilita combo indigena / habilita a combo para caso selecionar indígena
   onSelectedRaca() {
 
+    if (this.auth.canActivate())
+      this.auth.onSessaoAcrescimoTempo();
+
     if (this.Raca.nome == "INDÍGENA") {
       $("select[name^=DP_Etnia]").removeAttr("disabled");
 
@@ -1051,8 +1073,7 @@ export class PessoaComponent implements OnInit {
           $(document).ready(function () { $("select[name^=DP_Etnia]").val($("select[name^=DP_Etnia] option:first").val()); });
 
       }, error => {
-        Toastr.error("Falha ao carregar Etnias na aba Dados Pessoais");
-        console.log(`Error. ${error._body}.`);;
+        this.auth.onSessaoInvalida(error);
       });
 
     }
@@ -1063,6 +1084,9 @@ export class PessoaComponent implements OnInit {
 
   //begin:: Selecao UF Naturalidade / Selecionado a uf, habilita e carrega as cidades correspondente a uf selecionada na aba dados pessoais
   onSelectedUf() {
+
+    if (this.auth.canActivate())
+      this.auth.onSessaoAcrescimoTempo();
 
     $(document).ready(function () { $("select[name^=DP_NaturalidadeCidade]").val($("select[name^=DP_NaturalidadeCidade] option:first").val()); });
 
@@ -1078,8 +1102,7 @@ export class PessoaComponent implements OnInit {
         $(document).ready(function () { $("select[name^=DP_NaturalidadeCidade]").val($("select[name^=DP_NaturalidadeCidade] option:first").val()); });
 
     }, (error: HttpErrorResponse) => {
-      Toastr.error("Falha ao carregar UF(s) na aba Dados Pessoais");
-      console.log(`Error. ${error.message}.`);
+      this.auth.onSessaoInvalida(error);
     });
 
 
@@ -1088,6 +1111,9 @@ export class PessoaComponent implements OnInit {
 
   //begin:: Selecao UF Endereco / Selecionado a uf, habilita e carrega as cidades correspondente a uf selecionada na aba endereço
   onSelectedUfEndereco() {
+
+    if (this.auth.canActivate())
+      this.auth.onSessaoAcrescimoTempo();
 
     $(document).ready(function () { $("select[name^=DP_Endereco_Cidade]").val($("select[name^=DP_Endereco_Cidade] option:first").val()); });
 
@@ -1103,8 +1129,7 @@ export class PessoaComponent implements OnInit {
         $(document).ready(function () { $("select[name^=DP_Endereco_Cidade]").val($("select[name^=DP_Endereco_Cidade] option:first").val()); });
 
     }, (error: HttpErrorResponse) => {
-      Toastr.error("Falha ao carregar os Estados na aba Dados Pessoais");
-      console.log(`Error. ${error.message}.`);
+      this.auth.onSessaoInvalida(error);
     });
 
 
@@ -1114,14 +1139,15 @@ export class PessoaComponent implements OnInit {
   //begin:: Carregamento Tipo Profissional / carrega os tipos do profissional na aba profissional
   onHabilitaProfissional() {
 
+    if (this.auth.canActivate())
+      this.auth.onSessaoAcrescimoTempo();
 
     this.pessoaService.BindTipoProfissional().subscribe(async (data: Return) => {
       this.listaTipoProfissional = data.result;
 
       $(document).ready(function () { $("select[name^=DP_ProfTipo]").val($("select[name^=DP_ProfTipo] option:first").val()); });
     }, (error: HttpErrorResponse) => {
-      Toastr.error("Falha ao carregar Paises na aba Dados Complementares");
-      console.log(`Error. ${error.message}.`);
+      this.auth.onSessaoInvalida(error);
     });
 
 
@@ -1131,6 +1157,8 @@ export class PessoaComponent implements OnInit {
   //begin:: Carregamento Dados Complementares / carrega todas as combos na aba dados complementares
   onCarregaCamposDadosComplemenares() {
 
+    if (this.auth.canActivate())
+      this.auth.onSessaoAcrescimoTempo();
 
     if (this.listaOcupacao.length == 0) {
 
@@ -1147,8 +1175,7 @@ export class PessoaComponent implements OnInit {
         else
           $(document).ready(function () { $("select[name^=DC_Ocupacao]").val($("select[name^=DC_Ocupacao] option:first").val()); });
       }, (error: HttpErrorResponse) => {
-        Toastr.error("Falha ao carregar Ocupações na aba Dados Complementares");
-        console.log(`Error. ${error.message}.`);
+        this.auth.onSessaoInvalida(error);
       });
     }
 
@@ -1168,8 +1195,7 @@ export class PessoaComponent implements OnInit {
         else
           $(document).ready(function () { $("select[name^=DC_PaisDeOrigem]").val($("select[name^=DC_PaisDeOrigem] option:first").val()); });
       }, (error: HttpErrorResponse) => {
-        Toastr.error("Falha ao carregar Paises na aba Dados Complementares");
-        console.log(`Error. ${error.message}.`);
+        this.auth.onSessaoInvalida(error);
       });
     }
 
@@ -1189,8 +1215,7 @@ export class PessoaComponent implements OnInit {
           $(document).ready(function () { $("select[name^=DC_TipoCertidao]").val($("select[name^=DC_TipoCertidao] option:first").val()); });
 
       }, (error: HttpErrorResponse) => {
-        Toastr.error("Falha ao carregar Paises na aba Dados Complementares");
-        console.log(`Error. ${error.message}.`);
+        this.auth.onSessaoInvalida(error);
       });
 
     }
@@ -1221,8 +1246,7 @@ export class PessoaComponent implements OnInit {
 
 
       }, (error: HttpErrorResponse) => {
-        Toastr.error("Falha ao carregar Escolaridade na aba Dados Complementares");
-        console.log(`Error. ${error.message}.`);
+        this.auth.onSessaoInvalida(error);
       });
     }
 
@@ -1247,8 +1271,7 @@ export class PessoaComponent implements OnInit {
 
 
       }, (error: HttpErrorResponse) => {
-        Toastr.error("Falha ao carregar Situação Familiar na aba Dados Complementares");
-        console.log(`Error. ${error.message}.`);
+        this.auth.onSessaoInvalida(error);
       });
 
     }
@@ -1259,6 +1282,9 @@ export class PessoaComponent implements OnInit {
 
   //begin:: Adiciona Lotacao Profissional / Adiciona uma nova lotação ao profissional na aba profissional
   onAdicionaLotacao() {
+
+    if (this.auth.canActivate())
+      this.auth.onSessaoAcrescimoTempo();
 
     if (this.TipoProfissional !== undefined) {
 
@@ -1327,6 +1353,11 @@ export class PessoaComponent implements OnInit {
 
   //begin:: Edita Lotacao Profissional / Permite o usuário editar as lotações lançadas na aba profissional
   onEditarLotacao(lotacaoprofissional: LotacaoProfissional) {
+
+    if (this.auth.canActivate())
+      this.auth.onSessaoAcrescimoTempo();
+
+
     this.TipoProfissional = lotacaoprofissional.TipoProfissional;
     $("input[name='Prof_NumConselho']").val(lotacaoprofissional.numeroConselho);
     this.UfProfissional = this.listaUFIdentidade.find(x => x.uf === lotacaoprofissional.ufProfissional);
@@ -1345,6 +1376,9 @@ export class PessoaComponent implements OnInit {
   //begin:: Exibe Mensagem Excluir / Alerta o usuário da confirmação da exclusão na aba profissional
   onExibeMensagemExcluir(lotacaoprofissional: LotacaoProfissional) {
 
+    if (this.auth.canActivate())
+      this.auth.onSessaoAcrescimoTempo();
+
     var page = this;
 
     return swal({ title: 'Deseja excluir essa lotação?', text: '', type: 'warning', showCancelButton: true, cancelButtonText: 'Não', confirmButtonText: 'Sim' })
@@ -1361,6 +1395,9 @@ export class PessoaComponent implements OnInit {
 
   //begin:: Exclui lotacao Profissional / Alerta o usuário da confirmação da exclusão na aba profissional
   onExcluirLotacao(lotacaoprofissional: LotacaoProfissional) {
+
+    if (this.auth.canActivate())
+      this.auth.onSessaoAcrescimoTempo();
 
     var index = this.listaLotacaoProfissional.findIndex(x => x.TipoProfissional === lotacaoprofissional.TipoProfissional);
     this.listaLotacaoProfissional.splice(index, 1);
@@ -1389,6 +1426,9 @@ export class PessoaComponent implements OnInit {
 
   //begin:: Consulta Cep / Consulta tanto o CEP, quanto o logradouro e atribui aos campos correspondentes
   onBuscaCep() {
+
+    if (this.auth.canActivate())
+      this.auth.onSessaoAcrescimoTempo();
 
     var dp_cep = $("input[name^='DP_CEP']").val().replace('-', '');
     var dp_logradouro = $.trim($("input[name^=DP_Logradouro]").val());
@@ -1436,14 +1476,12 @@ export class PessoaComponent implements OnInit {
 
 
             }, (error: HttpErrorResponse) => {
-              Toastr.error("Falha ao carregar cidades na aba endereço");
-              console.log(`Error. ${error.message}.`);
+              this.auth.onSessaoInvalida(error);
             });
 
           }
         }, (error: HttpErrorResponse) => {
-          Toastr.error("Falha ao consultar cep na aba endereço");
-          console.log(`Error. ${error.message}.`);
+          this.auth.onSessaoInvalida(error);
         });
     } else {
 
@@ -1458,8 +1496,7 @@ export class PessoaComponent implements OnInit {
 
               this.listaCep = data;
             }, (error: HttpErrorResponse) => {
-              Toastr.error("Falha ao consultar cep na aba endereço");
-              console.log(`Error. ${error.message}.`);
+              this.auth.onSessaoInvalida(error);
             });
 
         } else {
@@ -1474,6 +1511,9 @@ export class PessoaComponent implements OnInit {
   //begin:: Seleciona Endereco / Responsável por selecionar o cep vindo da consulta cep logradouro
   public onSelectedCep(cep: any) {
 
+    if (this.auth.canActivate())
+      this.auth.onSessaoAcrescimoTempo();
+
     $("input[name^=DP_CEP]").val(cep.cep);
     $("input[name^=DP_Logradouro]").val(cep.logradouro.toUpperCase());
     $("input[name^=DP_Bairro]").val(cep.bairro.toUpperCase());
@@ -1484,6 +1524,9 @@ export class PessoaComponent implements OnInit {
 
   //begin:: Salvar Pessoa / Salva as informações da tela
   public onSalvarPessoa(p: NgForm) {
+
+    if (this.auth.canActivate())
+      this.auth.onSessaoAcrescimoTempo();
 
     $("#k_scrolltop").trigger("click");
 
@@ -1734,8 +1777,7 @@ export class PessoaComponent implements OnInit {
 
           }
         }, (error: HttpErrorResponse) => {
-          Toastr.error("Falha ao comunicar com API");
-          console.log(`Error. ${error.message}.`);
+          this.auth.onSessaoInvalida(error);
         },
         );
 
@@ -1759,8 +1801,7 @@ export class PessoaComponent implements OnInit {
           this.LimparCampos(p);
 
         }, (error: HttpErrorResponse) => {
-          Toastr.error("Falha ao comunicar com API");
-          console.log(`Error. ${error.message}.`);
+          this.auth.onSessaoInvalida(error);
         },
         );
       }
@@ -1794,6 +1835,8 @@ export class PessoaComponent implements OnInit {
     $('.k-avatar__holder').css('background-image', 'url(../../assets/media/users/default.jpg)');
   }
   //end:: Limpa Campos
+
+
 
 
 }
