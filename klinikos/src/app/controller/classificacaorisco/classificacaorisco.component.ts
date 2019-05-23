@@ -30,6 +30,7 @@ import { ClassificacaoRisco } from '../../model/ClassificacaoRisco';
 import { ClassificacaoRiscoAlergia } from '../../model/ClassificacaoRiscoAlergia';
 import * as swal from '../../../assets/vendors/general/sweetalert2/dist/sweetalert2.js';
 import { AuthGuard } from '../../controller/auth/auth.guard';
+import { ActivatedRoute } from '@angular/router';
 
 
 @Component({
@@ -85,7 +86,7 @@ export class ClassificacaoRiscoComponent implements OnInit {
   orderNome: string = 'nome';
   orderVariavel: string = 'variavel';
 
-  constructor(private classificacaoriscoservice: ClassificaoRiscoService, private pessoaService: PessoaService, private auth: AuthGuard) {
+  constructor(private classificacaoriscoservice: ClassificaoRiscoService, private pessoaService: PessoaService, private auth: AuthGuard, private route: ActivatedRoute ) {
     this.listaClassificacaoRiscoAlergia = new Array<ClassificacaoRiscoAlergia>();
   }
 

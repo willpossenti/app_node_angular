@@ -11778,9 +11778,11 @@ code {
   transition: all 0.3s ease;
   right: -445px; }
   .k-offcanvas-panel.k-offcanvas-panel--on {
-    -webkit-transition: all 0.3s ease;
+    /*-webkit-transition: all 0.3s ease;
     transition: all 0.3s ease;
-    right: 0; }
+    right: 0;*/
+
+  }
   @media screen\0 {
     .k-offcanvas-panel {
       -webkit-transition: none !important;
@@ -29141,13 +29143,13 @@ body {
         .k-aside__brand .k-aside__brand-tools .k-aside__brand-aside-toggler span::after {
           bottom: -8px; }
       .k-aside__brand .k-aside__brand-tools .k-aside__brand-aside-toggler.k-aside__brand-aside-toggler--left span:before {
-        -webkit-transition: all 0.4s ease;
+        -webkit-transition: all 0.4s ease !important;
         transition: all 0.4s ease;
         left: auto;
         right: 0px;
         width: 50%; }
       .k-aside__brand .k-aside__brand-tools .k-aside__brand-aside-toggler.k-aside__brand-aside-toggler--left span:after {
-        -webkit-transition: all 0.4s ease;
+        -webkit-transition: all 0.4s ease !important;
         transition: all 0.4s ease;
         left: auto;
         right: 0px;

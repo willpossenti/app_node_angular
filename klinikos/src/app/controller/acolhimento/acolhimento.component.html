@@ -23,7 +23,7 @@
             <div class="form-group row">
               <div class="col-lg-6">
                 <label>Nome do Paciente <span class="fld-obg" title="Obrigatório">*</span></label>
-                <input type="text" class="form-control maisc" name="IdentificacaoPacienteAcolhimento" maxlength="140" placeholder="CPF, CNS, Nome ou Nome Social" value="" tabindex="1" (keyup)="onConsultaNome()">
+                <input type="text" class="form-control maisc" name="IdentificacaoPacienteAcolhimento" maxlength="140" placeholder="CPF, CNS, Nome ou Nome Social" autofocus tabindex="1" (keyup)="onConsultaNome()">
                 <!--<span class="form-text text-muted">Please enter your full name</span>-->
 
 
@@ -97,33 +97,40 @@
     </div>
   </div>-->
 
+
+
               <div class="col-lg-3">
                 <label class="text-left d-block">Preferencial</label>
                 <div class="btn-group btn-group-toggle" data-toggle="buttons">
-                  <label class="btn btn-outline-info cp clear" for="Cadeirante" data-toggle="popover" data-placement="top" data-trigger="hover" data-content="Cadeirante">
-                    <input type="radio" name="Preferencial" autocomplete="off" value="" tabindex="">
-                    <i class="fab fa-accessible-icon fa-fw"></i>
+                  <label class="btn btn-outline-info cp clear rounded-left" id="deficiente" data-toggle="popover" data-placement="top" data-trigger="hover" data-content="Deficiente Físico">
+                    <input type="radio" name="Preferencial" autocomplete="off" value="1" tabindex="">
+                    <!--<i class="fab fa-accessible-icon fa-fw" style="font-size: 1.4em;"></i>-->
+                    <img src="../assets/media/icons/icon-prioridade-pregnant.svg" class="svg fill deficiente">
                   </label>
-                  <label class="btn btn-outline-info cp clear" for="Gestante" data-toggle="popover" data-placement="top" data-trigger="hover" data-content="Gestante">
-                    <input type="radio" name="Preferencial" autocomplete="off" value="" tabindex="">
-                    <i class="fab fa-accessible-icon fa-fw"></i>
+
+                  <label class="btn btn-outline-info cp clear" id="gestante" data-toggle="popover" data-placement="top" data-trigger="hover" data-content="Gestante">
+                    <input type="radio" name="Preferencial" autocomplete="off" value="2" tabindex="">
+                    <img src="../assets/media/icons/icon-prioridade-pregnant.svg" class="svg fill gestante">
                   </label>
-                  <label class="btn btn-outline-info cp clear" for="Idoso60" data-toggle="popover" data-placement="top" data-trigger="hover" data-content="Idoso acima de 60 anos">
-                    <input type="radio" name="Preferencial" autocomplete="off" value="" tabindex="">
-                    <i class="fab fa-accessible-icon fa-fw"></i>
+
+                  <label class="btn btn-outline-info cp clear" id="idoso-a" data-toggle="popover" data-placement="top" data-trigger="hover" data-content="Pessoa com idade entre 60 e 79 anos">
+                    <input type="radio" name="Preferencial" autocomplete="off" value="3" tabindex="">
+                    <img src="../assets/media/icons/icon-prioridade-elderly-60.svg" class="svg fill idoso-a">
                   </label>
-                  <label class="btn btn-outline-info cp clear" for="Idoso80" data-toggle="popover" data-placement="top" data-trigger="hover" data-content="Idoso acima de 80 anos">
-                    <input type="radio" name="Preferencial" autocomplete="off" value="" tabindex="">
-                    <i class="fab fa-accessible-icon fa-fw"></i>
+
+                  <label class="btn btn-outline-info cp clear" id="idoso-b" data-toggle="popover" data-placement="top" data-trigger="hover" data-content="Pessoa acima de 80 anos">
+                    <input type="radio" name="Preferencial" autocomplete="off" value="4" tabindex="">
+                    <img src="../assets/media/icons/icon-prioridade-elderly-80.svg" class="svg fill idoso-b">
                   </label>
                 </div>
                 <!--<span class="form-text text-muted">Please enter your full name</span>-->
               </div>
 
+
               <div class="col-lg-3">
                 <label>&nbsp;</label>
                 <div class="k-checkbox-list mt-2">
-                  <label class="k-checkbox k-checkbox--brand">
+                  <label class="k-checkbox k-checkbox--brand" data-toggle="popover" data-placement="top" data-trigger="hover" data-content="Pacientes definidos com Risco terão prioridade acima dos demais">
                     <input type="checkbox" name="PacienteRisco">Paciente em Risco<span></span>
                   </label>
                 </div>
@@ -152,8 +159,8 @@
                 <label>Peso, Altura, IMC</label>
                 <div class="input-group-lg">
                   <div class="input-group-prepend">
-                    <input type="text" class="form-control sn w-25" name="SV_Peso" id="SV_Peso" maxlength="3" placeholder="(kg)"  ngModel>
-                    <input type="text" class="form-control sn w-25" name="SV_Altura" id="SV_Altura" maxlength="3" placeholder="(cm)" ngModel>
+                    <input type="text" class="form-control sn w-25" name="SV_Peso" id="SV_Peso" maxlength="5" placeholder="(kg)"  ngModel>
+                    <input type="text" class="form-control sn w-25" name="SV_Altura" id="SV_Altura" maxlength="4" placeholder="(cm)" ngModel>
                     <input type="text" class="form-control ch w-100" name="SV_IMC" id="SV_IMC" placeholder="IMC" data-content="" data-toggle="popover" data-placement="top" data-trigger="hover" style="background:#E9E8E8;" readonly ngModel>
                   </div>
                   <div class="form-text text-danger" style="height:15px !important;"><span class="oculta">Message Error</span></div>
@@ -202,6 +209,7 @@
                 <span class="form-text text-info oculta cm" id="msg_pulso_a">Indicado valores entre 60 à 120</span>
                 <span class="form-text text-danger oculta cm" id="msg_pulso_b">Não permitido menor que 40 e maior que 150</span>
               </div>
+
             </div>
 
             <div class="form-group row mb-0 pb-0 pt-4">

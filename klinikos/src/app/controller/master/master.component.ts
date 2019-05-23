@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, NgZone } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import * as $ from 'jquery';
 import { Location } from '@angular/common';
@@ -9,74 +9,108 @@ import { PessoaProfissional } from '../../model/PessoaProfissional';
 import { Return } from '../../model/Return';
 import { HttpErrorResponse } from '@angular/common/http';
 import * as swal from '../../../assets/vendors/general/sweetalert2/dist/sweetalert2.js';
+import {transition, trigger, state, style, animate} from '@angular/animations';
+
 
 @Component({
   selector: 'app-klinikos',
+
+  animations: [
+    trigger('changeDivSize', [
+      state('aberto', style({
+        //backgroundColor: 'green',
+        width: '260px',
+        //height: '100px'
+      })),
+      state('contraido', style({
+        //backgroundColor: 'red',
+        width: '78px',
+      })),
+
+      transition('aberto=>contraido', animate('150ms')),
+      transition('contraido=>aberto', animate('150ms'))
+    ]),
+
+    trigger('changeDivSizeMenuRapido', [
+      state('aberto', style({
+        right: '0',
+      })),
+      state('fechado', style({
+        right: '-445px',
+      })),
+
+      transition('aberto=>fechado', animate('300ms')),
+      transition('fechado=>aberto', animate('300ms'))
+    ]),
+  
+
+  ],
+
+
   templateUrl: './master.component.html',
   styleUrls: ['./master.component.css'],
-
-
 })
 export class MasterComponent implements OnInit {
 
-
+  shaObj: any;
+  hash: String;
   listaPessoaPaciente: Array<PessoaPaciente>;
 
+  currentStateMenu = 'aberto';
+  currentStateMenuRapido: string;
 
-  constructor(private router: ActivatedRoute,
-    private route: Router, private location: Location, private pessoaService: PessoaService) {
+  listItem = [];
+  list_order: number = 1;
 
+  changeState() {
 
+    if (this.currentStateMenu === 'aberto')
+      this.currentStateMenu = 'contraido'
+    else
+      this.currentStateMenu = 'aberto'
 
   }
 
+  changeStateMenuRapido() {
+
+      this.currentStateMenuRapido = 'aberto'
+
+  }
+
+  changeFechaMenuRapido() {
+
+    this.currentStateMenuRapido = 'fechado'
+
+  }
+
+  changeStateHover() {
+    if (this.currentStateMenu === 'contraido')
+      this.currentStateMenu = 'abre';
+  }
+
+  constructor(
+    private route: Router, private location: Location, private pessoaService: PessoaService, private router: ActivatedRoute,) {
+
+    
+  }
+
+
+
   public ngOnInit() {
-
-
 
 
     $(document).ready(function () {
 
 
+      $.getScript("../../../assets/demo/default/base/scripts.bundle.js", function (data, textStatus, jqxhr) {
+      });
+      $.getScript("../../../assets/app/bundle/app.bundle.js", function (data, textStatus, jqxhr) {
+      });
+
 
       $('body').css("background", "");
       $('body').addClass("k-header--fixed k-header-mobile--fixed k-subheader--enabled k-subheader--transparent k-aside--enabled k-aside--fixed k-page--loading");
       document.title = 'Home | Klinikos';
-
-      $('.k-grid-nav-v2__item').on("click", function () {
-
-        var id = $(this).attr("id");
-
-        $("#k_offcanvas_toolbar_quick_actions").removeClass("k-offcanvas-panel--on");
-        $("body").removeClass("k-offcanvas-panel--on");
-        $("div").remove(".k-offcanvas-panel-overlay");
-        $("#kt_blockui_3_5").click();
-
-        if (id === "registroboletim")
-          setTimeout(() =>
-
-            //this.route.navigate(['registroboletim'], { relativeTo: this.router })
-            window.location.replace("http://localhost:4200/klinikos/registroboletim")
-            , 1000);
-        else if (id === "acolhimento")
-          setTimeout(() =>
-
-            //this.route.navigate(['registroboletim'], { relativeTo: this.router })
-            window.location.replace("http://localhost:4200/klinikos/acolhimento")
-            , 1000);
-        else if (id === "classificacaorisco")
-          setTimeout(() =>
-
-            //this.route.navigate(['registroboletim'], { relativeTo: this.router })
-            window.location.replace("http://localhost:4200/klinikos/classificacaorisco")
-            , 1000);
-        else if (id === "cadastro")
-          setTimeout(() =>
-            window.location.replace("http://localhost:4200/klinikos/cadastro")
-            //this.route.navigate(['cadastro'], { relativeTo: this.router })
-
-            , 1000);
-      })
 
     });
 
@@ -111,8 +145,6 @@ export class MasterComponent implements OnInit {
     var dp_nomecompletoPesquisaGeral = $("input[name^=DP_NomeCompleto_PesquisaGeral]").val().trim().toUpperCase();
 
     $('#divPesquisaNome').addClass('show');
-
-    alert($("input[name ^= DP_NomeCompleto_PesquisaGeral]").val());
 
     this.pessoaService.ConsultaNomeCompletoPaciente(dp_nomecompletoPesquisaGeral)
       .subscribe(data => {
@@ -151,14 +183,25 @@ export class MasterComponent implements OnInit {
     $("input[name^=DP_NomeCompleto_PesquisaGeral]").val("");
   }
 
-
-
-
   logout() {
 
     localStorage.clear();
     this.route.navigate(['login']);
   }
 
+  changePage(page) {
+
+
+    this.route.navigate([page], { relativeTo: this.router });
+    this.changeFechaMenuRapido();
+
+    $("#k_offcanvas_toolbar_quick_actions").removeClass("k-offcanvas-panel--on");
+    $("body").removeClass("k-offcanvas-panel--on");
+    $("div").remove(".k-offcanvas-panel-overlay");
+    $("#kt_blockui_3_5").click();
+    $("#k_scrolltop").trigger("click");
+
+
+  }
 
 }

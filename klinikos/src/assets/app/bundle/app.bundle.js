@@ -676,12 +676,12 @@ var KQuickSearch = function() {
             KUtil.addEvent(input, 'focus', handleSearch);
 
             // Prevent enter click
-            form.onkeypress = function(e) {
-                var key = e.charCode || e.keyCode || 0;     
-                if (key == 13) {
-                    e.preventDefault();
-                }
-            }
+            //form.onkeypress = function(e) {
+            //    var key = e.charCode || e.keyCode || 0;     
+            //    if (key === 13) {
+            //        e.preventDefault();
+            //    }
+            //}
            
             KUtil.addEvent(closeIcon, 'click', handleCancel);     
         }

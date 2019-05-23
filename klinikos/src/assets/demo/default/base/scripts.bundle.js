@@ -1,4 +1,8 @@
 "use strict";
+
+
+
+
 /**
  * @class KUtil  base utilize class that privides helper functions
  */
@@ -3998,7 +4002,7 @@ $(document).ready(function() {
 					localStorage.setItem(key, JSON.stringify(value));
 				}
 				if (Plugin.getOption('data.saveState.cookie')) {
-					Cookies.set(key, JSON.stringify(value));
+					//Cookies.set(key, JSON.stringify(value));
 				}
 			},
 
@@ -8669,7 +8673,9 @@ var KLayout = function() {
     }
 
     // Sidebar toggle
-    var initAsideToggler = function() {
+  var initAsideToggler = function () {
+
+
         if (!KUtil.get('k_aside_toggler')) {
             return;
         }
@@ -8691,14 +8697,14 @@ var KLayout = function() {
                 KUtil.removeClass(body, 'k-aside--minimizing');
             });
 
-            headerMenu.pauseDropdownHover(800);
-            asideMenu.pauseDropdownHover(800);
+            //headerMenu.pauseDropdownHover(800);
+            //asideMenu.pauseDropdownHover(800);
 
-            // Remember state in cookie
-            Cookies.set('k_aside_toggle_state', toggle.getState());
-            // to set default minimized left aside use this cookie value in your 
-            // server side code and add "k-brand--minimize k-aside--minimize" classes to 
-            // the body tag in order to initialize the minimized left aside mode during page loading.
+             //Remember state in cookie
+            //Cookies.set('k_aside_toggle_state', toggle.getState());
+             //to set default minimized left aside use this cookie value in your 
+             //server side code and add "k-brand--minimize k-aside--minimize" classes to 
+             //the body tag in order to initialize the minimized left aside mode during page loading.
         });
 
         asideToggler.on('beforeToggle', function(toggle) {   

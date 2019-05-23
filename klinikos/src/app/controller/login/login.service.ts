@@ -10,6 +10,7 @@ import { User } from '../../model/User';
 export class LoginService {
 
   private baseUrl: string;
+  private cadecoUrl: string;
 
 
   private httpOptions = {
@@ -22,12 +23,12 @@ export class LoginService {
 
   constructor(private http: HttpClient) {
     this.baseUrl = 'https://localhost:44307/api/';
-
+    this.cadecoUrl = 'https://integrador.ecosistemas.com.br/auth-rest/api/auth/login';
   }
 
 
   Authenticate(user: User) { return this.http.post<Return>(`${this.baseUrl}authenticate`, user, this.httpOptions); }
-
+  AuthenticateCadeco(user: any) { return this.http.post<any>(`${this.cadecoUrl}`, user, this.httpOptions); }
 
 
 

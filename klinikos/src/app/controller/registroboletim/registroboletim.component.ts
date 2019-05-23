@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { RegistroBoletimService } from './registroboletim.service';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import * as $ from 'jquery';
 import { Especialidade } from '../../model/Especialidade';
 import { TipoChegada } from '../../model/TipoChegada';
@@ -39,7 +39,7 @@ export class RegistroBoletimComponent implements OnInit {
   orderUf: string = 'uf';
   Pessoa: any;
 
-  constructor(private registroBoletimService: RegistroBoletimService,
+  constructor(private registroBoletimService: RegistroBoletimService, private route: ActivatedRoute, 
     private pessoaService: PessoaService, private cpfService: CpfService, private router: Router, private auth: AuthGuard) {
 
 

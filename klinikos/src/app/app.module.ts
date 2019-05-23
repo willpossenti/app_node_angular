@@ -20,7 +20,7 @@ import { LoginComponent } from './controller/login/login.component';
 import { MasterComponent } from './controller/master/master.component';
 import { AcolhimentoComponent } from './controller/acolhimento/acolhimento.component';
 import { ClassificacaoRiscoComponent } from './controller/classificacaorisco/classificacaorisco.component';
-
+import { BrowserAnimationsModule} from '@angular/platform-browser/animations';
 
 import { ClassificacaoRiscoPipe } from './controller/classificacaorisco/classificacaorisco.pipe';
 
@@ -58,6 +58,7 @@ const appRoutes: Routes = [
     OrderModule,
     HttpClientModule,
     FormsModule,
+    BrowserAnimationsModule,
     RouterModule.forRoot(
       appRoutes, { onSameUrlNavigation: 'reload' }
     )

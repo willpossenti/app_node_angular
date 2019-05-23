@@ -55,6 +55,10 @@
               "src/assets/app/custom/general/interface.css"
             ],
             "scripts": [
+              "src/app/base.js",
+              "src/assets/demo/default/base/scripts.bundle.js",
+              "src/assets/app/bundle/app.bundle.js",
+              "src/assets/vendors/general/perfect-scrollbar/dist/perfect-scrollbar.js",
               "node_modules/popper.js/dist/umd/popper.js",
               "node_modules/bootstrap/dist/js/bootstrap.min.js",
               "node_modules/js-cookie/src/js.cookie.js",
@@ -97,7 +101,6 @@
               "node_modules/jquery.repeater/src/jquery.input.js",
               "node_modules/jquery.repeater/src/repeater.js",
               "node_modules/dompurify/dist/purify.js",
-              "src/app/base.js",
               "src/assets/vendors/custom/components/vendors/bootstrap-datepicker/init.js",
               "src/assets/vendors/custom/components/vendors/bootstrap-timepicker/init.js",
               "src/assets/vendors/custom/vendors/bootstrap-multiselectsplitter/bootstrap-multiselectsplitter.min.js",
@@ -105,13 +108,9 @@
               "src/assets/vendors/custom/components/vendors/jquery-validation/init.js",
               "src/assets/vendors/custom/vendors/bootstrap-session-timeout/dist/bootstrap-session-timeout.min.js",
               "src/assets/vendors/custom/vendors/jquery-idletimer/idle-timer.min.js",
-              "src/assets/demo/default/base/scripts.bundle.js",
-              "src/assets/app/bundle/app.bundle.js",
               "src/assets/app/custom/general/jquery.maskedinput.js",
               "src/assets/app/custom/general/jquery.maskedinput.min.js",
-              "node_modules/sweetalert2/dist/sweetalert2.js",
-              "src/assets/app/custom/general/components/datatables/basic/basic.js",
-              "src/assets/vendors/general/perfect-scrollbar/dist/perfect-scrollbar.js"
+              "node_modules/sweetalert2/dist/sweetalert2.js"
             ],
             "es5BrowserSupport": true
           },

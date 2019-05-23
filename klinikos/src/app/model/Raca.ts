@@ -1,10 +1,10 @@
 
 export interface Raca {
 
-  racaId: string;
-  codigoraca: string;
-  nome: string;
-  ativo: boolean;
+  racaId?: string;
+  codigoraca?: string;
+  nome?: string;
+  ativo?: boolean;
 
 
 }

@@ -19,7 +19,8 @@
   <div class="k-grid__item k-grid__item--fluid k-grid k-grid--ver k-page">
     <!-- begin:: Aside -->
     <button class="k-aside-close " id="k_aside_close_btn"><i class="la la-close"></i></button>
-    <div class="k-aside k-aside--fixed k-grid__item k-grid k-grid--desktop k-grid--hor-desktop" id="k_aside">
+
+    <div class="k-aside k-aside--fixed k-grid__item k-grid k-grid--desktop k-grid--hor-desktop" id="k_aside" [@changeDivSize]=currentStateMenu (mouseenter)="changeStateHover()">
       <!-- begin::Aside Brand -->
       <div class="k-aside__brand k-grid__item " id="k_aside_brand">
         <div class="k-aside__brand-logo">
@@ -28,11 +29,11 @@
           </a>
         </div>
         <div class="k-aside__brand-tools">
-          <button class="k-aside__brand-aside-toggler k-aside__brand-aside-toggler--left" id="k_aside_toggler"><span></span></button>
+          <button class="k-aside__brand-aside-toggler k-aside__brand-aside-toggler--left" id="k_aside_toggler" (click)="changeState()"><span></span></button>
         </div>
       </div>
       <!-- end:: Aside Brand -->
-      <!-- begin:: Aside Menu -->
+      <!-- begin:: Aside Menu [@changeDivSizeMaster]=currentStateMaster-->
       <div class="k-aside-menu-wrapper k-grid__item k-grid__item--fluid" id="k_aside_menu_wrapper">
         <div id="k_aside_menu" class="k-aside-menu " data-kmenu-vertical="1" data-kmenu-scroll="1" data-kmenu-dropdown-timeout="500">
           <ul class="k-menu__nav ">
@@ -121,6 +122,7 @@
       </div>
       <!-- end:: Aside Footer-->
     </div>
+
     <!-- end:: Aside -->
     <!-- begin:: Wrapper -->
     <div class="k-grid__item k-grid__item--fluid k-grid k-grid--hor k-wrapper" id="k_wrapper">
@@ -418,7 +420,7 @@
           <!--end: Notifications -->
           <!--begin: Quick Actions -->
           <div class="k-header__topbar-item">
-            <div class="k-header__topbar-wrapper" id="k_offcanvas_toolbar_quick_actions_toggler_btn">
+            <div class="k-header__topbar-wrapper" id="k_offcanvas_toolbar_quick_actions_toggler_btn" (click)="changeStateMenuRapido()">
               <span class="k-header__topbar-icon"><i class="flaticon2-grids"></i></span>
 
             </div>
@@ -435,7 +437,7 @@
               </div>
             </div>
             <div class="dropdown-menu dropdown-menu-fit dropdown-menu-right dropdown-menu-anim dropdown-menu-top-unround dropdown-menu-sm">
-              <div class="k-user-card k-margin-b-50 k-margin-b-30-tablet-and-mobile" style="background-image: url(../classic/assets/media/misc/head_bg_sm.jpg)">
+              <div class="k-user-card k-margin-b-50 k-margin-b-30-tablet-and-mobile" style="background-image: url(../assets/media/misc/head_bg_sm.jpg)">
                 <div class="k-user-card__wrapper">
                   <div class="k-user-card__pic">
                     <img alt="Pic" src="../assets/media/users/300_21.jpg" />
@@ -487,6 +489,10 @@
             <h3 class="k-subheader__title">
               Klinikos
             </h3>
+
+
+
+
             <span class="k-subheader__separator k-hidden"></span>
             <div class="k-subheader__breadcrumbs">
               <a href="#" class="k-subheader__breadcrumbs-home"><i class="flaticon2-shelter"></i></a>
@@ -900,3 +906,45 @@
   <!-- end:: Content -->
 </div>
 
+
+
+<!-- begin::Offcanvas Toolbar Quick Actions -->
+<div id="k_offcanvas_toolbar_quick_actions" class="k-offcanvas-panel" [@changeDivSizeMenuRapido]=currentStateMenuRapido>
+  <div class="k-offcanvas-panel__head">
+    <h3 class="k-offcanvas-panel__title">
+      Menu Rápido
+    </h3>
+    <a href="#" class="k-offcanvas-panel__close" id="k_offcanvas_toolbar_quick_actions_close" (click)="changeFechaMenuRapido()"><i class="flaticon2-delete"></i></a>
+  </div>
+  <div class="k-offcanvas-panel__body">
+    <div class="k-grid-nav-v2">
+      <a class="k-grid-nav-v2__item" style="cursor:pointer;" (click)="changePage('cadastro')">
+        <div class="k-grid-nav-v2__item-icon"><i class="flaticon2-box"></i></div>
+        <div class="k-grid-nav-v2__item-title">Cadastro</div>
+      </a>
+      <a class="k-grid-nav-v2__item" style="cursor:pointer;"  (click)="changePage('registroboletim')">
+        <div class="k-grid-nav-v2__item-icon"><i class="flaticon-download-1"></i></div>
+        <div class="k-grid-nav-v2__item-title">Boletim</div>
+      </a>
+      <a class="k-grid-nav-v2__item" style="cursor:pointer;" id="acolhimento" (click)="changePage('acolhimento')">
+        <div class="k-grid-nav-v2__item-icon"><i class="flaticon2-supermarket"></i></div>
+        <div class="k-grid-nav-v2__item-title">Acolhimento</div>
+      </a>
+      <a class="k-grid-nav-v2__item" style="cursor:pointer;" id="classificacaorisco" (click)="changePage('classificacaorisco')">
+        <div class="k-grid-nav-v2__item-icon"><i class="flaticon2-avatar"></i></div>
+        <div class="k-grid-nav-v2__item-title">Classificação de Risco</div>
+      </a>
+      <a class="k-grid-nav-v2__item">
+        <div class="k-grid-nav-v2__item-icon"><i class="flaticon2-list"></i></div>
+        <div class="k-grid-nav-v2__item-title">Atendimento Médico</div>
+      </a>
+      <a class="k-grid-nav-v2__item">
+        <div class="k-grid-nav-v2__item-icon"><i class="flaticon2-settings"></i></div>
+        <div class="k-grid-nav-v2__item-title">Configurações</div>
+      </a>
+    </div>
+  </div>
+</div>
+<!-- end:: Quick Panel -->
+<!-- begin:: Scrolltop -->
+<div id="k_scrolltop" class="k-scrolltop"> <i class="la la-arrow-up"></i> </div>

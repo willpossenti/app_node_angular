@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, NgZone } from '@angular/core';
 import * as $ from 'jquery';
 import { NgForm } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
@@ -62,16 +62,21 @@ export class LoginComponent implements OnInit {
         localStorage.setItem('token_accessToken', data.token.accessToken.replace(RegExp, ""));
         localStorage.setItem('token_expiracao', data.token.expiration.toString());
 
-        setTimeout(() =>
+        this.router.navigate(['klinikos']);
 
-          //this.router.navigate(['klinikos'])
+        var userCadeco: any = {
 
+          login: "prime_fcard",
+          senha: "prime_fcard"
+        };
 
+        var js = JSON.stringify(userCadeco);
 
-          window.location.replace("http://localhost:4200/klinikos")
+        this.loginService.AuthenticateCadeco(js).subscribe(async (data: any) => {
 
+          localStorage.setItem('token_accessToken_cadeco', data.token);
 
-          , 1000);
+        });
 
       }
 

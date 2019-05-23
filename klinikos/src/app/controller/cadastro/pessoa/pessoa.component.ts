@@ -20,7 +20,7 @@ import { LotacaoProfissional } from '../../../model/LotacaoProfissional';
 import { PessoaService } from './pessoa.service';
 import * as RemoveAcentos from 'remove-accents';
 import { HttpErrorResponse } from '@angular/common/http';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { sortBy } from 'sort-by-typescript';
 import { Pessoa } from '../../../model/Pessoa';
 import { Return } from '../../../model/Return';
@@ -32,6 +32,7 @@ import * as moment from 'moment';
 import * as Toastr from 'toastr';
 import * as RecordRTC from 'recordrtc';
 import { AuthGuard } from '../../../controller/auth/auth.guard';
+import { concat } from 'rxjs';
 
 @Component({
   selector: 'app-pessoa',
@@ -93,7 +94,7 @@ export class PessoaComponent implements OnInit {
   public canvas: ElementRef;
 
 
-  constructor(private pessoaService: PessoaService,
+  constructor(private route: ActivatedRoute, private pessoaService: PessoaService,
     private cpfService: CpfService, private router: Router, private auth: AuthGuard) {
     this.listaLotacaoProfissional = new Array<LotacaoProfissional>();
     this.listaOcupacao = new Array<Ocupacao>();
@@ -121,8 +122,6 @@ export class PessoaComponent implements OnInit {
       "showMethod": "fadeIn",
       "hideMethod": "fadeOut"
     };
-
-    console.log(localStorage['token_expiracao']);
 
   }
 
@@ -659,7 +658,43 @@ export class PessoaComponent implements OnInit {
 
                 }
 
+
                 this.CarregaPessoa(paciente);
+              } else {
+
+                var cpf_cadeco = JSON.stringify(cpf);
+                this.pessoaService.ConsultaCpfPacienteCadeco(cpf_cadeco).subscribe(async (dataCadeco: any) => {
+
+
+                  var pessoaPaciente: PessoaPaciente = {
+
+                    nomeCompleto: dataCadeco.nome,
+                    nomemae: dataCadeco.nomeMae,
+                    nomepai: dataCadeco.nomePai,
+                    cns: dataCadeco.cns,
+                    sexo: dataCadeco.sexo.toUpperCase(),
+                    contato1: dataCadeco.telefoneCelular,
+                    contato2: dataCadeco.telefone,
+                    email: dataCadeco.email
+                  }
+
+                  if (dataCadeco.raca !== undefined)
+                    this.Raca = this.listaRaca.find(x => x.nome === dataCadeco.raca.descricao.toUpperCase());
+                  
+
+
+
+                  console.log(dataCadeco);
+                 
+
+
+
+                  this.CarregaPessoa(pessoaPaciente);
+
+                }, (error: HttpErrorResponse) => {
+                  this.auth.onSessaoInvalida(error);
+                });
+
               }
             }, (error: HttpErrorResponse) => {
               this.auth.onSessaoInvalida(error);
@@ -865,28 +900,31 @@ export class PessoaComponent implements OnInit {
     this.Pessoa = pessoa;
 
     $("input[name^=DP_NomeCompleto]").val(pessoa.nomeCompleto);
-    $("input[name^=DP_NomeSocial]").val(pessoa.nomeSocial);
+
+    if (pessoa.nomeSocial !== undefined)
+      $("input[name^=DP_NomeSocial]").val(pessoa.nomeSocial);
 
 
-    if (pessoa.foto !== null) {
+    if (pessoa.foto !== undefined)
+      if (pessoa.foto !== null) {
 
-      var _URL = window.URL;
+        var _URL = window.URL;
 
-      var imagem = new Image();
-      imagem.src = pessoa.foto;
+        var imagem = new Image();
+        imagem.src = pessoa.foto;
 
-      imagem.onload = function () {
+        imagem.onload = function () {
 
-        $('.k-avatar__holder').css('background-image', 'url("' + pessoa.foto + '")');
+          $('.k-avatar__holder').css('background-image', 'url("' + pessoa.foto + '")');
 
-        if ($(this)[0].width === $(this)[0].height)
-          $('.k-avatar__holder').css('background-size', '120px 120px');
-        else
-          $('.k-avatar__holder').css('background-size', '160px 120px');
-      };
+          if ($(this)[0].width === $(this)[0].height)
+            $('.k-avatar__holder').css('background-size', '120px 120px');
+          else
+            $('.k-avatar__holder').css('background-size', '160px 120px');
+        };
 
-      $('.k-avatar__holder').css('background-position', 'center');
-    }
+        $('.k-avatar__holder').css('background-position', 'center');
+      }
 
 
     if (pessoa.sexo === "M")
@@ -894,57 +932,71 @@ export class PessoaComponent implements OnInit {
     if (pessoa.sexo === "F")
       $("label[for^=DP_Sexo_Feminino]").addClass("active");
 
-    if (pessoa.nascimento != null) {
+    if (pessoa.nascimento !== undefined)
+      if (pessoa.nascimento != null) {
 
-      var nascimento = new Date(pessoa.nascimento),
-        month = '' + (nascimento.getMonth() + 1),
-        day = '' + nascimento.getDate(),
-        year = nascimento.getFullYear();
+        var nascimento = new Date(pessoa.nascimento),
+          month = '' + (nascimento.getMonth() + 1),
+          day = '' + nascimento.getDate(),
+          year = nascimento.getFullYear();
 
-      $("input[name^=DP_Nascimento]").val(("0" + day).slice(-2) + "/" + ("0" + month).slice(-2) + "/" + year);
-    }
+        $("input[name^=DP_Nascimento]").val(("0" + day).slice(-2) + "/" + ("0" + month).slice(-2) + "/" + year);
+      }
 
     this.onCalculaIdade();
 
-    if (pessoa.raca !== null) {
 
-      this.Raca = this.listaRaca.find(x => x.racaId === pessoa.raca.racaId);
+    if (pessoa.Raca !== undefined)
+      if (pessoa.Raca !== null && this.Raca === null) {
 
-      if (pessoa.etnia !== null) {
+        this.Raca = this.listaRaca.find(x => x.racaId === pessoa.Raca.racaId);
 
-        this.Etnia = pessoa.etnia;
-        this.onSelectedRaca();
+
+        if (pessoa.Etnia !== undefined)
+          if (pessoa.Etnia !== null) {
+
+            this.Etnia = pessoa.etnia;
+            this.onSelectedRaca();
+
+          }
       }
-    }
+
+
 
     $("input[name^=DP_NomePai]").val(pessoa.nomePai);
     $("input[name^=DP_NomeMae]").val(pessoa.nomeMae);
 
-    if (pessoa.justificativa !== null)
-      this.Justificativa = this.listaJustificativa.find(x => x.justificativaId === pessoa.justificativa.justificativaId);
-    if (pessoa.nacionalidade !== null)
-      this.Nacionalidade = this.listaNacionalidade.find(x => x.nacionalidadeId === pessoa.nacionalidade.nacionalidadeId);
+    if (pessoa.justificativa !== undefined)
+      if (pessoa.justificativa !== null)
+        this.Justificativa = this.listaJustificativa.find(x => x.justificativaId === pessoa.justificativa.justificativaId);
 
-    if (pessoa.naturalidade !== null) {
+    if (pessoa.nacionalidade !== undefined)
+      if (pessoa.nacionalidade !== null)
+        this.Nacionalidade = this.listaNacionalidade.find(x => x.nacionalidadeId === pessoa.nacionalidade.nacionalidadeId);
 
-      this.Estado = this.listaEstado.find(x => x.estadoId === pessoa.naturalidade.estado.estadoId);
-      this.Cidade = pessoa.naturalidade;
-      this.onSelectedUf();
-    }
+    if (pessoa.naturalidade !== undefined)
+      if (pessoa.naturalidade !== null) {
+
+        this.Estado = this.listaEstado.find(x => x.estadoId === pessoa.naturalidade.estado.estadoId);
+        this.Cidade = pessoa.naturalidade;
+        this.onSelectedUf();
+      }
 
     $("input[name^=DP_Identidade]").val(pessoa.identidade);
     this.UfIdentidade = this.listaEstado.find(x => x.uf === pessoa.uf);
 
-    if (pessoa.orgaoEmissor !== null)
-      this.OrgaoEmissor = this.listaOrgaoEmissor.find(x => x.orgaoEmissorId === pessoa.orgaoEmissor.orgaoEmissorId);
+    if (pessoa.orgaoEmissor !== undefined)
+      if (pessoa.orgaoEmissor !== null)
+        this.OrgaoEmissor = this.listaOrgaoEmissor.find(x => x.orgaoEmissorId === pessoa.orgaoEmissor.orgaoEmissorId);
 
-    if (pessoa.emissao != null) {
-      var emissao = new Date(pessoa.emissao),
-        month = '' + (emissao.getMonth() + 1),
-        day = '' + emissao.getDate(),
-        year = emissao.getFullYear();
-      $("input[name^=DP_OrgaoEmissorData]").val(("0" + day).slice(-2) + "/" + ("0" + month).slice(-2) + "/" + year);
-    }
+    if (pessoa.emissao !== undefined)
+      if (pessoa.emissao != null) {
+        var emissao = new Date(pessoa.emissao),
+          month = '' + (emissao.getMonth() + 1),
+          day = '' + emissao.getDate(),
+          year = emissao.getFullYear();
+        $("input[name^=DP_OrgaoEmissorData]").val(("0" + day).slice(-2) + "/" + ("0" + month).slice(-2) + "/" + year);
+      }
 
     $("input[name^=DP_CNS]").val(pessoa.cns);
 
@@ -953,11 +1005,12 @@ export class PessoaComponent implements OnInit {
     $("input[name^=DP_Numero]").val(pessoa.numero);
     $("input[name^=DP_Complemento]").val(pessoa.complemento);
 
-    if (pessoa.estado !== null) {
-      this.EstadoEndereco = this.listaEstado.find(x => x.estadoId === pessoa.estado.estadoId);
-      this.onSelectedUfEndereco();
-      this.CidadeEndereco = pessoa.cidade;
-    }
+    if (pessoa.estado !== undefined)
+      if (pessoa.estado !== null) {
+        this.EstadoEndereco = this.listaEstado.find(x => x.estadoId === pessoa.estado.estadoId);
+        this.onSelectedUfEndereco();
+        this.CidadeEndereco = pessoa.cidade;
+      }
 
     $("input[name^=DP_Bairro]").val(pessoa.bairro);
 
@@ -1458,8 +1511,6 @@ export class PessoaComponent implements OnInit {
             Toastr.warning("CEP não encontrado");
 
           } else {
-
-            console.log('1');
 
             $("input[name^=DP_Logradouro]").val(data.logradouro.toUpperCase())
             $("input[name^=DP_Bairro]").val(data.bairro.toUpperCase())

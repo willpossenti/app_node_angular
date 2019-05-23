@@ -18,7 +18,7 @@ export class PessoaService {
 
   private baseUrl: string;
   private cepUrl: string;
-
+  private cadecoUrl: string;
 
   private httpOptions = {
     headers: new HttpHeaders({
@@ -27,11 +27,18 @@ export class PessoaService {
     })
   };
 
+  private httpOptions2 = {
+    headers: new HttpHeaders({
+      'Content-Type': 'application/json',
+      'Authorization': 'Basic ' + localStorage['token_accessToken_cadeco']
+    })
+  };
+
 
   constructor(private http: HttpClient) {
     this.baseUrl = 'https://localhost:44307/api/';
     this.cepUrl = 'https://viacep.com.br/ws/';
-
+    this.cadecoUrl = 'https://integrador.ecosistemas.com.br/cadeco-rest/api/paciente/cpf?';
 
 
 
@@ -69,8 +76,17 @@ export class PessoaService {
   ConsultaCpfProfissional(cpf: string) {
     return this.http.get<Return>(`${this.baseUrl}pessoa/pessoaprofissional/consultacpf/` + cpf, this.httpOptions);
   }
+
+
+  ConsultaCpfPacienteCadeco(cpf: string) {
+    return this.http.get<any>(`${this.cadecoUrl}cpf=` + cpf, this.httpOptions2);
+
+  }
+
+
   ConsultaCpfPaciente(cpf: string) {
     return this.http.get<Return>(`${this.baseUrl}pessoa/pessoapaciente/consultacpf/` + cpf, this.httpOptions);
+
   }
   ConsultaCnsProfissional(cns: string) {
     return this.http.get<Return>(`${this.baseUrl}pessoa/pessoaprofissional/consultacns/` + cns, this.httpOptions);

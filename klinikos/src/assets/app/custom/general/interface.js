@@ -272,7 +272,7 @@ $(document).ready(function () {
     var dp_cpf = $('#DP_CPF').val();
     var dp_cpf_check = validarCPF(dp_cpf);
     // vazio ou falso requer CPF
-    if ((dp_cpf === '') || (dp_cpf_check === false)) {
+    if ((dp_cpf == '') || (dp_cpf_check === false)) {
       $('#msg_cpf').removeClass('oculta');
       $('#DP_CPF').focus();
     }
@@ -297,6 +297,7 @@ $(document).ready(function () {
     $(".mask_hour").mask("99:99"); // Titulo Eleitor
 
   });
+
   jQuery(".telefone")
     .mask("(99) 9999-9999?9")
     .focusout(function (event) {
@@ -313,14 +314,12 @@ $(document).ready(function () {
     });
 
 
-
   /*=CadastroDePessoas: ------------------------------------------- */
 
-  // Permite apenas Números
+  // Permite apenas Somente Números
   $(function () {
-    //$('#DC_Zona, #DC_Secao, #DC_NumeroCTPS, #SV_PressaoArterial_1, #SV_PressaoArterial_2, #SV_Pulso, #SV_FreqResp').bind('keypress', function(e){
     $('.sn').bind('keypress', function (e) {
-      var keyCode = e.which ? e.which : event.keyCode;
+      var keyCode = (e.which) ? e.which : event.keyCode;
       return !(keyCode > 31 && (keyCode < 48 || keyCode > 57));
     });
   });
@@ -356,10 +355,12 @@ $(document).ready(function () {
     // limpa: elementos com a classe 'clear' (bootstrap label buttons)
     if ($('.clear').hasClass('active')) {
       $('.clear').removeClass('active');
-      // campos com opacidade : escala de dor
-      $('.clear').addClass('ed-opac');
+      // class.risco > escala de dor : campos com opacidade
+      $('.ed').addClass('ed-opac');
+      // acolhimento > preferencial : icones svg
+      $('.deficiente, .gestante, .idoso-a, idoso-b').removeClass('fill-hover');
     }
-    // limpra combos dinâmicos
+    // limpa combos dinâmicos
     $('select[name="DP_Etnia"]').find('option').remove().end().append('<option value="-1">-- Selecione --</option>');
     $('select[name="DP_NaturalidadeCidade"]').find('option').remove().end().append('<option value="-1">-- Selecione --</option>');
     $("select[name^=DP_Etnia]").val($("select[name^=DP_Etnia] option:first").val());
@@ -440,11 +441,11 @@ $(document).ready(function () {
 
     if (pre_art_1 !== '') {
 
-      if ((pre_art_1 > 49 && pre_art_1 <= 59) || (pre_art_1 > 180 && pre_art_1 <= 250)) {
+      if (((pre_art_1 > 49) && (pre_art_1 <= 59)) || ((pre_art_1 > 180) && (pre_art_1 <= 250))) {
         $('#msg_pa1_a').removeClass('oculta');
         $('#msg_pa1_b').addClass('oculta');
       }
-      if (pre_art_1 < 50 || pre_art_1 > 250) {
+      if ((pre_art_1 < 50) || (pre_art_1 > 250)) {
         $('#msg_pa1_b').removeClass('oculta');
         $('#msg_pa1_a').addClass('oculta');
       }
@@ -466,16 +467,16 @@ $(document).ready(function () {
 
     if (pre_art_2 !== '') {
 
-      if ((pre_art_2 > 19 && pre_art_2 <= 29) || (pre_art_2 > 110 && pre_art_2 <= 160)) {
+      if (((pre_art_2 > 19) && (pre_art_2 <= 29)) || ((pre_art_2 > 110) && (pre_art_2 <= 160))) {
         $('#msg_pa2_a').removeClass('oculta');
         $('#msg_pa2_b').addClass('oculta');
       }
-      if (pre_art_2 < 20 || pre_art_2 > 160) {
+      if ((pre_art_2 < 20) || (pre_art_2 > 160)) {
         $('#msg_pa2_b').removeClass('oculta');
         $('#msg_pa2_a').addClass('oculta');
       }
 
-      if (pre_art_2 <= 110 && pre_art_2 >= 30) {
+      if ((pre_art_2 <= 110) && (pre_art_2 >= 30)) {
         $('#msg_pa2_a, #msg_pa2_b').addClass('oculta');
       }
 
@@ -492,15 +493,15 @@ $(document).ready(function () {
 
     if (pulso !== '') {
 
-      if ((pulso > 39 && pulso <= 59) || (pulso > 120 && pulso <= 150)) {
+      if (((pulso > 39) && (pulso <= 59)) || ((pulso > 120) && (pulso <= 150))) {
         $('#msg_pulso_a').removeClass('oculta');
         $('#msg_pulso_b').addClass('oculta');
       }
-      if (pulso < 40 || pulso > 150) {
+      if ((pulso < 40) || (pulso > 150)) {
         $('#msg_pulso_b').removeClass('oculta');
         $('#msg_pulso_a').addClass('oculta');
       }
-      if (pulso <= 120 && pulso >= 60) {
+      if ((pulso <= 120) && (pulso >= 60)) {
         $('#msg_pulso_a, #msg_pulso_b').addClass('oculta');
       }
 
@@ -517,15 +518,15 @@ $(document).ready(function () {
 
     if (temp !== '') {
 
-      if ((temp >= 33 && temp <= 34) || (temp > 40 && temp <= 45)) {
+      if (((temp >= 33) && (temp <= 34)) || ((temp > 40) && (temp <= 45))) {
         $('#msg_temp_a').removeClass('oculta');
         $('#msg_temp_b').addClass('oculta');
       }
-      if (temp < 33 || temp > 45) {
+      if ((temp < 33) || (temp > 45)) {
         $('#msg_temp_b').removeClass('oculta');
         $('#msg_temp_a').addClass('oculta');
       }
-      if (temp >= 35 && temp <= 40) {
+      if ((temp >= 35) && (temp <= 40)) {
         $('#msg_temp_a, #msg_temp_b').addClass('oculta');
       }
     }
@@ -568,15 +569,15 @@ $(document).ready(function () {
 
     if (freq_resp !== '') {
 
-      if ((freq_resp > 9 && freq_resp <= 11) || (freq_resp > 60 && freq_resp <= 66)) {
+      if (((freq_resp > 9) && (freq_resp <= 11)) || ((freq_resp > 60) && (freq_resp <= 66))) {
         $('#msg_freqresp_a').removeClass('oculta');
         $('#msg_freqresp_b').addClass('oculta');
       }
-      if (freq_resp < 10 || freq_resp > 66) {
+      if ((freq_resp < 10) || (freq_resp > 66)) {
         $('#msg_freqresp_b').removeClass('oculta');
         $('#msg_freqresp_a').addClass('oculta');
       }
-      if (freq_resp <= 60 && freq_resp >= 12) {
+      if ((freq_resp <= 60) && (freq_resp >= 12)) {
         $('#msg_freqresp_a, #msg_freqresp_b').addClass('oculta');
       }
 
@@ -633,7 +634,118 @@ $(document).ready(function () {
   //end: Outras Condições (Ao marcar 'Dor Torácica força a marcação da opção Risco) -----
 
 
+  // Ícone de Prioridade : Permite alterar cor de imagens SVG, classe 'fill'; -------
+  $(function () {
+    jQuery('img.svg').each(function () {
+      var $img = jQuery(this);
+      var imgID = $img.attr('id');
+      var imgClass = $img.attr('class');
+      var imgURL = $img.attr('src');
+
+      jQuery.get(imgURL, function (data) {
+        // Get the SVG tag, ignore the rest
+        var $svg = jQuery(data).find('svg');
+
+        // Add replaced image's ID to the new SVG
+        if (typeof imgID !== 'undefined') {
+          $svg = $svg.attr('id', imgID);
+        }
+        // Add replaced image's classes to the new SVG
+        if (typeof imgClass !== 'undefined') {
+          $svg = $svg.attr('class', imgClass + ' replaced-svg');
+        }
+
+        // Remove any invalid XML tags as per http://validator.w3.org
+        $svg = $svg.removeAttr('xmlns:a');
+
+        // Check if the viewport is set, else we gonna set it if we can.
+        if (!$svg.attr('viewBox') && $svg.attr('height') && $svg.attr('width')) {
+          $svg.attr('viewBox', '0 0 ' + $svg.attr('height') + ' ' + $svg.attr('width'))
+        }
+
+        // Replace image with new SVG
+        $img.replaceWith($svg);
+
+      }, 'xml');
+
+    });
+  });
+
+  // Ícone de Prioridade (Click) : Add and remove class 'fill' -------------------------------------
+  $('#deficiente').on('click', function () {
+    if (!$(this).hasClass('active')) {
+      $('.deficiente').addClass('fill-hover');
+      $('.gestante, .idoso-a, .idoso-b').removeClass('fill-hover');
+    }
+  });
+  $('#gestante').on('click', function () {
+    if (!$(this).hasClass('active')) {
+      $('.gestante').addClass('fill-hover');
+      $('.deficiente, .idoso-a, .idoso-b').removeClass('fill-hover');
+    }
+  });
+  $('#idoso-a').on('click', function () {
+    if (!$(this).hasClass('active')) {
+      $('.idoso-a').addClass('fill-hover');
+      $('.deficiente, .gestante, .idoso-b').removeClass('fill-hover');
+    }
+  });
+  $('#idoso-b').on('click', function () {
+    if (!$(this).hasClass('active')) {
+      $('.idoso-b').addClass('fill-hover');
+      $('.deficiente, .gestante, .idoso-a').removeClass('fill-hover');
+    }
+  });
+
+  // Ícone de Prioridade (Hover) : Add and remove class 'fill' -------------------------------------
+  $(function () {
+    // Prioridades
+    $('#deficiente').hover(
+      function () {
+        $('.deficiente').addClass('fill-hover');
+      },
+      function () {
+        if (!$(this).hasClass('active')) {
+          $('.deficiente').removeClass('fill-hover');
+        }
+      }
+    );
+    $('#gestante').hover(
+      function () {
+        $('.gestante').addClass('fill-hover');
+      },
+      function () {
+        if (!$(this).hasClass('active')) {
+          $('.gestante').removeClass('fill-hover');
+        }
+      }
+    );
+    $('#idoso-a').hover(
+      function () {
+        $('.idoso-a').addClass('fill-hover');
+      },
+      function () {
+        if (!$(this).hasClass('active')) {
+          $('.idoso-a').removeClass('fill-hover');
+        }
+      }
+    );
+    $('#idoso-b').hover(
+      function () {
+        $('.idoso-b').addClass('fill-hover');
+      },
+      function () {
+        if (!$(this).hasClass('active')) {
+          $('.idoso-b').removeClass('fill-hover');
+        }
+      }
+    );
+  });
+
+
+
   /*=Classificação de Risco: --------------------------------------------------- */
+
   // Escala de Dor : Sweep label [radio buttons] with class: "ed" ------
   $('.ed').on('click', function () {
     // sweep radio-buttons
@@ -646,7 +758,7 @@ $(document).ready(function () {
       // restore opacity other options
       $(radios).each(function (i, e) {
         // check each
-        if ($(e) !== escala) {
+        if ($(e) != escala) {
           if ($(e).hasClass('active')) {
             $(e).removeClass('active');
             $(e).addClass('ed-opac');
@@ -658,50 +770,45 @@ $(document).ready(function () {
   });
 
   // Sinais Vitais : Calcular IMC -----------
-  $('#SV_Peso, #SV_Altura').on('keyup', function () {
+  $('#SV_Peso, #SV_Altura').on('focusout', function () {
     // vars
-    var peso = $('#SV_Peso').val();
-    var altura = $('#SV_Altura').val();
-    altura = altura / 100;
-    var imc = peso / (altura * altura);
-    var imc_r = imc.toFixed(2);
+    var peso = $('#SV_Peso').val().replace(',', '.');
+    var altura = $('#SV_Altura').val().replace(',', '').replace('.', '');
 
-    // check results
-    if (imc !== 'Infinity' && imc !== '') {
+    if ($.isNumeric(peso) && $.isNumeric(altura)) {
+      // vars
+      if (peso !== '' && altura !== '') {
+        // calc
+        var newaltura = altura / 100;
+        var imc = peso / (newaltura * newaltura);
+        var imc_r = imc.toFixed(1).replace('.', ',');
 
-      var result = '';
-      // Abaixo do Peso
-      if (imc_r < 18.5) {
-         result = imc_r + ' - Ab. do Peso';
-        $("#SV_IMC").attr("data-content", "Abaixo do Peso");
+        // check 
+        if (imc < 18.5) {
+          var msg = ' - Abaixo do Peso';
+        }
+        if (imc >= 18.5) {
+          var msg = ' - Peso Normal';
+        }
+        if (imc >= 25) {
+          var msg = ' - Sobrepeso';
+        }
+        if (imc >= 30) {
+          var msg = ' - Obesidade: Grau 1';
+        }
+        if (imc >= 35) {
+          var msg = ' - Obesidade: Grau 2';
+        }
+        if (imc >= 40) {
+          var msg = ' - Obesidade: Grau 3';
+        }
+        // show result
+        $('#SV_IMC').val(imc_r + msg);
+
+      } else {
+        $('#SV_IMC').val('Informe o Peso e a Altura');
       }
-      // Peso Normal
-      if (imc_r >= 18.5 && imc_r <= 24.9) {
-         result = imc_r + ' - Peso Normal';
-        $("#SV_IMC").attr("data-content", "Peso Normal");
-      }
-      // Sobrepeso
-      if (imc_r >= 25 && imc_r <= 29.9) {
-         result = imc_r + ' - Sobrepeso';
-        $("#SV_IMC").attr("data-content", "Sobrepeso");
-      }
-      // Obeso Grau 1
-      if (imc_r >= 30 && imc_r <= 34.9) {
-         result = imc_r + ' - Ob.: Grau 1';
-        $("#SV_IMC").attr("data-content", "Obesidade: Grau 1");
-      }
-      // Obeso Grau 2
-      if (imc_r >= 35 && imc_r <= 39.9) {
-         result = imc_r + ' - Ob.: Grau 2';
-        $("#SV_IMC").attr("data-content", "Obesidade: Grau 2");
-      }
-      // Obeso Grau 3
-      if (imc_r > 40) {
-        result = imc_r + ' - Ob.: Grau 3';
-        $("#SV_IMC").attr("data-content", "Obesidade: Grau 3");
-      }
-      // append with rounded
-      $('#SV_IMC').val(result);
+
     }
   });
 
@@ -729,7 +836,7 @@ $(document).ready(function () {
 
   // Possui Alergia
   $('#PossuiAlergia').on('change', function () {
-    if ($(this).val() === 1) {
+    if ($(this).val() == 1) {
       // show card : Alergia
       $('#AlergiaCard').removeClass('oculta');
       $('#collapseOne3').addClass('show');
@@ -738,6 +845,38 @@ $(document).ready(function () {
       $('#AlergiaCard').addClass('oculta');
       $('#collapseOne3').removeClass('show');
     }
+  });
+
+  // Escala de Glasgow
+  $('#EG_AberturaOcular, #EG_RespostaVerbal, #EG_RespostaMotora').on('change', function () {
+    //vars
+    var ao = $('#EG_AberturaOcular').val();
+    var rv = $('#EG_RespostaVerbal').val();
+    var rm = $('#EG_RespostaMotora').val();
+
+    if ((ao != '') && (rv != '') && (rm != '')) {
+      // calc eg
+      var calc = parseInt(ao) + parseInt(rv) + parseInt(rm);
+
+      //check
+      if (calc <= 8) {
+        var eg = calc + ' - Trauma Grave';
+      }
+      if ((calc > 8) && (calc <= 12)) {
+        var eg = calc + ' - Trauma Moderado';
+      }
+      if ((calc >= 13) && (calc <= 15)) {
+        var eg = calc + ' - Trauma Moderado';
+      }
+      // show result
+      $('#EscalaGlasgow').val(eg);
+    }
+  });
+  // button clean options EG
+  $('#EG_Clean').on('click', function () {
+    // selects
+    $('#EG_AberturaOcular, #EG_RespostaVerbal, #EG_RespostaMotora').find('option:selected').prop('selected', false);
+    $('#EscalaGlasgow').val('');
   });
 
 
