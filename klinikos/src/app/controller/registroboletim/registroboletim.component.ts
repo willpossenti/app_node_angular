@@ -387,7 +387,7 @@ export class RegistroBoletimComponent implements OnInit {
         this.listaPessoaPaciente = data.result;
 
       }, (error: HttpErrorResponse) => {
-        Toastr.error("Falha ao consultar cep na aba endereço");
+        Toastr.error("Falha ao consultar o nome completo na aba Nome");
         console.log(`Error. ${error.message}.`);
       });
 
@@ -423,7 +423,7 @@ export class RegistroBoletimComponent implements OnInit {
         this.listaPessoaPaciente = data.result;
 
       }, (error: HttpErrorResponse) => {
-        Toastr.error("Falha ao consultar cep na aba endereço");
+        Toastr.error("Falha ao consultar o nome social na aba Nome");
         console.log(`Error. ${error.message}.`);
       });
 

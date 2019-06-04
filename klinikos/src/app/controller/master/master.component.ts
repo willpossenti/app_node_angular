@@ -70,6 +70,13 @@ export class MasterComponent implements OnInit {
             //this.route.navigate(['registroboletim'], { relativeTo: this.router })
             window.location.replace("http://localhost:4200/klinikos/classificacaorisco")
             , 1000);
+
+        else if (id === "atendimentomedico")
+          setTimeout(() =>
+
+            //this.route.navigate(['registroboletim'], { relativeTo: this.router })
+            window.location.replace("http://localhost:4200/klinikos/atendimentomedico")
+            , 1000);
         else if (id === "cadastro")
           setTimeout(() =>
             window.location.replace("http://localhost:4200/klinikos/cadastro")

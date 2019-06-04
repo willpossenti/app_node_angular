@@ -30,7 +30,6 @@ import { Cep } from '../../../model/Cep';
 import { CpfService } from '../../util/cpf.service';
 import * as moment from 'moment';
 import * as Toastr from 'toastr';
-import * as RecordRTC from 'recordrtc';
 
 @Component({
   selector: 'app-pessoa',

@@ -729,17 +729,80 @@ $(document).ready(function () {
 
   // Possui Alergia
   $('#PossuiAlergia').on('change', function () {
-    if ($(this).val() === 1) {
+    if ($(this).val() == 1) {
       // show card : Alergia
       $('#AlergiaCard').removeClass('oculta');
       $('#collapseOne3').addClass('show');
-      $('select[name="AlergiaTipo"]').focus();
+      // scrolltop animate
+      $("html, body").delay(300).animate({ scrollTop: $('#boxAlergiaScroll').offset().top - 75 }, 800);
     } else {
       $('#AlergiaCard').addClass('oculta');
       $('#collapseOne3').removeClass('show');
     }
   });
 
+
+
+  /*=Atendimento Médico: --------------------------------------------------- */
+  // Diagnóstico > Condutas > Exames ----
+  $('#CondutaExames').on('click', function () {
+    if (!$(this).find('input[type="checkbox"]').is(':checked')) {
+      $('#boxExames').removeClass('oculta');
+      $('#collapseOne5').addClass('show');
+      // scroll animated
+      $("html, body").delay(300).animate({ scrollTop: $('#boxExamesScroll').offset().top - 75 }, 800);
+    } else {
+      $('#boxExames').addClass('oculta');
+      $('#collapseOne5').removeClass('show');
+    }
+  });
+  // Diagnóstico > Condutas > Prescricao ou Receita ----
+  $('#CondutaPrescricao').on('click', function () {
+    if (!$(this).find('input[type="checkbox"]').is(':checked')) {
+      $('#boxPrescricaoReceita').removeClass('oculta');
+      $('#collapseOne6').addClass('show');
+      // scroll animated
+      $("html, body").delay(300).animate({ scrollTop: $('#boxPrescricaoReceitaScroll').offset().top - 75 }, 800);
+
+    } else {
+      $('#boxPrescricaoReceita').addClass('oculta');
+      $('#collapseOne6').removeClass('show');
+    }
+  });
+  // Diagnóstico > Condutas > Atestado ----
+  $('#CondutaAtestado').on('click', function () {
+    if (!$(this).find('input[type="checkbox"]').is(':checked')) {
+      $('#boxAtestado').removeClass('oculta');
+      $('#collapseOne7').addClass('show');
+      // scroll animated
+      $("html, body").delay(300).animate({ scrollTop: $('#boxAtestadoScroll').offset().top - 75 }, 800);
+    } else {
+      $('#boxAtestado').addClass('oculta');
+      $('#collapseOne7').removeClass('show');
+    }
+  });
+
+  // Botões Auxiliares Fixos Auxiliares : Opções de Diagnóstico
+  $('#btnAuxExames').on('click', function () {
+    $('#CondutaExames').trigger('click');
+  });
+  $('#btnAuxPrescricao').on('click', function () {
+    $('#CondutaPrescricao').trigger('click');
+  });
+  $('#btnAuxAtestado').on('click', function () {
+    $('#CondutaAtestado').trigger('click');
+  });
+
+  // Finalização do Atendimento Médico --- botão [Finalizar]
+  $('#AtendMedTipoSaida').on('change', function () {
+    if ($(this).val() == 1) {
+      $('#colModalFinAlta').addClass('oculta');
+      $('#colModalFinObito').removeClass('oculta');
+    } else {
+      $('#colModalFinAlta').removeClass('oculta');
+      $('#colModalFinObito').addClass('oculta');
+    }
+  });
 
 
 });

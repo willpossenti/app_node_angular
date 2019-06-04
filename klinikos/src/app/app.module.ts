@@ -23,6 +23,8 @@ import { ClassificacaoRiscoComponent } from './controller/classificacaorisco/cla
 
 
 import { ClassificacaoRiscoPipe } from './controller/classificacaorisco/classificacaorisco.pipe';
+import { AtendimentoMedicoComponent } from './controller/atendimentomedico/atendimentomedico.component';
+import { AtendimentoMedicoService } from './controller/atendimentomedico/atendimentomedico.service';
 
 const appRoutes: Routes = [
   { path: '', redirectTo: '/login', pathMatch: 'full' },
@@ -33,7 +35,8 @@ const appRoutes: Routes = [
       { path: 'cadastro', component: PessoaComponent },
       { path: 'registroboletim', component: RegistroBoletimComponent },
       { path: 'acolhimento', component: AcolhimentoComponent },
-      { path: 'classificacaorisco', component: ClassificacaoRiscoComponent }
+      { path: 'classificacaorisco', component: ClassificacaoRiscoComponent },
+      { path: 'atendimentomedico', component: AtendimentoMedicoComponent }
     ]
   },
 
@@ -51,7 +54,8 @@ const appRoutes: Routes = [
     MasterComponent,
     AcolhimentoComponent,
     ClassificacaoRiscoComponent,
-    ClassificacaoRiscoPipe
+    ClassificacaoRiscoPipe,
+    AtendimentoMedicoComponent
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),
@@ -68,7 +72,8 @@ const appRoutes: Routes = [
     LoginService,
     CpfService,
     AcolhimentoService,
-    ClassificaoRiscoService
+    ClassificaoRiscoService,
+    AtendimentoMedicoService
   ],
   bootstrap: [AppComponent]
 })
