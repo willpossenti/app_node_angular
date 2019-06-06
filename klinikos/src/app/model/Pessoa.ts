@@ -1,17 +1,3 @@
-import { Cidade } from "./Cidade";
-import { Estado } from './Estado';
-import { Ocupacao } from './Ocupacao';
-import { Pais } from './Pais';
-import { TipoCertidao } from './TipoCertidao';
-import { Escolaridade } from './Escolaridade';
-import { SituacaoFamiliarConjugal } from './SituacaoFamiliarConjugal';
-import { Raca } from "./Raca";
-import { Etnia } from "./Etnia";
-import { Justificativa } from "./Justificativa";
-import { Nacionalidade } from "./Nacionalidade";
-import { OrgaoEmissor } from "./OrgaoEmissor";
-import { LotacaoProfissional } from './LotacaoProfissional';
-
 
 export interface Pessoa  {
 
@@ -21,15 +7,15 @@ export interface Pessoa  {
   sexo?: string;
   nascimento?: Date;
   idadeAparente?: string;
-  Raca?: Raca;
-  Etnia?: Etnia;
+  racaId?: string;
+  etniaId?: string;
   nomepai?: string;
   nomemae?: string;
   cpf?: string;
-  Justificativa?: Justificativa;
-  Nacionalidade?: Nacionalidade;
-  Naturalidade?: Cidade;
-  OrgaoEmissor?: OrgaoEmissor;
+  justificativaId?: string;
+  nacionalidadeId?: string;
+  naturalidadeId?: string;
+  orgaoEmissorId?: string;
   identidade?: string;
   uf?: string;
   emissao?: Date;
@@ -39,17 +25,17 @@ export interface Pessoa  {
   numero?: string;
   complemento?: string;
   bairro?: string;
-  Estado?: Estado;
-  Cidade?: Cidade;
+  estadoId?: string;
+  cidadeId?: string;
   contato1?: string;
   contato2?: string;
   contato3?: string;
   email?: string;
   pisPasep?: string;
-  Ocupacao?: Ocupacao;
-  PaisOrigem?: Pais;
-  dataEntradaPis?: Date;
-  TipoCertidao?: TipoCertidao;
+  ocupacaoId?: string;
+  paisOrigemId?: string;
+  dataEntradaPais?: Date;
+  tipoCertidaoId?: string;
   nomeCartorio?: string;
   numeroLivro?: string;
   numeroFolha?: string;
@@ -63,8 +49,8 @@ export interface Pessoa  {
   zona?: string;
   secao?: string;
   frequentaeEscola?: boolean;
-  Escolaridade?: Escolaridade;
-  SituacaoFamiliarConjugal?: SituacaoFamiliarConjugal;
+  escolaridadeId?: string;
+  situacaoFamiliarConjugalId?: string;
   pacienteProfissional?: boolean;
   codigoLogin?: string;
   login?: string;

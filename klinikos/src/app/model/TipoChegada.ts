@@ -1,6 +1,6 @@
 export interface TipoChegada {
 
-  tipoChegadaId?: boolean;
+  tipoChegadaId?: string;
   descricao?: string;
   ativo?: boolean;
 

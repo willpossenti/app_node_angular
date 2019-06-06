@@ -4,7 +4,7 @@ export interface Cidade {
 
   cidadeId: string;
   nome: string;
-  Estado: Estado;
+  estadoId: string;
   ativo: boolean;
 
 

@@ -21,7 +21,8 @@ export class ClassificaoRiscoService {
 
 
   constructor(private http: HttpClient) {
-    this.baseUrl = 'https://localhost:44307/api/';
+    //this.baseUrl = 'https://localhost:44307/api/';
+    this.baseUrl = 'https://apinew.ecosistemas.com.br/api/';
   }
 
   BindCausaExterna() { return this.http.get<Return>(`${this.baseUrl}causaexterna`, this.httpOptions); }

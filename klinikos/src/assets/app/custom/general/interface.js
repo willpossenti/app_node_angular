@@ -331,7 +331,7 @@ $(document).ready(function () {
 
 
   // Limpar Formulário -------------------------
-  $('#btn_formclear').on('click', function () {
+  $('#btn_formclearCadastro').on('click', function () {
 
     // Reestrutura campos iniciais de Dados Pessoais -------------------
     if ($('input[name="DP_RecemNascido"]').is(":checked")) {
@@ -377,39 +377,7 @@ $(document).ready(function () {
   });
 
 
-  //Mostra/Oculta : Campos: Nome Completo e Nome Social
-  $('#btn_naoidentificado').on('click', function () {
-    // find
-    var btncheck = $(this).find('input[type="checkbox"]');
-    // Mostra
-    if ($(btncheck).is(":checked")) {
-      $('#box_nomecompleto, #box_social, #box_nomesocial').addClass('oculta');
-      $('#box_descricao').removeClass('oculta');
-    }
-    // Oculta
-    else {
-      $(btncheck).prop('checked', false);
-      $('#box_nomecompleto, #box_social, #box_nomesocial').removeClass('oculta');
-      $('#box_descricao, #box_nomeRN').addClass('oculta');
-    }
-  });
 
-  //Mostra/Oculta : Campo: Número Prontuário da Mãe e Nome RN
-  $('#btn_recemnasc').on('click', function () {
-    // find
-    var btnchk = $(this).find('input[type="checkbox"]');
-    // Mostra
-    if ($(btnchk).is(":checked")) {
-      $('#box_nomecomp, #box_nomesocial').addClass('oculta');
-      $('#box_numprontmae, #box_nomeRN').removeClass('oculta');
-    }
-    // Oculta
-    else {
-      $(btnchk).prop('checked', false);
-      $('#box_nomecomp, #box_nomesocial').removeClass('oculta');
-      $('#box_numprontmae, #box_nomeRN').addClass('oculta');
-    }
-  });
 
   //Mostra/Oculta : Portlet: Dados Profissionais
   $('#btn_dadosprof').on('click', function () {

@@ -57,6 +57,9 @@ export class LoginComponent implements OnInit {
       if (data.statusCode === 404 || data.statusCode === 401) {
         $('.form-group').find('span').text(data.message);
       } else {
+
+        localStorage.clear();
+
         var RegExp = /["|']/g;
         localStorage.setItem('user', JSON.stringify(data.result));
         localStorage.setItem('token_accessToken', data.token.accessToken.replace(RegExp, ""));
@@ -70,12 +73,13 @@ export class LoginComponent implements OnInit {
           senha: "prime_fcard"
         };
 
+
+
         var js = JSON.stringify(userCadeco);
 
         this.loginService.AuthenticateCadeco(js).subscribe(async (data: any) => {
 
           localStorage.setItem('token_accessToken_cadeco', data.token);
-
         });
 
       }

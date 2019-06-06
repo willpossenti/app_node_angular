@@ -14,16 +14,12 @@ import {transition, trigger, state, style, animate} from '@angular/animations';
 
 @Component({
   selector: 'app-klinikos',
-
   animations: [
     trigger('changeDivSize', [
       state('aberto', style({
-        //backgroundColor: 'green',
         width: '260px',
-        //height: '100px'
       })),
       state('contraido', style({
-        //backgroundColor: 'red',
         width: '78px',
       })),
 
@@ -98,7 +94,7 @@ export class MasterComponent implements OnInit {
 
   public ngOnInit() {
 
-
+   
     $(document).ready(function () {
 
 
@@ -106,6 +102,7 @@ export class MasterComponent implements OnInit {
       });
       $.getScript("../../../assets/app/bundle/app.bundle.js", function (data, textStatus, jqxhr) {
       });
+
 
 
       $('body').css("background", "");
@@ -191,7 +188,8 @@ export class MasterComponent implements OnInit {
 
   changePage(page) {
 
-
+    console.log(localStorage.getItem('token_expiracao'));
+    
     this.route.navigate([page], { relativeTo: this.router });
     this.changeFechaMenuRapido();
 

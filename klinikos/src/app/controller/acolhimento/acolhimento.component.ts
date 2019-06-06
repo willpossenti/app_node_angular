@@ -23,6 +23,7 @@ import * as Toastr from 'toastr';
 import { Preferencial } from '../../model/Preferencial';
 import { AuthGuard } from '../../controller/auth/auth.guard';
 
+
 @Component({
   selector: 'app-acolhimento',
   templateUrl: './acolhimento.component.html'
@@ -39,8 +40,8 @@ export class AcolhimentoComponent implements OnInit {
   orderDescricao: string = 'descricao';
   Pessoa: any;
 
-  constructor(private AcolhimentoService: AcolhimentoService, private route: ActivatedRoute, 
-    private pessoaService: PessoaService, private cpfService: CpfService, private router: Router, private auth: AuthGuard) {
+  constructor(private AcolhimentoService: AcolhimentoService, private route: ActivatedRoute,
+    private pessoaService: PessoaService, private cpfService: CpfService, private router: Router, private auth: AuthGuard,) {
 
     this.listaPreferencial = new Array<Preferencial>();
     this.listaEspecialidade = new Array<Especialidade>();
@@ -67,6 +68,7 @@ export class AcolhimentoComponent implements OnInit {
 
   public ngOnInit() {
 
+  
 
     $(document).ready(function () {
 
@@ -101,7 +103,7 @@ export class AcolhimentoComponent implements OnInit {
 
       });
 
-     
+
       document.title = 'Acolhimento | Klinikos';
       $("h3[class^=k-subheader__title]").html("Acolhimento");
 
@@ -156,8 +158,6 @@ export class AcolhimentoComponent implements OnInit {
     });
 
 
-    console.log(localStorage['token_accessToken']);
-
     if (this.auth.canActivate())
       this.auth.onSessaoAcrescimoTempo();
 
@@ -167,16 +167,16 @@ export class AcolhimentoComponent implements OnInit {
 
       $(document).ready(function () { $("select[name^=Especialidade]").val($("select[name^=Especialidade] option:first").val()); });
     }, (error: HttpErrorResponse) => {
-        this.auth.onSessaoInvalida(error);
+      this.auth.onSessaoInvalida(error);
     });
 
     this.AcolhimentoService.BindPreferencial().subscribe(async (data: Return) => {
       this.listaPreferencial = data.result;
 
-      
+
       $(document).ready(function () { $("select[name^=Preferencial]").val($("select[name^=Preferencial] option:first").val()); });
     }, (error: HttpErrorResponse) => {
-        this.auth.onSessaoInvalida(error);
+      this.auth.onSessaoInvalida(error);
     });
 
 
@@ -215,28 +215,31 @@ export class AcolhimentoComponent implements OnInit {
     pessoa.ativo = true;
 
     var imc = $("input[name^=SV_IMC]").val();
+    var imc = $("input[name^=SV_IMC]").val();
 
-    if (a.value.IdentificacaoPaciente !== "")
-      pessoa.nomeCompleto = a.value.IdentificacaoPaciente.toUpperCase();
+
+
+    if (a.value.IdentificacaoPacienteAcolhimento !== undefined)
+      pessoa.nomeCompleto = a.value.IdentificacaoPacienteAcolhimento.toUpperCase();
 
 
     if (a.value.NomeSocial !== "")
       pessoa.nomeSocial = a.value.NomeSocial.toUpperCase();
 
-
-    acolhimento.Especialidade = this.Especialidade;
+    if (this.Especialidade != null)
+      acolhimento.especialidadeId = this.Especialidade.especialidadeId;
 
     if ($("label[for^=Cadeirante]").hasClass("active"))
-      acolhimento.Preferencial = this.listaPreferencial.find(x => x.nome === "DEFICIENTE FISICO");
+      acolhimento.preferencialId = this.listaPreferencial.find(x => x.nome === "DEFICIENTE FISICO").preferencialId;
 
     if ($("label[for^=Gestante]").hasClass("active"))
-      acolhimento.Preferencial = this.listaPreferencial.find(x => x.nome === "GESTANTE");
+      acolhimento.preferencialId = this.listaPreferencial.find(x => x.nome === "GESTANTE").preferencialId;
 
     if ($("label[for^=Idoso60]").hasClass("active"))
-      acolhimento.Preferencial = this.listaPreferencial.find(x => x.nome === "IDOSO 60 ANOS: PESSOA COM IDADE ENTRE 60 E 79 ANOS");
+      acolhimento.preferencialId = this.listaPreferencial.find(x => x.nome === "IDOSO 60 ANOS: PESSOA COM IDADE ENTRE 60 E 79 ANOS").preferencialId;
 
     if ($("label[for^=Idoso80]").hasClass("active"))
-      acolhimento.Preferencial = this.listaPreferencial.find(x => x.nome === "IDOSO 80 ANOS: PESSOA COM IDADE IGUAL OU SUPERIOR A 80 ANOS");
+      acolhimento.preferencialId = this.listaPreferencial.find(x => x.nome === "IDOSO 80 ANOS: PESSOA COM IDADE IGUAL OU SUPERIOR A 80 ANOS").preferencialId;
 
     if (a.value.SV_Peso !== "")
       acolhimento.peso = a.value.SV_Peso + " kg";
@@ -270,7 +273,7 @@ export class AcolhimentoComponent implements OnInit {
     else
       acolhimento.risco = false;
 
-      acolhimento.PessoaPaciente = pessoa;
+    acolhimento.PessoaPaciente = pessoa;
 
 
     console.log(JSON.stringify(acolhimento));
@@ -286,7 +289,7 @@ export class AcolhimentoComponent implements OnInit {
       this.LimparCampos(a);
 
     }, (error: HttpErrorResponse) => {
-        this.auth.onSessaoInvalida(error);
+      this.auth.onSessaoInvalida(error);
     },
     );
 
@@ -323,7 +326,7 @@ export class AcolhimentoComponent implements OnInit {
 
     $("#btn_formclear").trigger("click");
     this.Pessoa = undefined;
-    a.value.IdentificacaoPaciente = "";
+    a.value.IdentificacaoPacienteAcolhimento = "";
     a.value.NomeSocial = "";
     a.value.SV_Peso = "";
     a.value.SV_Altura = "";
@@ -354,7 +357,7 @@ export class AcolhimentoComponent implements OnInit {
         this.listaPessoaPaciente = data.result;
 
       }, (error: HttpErrorResponse) => {
-          this.auth.onSessaoInvalida(error);
+        this.auth.onSessaoInvalida(error);
       });
 
 

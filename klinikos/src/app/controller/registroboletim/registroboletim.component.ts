@@ -19,6 +19,7 @@ import * as moment from 'moment';
 import { Return } from '../../model/Return';
 import * as Toastr from 'toastr';
 import { AuthGuard } from '../../controller/auth/auth.guard';
+import * as swal from '../../../assets/vendors/general/sweetalert2/dist/sweetalert2.js';
 
 @Component({
   selector: 'app-registroboletim',
@@ -38,8 +39,9 @@ export class RegistroBoletimComponent implements OnInit {
   orderDescricao: string = 'descricao';
   orderUf: string = 'uf';
   Pessoa: any;
+  customMask: string;
 
-  constructor(private registroBoletimService: RegistroBoletimService, private route: ActivatedRoute, 
+  constructor(private registroBoletimService: RegistroBoletimService, private route: ActivatedRoute,
     private pessoaService: PessoaService, private cpfService: CpfService, private router: Router, private auth: AuthGuard) {
 
 
@@ -48,6 +50,8 @@ export class RegistroBoletimComponent implements OnInit {
 
   public ngOnInit() {
 
+
+    this.customMask = '(00) 00000-0000';
 
     $(document).ready(function () {
 
@@ -146,7 +150,7 @@ export class RegistroBoletimComponent implements OnInit {
 
       $(document).ready(function () { $("select[name^=IB_Especialidade]").val($("select[name^=IB_Especialidade] option:first").val()); });
     }, (error: HttpErrorResponse) => {
-        this.auth.onSessaoInvalida(error);
+      this.auth.onSessaoInvalida(error);
     });
 
     this.registroBoletimService.BindTipoChegada().subscribe(async (data: Return) => {
@@ -154,12 +158,12 @@ export class RegistroBoletimComponent implements OnInit {
 
       $(document).ready(function () { $("select[name^=IB_ComoChegou]").val($("select[name^=IB_ComoChegou] option:first").val()); });
     }, (error: HttpErrorResponse) => {
-        this.auth.onSessaoInvalida(error);
+      this.auth.onSessaoInvalida(error);
     });
 
-   
 
-   
+
+
 
 
   }
@@ -202,7 +206,7 @@ export class RegistroBoletimComponent implements OnInit {
             this.CarregaPessoa(paciente);
           }
         }, (error: HttpErrorResponse) => {
-            this.auth.onSessaoInvalida(error);
+          this.auth.onSessaoInvalida(error);
         });
       }
     }
@@ -318,9 +322,11 @@ export class RegistroBoletimComponent implements OnInit {
     if (rb.value.DP_Bairro !== "")
       pessoa.bairro = rb.value.DP_Bairro.toUpperCase();
 
+    if (this.TipoChegada !== undefined)
+      registroboletim.tipoChegadaId = this.TipoChegada.tipoChegadaId;
 
-    registroboletim.TipoChegada = this.TipoChegada;
-    registroboletim.Especialidade = this.Especialidade;
+    if (this.Especialidade !== undefined)
+      registroboletim.especialidadeId = this.Especialidade.especialidadeId;
 
     if (rb.value.IN_NomeDoInformante !== "")
       registroboletim.nomeInformante = rb.value.IN_NomeDoInformante.toUpperCase();
@@ -334,6 +340,24 @@ export class RegistroBoletimComponent implements OnInit {
     if (rb.value.IN_GrauParentesco !== "")
       registroboletim.grauParentesco = rb.value.IN_GrauParentesco.toUpperCase();
 
+
+    var msgCamposObrigatorios = "";
+
+    if (nome === "")
+      msgCamposObrigatorios = "Informe o nome\n";
+
+    if (this.TipoChegada === undefined)
+      msgCamposObrigatorios = msgCamposObrigatorios + ", como chegou ";
+
+    if (this.Especialidade === undefined)
+      msgCamposObrigatorios = msgCamposObrigatorios + "e especialidade";
+
+    if (msgCamposObrigatorios !== "") {
+      swal("Campos Obrigatórios", msgCamposObrigatorios, "error");
+      return;
+    }
+
+
     if (this.Pessoa === undefined)
       registroboletim.Pessoa = pessoa;
     else {
@@ -345,11 +369,13 @@ export class RegistroBoletimComponent implements OnInit {
         registroboletim.Pessoa = pessoa;
 
       }, (error: HttpErrorResponse) => {
-          this.auth.onSessaoInvalida(error);
+        this.auth.onSessaoInvalida(error);
       },
       );
 
     }
+
+
 
     this.registroBoletimService.SalvarRegistroBoletim(registroboletim).subscribe(data => {
 
@@ -359,7 +385,7 @@ export class RegistroBoletimComponent implements OnInit {
       this.LimparCampos(rb);
 
     }, (error: HttpErrorResponse) => {
-        this.auth.onSessaoInvalida(error);
+      this.auth.onSessaoInvalida(error);
     },
     );
 
@@ -382,7 +408,7 @@ export class RegistroBoletimComponent implements OnInit {
 
 
       }, (error: HttpErrorResponse) => {
-          this.auth.onSessaoInvalida(error);
+        this.auth.onSessaoInvalida(error);
       });
 
 
@@ -393,7 +419,7 @@ export class RegistroBoletimComponent implements OnInit {
         this.listaPessoaPaciente = data.result;
 
       }, (error: HttpErrorResponse) => {
-          this.auth.onSessaoInvalida(error);
+        this.auth.onSessaoInvalida(error);
       });
 
 
@@ -420,7 +446,7 @@ export class RegistroBoletimComponent implements OnInit {
 
 
       }, (error: HttpErrorResponse) => {
-          this.auth.onSessaoInvalida(error);
+        this.auth.onSessaoInvalida(error);
       });
 
 
@@ -431,7 +457,7 @@ export class RegistroBoletimComponent implements OnInit {
         this.listaPessoaPaciente = data.result;
 
       }, (error: HttpErrorResponse) => {
-          this.auth.onSessaoInvalida(error);
+        this.auth.onSessaoInvalida(error);
       });
 
     console.log(this.listaPessoaProfissional);
@@ -483,6 +509,15 @@ export class RegistroBoletimComponent implements OnInit {
   }
   //end:: Limpa Campos
 
+
+  onChangeMask($event) {
+
+    if ($event.target.value.length === 14)
+      this.customMask = '(00) 0000-00000';
+    else
+      this.customMask = '(00) 00000-0000';
+
+  }
 
 }
 

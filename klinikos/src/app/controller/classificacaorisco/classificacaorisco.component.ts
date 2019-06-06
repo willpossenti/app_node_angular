@@ -432,41 +432,41 @@ export class ClassificacaoRiscoComponent implements OnInit {
     if (cr.value.DescricaoQueixa !== "")
       classificacaorisco.descricaoQueixa = cr.value.DescricaoQueixa.toUpperCase();
 
-    if (this.CausaExterna !== null)
-      classificacaorisco.CausaExterna = this.CausaExterna;
+    if (this.CausaExterna !== undefined)
+      classificacaorisco.causaExternaId = this.CausaExterna.causaExternaId;
 
     if ($("label[for^=EscalaDor0]").hasClass("active"))
-      classificacaorisco.EscalaDor = this.listaEscalasDor.find(x => x.codigoEscalaDor === 0);
+      classificacaorisco.escalaDorId = this.listaEscalasDor.find(x => x.codigoEscalaDor === 0).escalaDorId;
 
     if ($("label[for^=EscalaDor1]").hasClass("active"))
-      classificacaorisco.EscalaDor = this.listaEscalasDor.find(x => x.codigoEscalaDor === 1);
+      classificacaorisco.escalaDorId = this.listaEscalasDor.find(x => x.codigoEscalaDor === 1).escalaDorId;
 
     if ($("label[for^=EscalaDor2]").hasClass("active"))
-      classificacaorisco.EscalaDor = this.listaEscalasDor.find(x => x.codigoEscalaDor === 2);
+      classificacaorisco.escalaDorId = this.listaEscalasDor.find(x => x.codigoEscalaDor === 2).escalaDorId;
 
     if ($("label[for^=EscalaDor3]").hasClass("active"))
-      classificacaorisco.EscalaDor = this.listaEscalasDor.find(x => x.codigoEscalaDor === 3);
+      classificacaorisco.escalaDorId = this.listaEscalasDor.find(x => x.codigoEscalaDor === 3).escalaDorId;
 
     if ($("label[for^=EscalaDor4]").hasClass("active"))
-      classificacaorisco.EscalaDor = this.listaEscalasDor.find(x => x.codigoEscalaDor === 4);
+      classificacaorisco.escalaDorId = this.listaEscalasDor.find(x => x.codigoEscalaDor === 4).escalaDorId;
 
     if ($("label[for^=EscalaDor5]").hasClass("active"))
-      classificacaorisco.EscalaDor = this.listaEscalasDor.find(x => x.codigoEscalaDor === 5);
+      classificacaorisco.escalaDorId = this.listaEscalasDor.find(x => x.codigoEscalaDor === 5).escalaDorId;
 
     if ($("label[for^=EscalaDor6]").hasClass("active"))
-      classificacaorisco.EscalaDor = this.listaEscalasDor.find(x => x.codigoEscalaDor === 6);
+      classificacaorisco.escalaDorId = this.listaEscalasDor.find(x => x.codigoEscalaDor === 6).escalaDorId;
 
     if ($("label[for^=EscalaDor7]").hasClass("active"))
-      classificacaorisco.EscalaDor = this.listaEscalasDor.find(x => x.codigoEscalaDor === 7);
+      classificacaorisco.escalaDorId = this.listaEscalasDor.find(x => x.codigoEscalaDor === 7).escalaDorId;
 
     if ($("label[for^=EscalaDor8]").hasClass("active"))
-      classificacaorisco.EscalaDor = this.listaEscalasDor.find(x => x.codigoEscalaDor === 8);
+      classificacaorisco.escalaDorId = this.listaEscalasDor.find(x => x.codigoEscalaDor === 8).escalaDorId;
 
     if ($("label[for^=EscalaDor9]").hasClass("active"))
-      classificacaorisco.EscalaDor = this.listaEscalasDor.find(x => x.codigoEscalaDor === 9);
+      classificacaorisco.escalaDorId = this.listaEscalasDor.find(x => x.codigoEscalaDor === 9).escalaDorId;
 
     if ($("label[for^=EscalaDor10]").hasClass("active"))
-      classificacaorisco.EscalaDor = this.listaEscalasDor.find(x => x.codigoEscalaDor === 10);
+      classificacaorisco.escalaDorId = this.listaEscalasDor.find(x => x.codigoEscalaDor === 10).escalaDorId;
 
     if (cr.value.SV_Peso !== "")
       classificacaorisco.peso = cr.value.SV_Peso + " kg";
@@ -494,7 +494,7 @@ export class ClassificacaoRiscoComponent implements OnInit {
 
 
     if (nivelConsciencia !== undefined)
-      classificacaorisco.NivelConsciencia = this.listaNiveisConsciencia.find(x => x.nivelConscienciaId === nivelConsciencia);
+      classificacaorisco.nivelConscienciaId = this.listaNiveisConsciencia.find(x => x.nivelConscienciaId === nivelConsciencia).nivelConscienciaId;
 
     classificacaorisco.sutura = cr.value.Sutura !== "" ? true : false;
 
@@ -517,28 +517,28 @@ export class ClassificacaoRiscoComponent implements OnInit {
 
 
     if (this.TipoChegada !== null)
-      classificacaorisco.TipoChegada = this.TipoChegada;
+      classificacaorisco.tipoChegadaId = this.TipoChegada.tipoChegadaId;
 
     if (this.Especialidade !== null)
-      classificacaorisco.Especialidade = this.Especialidade;
+      classificacaorisco.especialidadeId = this.Especialidade.especialidadeId;
 
     if ($("label[for^=riscoazul]").hasClass("active"))
-      classificacaorisco.Risco = this.listaRisco.find(x => x.descricao === "AZUL");
+      classificacaorisco.riscoId = this.listaRisco.find(x => x.descricao === "AZUL").riscoId;
 
     if ($("label[for^=riscoverde]").hasClass("active"))
-      classificacaorisco.Risco = this.listaRisco.find(x => x.descricao === "VERDE");
+      classificacaorisco.riscoId = this.listaRisco.find(x => x.descricao === "VERDE").riscoId;
 
     if ($("label[for^=riscoamareloconsultorio]").hasClass("active"))
-      classificacaorisco.Risco = this.listaRisco.find(x => x.descricao === "AMARELO CONSULTÓRIO");
+      classificacaorisco.riscoId = this.listaRisco.find(x => x.descricao === "AMARELO CONSULTÓRIO").riscoId;
 
-    if ($("label[for^=riscoamareloobservacao]").hasClass("active"))
-      classificacaorisco.Risco = this.listaRisco.find(x => x.descricao === "AMARELO OBSERVAÇÃO");
+    if ($("label[for^=riscoId]").hasClass("active"))
+      classificacaorisco.riscoId = this.listaRisco.find(x => x.descricao === "AMARELO OBSERVAÇÃO").riscoId;
 
     if ($("label[for^=riscolaranja]").hasClass("active"))
-      classificacaorisco.Risco = this.listaRisco.find(x => x.descricao === "LARANJA");
+      classificacaorisco.riscoId = this.listaRisco.find(x => x.descricao === "LARANJA").riscoId;
 
     if ($("label[for^=riscovermelho]").hasClass("active"))
-      classificacaorisco.Risco = this.listaRisco.find(x => x.descricao === "VERMELHO");
+      classificacaorisco.riscoId = this.listaRisco.find(x => x.descricao === "VERMELHO").riscoId;
 
     console.log(localStorage['token_accessToken']);
 
@@ -550,23 +550,23 @@ export class ClassificacaoRiscoComponent implements OnInit {
       classificacaorisco.ClassificacoesRiscoAlergia = this.listaClassificacaoRiscoAlergia;
     }
 
-    if (this.AberturaOcular !== null)
-      classificacaorisco.AberturaOcular = this.AberturaOcular;
+    if (this.AberturaOcular !== undefined)
+      classificacaorisco.aberturaOcularId = this.AberturaOcular.aberturaOcularId;
 
-    if (this.RespostaVerbal !== null)
-      classificacaorisco.RespostaVerbal = this.RespostaVerbal;
+    if (this.RespostaVerbal !== undefined)
+      classificacaorisco.respostaVerbalId = this.RespostaVerbal.respostaVerbalId;
 
-    if (this.RespostaMotora !== null)
-      classificacaorisco.RespostaMotora = this.RespostaMotora;
+    if (this.RespostaMotora !== undefined)
+      classificacaorisco.respostaMotoraId = this.RespostaMotora.respostaMotoraId;
 
-    if (this.AberturaOcular !== null && this.RespostaVerbal !== null && this.RespostaMotora !== null)
+    if (this.AberturaOcular !== undefined && this.RespostaVerbal !== undefined && this.RespostaMotora !== undefined)
       classificacaorisco.status = escalaGlasgow;
 
     if (cr.value.DO_Procedencia !== "")
       classificacaorisco.procedencia = cr.value.DO_Procedencia.toUpperCase();
 
     if (this.listaTipoOcorrencia !== null)
-      classificacaorisco.TipoOcorrencia = this.TipoOcorrencia;
+      classificacaorisco.tipoOcorrenciaId = this.TipoOcorrencia.tipoOcorrenciaId;
 
 
     if (dataOcorrencia !== "") {
@@ -597,10 +597,10 @@ export class ClassificacaoRiscoComponent implements OnInit {
       classificacaorisco.complemento = cr.value.DO_Complemento.toUpperCase();
 
     if (this.Estado !== null)
-      classificacaorisco.Estado = this.Estado;
+      classificacaorisco.estadoId = this.Estado.estadoId;
 
     if (this.Cidade !== null)
-      classificacaorisco.Cidade = this.Cidade;
+      classificacaorisco.cidadeId = this.Cidade.cidadeId;
 
     if (cr.value.DO_Bairro !== "")
       classificacaorisco.bairro = cr.value.DO_Bairro.toUpperCase();
@@ -637,17 +637,18 @@ export class ClassificacaoRiscoComponent implements OnInit {
 
       var classificacaoriscoAlergia: ClassificacaoRiscoAlergia = {};
 
-      classificacaoriscoAlergia.TipoAlergia = this.TipoAlergia;
-      classificacaoriscoAlergia.Alergia = this.Alergia;
+
+      classificacaoriscoAlergia.tipoAlergiaId = this.TipoAlergia.tipoAlergiaId;
+      classificacaoriscoAlergia.alergiaId = this.Alergia.alergiaId;
 
       if (this.LocalizacaoAlergia !== null)
-        classificacaoriscoAlergia.LocalizacaoAlergia = this.LocalizacaoAlergia;
+        classificacaoriscoAlergia.localizacaoAlergiaId = this.LocalizacaoAlergia.localizacaoAlergiaId;
 
       if (this.ReacaoAlergia !== null)
-        classificacaoriscoAlergia.ReacaoAlergia = this.ReacaoAlergia;
+        classificacaoriscoAlergia.reacaoAlergiaId = this.ReacaoAlergia.reacaoAlergiaId;
 
       if (this.SeveridadeAlergia !== null)
-        classificacaoriscoAlergia.SeveridadeAlergia = this.SeveridadeAlergia;
+        classificacaoriscoAlergia.severidadeAlergiaId = this.SeveridadeAlergia.severidadeAlergiaId;
 
 
       if (datasintomas !== "") {
@@ -659,17 +660,17 @@ export class ClassificacaoRiscoComponent implements OnInit {
       classificacaoriscoAlergia.alergiaSituacao = alergiaSituacao;
 
 
-      if (this.listaClassificacaoRiscoAlergia.find(x => x.TipoAlergia === this.TipoAlergia && x.Alergia === this.Alergia) === undefined && this.ClassificacaoRiscoAlergia === undefined) {
+      if (this.listaClassificacaoRiscoAlergia.find(x => x.tipoAlergiaId === this.TipoAlergia.tipoAlergiaId && x.alergiaId === this.Alergia.alergiaId) === undefined && this.ClassificacaoRiscoAlergia === undefined) {
 
         this.listaClassificacaoRiscoAlergia.push(classificacaoriscoAlergia);
 
       } else if (this.ClassificacaoRiscoAlergia !== undefined) {
 
-        if (this.ClassificacaoRiscoAlergia.TipoAlergia != classificacaoriscoAlergia.TipoAlergia && this.ClassificacaoRiscoAlergia.Alergia != classificacaoriscoAlergia.Alergia) 
-          if (this.listaClassificacaoRiscoAlergia.find(x => x.TipoAlergia === this.TipoAlergia && x.Alergia === this.Alergia))
+        if (this.ClassificacaoRiscoAlergia.tipoAlergiaId != classificacaoriscoAlergia.tipoAlergiaId && this.ClassificacaoRiscoAlergia.alergiaId != classificacaoriscoAlergia.alergiaId) 
+          if (this.listaClassificacaoRiscoAlergia.find(x => x.tipoAlergiaId === this.TipoAlergia.tipoAlergiaId && x.alergiaId === this.Alergia.alergiaId))
             return;
         
-        var index = this.listaClassificacaoRiscoAlergia.findIndex(x => x.TipoAlergia === this.TipoAlergia || x.Alergia === this.Alergia);
+        var index = this.listaClassificacaoRiscoAlergia.findIndex(x => x.tipoAlergiaId === this.TipoAlergia.tipoAlergiaId || x.alergiaId === this.Alergia.alergiaId);
         this.listaClassificacaoRiscoAlergia[index] = classificacaoriscoAlergia;
 
       }
@@ -774,11 +775,11 @@ export class ClassificacaoRiscoComponent implements OnInit {
     if (this.auth.canActivate())
       this.auth.onSessaoAcrescimoTempo();
 
-    this.TipoAlergia = classificacaoRiscoAlergia.TipoAlergia;
-    this.Alergia = classificacaoRiscoAlergia.Alergia;
-    this.LocalizacaoAlergia = classificacaoRiscoAlergia.LocalizacaoAlergia;
-    this.ReacaoAlergia = classificacaoRiscoAlergia.ReacaoAlergia;
-    this.SeveridadeAlergia = classificacaoRiscoAlergia.SeveridadeAlergia;
+    this.TipoAlergia = this.listaTipoAlergia.find(x => x.tipoAlergiaId === classificacaoRiscoAlergia.tipoAlergiaId);
+    this.Alergia = this.listaAlergia.find(x => x.alergiaId === classificacaoRiscoAlergia.alergiaId);
+    this.LocalizacaoAlergia = this.listaLocalizacaoAlergia.find(x => x.localizacaoAlergiaId === classificacaoRiscoAlergia.localizacaoAlergiaId);
+    this.ReacaoAlergia = this.listaReacaoAlergia.find(x => x.reacaoAlergiaId === classificacaoRiscoAlergia.reacaoAlergiaId);
+    this.SeveridadeAlergia = this.listaSeveridadeAlergia.find(x => x.severidadeAlergiaId === classificacaoRiscoAlergia.severidadeAlergiaId);
 
     if (classificacaoRiscoAlergia.dataSintomas != null) {
 
@@ -824,7 +825,7 @@ export class ClassificacaoRiscoComponent implements OnInit {
   //begin:: Exclui lotacao Profissional / Alerta o usuário da confirmação da exclusão na aba profissional
   onExcluirAlergia(classificacaoRiscoAlergia: ClassificacaoRiscoAlergia) {
 
-    var index = this.listaClassificacaoRiscoAlergia.findIndex(x => x.Alergia === classificacaoRiscoAlergia.Alergia);
+    var index = this.listaClassificacaoRiscoAlergia.findIndex(x => x.alergiaId === classificacaoRiscoAlergia.alergiaId);
     this.listaClassificacaoRiscoAlergia.splice(index, 1);
   }
   //end:: Exibe Mensagem Excluir

@@ -6,8 +6,8 @@ export interface Acolhimento {
 
   acolhimentoId?: string;
   PessoaPaciente?: PessoaPaciente;
-  Especialidade?: Especialidade;
-  Preferencial?: Preferencial;
+  especialidadeId?: string;
+  preferencialId?: string;
   risco?: boolean;
   peso?: string;
   altura?: string;

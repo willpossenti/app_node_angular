@@ -6,10 +6,10 @@ export interface LotacaoProfissional {
 
   lotacaoProfissionalId?: string;
   Pessoa?: PessoaProfissional;
-  TipoProfissional?: TipoProfissional;
+  tipoProfissionalId?: string;
   numeroConselho?: string;
   ufProfissional?: string;
-  OrgaoEmissorProfissional?: OrgaoEmissor;
+  orgaoEmissorProfissionalId?: string;
   coordenador?: boolean;
   ativo?: boolean;
 

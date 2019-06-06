@@ -1,6 +1,6 @@
 export interface Especialidade {
 
-  especidalidadeId?: string;
+  especialidadeId?: string;
   descricao?: string;
   ativo?: boolean;
 

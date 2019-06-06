@@ -469,7 +469,7 @@
                           <div class="col">
                             <!--<button type="button" class="btn btn-success"><i class="fa fa-plus fa-fw"></i> Adicionar</button>-->
                             <button type="button" tabindex="33" class="btn btn-metal" data-toggle="popover" data-placement="top" data-trigger="hover" data-content="Adicionar uma nova alergia" style="float: right; margin-left: 10px;" (click)="onAdicionaAlergia()" id="btnAddNovaAlergia"><i class="fa fa-plus"></i>Adicionar</button>
-                            <button type="button" class="btn btn-metal oculta" data-toggle="popover" data-placement="top" data-trigger="hover" data-content="Cancelar a edição da lotação" style="float: right;" (click)="onLimparCamposProfissional()" id="btnCancelarAlergia"><i class="fa fa-plus"></i>Cancelar</button>
+                            <button type="button" class="btn btn-metal oculta" data-toggle="popover" data-placement="top" data-trigger="hover" data-content="Cancelar a edição da lotação" style="float: right;"  id="btnCancelarAlergia"><i class="fa fa-plus"></i>Cancelar</button>
 
 
                           </div>
@@ -656,11 +656,11 @@
                           </div>
                           <div class="col-lg-2">
                             <label>Data</label>
-                            <input type="text" class="form-control mask_data" name="DO_Data" placeholder="" tabindex="20" ngModel>
+                            <input type="text" class="form-control mask_data" name="DO_Data" placeholder="" mask="00/00/0000" tabindex="20" ngModel>
                           </div>
                           <div class="col-lg-1">
                             <label>Hora</label>
-                            <input type="text" class="form-control mask_hour" name="DO_Hora" placeholder="" tabindex="21" ngModel>
+                            <input type="text" class="form-control mask_hour" name="DO_Hora" placeholder="" mask="00:00" tabindex="21" ngModel>
                           </div>
                           <div class="col-lg-2">
                             <label class="d-block">&nbsp;</label>
@@ -677,7 +677,7 @@
                         <div class="form-group row">
                           <div class="col-lg-2">
                             <label>CEP</label>
-                            <input type="text" class="form-control mask_cep" name="DO_CEP" id="DP_CEP" maxlength="11" value="" tabindex="23" (blur)="onBuscaCep()">
+                            <input type="text" class="form-control" name="DO_CEP" id="DP_CEP" mask="00000-000" maxlength="11" value="" tabindex="23" (blur)="onBuscaCep()">
                             <span id="msg_cep" class="form-text text-danger oculta">Informe um CEP válido</span>
                           </div>
                           <div class="col-lg-6">
@@ -777,7 +777,6 @@
 
                         <div class="form-group row">
                           <div class="col-lg-6">
-                            <label class="d-block float-left">Risco</label>
 
                             <div class="btn-group btn-group-toggle" data-toggle="buttons">
                               <label class="btn risco-azul cp clear" data-toggle="popover" data-placement="top" data-trigger="hover" data-content="" for="riscoazul">

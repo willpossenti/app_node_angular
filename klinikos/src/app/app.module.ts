@@ -23,6 +23,7 @@ import { ClassificacaoRiscoComponent } from './controller/classificacaorisco/cla
 import { BrowserAnimationsModule} from '@angular/platform-browser/animations';
 
 import { ClassificacaoRiscoPipe } from './controller/classificacaorisco/classificacaorisco.pipe';
+import { NgxMaskModule, IConfig } from 'ngx-mask'
 
 const appRoutes: Routes = [
   { path: '', redirectTo: '/login', pathMatch: 'full' },
@@ -40,6 +41,8 @@ const appRoutes: Routes = [
 
   { path: '**', redirectTo: '/login' },
 ];
+
+export const options: Partial<IConfig> | (() => Partial<IConfig>) = {};
 
 @NgModule({
   declarations: [
@@ -61,7 +64,8 @@ const appRoutes: Routes = [
     BrowserAnimationsModule,
     RouterModule.forRoot(
       appRoutes, { onSameUrlNavigation: 'reload' }
-    )
+    ),
+    NgxMaskModule.forRoot(options)
   ],
   providers: [
     PessoaService,

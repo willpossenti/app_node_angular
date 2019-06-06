@@ -28,11 +28,10 @@ import { AgeFromDate } from 'age-calculator';
 import * as swal from '../../../../assets/vendors/general/sweetalert2/dist/sweetalert2.js';
 import { Cep } from '../../../model/Cep';
 import { CpfService } from '../../util/cpf.service';
+import { DataService } from '../../util/data.service';
 import * as moment from 'moment';
 import * as Toastr from 'toastr';
-import * as RecordRTC from 'recordrtc';
 import { AuthGuard } from '../../../controller/auth/auth.guard';
-import { concat } from 'rxjs';
 
 @Component({
   selector: 'app-pessoa',
@@ -86,6 +85,9 @@ export class PessoaComponent implements OnInit {
   SituacaoFamiliarConjugal: SituacaoFamiliarConjugal;
   foto: string;
   stream: any;
+  customMaskContato1: string;
+  customMaskContato2: string;
+  customMaskContato3: string;
 
   @ViewChild("video")
   public video: ElementRef;
@@ -95,7 +97,7 @@ export class PessoaComponent implements OnInit {
 
 
   constructor(private route: ActivatedRoute, private pessoaService: PessoaService,
-    private cpfService: CpfService, private router: Router, private auth: AuthGuard) {
+    private cpfService: CpfService, private dataService: DataService, private router: Router, private auth: AuthGuard) {
     this.listaLotacaoProfissional = new Array<LotacaoProfissional>();
     this.listaOcupacao = new Array<Ocupacao>();
     this.listaPais = new Array<Pais>();
@@ -130,6 +132,8 @@ export class PessoaComponent implements OnInit {
 
     var page = this;
 
+    this.customMaskContato1 = this.customMaskContato2 = this.customMaskContato3 = '(00) 00000-0000';
+
     var dataAtual = moment(new Date()).format('DD/MM/YYYY');
     var horaAtual = moment(new Date()).format('HH:mm:ss');
 
@@ -154,7 +158,6 @@ export class PessoaComponent implements OnInit {
 
     this.pessoaService.BindJustificativa().subscribe(async (data: Return) => {
       this.listaJustificativa = data.result;
-
       $(document).ready(function () { $("select[name^=DP_JustificativaCPF]").val($("select[name^=DP_JustificativaCPF] option:first").val()); });
     }, (error: HttpErrorResponse) => {
       this.auth.onSessaoInvalida(error);
@@ -208,8 +211,12 @@ export class PessoaComponent implements OnInit {
 
     $(document).ready(function () {
 
+
       document.title = 'Cadastro | Klinikos';
       $("h3[class^=k-subheader__title]").html("Cadastro");
+
+
+
 
 
 
@@ -305,6 +312,36 @@ export class PessoaComponent implements OnInit {
   }
   //end:: Carregamento Básico da tela
 
+
+  onChangeMask(event: any) {
+
+  if (event.target.name === 'Cont_Contato1')
+     if (event.target.value.length === 14)
+        this.customMaskContato1 = '(00) 0000-00000';
+      else
+        this.customMaskContato1 = '(00) 00000-0000';
+
+  if (event.target.name === 'Cont_Contato2')
+      if (event.target.value.length === 14)
+          this.customMaskContato2 = '(00) 0000-00000';
+      else
+          this.customMaskContato2 = '(00) 00000-0000';
+
+  if (event.target.name === 'Cont_Contato3')
+      if (event.target.value.length === 14)
+          this.customMaskContato3 = '(00) 0000-00000';
+      else
+          this.customMaskContato3 = '(00) 00000-0000';
+
+  }
+
+  onValidaEmail(event : any){
+ 
+    var RegExPattern = RegExp(/^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/);
+    if (!RegExPattern.test(event.target.value))
+      $("input[name^=Cont_Email]").val('');
+    
+  }
 
 
   onHabilitarWebCam() {
@@ -559,7 +596,25 @@ export class PessoaComponent implements OnInit {
   public onCalculaIdade() {
 
 
-    var data = $("input[name='DP_Nascimento']").val().split("/");
+
+    if($("input[name='DP_Nascimento']").val().length > 0)
+      $("input[name='DP_IdadeAparente']").prop('readonly', true);
+      else
+      $("input[name='DP_IdadeAparente']").prop('readonly', false);
+
+
+     if(!this.dataService.validarData($("input[name^=DP_Nascimento]").val())){
+
+      $("input[name^=DP_Nascimento]").val('');
+      $("input[name^=DP_IdadeAparente]").val('');
+      return;
+
+     }
+
+
+    var data = $("input[name^=DP_Nascimento]").val().split("/");
+
+
     let ageFromDate = new AgeFromDate(new Date(data[2], data[1], data[0])).age;
 
     if (ageFromDate > 0)
@@ -617,6 +672,44 @@ export class PessoaComponent implements OnInit {
   }
   //end:: calcula idade
 
+ 
+
+
+
+ onValidaData(event: any){
+
+  if(event.target.name === "DP_OrgaoEmissorData")
+  if(!this.dataService.validarData(event.target.value)){
+    $("input[name^=DP_OrgaoEmissorData]").val('');
+    return;
+   }
+
+if(event.target.name === "DC_DataEmissao_Ctps")
+  if(!this.dataService.validarData(event.target.value)){
+    $("input[name^=DC_DataEmissao_Ctps]").val('');
+    return;
+   }
+   
+
+if(event.target.name === "DC_DataEmissao")
+   if(!this.dataService.validarData(event.target.value)){
+     $("input[name^=DC_DataEmissao]").val('');
+     return;
+    }
+ 
+if(event.target.name === "DC_DataEntrada_Pais")
+    if(!this.dataService.validarData(event.target.value)){
+      $("input[name^=DC_DataEntrada_Pais]").val('');
+      return;
+     }
+
+
+ }
+
+ 
+
+ 
+
   //begin:: validacao e consulta de CPF
   onConsultaCpf(e) {
 
@@ -625,7 +718,9 @@ export class PessoaComponent implements OnInit {
 
     var cpf = e.target.value;
 
-    if (cpf !== '___.___.___-__') {
+    if (cpf !== '') {
+
+      $('select[name^=DP_JustificativaCPF]').prop('disabled', 'disabled');
 
       var verifica = this.cpfService.validarCPF(cpf);
 
@@ -661,11 +756,11 @@ export class PessoaComponent implements OnInit {
 
                 this.CarregaPessoa(paciente);
               } else {
-
+            
                 var cpf_cadeco = JSON.stringify(cpf);
-                this.pessoaService.ConsultaCpfPacienteCadeco(cpf_cadeco).subscribe(async (dataCadeco: any) => {
+                this.pessoaService.ConsultaCpfPacienteCadeco(cpf).subscribe(async (dataCadeco: any) => {
 
-
+                  Toastr.info("Paciente encontrado");
                   var pessoaPaciente: PessoaPaciente = {
 
                     nomeCompleto: dataCadeco.nome,
@@ -680,12 +775,6 @@ export class PessoaComponent implements OnInit {
 
                   if (dataCadeco.raca !== undefined)
                     this.Raca = this.listaRaca.find(x => x.nome === dataCadeco.raca.descricao.toUpperCase());
-                  
-
-
-
-                  console.log(dataCadeco);
-                 
 
 
 
@@ -710,10 +799,46 @@ export class PessoaComponent implements OnInit {
           this.auth.onSessaoInvalida(error);
         });
       }
+    }else{
+
+      $('select[name^=DP_JustificativaCPF]').prop('disabled', false);
+
     }
 
   }
   //end:: validacao e consulta de CPF
+
+  onSelecionadoNacionalidade(){
+
+    $("select[name^=DP_NaturalidadeUF]").val($("select[name^=DP_NaturalidadeUF] option:first").val());
+    $("select[name^=DP_NaturalidadeCidade]").val($("select[name^=DP_NaturalidadeCidade] option:first").val());
+
+
+ 
+if(this.Nacionalidade.descricao === "ESTRANGEIRO"){
+
+
+  $(document).ready(function () {
+   
+
+  $('select[name^=DP_NaturalidadeUF]').prop('disabled', 'disabled');
+  $('select[name^=DP_NaturalidadeCidade]').prop('disabled', 'disabled');
+  $('select[name^=DC_PaisDeOrigem]').prop('disabled', false);
+});
+}else{
+
+  $(document).ready(function () {
+
+  $('select[name^=DP_NaturalidadeUF]').prop('disabled', false);
+  $('select[name^=DP_NaturalidadeCidade]').prop('disabled', false);
+  $('select[name^=DC_PaisDeOrigem]').prop('disabled', 'disabled');
+});
+}
+
+
+}
+
+
 
   //begin:: validacao e consulta de CNS
   onConsultaCns(e) {
@@ -899,7 +1024,7 @@ export class PessoaComponent implements OnInit {
 
     this.Pessoa = pessoa;
 
-    $("input[name^=DP_NomeCompleto]").val(pessoa.nomeCompleto);
+    $("input[name^=DP_NomeCompleto_Pessoa]").val(pessoa.nomeCompleto);
 
     if (pessoa.nomeSocial !== undefined)
       $("input[name^=DP_NomeSocial]").val(pessoa.nomeSocial);
@@ -944,6 +1069,8 @@ export class PessoaComponent implements OnInit {
       }
 
     this.onCalculaIdade();
+
+
 
 
     if (pessoa.Raca !== undefined)
@@ -1021,7 +1148,7 @@ export class PessoaComponent implements OnInit {
 
 
 
-    if (pessoa.pisPasep != null || pessoa.ocupacao != null || pessoa.paisOrigem != null || pessoa.dataEntradaPis != null ||
+    if (pessoa.pisPasep != null || pessoa.ocupacao != null || pessoa.paisOrigem != null || pessoa.dataEntradaPais != null ||
       pessoa.tipoCertidao != null || pessoa.nomeCartorio != null || pessoa.numeroLivro != null || pessoa.numeroFolha != null ||
       pessoa.numeroTermo != null || pessoa.dataEmissaoCertidao != null || pessoa.numeroCtps != null || pessoa.serieCtps != null ||
       pessoa.ufCtps != null || pessoa.dataEmissaoCtps != null || pessoa.tituloEleitor != null || pessoa.zona != null || pessoa.secao != null ||
@@ -1036,14 +1163,14 @@ export class PessoaComponent implements OnInit {
       if (pessoa.paisOrigem != null)
         this.Pais = pessoa.paisOrigem;
 
-      if (pessoa.dataEntradaPis != null) {
+      if (pessoa.dataEntradaPais != null) {
 
-        var entradaPis = new Date(pessoa.dataEntradaPis),
+        var entradaPis = new Date(pessoa.dataEntradaPais),
           month = '' + (entradaPis.getMonth() + 1),
           day = '' + entradaPis.getDate(),
           year = entradaPis.getFullYear();
 
-        $("input[name^=DC_DataEntrada_Pis]").val(("0" + day).slice(-2) + "/" + ("0" + month).slice(-2) + "/" + year);
+        $("input[name^=DC_DataEntrada_Pais]").val(("0" + day).slice(-2) + "/" + ("0" + month).slice(-2) + "/" + year);
       }
 
       if (pessoa.tipoCertidao != null)
@@ -1110,7 +1237,12 @@ export class PessoaComponent implements OnInit {
     if (this.auth.canActivate())
       this.auth.onSessaoAcrescimoTempo();
 
+      //Reseta combo etnia
+
+      $("select[name^=DP_Etnia]").val($("select[name^=DP_Etnia] option:first").val());
+
     if (this.Raca.nome == "INDÍGENA") {
+      this.Etnia = null;
       $("select[name^=DP_Etnia]").removeAttr("disabled");
 
 
@@ -1189,11 +1321,64 @@ export class PessoaComponent implements OnInit {
   }
   //end::  Selecao UF Endereco
 
+
+  onHabilitaRecemNascido(){
+
+    $(document).ready(function () {
+
+    var btnchk = $(this).find('input[name^=DP_RecemNascido]');
+    // Mostra
+    if ($(btnchk).is(":checked")) {
+      $('#box_nomecomp, #box_nomesocial').addClass('oculta');
+      $('#box_numprontmae, #box_nomeRN').removeClass('oculta');
+    }
+    // Oculta
+    else {
+      $(btnchk).prop('checked', false);
+      $('#box_nomecomp, #box_nomesocial').removeClass('oculta');
+      $('#box_numprontmae, #box_nomeRN').addClass('oculta');
+    }
+
+    });
+  }
+
+  onHabilitaNaoIdentificado(){
+
+
+    $(document).ready(function () {
+
+     // find
+     var btncheck = $(this).find('input[name^=DP_NaoIdentificado]');
+     // Mostra
+     if ($(btncheck).is(":checked")) {
+
+       $('#box_nomecompleto, #box_social, #box_nomesocial').addClass('oculta');
+       $('#box_descricao').removeClass('oculta');
+     }
+     // Oculta
+     else {
+       $(btncheck).prop('checked', false);
+       $('#box_nomecompleto, #box_social, #box_nomesocial').removeClass('oculta');
+       $('#box_descricao, #box_nomeRN').addClass('oculta');
+     }
+    });
+  }
+
+
   //begin:: Carregamento Tipo Profissional / carrega os tipos do profissional na aba profissional
   onHabilitaProfissional() {
 
     if (this.auth.canActivate())
       this.auth.onSessaoAcrescimoTempo();
+
+      $(document).ready(function () {
+      var btnchk = $(this).find('input[name^=DP_TipoCadastro]');
+
+      if ($(btnchk).is(":checked")) 
+      $('#box_dadosprof').removeClass('oculta');
+      else
+      $('#box_dadosprof').addClass('oculta');
+      });
 
     this.pessoaService.BindTipoProfissional().subscribe(async (data: Return) => {
       this.listaTipoProfissional = data.result;
@@ -1341,7 +1526,7 @@ export class PessoaComponent implements OnInit {
 
     if (this.TipoProfissional !== undefined) {
 
-      if (this.listaLotacaoProfissional.find(x => x.TipoProfissional.tipoProfissionalId === this.TipoProfissional.tipoProfissionalId) !== undefined) {
+      if (this.listaLotacaoProfissional.find(x => x.tipoProfissionalId === this.TipoProfissional.tipoProfissionalId) !== undefined) {
 
         $(document).ready(function () { swal('Já existe esse tipo de profissional'); });
       }
@@ -1352,7 +1537,7 @@ export class PessoaComponent implements OnInit {
 
       var lotacaoProfissional: LotacaoProfissional = {
 
-        TipoProfissional: this.TipoProfissional,
+        tipoProfissionalId: this.TipoProfissional.tipoProfissionalId,
         ativo: true
       }
 
@@ -1363,11 +1548,11 @@ export class PessoaComponent implements OnInit {
         lotacaoProfissional.ufProfissional = this.UfProfissional.uf;
 
       if (this.OrgaoEmissorProfissional !== undefined)
-        lotacaoProfissional.OrgaoEmissorProfissional = this.OrgaoEmissorProfissional;
+        lotacaoProfissional.orgaoEmissorProfissionalId = this.OrgaoEmissorProfissional.orgaoEmissorId;
 
 
 
-      if (this.listaLotacaoProfissional.find(x => x.TipoProfissional === this.TipoProfissional) === undefined && this.LotacaoProfissional === undefined) {
+      if (this.listaLotacaoProfissional.find(x => x.tipoProfissionalId === this.TipoProfissional.tipoProfissionalId) === undefined && this.LotacaoProfissional === undefined) {
 
         console.log(lotacaoProfissional);
 
@@ -1377,11 +1562,11 @@ export class PessoaComponent implements OnInit {
 
       } else if (this.LotacaoProfissional !== undefined) {
 
-        if (this.LotacaoProfissional.TipoProfissional != lotacaoProfissional.TipoProfissional)
-          if (this.listaLotacaoProfissional.find(x => x.TipoProfissional === this.TipoProfissional))
+        if (this.LotacaoProfissional.tipoProfissionalId != lotacaoProfissional.tipoProfissionalId)
+          if (this.listaLotacaoProfissional.find(x => x.tipoProfissionalId === this.TipoProfissional.tipoProfissionalId))
             return;
 
-        var index = this.listaLotacaoProfissional.findIndex(x => x.TipoProfissional === this.LotacaoProfissional.TipoProfissional);
+        var index = this.listaLotacaoProfissional.findIndex(x => x.tipoProfissionalId === this.LotacaoProfissional.tipoProfissionalId);
         lotacaoProfissional.coordenador = this.LotacaoProfissional.coordenador;
         this.listaLotacaoProfissional[index] = lotacaoProfissional;
         //this.onLimparCamposProfissional();
@@ -1411,11 +1596,11 @@ export class PessoaComponent implements OnInit {
       this.auth.onSessaoAcrescimoTempo();
 
 
-    this.TipoProfissional = lotacaoprofissional.TipoProfissional;
+    this.TipoProfissional.tipoProfissionalId = lotacaoprofissional.tipoProfissionalId;
     $("input[name='Prof_NumConselho']").val(lotacaoprofissional.numeroConselho);
     this.UfProfissional = this.listaUFIdentidade.find(x => x.uf === lotacaoprofissional.ufProfissional);
-    this.OrgaoEmissorProfissional = lotacaoprofissional.OrgaoEmissorProfissional;
-    var index = this.listaLotacaoProfissional.findIndex(x => x.TipoProfissional === lotacaoprofissional.TipoProfissional);
+    this.OrgaoEmissorProfissional.orgaoEmissorId = lotacaoprofissional.orgaoEmissorProfissionalId;
+    var index = this.listaLotacaoProfissional.findIndex(x => x.tipoProfissionalId === lotacaoprofissional.lotacaoProfissionalId);
     lotacaoprofissional.coordenador = $("#ckcoordenador" + index).prop('checked');
     this.LotacaoProfissional = lotacaoprofissional;
 
@@ -1452,7 +1637,7 @@ export class PessoaComponent implements OnInit {
     if (this.auth.canActivate())
       this.auth.onSessaoAcrescimoTempo();
 
-    var index = this.listaLotacaoProfissional.findIndex(x => x.TipoProfissional === lotacaoprofissional.TipoProfissional);
+    var index = this.listaLotacaoProfissional.findIndex(x => x.lotacaoProfissionalId === lotacaoprofissional.lotacaoProfissionalId);
     this.listaLotacaoProfissional.splice(index, 1);
   }
   //end:: Exibe Mensagem Excluir
@@ -1596,7 +1781,7 @@ export class PessoaComponent implements OnInit {
     var cep = $("input[name^=DP_CEP]").val();
     var bairro = $("input[name^=DP_Bairro]").val();
     var pisPasep = $("input[name^=DC_PISPASEP]").val();
-    var dataEntradaPis = $("input[name^=DC_DataEntrada_Pis]").val();
+    var dataEntradaPais = $("input[name^=DC_DataEntrada_Pais]").val();
     var dataEmissaoCertidao = $("input[name^=DC_DataEmissao]").val();
     var dataEmissaoCtps = $("input[name^=DC_DataEmissao_Ctps]").val();
     var tituloEleitor = $("input[name^=DC_TituloEleitor]").val();
@@ -1617,15 +1802,16 @@ export class PessoaComponent implements OnInit {
         pessoa.nomeCompleto = p.value.DP_NomeRN.toUpperCase();
       else {
 
-        pessoa.nomeCompleto = p.value.DP_NomeCompleto.toUpperCase();
+        if (p.value.DP_NomeCompleto_Pessoa !== "")
+          pessoa.nomeCompleto = p.value.DP_NomeCompleto_Pessoa.toUpperCase();
+        else
+          pessoa.nomeCompleto = $("input[name^=DP_NomeCompleto_Pessoa]").val();
 
         if (p.value.DP_NomeSocial !== "")
           pessoa.nomeSocial = p.value.DP_NomeSocial.toUpperCase();
 
       }
     }
-
-
 
 
     if ($("label[for^=DP_Sexo_Masculino]").hasClass("active"))
@@ -1665,25 +1851,25 @@ export class PessoaComponent implements OnInit {
       pessoa.idadeAparente = idadeAparente.toUpperCase();
 
     if (this.Raca !== undefined)
-      pessoa.Raca = this.Raca;
+      pessoa.racaId = this.Raca.racaId;
 
     if (this.Etnia !== undefined)
-      pessoa.Etnia = this.Etnia;
+      pessoa.etniaId = this.Etnia.etniaId;
 
     if (this.Justificativa !== undefined)
-      pessoa.Justificativa = this.Justificativa;
+      pessoa.justificativaId = this.Justificativa.justificativaId;
 
     if (this.Nacionalidade !== undefined)
-      pessoa.Nacionalidade = this.Nacionalidade;
+      pessoa.nacionalidadeId = this.Nacionalidade.nacionalidadeId;
 
     if (this.Cidade !== undefined) {
-      this.Cidade.Estado = this.Estado;
-      pessoa.Naturalidade = this.Cidade;
+      this.Cidade.estadoId = this.Estado.estadoId;
+      pessoa.naturalidadeId = this.Cidade.cidadeId;
 
     }
 
     if (this.OrgaoEmissor !== undefined)
-      pessoa.OrgaoEmissor = this.OrgaoEmissor;
+      pessoa.orgaoEmissorId = this.OrgaoEmissor.orgaoEmissorId;
 
     if (this.UfIdentidade !== undefined)
       pessoa.uf = this.UfIdentidade.uf;
@@ -1716,25 +1902,25 @@ export class PessoaComponent implements OnInit {
       pessoa.bairro = bairro;
 
     if (this.EstadoEndereco !== undefined)
-      pessoa.Estado = this.EstadoEndereco;
+      pessoa.estadoId = this.EstadoEndereco.estadoId;
 
     if (this.CidadeEndereco !== undefined)
-      pessoa.Cidade = this.CidadeEndereco;
+      pessoa.cidadeId = this.CidadeEndereco.cidadeId;
 
     if (pisPasep !== "")
       pessoa.pisPasep = pisPasep.replace('.', '').replace('.', '').replace('-', '');
 
     if (this.Ocupacao !== undefined)
-      pessoa.Ocupacao = this.Ocupacao;
+      pessoa.ocupacaoId = this.Ocupacao.ocupacaoId;
 
     if (this.Pais !== undefined)
-      pessoa.PaisOrigem = this.Pais;
+      pessoa.paisOrigemId = this.Pais.paisId;
 
-    if (dataEntradaPis !== "")
-      pessoa.dataEntradaPis = dataEntradaPis;
+    if (dataEntradaPais !== "")
+      pessoa.dataEntradaPais = dataEntradaPais;
 
     if (this.TipoCertidao !== undefined)
-      pessoa.TipoCertidao = this.TipoCertidao;
+      pessoa.tipoCertidaoId = this.TipoCertidao.tipocertidaoId;
 
     if (p.value.DC_NomeDoCartorio !== "")
       pessoa.nomeCartorio = p.value.DC_NomeDoCartorio.toUpperCase();
@@ -1780,10 +1966,10 @@ export class PessoaComponent implements OnInit {
 
 
     if (escolaridadeId !== undefined)
-      pessoa.Escolaridade = this.listaEscolaridade.find(x => x.escolaridadeId === escolaridadeId);
+      pessoa.escolaridadeId = this.listaEscolaridade.find(x => x.escolaridadeId === escolaridadeId).escolaridadeId;
 
     if (situacaoFamiliarConjugalId !== undefined)
-      pessoa.SituacaoFamiliarConjugal = this.listaSituacaoFamiliarConjugal.find(x => x.situacaoFamiliarConjugalId === situacaoFamiliarConjugalId);
+      pessoa.situacaoFamiliarConjugalId = this.listaSituacaoFamiliarConjugal.find(x => x.situacaoFamiliarConjugalId === situacaoFamiliarConjugalId).situacaoFamiliarConjugalId;
 
 
     if (p.value.DP_Prof_Login !== "")
@@ -1807,56 +1993,63 @@ export class PessoaComponent implements OnInit {
       return;
     }
 
-    if (this.Pessoa == null) {
 
-      if (this.listaLotacaoProfissional.length > 0) {
+    if (this.listaLotacaoProfissional.length > 0) {
 
-        pessoaProfissional = {};
-        pessoaProfissional = pessoa;
+      pessoaProfissional = {};
+      pessoaProfissional = pessoa;
 
-        pessoaProfissional.lotacoesProfissional = [];
-        pessoaProfissional.lotacoesProfissional = this.listaLotacaoProfissional;
-
-        this.pessoaService.SalvarPessoaProfissional(pessoaProfissional).subscribe(async (data: Return) => {
-
-          if (data.statusCode == "409") {
-            swal("Profissional já cadastrado!", "CPF ou CNS ou PIS/PASEP já existente na Base", "error");
-
-          } else {
-            Toastr.success("Profissional salvo com sucesso");
-            this.LimparCampos(p);
-
-          }
-        }, (error: HttpErrorResponse) => {
-          this.auth.onSessaoInvalida(error);
-        },
-        );
+      pessoaProfissional.lotacoesProfissional = [];
+      pessoaProfissional.lotacoesProfissional = this.listaLotacaoProfissional;
 
 
-      } else {
-
-        pessoaPaciente = {};
-        pessoaPaciente = pessoa;
-
-        pessoaPaciente.recemNascido = p.value.DP_RecemNascido === true;
-
-        if (p.value.DP_NumProntuarioMae !== "")
-          pessoaPaciente.numeroProntuario = p.value.DP_NumProntuarioMae.toUpperCase();
-
-        if (p.value.DP_Descricao_Nao_Identificado !== "")
-          pessoaPaciente.descricaoNaoIdentificado = p.value.DP_Descricao_Nao_Identificado.toUpperCase();
 
 
-        this.pessoaService.SalvarPessoaPaciente(pessoaPaciente).subscribe(async (data: Return) => {
-          Toastr.success("Paciente salvo com sucesso");
+      this.pessoaService.SalvarPessoaProfissional(pessoaProfissional).subscribe(async (data: Return) => {
+
+        if (data.statusCode == "409") {
+          swal("Profissional já cadastrado!", "CPF ou CNS ou PIS/PASEP já existente na Base", "error");
+
+        } else {
+          Toastr.success("Profissional salvo com sucesso");
           this.LimparCampos(p);
 
-        }, (error: HttpErrorResponse) => {
-          this.auth.onSessaoInvalida(error);
-        },
-        );
-      }
+        }
+      }, (error: HttpErrorResponse) => {
+        Toastr.error("Erro ao comunicar com a API");
+        this.auth.onSessaoInvalida(error);
+      },
+      );
+
+
+    } else {
+
+      pessoaPaciente = {};
+      pessoaPaciente = pessoa;
+
+      pessoaPaciente.recemNascido = p.value.DP_RecemNascido === true;
+
+      if (p.value.DP_NumProntuarioMae !== "")
+        pessoaPaciente.numeroProntuario = p.value.DP_NumProntuarioMae.toUpperCase();
+
+      if (p.value.DP_Descricao_Nao_Identificado !== "")
+        pessoaPaciente.descricaoNaoIdentificado = p.value.DP_Descricao_Nao_Identificado.toUpperCase();
+
+      console.log(JSON.stringify(pessoaPaciente));
+
+      this.pessoaService.SalvarPessoaPaciente(pessoaPaciente).subscribe(async (data: Return) => {
+        Toastr.success("Paciente salvo com sucesso");
+        this.LimparCampos(p);
+
+      }, (error: HttpErrorResponse) => {
+        Toastr.error("Erro ao comunicar com a API");
+        this.auth.onSessaoInvalida(error);
+      },
+      );
     }
+
+
+
   }
   //end:: Salvar Pessoa
 

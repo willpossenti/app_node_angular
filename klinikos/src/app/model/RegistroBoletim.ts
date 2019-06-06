@@ -11,8 +11,8 @@ export interface RegistroBoletim {
   numeroBoletim?: string;
   dataBoletim?: Date;
   Pessoa?: Pessoa;
-  TipoChegada?: TipoChegada;
-  Especialidade?: Especialidade;
+  tipoChegadaId?: string;
+  especialidadeId?: string;
   nomeInformante?: string;
   enderecoInformante?: string;
   telefoneInformante?: string;

@@ -18,9 +18,11 @@ export class RegistroBoletimService {
       'Authorization': 'Bearer ' + localStorage['token_accessToken']
     })
   };
+  
 
   constructor(private http: HttpClient) {
-    this.baseUrl = 'https://localhost:44307/api/';
+    //this.baseUrl = 'https://localhost:44307/api/';
+    this.baseUrl = 'https://apinew.ecosistemas.com.br/api/';
 
   }
 

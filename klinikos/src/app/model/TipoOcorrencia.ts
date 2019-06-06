@@ -1,6 +1,6 @@
 export interface TipoOcorrencia {
 
-  tipoOcorrenciaId?: boolean;
+  tipoOcorrenciaId?: string;
   descricao?: string;
   ativo?: boolean;
 

@@ -2,6 +2,7 @@
 import { Injectable } from '@angular/core';
 import { CanActivate, ActivatedRouteSnapshot, RouterStateSnapshot, Router } from "@angular/router";
 import { HttpErrorResponse } from '@angular/common/http';
+import * as moment from 'moment';
 
 @Injectable({
   providedIn: 'root'
@@ -46,7 +47,11 @@ export class AuthGuard implements CanActivate {
 
     var dt = new Date();
     dt.setMinutes(dt.getMinutes() + 20);
-    localStorage.setItem('token_expiracao', dt.toLocaleString());
+    localStorage.setItem('token_expiracao', moment(dt).format('YYYY-MM-DD HH:mm:ss'));
+
+
+
+
 
   }
      

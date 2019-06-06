@@ -36,7 +36,8 @@ export class PessoaService {
 
 
   constructor(private http: HttpClient) {
-    this.baseUrl = 'https://localhost:44307/api/';
+    //this.baseUrl = 'https://localhost:44307/api/';
+    this.baseUrl = 'https://apinew.ecosistemas.com.br/api/';
     this.cepUrl = 'https://viacep.com.br/ws/';
     this.cadecoUrl = 'https://integrador.ecosistemas.com.br/cadeco-rest/api/paciente/cpf?';
 
@@ -79,6 +80,8 @@ export class PessoaService {
 
 
   ConsultaCpfPacienteCadeco(cpf: string) {
+
+    console.log('Basic ' + localStorage['token_accessToken_cadeco']);
     return this.http.get<any>(`${this.cadecoUrl}cpf=` + cpf, this.httpOptions2);
 
   }

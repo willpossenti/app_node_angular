@@ -20,7 +20,7 @@
                     <i class="flaticon2-user"></i> Informações do Boletim
                   </div>
                 </div>
-                <div id="collapseOne1" class="collapse show" aria-labelledby="headingOne1" data-parent="#accordionExample1" style="">
+                <div id="collapseOne1" class="collapse show" aria-labelledby="headingOne1" data-parent="#accordionExample1" >
                   <div class="card-body">
 
                     <!--begin::Portlet 1-->
@@ -45,12 +45,12 @@
                           </div>
                           <div class="col-lg-2">
                             <label>Data <span class="fld-obg" title="Obrigatório">*</span></label>
-                            <input type="text" class="form-control mask_data" name="IB_Data" placeholder="00/00/0000" maxlength="140" tabindex="1" ngModel>
+                            <input type="text" class="form-control" name="IB_Data" mask="00/00/0000" placeholder="00/00/0000" maxlength="140" tabindex="1" ngModel>
                             <!-- <span class="form-text text-muted">Please enter your contact number</span> -->
                           </div>
                           <div class="col-lg-1">
                             <label>Hora <span class="fld-obg" title="Obrigatório">*</span></label>
-                            <input type="text" name="IB_Hora" class="form-control mask_hour" placeholder="00:00" tabindex="2" value="">
+                            <input type="text" name="IB_Hora" class="form-control" mask="00:00" placeholder="00:00" tabindex="2" value="">
                           </div>
 
                           <div class="col-lg-6">
@@ -110,16 +110,16 @@
                         <div class="form-group row">
                           <div class="col-lg-2">
                             <label>CPF</label>
-                            <input type="text" name="P_CPF" id="DP_CPF" class="form-control mask_cpf" placeholder="Pesquisar por CPF" tabindex="4" (blur)="onConsultaCpf($event)">
+                            <input type="text" name="P_CPF" id="DP_CPF" class="form-control" mask="000.000.000-00" placeholder="Pesquisar por CPF" tabindex="4" (blur)="onConsultaCpf($event)">
                             <span id="msg_cpf" class="form-text text-danger oculta">Informe um CPF válido</span>
                           </div>
                           <div class="col-lg-2">
                             <label>Nascimento <span class="fld-obg" title="Obrigatório">*</span></label>
-                            <input type="text" name="IB_Nascimento" class="form-control mask_data" value="" tabindex="5">
+                            <input type="text" name="IB_Nascimento" class="form-control" mask="00/00/0000" value="" tabindex="5">
                           </div>
                           <div class="col-lg-2">
                             <label>Telefone</label>
-                            <input type="text" name="DP_Telefone" class="form-control telefone" value="" tabindex="6">
+                            <input type="text" name="DP_Telefone" class="form-control"  mask="{{customMask}}" (focusout)="onChangeMask($event)" tabindex="6">
                           </div>
                           <div class="col-lg-6">
                             <label>Nome Social</label>
@@ -263,7 +263,7 @@
                             </div>
                             <div class="col-lg-2">
                               <label>Telefone</label>
-                              <input type="text" class="form-control mask_phone" name="IN_Telefone" maxlength="" value="" tabindex="16" ngModel>
+                              <input type="text" class="form-control" name="IN_Telefone" mask="{{customMask}}" (focusout)="onChangeMask($event)" value="" tabindex="16" ngModel>
                               <!-- <span class="form-text text-muted">Please enter your contact number</span> -->
                             </div>
                             <div class="col-lg-2">

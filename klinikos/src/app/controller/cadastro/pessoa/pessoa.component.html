@@ -92,7 +92,8 @@
                             </div>
                             <div class="k-checkbox-list mt-2" data-toggle="popover" data-trigger="hover" tabindex="7" data-placement="top" data-content="Remove a obrigatoriedade dos demais campos e impõe o preenchimento do campo [Descrição]">
                               <label class="k-checkbox k-checkbox--bold" id="btn_naoidentificado">
-                                <input type="checkbox" name="DP_NaoIdentificado" ngModel>Não Identificado<span></span>
+                                <input type="checkbox" name="DP_NaoIdentificado" (change)="onHabilitaNaoIdentificado()" ngModel>Não Identificado<span></span>
+                                
                               </label>
                             </div>
 
@@ -162,7 +163,7 @@
 
                             <div class="k-checkbox-list mt-2">
                               <label class="k-checkbox k-checkbox--bold" id="btn_recemnasc">
-                                <input type="checkbox" name="DP_RecemNascido" tabindex="3" (focus)="onFechaPesquisa()" ngModel>Recém Nascido<span></span>
+                                <input type="checkbox" name="DP_RecemNascido" tabindex="3" (focus)="onFechaPesquisa()" ngModel (change)="onHabilitaRecemNascido()">Recém Nascido<span></span>
                               </label>
                             </div>
                             <!-- <span class="form-text text-muted">Please enter your full name</span> -->
@@ -266,17 +267,19 @@
                           </div>
                           <div class="col-lg-2">
                             <label>Nascimento</label>
-                            <input type="text" class="form-control mask_data" name="DP_Nascimento" placeholder="00/00/0000" tabindex="10" (blur)="onCalculaIdade()" (focus)="onFechaPesquisa()">
+                            <input type="text" class="form-control" name="DP_Nascimento" placeholder="00/00/0000" mask="00/00/0000" tabindex="10" (blur)="onCalculaIdade()" (focus)="onFechaPesquisa()">
+
                           </div>
+
                           <div class="col-lg-2">
                             <label>Idade Aparente</label>
                             <div class="k-input-icon">
                               <input type="text" class="form-control" name="DP_IdadeAparente" placeholder="" tabindex="11" (focus)="onFechaPesquisa()" ngModel>
                               <!--
-                              <span class="k-input-icon__icon k-input-icon__icon--right">
-                                  <span><i class="la la-calendar"></i></span>
-                              </span>
-                              -->
+      <span class="k-input-icon__icon k-input-icon__icon--right">
+          <span><i class="la la-calendar"></i></span>
+      </span>
+      -->
                             </div>
                           </div>
 
@@ -318,7 +321,7 @@
                         <div class="form-group row">
                           <div class="col-lg-3">
                             <label>CPF</label>
-                            <input type="text" class="form-control mask_cpf" name="DP_CPF" id="DP_CPF" placeholder="000.000.000-00" maxlength="11" value="" tabindex="16" (blur)="onConsultaCpf($event)" (focus)="onFechaPesquisa()" ngModel>
+                            <input type="text" class="form-control" name="DP_CPF" id="DP_CPF" placeholder="000.000.000-00" mask="000.000.000-00" maxlength="14" value="" tabindex="16" (blur)="onConsultaCpf($event)" (focus)="onFechaPesquisa()" ngModel>
                             <span id="msg_cpf" class="form-text text-danger oculta">Informe um CPF válido</span>
                           </div>
                           <div class="col-lg-3">
@@ -334,7 +337,7 @@
                             <label>Nacionalidade</label>
 
 
-                            <select class="form-control" name="DP_Nacionalidade" tabindex="18" [(ngModel)]="Nacionalidade" (focus)="onFechaPesquisa()">
+                            <select class="form-control" name="DP_Nacionalidade" tabindex="18" [(ngModel)]="Nacionalidade" (focus)="onFechaPesquisa()" (change)="onSelecionadoNacionalidade()">
                               <option value="-1">-- Selecione --</option>
                               <option *ngFor="let nacionalidade of listaNacionalidade" [ngValue]="nacionalidade">{{nacionalidade.descricao}}</option>
                               <!--| orderBy: orderDescricao-->
@@ -363,7 +366,7 @@
                         <div class="form-group row">
                           <div class="col-lg-3">
                             <label>Identidade</label>
-                            <input type="text" class="form-control mask_rg" name="DP_Identidade" placeholder="" tabindex="21" (focus)="onFechaPesquisa()" ngModel>
+                            <input type="text" class="form-control" name="DP_Identidade" placeholder="" mask="00.000.000-0" tabindex="21" (focus)="onFechaPesquisa()" ngModel>
                           </div>
                           <div class="col-lg-3">
                             <label>UF da Identidade</label>
@@ -378,21 +381,21 @@
                           <div class="col-lg-4">
                             <label>Órgão Emissor</label>
 
-                            <select class="form-control" name="DP_OrgaoEmissor" tabindex="23" [(ngModel)]="OrgaoEmissor" (focus)="onFechaPesquisa()">
+                            <select class="form-control" name="DP_OrgaoEmissor" tabindex="23" [(ngModel)]="OrgaoEmissor"  (focus)="onFechaPesquisa()">
                               <option value="-1">-- Selecione --</option>
                               <option *ngFor="let OrgaoEmissor of listaOrgaoEmissor | orderBy: orderDescricao" [ngValue]="OrgaoEmissor">{{OrgaoEmissor.descricao}}</option>
                             </select>
                           </div>
                           <div class="col-lg-2">
                             <label>Emissão</label>
-                            <input type="text" class="form-control mask_data" name="DP_OrgaoEmissorData" tabindex="24" (focus)="onFechaPesquisa()" placeholder="00/00/0000">
+                            <input type="text" class="form-control" name="DP_OrgaoEmissorData" tabindex="24" (focus)="onFechaPesquisa()" (blur)="onValidaData($event)" placeholder="00/00/0000" mask="00/00/0000">
                           </div>
                         </div>
 
                         <div class="form-group row">
                           <div class="col-lg-6">
                             <label>Cartão Nacional de Saúde</label>
-                            <input type="text" class="form-control mask_cns" name="DP_CNS" id="DP_CNS" value="" tabindex="25" maxlength="15" (blur)="onConsultaCns($event)" (focus)="onFechaPesquisa()" ngModel>
+                            <input type="text" class="form-control" name="DP_CNS" id="DP_CNS" value="" tabindex="25" maxlength="15" (blur)="onConsultaCns($event)" (focus)="onFechaPesquisa()" mask="000 0000 0000 0000" ngModel>
                             <span id="msg_cns" class="form-text text-danger oculta">Informe um CNS válido</span>
                           </div>
 
@@ -550,19 +553,19 @@
                           <div class="form-group row" id="box_newcontact0">
                             <div class="col-lg-2">
                               <label>Telefone/Celular</label>
-                              <input type="text" class="form-control telefone" name="Cont_Contato1" maxlength="20" value="" tabindex="21">
+                              <input type="text" class="form-control" name="Cont_Contato1" mask="{{customMaskContato1}}" (focusout)="onChangeMask($event)" maxlength="20" tabindex="21">
                             </div>
                             <div class="col-lg-2">
                               <label>Telefone/Celular</label>
-                              <input type="text" class="form-control telefone" name="Cont_Contato2" maxlength="20" value="" tabindex="22">
+                              <input type="text" class="form-control" name="Cont_Contato2" mask="{{customMaskContato2}}" (focusout)="onChangeMask($event)" maxlength="20" value="" tabindex="22">
                             </div>
                             <div class="col-lg-2">
                               <label>Telefone/Celular</label>
-                              <input type="text" class="form-control telefone" name="Cont_Contato3" maxlength="20" value="" tabindex="22">
+                              <input type="text" class="form-control " name="Cont_Contato3" mask="{{customMaskContato3}}" (focusout)="onChangeMask($event)" maxlength="20" value="" tabindex="22">
                             </div>
                             <div class="col-lg-6">
                               <label>E-mail</label>
-                              <input type="email" class="form-control minus" name="Cont_Email" value="" tabindex="23" ngModel>
+                              <input type="email" class="form-control minus" name="Cont_Email" value="" tabindex="23" pattern="^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$" (blur)="onValidaEmail($event)" ngModel>
                               <span class="form-text text-muted">Campo obrigatório após preenchimento de Dados Profissionais</span>
                             </div>
                           </div>
@@ -593,7 +596,7 @@
                           <div class="form-group row">
                             <div class="col-lg-2">
                               <label>CEP</label>
-                              <input type="text" class="form-control mask_cep" name="DP_CEP" id="DP_CEP" maxlength="11" value="" tabindex="25" (blur)="onBuscaCep()" (focus)="onFechaPesquisa()">
+                              <input type="text" class="form-control" name="DP_CEP" id="DP_CEP" maxlength="11" mask="00000-000" tabindex="25" (blur)="onBuscaCep()" (focus)="onFechaPesquisa()">
                               <span id="msg_cep" class="form-text text-danger oculta">Informe um CEP válido</span>
                             </div>
                             <div class="col-lg-6">
@@ -692,7 +695,7 @@
                           <div class="form-group row">
                             <div class="col-lg-3">
                               <label>PIS / PASEP</label>
-                              <input type="text" class="form-control  mask_pis" name="DC_PISPASEP" placeholder="" maxlength="15" (blur)="onConsultaPis($event)" tabindex="32">
+                              <input type="text" class="form-control" name="DC_PISPASEP" placeholder="" mask="000.0000.000-0" maxlength="15" (blur)="onConsultaPis($event)" tabindex="32">
                               <span id="msg_pis" class="form-text text-danger oculta">Informe um PIS válido</span>
                             </div>
                             <div class="col-lg-3">
@@ -717,7 +720,7 @@
                             </div>
                             <div class="col-lg-2">
                               <label>Data de Entrada</label>
-                              <input type="text" class="form-control mask_data" name="DC_DataEntrada_Pis" placeholder="do PIS" tabindex="35">
+                              <input type="text" class="form-control" name="DC_DataEntrada_Pais" mask="00/00/0000" placeholder="no País" tabindex="35"  (blur)="onValidaData($event)">
                             </div>
                           </div>
 
@@ -750,7 +753,7 @@
                             </div>
                             <div class="col-lg-2">
                               <label>Data de Emissão</label>
-                              <input type="text" class="form-control mask_data" name="DC_DataEmissao" placeholder="da Certidão" tabindex="40">
+                              <input type="text" class="form-control mask_data" name="DC_DataEmissao" mask="00/00/0000" placeholder="da Certidão" tabindex="40" (blur)="onValidaData($event)">
                             </div>
                           </div>
 
@@ -772,7 +775,7 @@
                             </div>
                             <div class="col-lg-2">
                               <label>Data de Emissão</label>
-                              <input type="text" class="form-control mask_data" name="DC_DataEmissao_Ctps" placeholder="da CTPS" tabindex="44">
+                              <input type="text" class="form-control mask_data" name="DC_DataEmissao_Ctps" mask="00/00/0000" placeholder="da CTPS" tabindex="44" (blur)="onValidaData($event)">
                             </div>
                           </div>
 
@@ -857,7 +860,7 @@
             <div class="row">
               <div class="col-lg-6">
                 <button type="reset" class="btn btn-accent">Biometria</button>
-                <button type="button" id="btn_formclear" class="btn btn-metal" data-toggle="popover" data-placement="top" data-trigger="hover" data-content="Limpar Campos do Formulário">Limpar</button>
+                <button type="button" id="btn_formclearCadastro" class="btn btn-metal" data-toggle="popover" data-placement="top" data-trigger="hover" data-content="Limpar Campos do Formulário">Limpar</button>
               </div>
 
               <div class="col-lg-6 text-right">

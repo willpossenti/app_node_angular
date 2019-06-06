@@ -9,11 +9,11 @@ export interface ClassificacaoRiscoAlergia {
 
   classificacaoRiscoAlergiaId?: string;
   ClassificacaoRisco?: ClassificacaoRisco;
-  Alergia?: Alergia;
-  TipoAlergia?: TipoAlergia;
-  LocalizacaoAlergia?: LocalizacaoAlergia;
-  ReacaoAlergia?: ReacaoAlergia;
-  SeveridadeAlergia?: SeveridadeAlergia;
+  alergiaId?: string;
+  tipoAlergiaId?: string;
+  localizacaoAlergiaId?: string;
+  reacaoAlergiaId?: string;
+  severidadeAlergiaId?: string;
   dataSintomas?: Date;
   alergiaSituacao?: boolean;
   ativo?: boolean;
