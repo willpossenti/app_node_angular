@@ -489,17 +489,17 @@
                           <div class="form-group row">
                             <div class="col-lg-6 pb-3">
                               <label>Grupo de Exames</label>
-                              <select class="form-control" name="GrupoExame" [(ngModel)]="GrupoExame" (change)="onSelectedGrupoExame()">
+                              <select class="form-control" name="GrupoExame" [(ngModel)]="GrupoExame" >
                                 <option value="">-- Selecione --</option>
                                 <option *ngFor="let grupoexame of listaGrupoExame | orderBy: orderNome" [ngValue]="grupoexame">{{grupoexame.nome}}</option>
                               </select>
                               <span class="form-text text-danger cm oculta">Message Error</span>
                             </div>
 
-                            <div class="col-lg-6">
+                            <div class="col-lg-6 pb-3">
                               <label>Exame <span class="fld-obg" title="Obrigatório">*</span></label>
                               <input type="text" class="form-control maisc" name="Exames" placeholder="Informe o exame" (keyup)="onConsultaExame()" ngModel>
-                              <span class="form-text text-danger cm oculta">Message Error</span>
+                              <!--<span class="form-text text-danger cm oculta">Message Error</span>-->
                               <div class="dropdown-menu dropdown-menu-fit dropdown-menu-right dropdown-menu-top-unround dropdown-menu-anim dropdown-menu-lg" x-placement="bottom-end" style="position: absolute; left: 10px;  width: 95%; will-change: transform; top: 65px;" id="divPesquisaExame">
                                 <div class="k-quick-search k-quick-search--dropdown k-quick-search--result-compact k-quick-search--has-result" id="k_quick_search_dropdown">
                                   <div class="k-quick-search__wrapper k-scroll ps ps--active-y m-0 p-0" data-scroll="true" data-height="325" data-mobile-height="200" style="overflow: hidden; height: 325px;">
@@ -571,7 +571,7 @@
 
                                   <tr class="text-center" id="row{{i}}">
                                     <td>{{ item.Observacao }}</td>
-                                    <td>{{ item.GrupoExame? item.GrupoExame.nome: '' }}</td>
+                                    <td>{{ item.GrupoExame? item.GrupoExame.nome.substr(0,50) : '' }}</td>
                                     <td>{{ item.Exame? item.Exame.nome: '' }}</td>
                                     <td>{{ item.DataExame }}</td>
                                     <!-- <td>{{ item.exameSituacao === true? 'Ativo': 'Inativa'}}</td> -->
@@ -638,10 +638,10 @@
 
                               <div class="btn-group btn-group-toggle" data-toggle="buttons">
                                 <label class="btn btn-outline-dark cp pr-4 pl-4" id="">
-                                  <input type="radio" name="PR_Tipo" autocomplete="off" value="1"> Prescrição
+                                  <input type="radio" name="Prescrição" autocomplete="off" > Prescrição
                                 </label>
                                 <label class="btn btn-outline-dark cp pr-5 pl-5" id="">
-                                  <input type="radio" name="PR_Tipo" autocomplete="off" value="2"> Receita
+                                  <input type="radio" name="Receita" autocomplete="off" > Receita
                                 </label>
                               </div>
                               <span class="form-text text-danger cm oculta">Message Error</span>
@@ -649,7 +649,7 @@
 
                             <div class="col-lg-6 pb-3">
                               <label>Modelo <span class="fld-obg" title="Obrigatório">*</span></label>
-                              <select name="PR_Modelo" class="form-control" [(ngModel)]="ModeloPrescricaoReceitaDetalhe" (change)="onSelectedModeloPrescricaoReceitaDetalhe()">
+                              <select name="PR_Modelo" class="form-control" [(ngModel)]="ModeloPrescricaoReceitaDetalhe">
                                 <option value="">-- Selecione --</option>
                                 <option *ngFor="let modeloprescricaoreceitadetalhe of listaModeloPrescricaoReceitaDetalhe | orderBy: orderNome" [ngValue]="modeloprescricaoreceitadetalhe">{{modeloprescricaoreceitadetalhe.modeloprescricaoreceita.nome}}</option>
                               </select>
@@ -660,7 +660,7 @@
                           <div class="form-group row mb-3">
                             <div class="col-lg-6 pb-3">
                               <label>Grupo</label>
-                              <select name="M_Grupo" class="form-control" [(ngModel)]="GrupoMedicamento" (change)="onSelectedGrupoMedicamento()">
+                              <select name="M_Grupo" class="form-control" [(ngModel)]="GrupoMedicamento" >
                                 <option value="">-- Selecione --</option>
                                 <option *ngFor="let grupomedicamento of listaGrupoMedicamento | orderBy: orderNome" [ngValue]="grupomedicamento">{{grupomedicamento.grupomedicamentodetalhe.nome}}</option>
                               </select>
@@ -702,7 +702,7 @@
                             </div>
                             <div class="col-lg-3 pb-3">
                               <label>Via Administração</label>
-                              <select name="M_Via_Administracao" class="form-control" [(ngModel)]="ViaAdministracaoMedicamento" (change)="onSelectedViaAdministracaoMedicamento()">
+                              <select name="M_Via_Administracao" class="form-control" [(ngModel)]="ViaAdministracaoMedicamento" >
                                 <option value="">-- Selecione --</option>
                                 <option *ngFor="let viaadministracaomedicamento of listaViaAdministracaoMedicamento | orderBy: orderDescricao" [ngValue]="viaadministracaomedicamento">{{viaadministracaomedicamento.descricao}}</option>
                               </select>
@@ -710,7 +710,7 @@
                             </div>
                             <div class="col-lg-3 pb-3">
                               <label>Unidade</label>
-                              <select name="M_Unidade" class="form-control" [(ngModel)]="UnidadeMedicamento" (change)="onSelectedUnidadeMedicamento()">
+                              <select name="M_Unidade" class="form-control" [(ngModel)]="UnidadeMedicamento" >
                                 <option value="">-- Selecione --</option>
                                 <option *ngFor="let unidademedicamento of listaUnidadeMedicamento | orderBy: orderDescricao" [ngValue]="unidademedicamento">{{unidademedicamento.descricao}}</option>
                               </select>
@@ -728,7 +728,7 @@
                           <div class="form-group row mb-3">
                             <div class="col-lg-9 pb-3">
                               <label>Observação</label>
-                              <input type="text" class="form-control" name="Observacao" ngModel>
+                              <input type="text" class="form-control" name="ObservacaoMedicamento" ngModel>
                               <span class="form-text text-danger cm oculta">Message Error</span>
                             </div>
                             <div class="col-lg-2 pb-3">
@@ -736,6 +736,7 @@
                               <button type="button" class="btn btn-metal" (click)="onAdicionaMedicamento()" id="btnAddNovoMedicamento"><i class="fa fa-plus fa-fw"></i>Adicionar</button>
                             </div>
                           </div>
+                          
                           <div class="form-group row mb-1">
                             <div class="col">
                               <table class="table">
@@ -748,6 +749,7 @@
                                     <th>Via Administração</th>
                                     <th>Intervalo</th>
                                     <th colspan="2">Ações</th>
+                                   
                                   </tr>
                                 </thead>
                                 <!--<tbody>
@@ -763,11 +765,15 @@
                                   </tr>
 
                                 </tbody>-->
-                                <tbody id="tableMedicamento" *ngFor="let item of listaAtendimentoPrescricaoReceita; let i = index">
+                                <tbody id="tableMedicamento" *ngFor="let item of listaAtendimentoMedicoPrescricaoReceita; let i = index">
+                                  
+                                  <!-- <tr class="text-center"> -->
+                                     <!-- <td><i class="flaticon2-information-circular-button-symbol ch text-info" style="font-size: 1.5em;" data-content="Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt." data-toggle="popover" data-placement="top" data-trigger="hover"></i></td> -->
+                                     
 
                                   <tr class="text-center" id="row{{i}}">
-                                    <td>{{ item.Observacao }}</td>
-                                    <td>{{ item.Medicamento? item.Medicamento.nome: '' }}</td>
+                                    <td><i id="rowmedicamento" class="flaticon2-information-circular-button-symbol ch text-info" style="font-size: 1.5em;" data-toggle="popover" data-placement="top" data-trigger="hover" data-content="asdfa" (mouseenter) ="mouseEnter()"></i>{{ item.observacao }}</td>
+                                    <td>{{ item.Medicamento? item.Medicamento.nome.substr(0,50)  : '' }}</td>
                                     <td>{{ item.dose }}</td>
                                     <td>{{ item.Unidade? item.Unidade.descricao: ''}}</td>
                                     <td>{{ item.ViaAdministracaoMedicamento? item.ViaAdministracaoMedicamento.descricao: '' }}</td>

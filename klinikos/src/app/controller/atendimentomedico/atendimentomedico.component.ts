@@ -244,7 +244,7 @@ export class AtendimentoMedicoComponent implements OnInit {
       $(document).ready(function () { $("select[name^=M_Intervalo]").val($("select[name^=M_Intervalo] option:first").val()); });
 
     }, (error: HttpErrorResponse) => {
-      Toastr.error("Falha ao carregar os estados na aba Informações do boletim");
+      Toastr.error("Falha ao carregar Intervalo na aba Prescrição e Receita");
       console.log(`Error. ${error.message}.`);
     });
 
@@ -254,7 +254,7 @@ export class AtendimentoMedicoComponent implements OnInit {
 
 
     }, (error: HttpErrorResponse) => {
-      Toastr.error("Falha ao carregar os estados na aba Informações do boletim");
+      Toastr.error("Falha ao carregar Modelo Atestado na aba Prescrição Receita");
       console.log(`Error. ${error.message}.`);
     });
 
@@ -384,33 +384,36 @@ export class AtendimentoMedicoComponent implements OnInit {
     if (rb.value.SuspeitaDiagnostica != "")
       atendimentomedico.suspeitaDiagnostico = rb.value.SuspeitaDiagnostica.toUpperCase();
 
-    if ($("label[for^=CondutaExames]").hasClass("active"))
-      atendimentomedico.condutaExames = true;
-    else
-      atendimentomedico.condutaExames = false;
 
-    if ($("label[for^=CondutaPrescricao]").hasClass("active"))
-      atendimentomedico.condutaPrescricao = true;
+    if ($("label[for^=Prescricao]").hasClass("active"))
+      atendimentomedico.Prescricao = true;
     else
-      atendimentomedico.condutaPrescricao = false;
+      atendimentomedico.Prescricao = false;
 
+    if ($("label[for^=Receita]").hasClass("active"))
+      atendimentomedico.Receita = true;
+    else
+      atendimentomedico.Receita = false;
+      
+      
     if (rb.value.AtestadoObservacao != "")
     {
-      atendimentomedico.condutaAtestado = true;
       atendimentomedico.atestado = rb.value.AtestadoObservacao.toUpperCase();
       if (rb.value.AtestadoValidade != "")
         atendimentomedico.validadeatestado = rb.value.AtestadoValidade + " dias";
     }
-    else
-      atendimentomedico.condutaAtestado = false;
 
     if (rb.value.TipoSaida != "")
+    {
       if (rb.value.TipoSaida == 1) {
         atendimentomedico.tipoSaida = "A";
       }
-    if (rb.value.TipoSaida == 2) {
-      atendimentomedico.tipoSaida = "B";
+      if (rb.value.TipoSaida == 2) {
+        atendimentomedico.tipoSaida = "B";
     }
+    }
+    else
+      atendimentomedico.tipoSaida = "";
 
     if (rb.value.colModalFinAlta != "")
       atendimentomedico.dataSaida = rb.value.colModalFinAlta;
@@ -435,11 +438,12 @@ export class AtendimentoMedicoComponent implements OnInit {
 
   }
 
+
   onAdicionaExame() {
 
     if (this.GrupoExame !== null && this.Exame !== null) {
 
-      var observacaoexame = $("input[name^=ExamesObservacao]");
+      var observacaoexame = $("input[name^=ExamesObservacao]").val();
       //var dataexame = $("input[name^=Data/Hora]")/*.val(Date.now)*/;
 
 
@@ -447,9 +451,7 @@ export class AtendimentoMedicoComponent implements OnInit {
 
       atendimentomedicoExame.GrupoExame = this.GrupoExame;
       atendimentomedicoExame.Exame = this.Exame;
-
-      if (this.AtendimentoMedicoExame.observacaoExame !== "")
-        atendimentomedicoExame.observacaoExame = this.AtendimentoMedicoExame.observacaoExame;
+      atendimentomedicoExame.observacaoExame = observacaoexame.toUpperCase();
 
  
 
@@ -462,21 +464,21 @@ export class AtendimentoMedicoComponent implements OnInit {
 
 
 
-      if (this.listaAtendimentoMedicoExame.find(x => x.GrupoExame === this.GrupoExame && x.Exame === this.Exame) === undefined && this.AtendimentoMedicoExame === undefined) {
+      // if (this.listaAtendimentoMedicoExame.find(x => x.GrupoExame === this.GrupoExame && x.Exame === this.Exame) === undefined && this.AtendimentoMedicoExame === undefined) {
 
         this.listaAtendimentoMedicoExame.push(atendimentomedicoExame);
 
-      } else if (this.AtendimentoMedicoExame !== undefined) {
+      // } else if (this.AtendimentoMedicoExame !== undefined) {
 
-        if (this.AtendimentoMedicoExame.GrupoExame != atendimentomedicoExame.GrupoExame && this.AtendimentoMedicoExame.Exame != atendimentomedicoExame.Exame)
-          if (this.listaAtendimentoMedicoExame.find(x => x.GrupoExame === this.GrupoExame && x.Exame === this.Exame))
-            return;
+        // if (this.AtendimentoMedicoExame.GrupoExame != atendimentomedicoExame.GrupoExame && this.AtendimentoMedicoExame.Exame != atendimentomedicoExame.Exame)
+        //   if (this.listaAtendimentoMedicoExame.find(x => x.GrupoExame === this.GrupoExame && x.Exame === this.Exame))
+        //     return;
 
-        var index = this.listaAtendimentoMedicoExame.findIndex(x => x.GrupoExame === this.GrupoExame || x.Exame === this.Exame);
-        this.listaAtendimentoMedicoExame[index] = atendimentomedicoExame;
+    //    var index = this.listaAtendimentoMedicoExame.findIndex(x => x.GrupoExame === this.GrupoExame || x.Exame === this.Exame);
+    //     this.listaAtendimentoMedicoExame[index] = atendimentomedicoExame;
 
-      }
-    } else {
+      
+    // } else {
 
       $(document).ready(function () {
 
@@ -520,15 +522,15 @@ export class AtendimentoMedicoComponent implements OnInit {
     this.Exame = atendimentomedicoExame.Exame;
 
 
-    if (atendimentomedicoExame.dataExame != null) {
+    // if (atendimentomedicoExame.dataExame != null) {
 
-      var dataExame = new Date(atendimentomedicoExame.dataExame),
-        month = '' + (dataExame.getMonth() + 1),
-        day = '' + dataExame.getDate(),
-        year = dataExame.getFullYear();
+    //   var dataExame = new Date(atendimentomedicoExame.dataExame),
+    //     month = '' + (dataExame.getMonth() + 1),
+    //     day = '' + dataExame.getDate(),
+    //     year = dataExame.getFullYear();
 
       //$("input[name^=Data/Hora]").val(("0" + day).slice(-2) + "/" + ("0" + month).slice(-2) + "/" + year);
-    }
+    // }
 
     $("input[name^=ExameAtivo]").prop("checked", false);
 
@@ -567,8 +569,145 @@ export class AtendimentoMedicoComponent implements OnInit {
   }
   //end:: Exibe Mensagem Excluir
 
+  onAdicionaMedicamento() {
+
+    if (this.Medicamento !== null) {
 
 
+      var receita = $('input[type=checkbox][name^=Receita]').prop("checked");
+      var prescricao = $('input[type=checkbox][name^=Prescricao]').prop("checked");
+      var observacao = $('input[name^=ObservacaoMedicamento]').val();
+
+      var atendimentomedicoPrescricaoReceita: AtendimentoMedicoPrescricaoReceita = {};
+
+      atendimentomedicoPrescricaoReceita.GrupoMedicamento = this.GrupoMedicamento;
+      atendimentomedicoPrescricaoReceita.Medicamento = this.Medicamento;
+
+      if (this.UnidadeMedicamento !== null)
+        atendimentomedicoPrescricaoReceita.UnidadeMedicamento = this.UnidadeMedicamento;
+
+      if (this.ViaAdministracaoMedicamento !== null)
+        atendimentomedicoPrescricaoReceita.ViaAdministracaoMedicamento = this.ViaAdministracaoMedicamento;
+
+      if (this.GrupoMedicamento !== null)
+        atendimentomedicoPrescricaoReceita.GrupoMedicamento = this.GrupoMedicamento;
+
+
+
+      atendimentomedicoPrescricaoReceita.receita = receita;
+
+      atendimentomedicoPrescricaoReceita.prescricao = prescricao;
+
+      atendimentomedicoPrescricaoReceita.observacao = observacao;
+
+
+      console.log(atendimentomedicoPrescricaoReceita);
+
+
+      //if (this.listaAtendimentoMedicoPrescricaoReceita.find(x => x.GrupoMedicamento === this.GrupoMedicamento && x.Medicamento === this.Medicamento) === undefined && this.AtendimentoMedicoPrescricaoReceita === undefined) {
+
+        this.listaAtendimentoMedicoPrescricaoReceita.push(atendimentomedicoPrescricaoReceita);
+
+
+console.log( this.listaAtendimentoMedicoPrescricaoReceita);
+
+     // } else if (this.AtendimentoMedicoPrescricaoReceita !== undefined) {
+
+       // if (this.AtendimentoMedicoPrescricaoReceita.GrupoMedicamento != atendimentomedicoPrescricaoReceita.GrupoMedicamento && this.AtendimentoMedicoPrescricaoReceita.Medicamento != atendimentomedicoPrescricaoReceita.Medicamento)
+        //  if (this.listaAtendimentoMedicoPrescricaoReceita.find(x => x.GrupoMedicamento === this.GrupoMedicamento && x.Medicamento === this.Medicamento))
+        //    return;
+
+     //   var index = this.listaAtendimentoMedicoPrescricaoReceita.findIndex(x => x.GrupoMedicamento === this.GrupoMedicamento || x.Medicamento === this.Medicamento);
+//this.listaAtendimentoMedicoPrescricaoReceita[index] = atendimentomedicoPrescricaoReceita;
+
+     // }
+   // } else {
+
+      $(document).ready(function () {
+
+        //$('#msg_tipoprofissional').removeClass('oculta');
+      });
+
+    }
+
+
+    this.onLimparCamposMedicamento();
+  }
+
+  onLimparCamposMedicamento() {
+
+    $("input[name^=Prof_NumConselho]").val("");
+    this.GrupoMedicamento = undefined;
+    this.Medicamento = undefined;
+    this.UnidadeMedicamento = undefined;
+    this.ViaAdministracaoMedicamento = undefined;
+    this.IntervaloMedicamento = undefined;
+    this.AtendimentoMedicoPrescricaoReceita = undefined;
+
+    $(document).ready(function () {
+      $("select[name^=GrupoMedicamento]").val($("select[name^=GrupoMedicamento] option:first").val());
+      $("select[name^=Medicamento]").val($("select[name^=Medicamento] option:first").val());
+      $("select[name^=LocalizacaoMedicamento]").val($("select[name^=LocalizacaoMedicamento] option:first").val());
+      $("select[name^=ReacaoMedicamento]").val($("select[name^=ReacaoMedicamento] option:first").val());
+      $("select[name^=SeveridadeMedicamento]").val($("select[name^=SeveridadeMedicamento] option:first").val());
+      $("input[name^=MedicamentoData]").val("");
+      $("input[name^=MedicamentoAtivo]").prop("checked", false);
+      //$('#msg_tipoprofissional').addClass('oculta');
+      $('#btnCancelarMedicamento').addClass('oculta');
+      $("#btnAddNovaMedicamento").html('<i class="fa fa-plus"></i>Adicionar');
+    });
+  }
+
+
+
+
+
+  //begin:: Edita Lotacao Profissional / Permite o usuário editar as lotações lançadas na aba profissional
+  onEditarMedicamento(atendimentomedicoPrescricaoReceita: AtendimentoMedicoPrescricaoReceita) {
+
+    this.GrupoMedicamento = atendimentomedicoPrescricaoReceita.GrupoMedicamento;
+    this.Medicamento = atendimentomedicoPrescricaoReceita.Medicamento;
+    this.UnidadeMedicamento = atendimentomedicoPrescricaoReceita.UnidadeMedicamento;
+    this.ViaAdministracaoMedicamento = atendimentomedicoPrescricaoReceita.ViaAdministracaoMedicamento;
+    this.IntervaloMedicamento = atendimentomedicoPrescricaoReceita.IntervaloMedicamento;
+   
+
+    this.AtendimentoMedicoPrescricaoReceita = atendimentomedicoPrescricaoReceita;
+
+    $("#btnAddNovaMedicamento").html("<i class='fa fa-plus'></i>Salvar");
+    $('#btnCancelarMedicamento').removeClass('oculta');
+
+  }
+  //end::  Edita Lotacao Profissional
+
+
+  //begin:: Exibe Mensagem Excluir / Alerta o usuário da confirmação da exclusão na aba profissional
+  onExibeMensagemExcluirMedicamento(atendimentomedicoPrescricaoReceita: AtendimentoMedicoPrescricaoReceita) {
+
+    var page = this;
+
+    return swal({ title: 'Deseja excluir essa medicamento?', text: '', type: 'warning', showCancelButton: true, cancelButtonText: 'Não', confirmButtonText: 'Sim' })
+
+      .then(function (result) {
+        if (result.value) {
+          page.onExcluirMedicamento(atendimentomedicoPrescricaoReceita);
+        }
+
+      });
+
+  }
+  //end:: Exibe Mensagem Excluir
+
+  //begin:: Exclui lotacao Profissional / Alerta o usuário da confirmação da exclusão na aba profissional
+  onExcluirMedicamento(atendimentomedicoPrescricaoReceita: AtendimentoMedicoPrescricaoReceita) {
+
+    var index = this.listaAtendimentoMedicoPrescricaoReceita.findIndex(x => x.Medicamento === atendimentomedicoPrescricaoReceita.Medicamento);
+    this.listaAtendimentoMedicoPrescricaoReceita.splice(index, 1);
+  }
+  //end:: Exibe Mensagem Excluir
+
+ 
+ 
   onAdicionaAlergia() {
 
     if (this.TipoAlergia !== null && this.Alergia !== null) {
@@ -771,6 +910,7 @@ export class AtendimentoMedicoComponent implements OnInit {
 
     var dp_exame = $("input[name^=Exames]").val().trim().toUpperCase();
 
+
     if (dp_exame.length > 3) {
 
       $('#divPesquisaExame').addClass('show');
@@ -804,7 +944,6 @@ export class AtendimentoMedicoComponent implements OnInit {
   }
   //end:: carregamento padrão de campos para a tela
 
-
   //begin:: Carregamento do Exame pela Busca
   onSelectedExame(exame: Exame) {
 
@@ -815,6 +954,15 @@ export class AtendimentoMedicoComponent implements OnInit {
 
   }
   //end::  Carregamento do Exame pela Busca
+
+
+
+  mouseEnter(){
+
+    
+    $( "#rowmedicamento" ).prop( "data-content", 'teste' );
+  }
+
 }
 
 

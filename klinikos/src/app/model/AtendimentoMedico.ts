@@ -24,9 +24,8 @@ export interface AtendimentoMedico {
   suspeitaDiagnostico?: string;
   CID?: CID;
   ConsultaCID?: ConsultaCID;
-  condutaExames?: boolean;
-  condutaPrescricao?: boolean;
-  condutaAtestado?: boolean;
+  Prescricao?: boolean;
+  Receita?: boolean;
   AtendimentoMedicoExame?: Array<AtendimentoMedicoExame>;
   ModeloPrescricaoReceitaDetalhe?: ModeloPrescricaoReceitaDetalhe;
   AtendimentoMedicoPrescricaoReceita?: Array<AtendimentoMedicoPrescricaoReceita>;
