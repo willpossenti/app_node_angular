@@ -382,7 +382,7 @@ export class RegistroBoletimComponent implements OnInit {
       Toastr.success("Registro Boletim salvo com sucesso");
 
       $("input[name^=IB_NumeroBoletim]").val(data.result.numeroBoletim);
-      this.LimparCampos(rb);
+      this.onLimpaFormRegistroBoletim(rb);
 
     }, (error: HttpErrorResponse) => {
       this.auth.onSessaoInvalida(error);
@@ -495,27 +495,33 @@ export class RegistroBoletimComponent implements OnInit {
 
 
   //begin:: Limpa Campos/ mensagens responsáveis pelos avisos com integrações externas
-  public LimparCampos(rb: NgForm) {
+  public onLimpaFormRegistroBoletim(form: NgForm) {
 
-
+    $("#btn_formclear").trigger("click");
+    form.reset();
     this.Pessoa = undefined;
-
-    rb.value.IN_Endereco = "";
-    rb.value.IN_Telefone = "";
-    rb.value.IN_GrauParentesco = "";
-    rb.value.DO_Logradouro = "";
-    rb.value.DO_Complemento = "";
+    form.value.IN_Endereco = "";
+    form.value.IN_Telefone = "";
+    form.value.IN_GrauParentesco = "";
+    form.value.DO_Logradouro = "";
+    form.value.DO_Complemento = "";
 
   }
   //end:: Limpa Campos
 
 
-  onChangeMask($event) {
+  onChangeMask(event: any) {
 
-    if ($event.target.value.length === 14)
+    if (event.target.value.length === 14)
       this.customMask = '(00) 0000-00000';
     else
       this.customMask = '(00) 00000-0000';
+
+  }
+
+  onValidaData(event: any){
+
+
 
   }
 

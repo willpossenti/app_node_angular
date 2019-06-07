@@ -376,8 +376,7 @@ $(document).ready(function () {
 
   });
 
-
-
+ 
 
   //Mostra/Oculta : Portlet: Dados Profissionais
   $('#btn_dadosprof').on('click', function () {
@@ -479,81 +478,7 @@ $(document).ready(function () {
   });
   //end::Pulso
 
-  //begin::Temperatura
-  $('#SV_Temperatura').on('keyup', function () {
-    // var
-    var temp = $(this).val();
 
-    if (temp !== '') {
-
-      if (((temp >= 33) && (temp <= 34)) || ((temp > 40) && (temp <= 45))) {
-        $('#msg_temp_a').removeClass('oculta');
-        $('#msg_temp_b').addClass('oculta');
-      }
-      if ((temp < 33) || (temp > 45)) {
-        $('#msg_temp_b').removeClass('oculta');
-        $('#msg_temp_a').addClass('oculta');
-      }
-      if ((temp >= 35) && (temp <= 40)) {
-        $('#msg_temp_a, #msg_temp_b').addClass('oculta');
-      }
-    }
-    else {
-      $('#msg_temp_a, #msg_temp_b').addClass('oculta');
-    }
-
-  });
-  //end::Temperatura
-
-  //begin::Saturação
-  $('#SV_Saturacao').on('keyup', function () {
-    // var
-    var sat = $(this).val();
-
-    if (sat !== '') {
-
-      if (sat > 100) {
-        $('#msg_sat_b').removeClass('oculta');
-        $('#msg_sat_a').addClass('oculta');
-      }
-      if (sat < 85) {
-        $('#msg_sat_a').removeClass('oculta');
-        $('#msg_sat_b').addClass('oculta');
-      }
-      if ((sat >= 85) && (sat <= 100)) {
-        $('#msg_sat_a, #msg_sat_b').addClass('oculta');
-      }
-
-    } else {
-      $('#msg_sat_a, #msg_sat_b').addClass('oculta');
-    }
-  });
-  //end::Temperatura
-
-  //begin::Frequencia Respiratoria
-  $('#SV_FreqResp').on('keyup', function () {
-
-    var freq_resp = $(this).val();
-
-    if (freq_resp !== '') {
-
-      if (((freq_resp > 9) && (freq_resp <= 11)) || ((freq_resp > 60) && (freq_resp <= 66))) {
-        $('#msg_freqresp_a').removeClass('oculta');
-        $('#msg_freqresp_b').addClass('oculta');
-      }
-      if ((freq_resp < 10) || (freq_resp > 66)) {
-        $('#msg_freqresp_b').removeClass('oculta');
-        $('#msg_freqresp_a').addClass('oculta');
-      }
-      if ((freq_resp <= 60) && (freq_resp >= 12)) {
-        $('#msg_freqresp_a, #msg_freqresp_b').addClass('oculta');
-      }
-
-    } else {
-      $('#msg_freqresp_a, #msg_freqresp_b').addClass('oculta');
-    }
-  });
-  //end::Frequencia Respiratoria
 
   // Outros -------
   //begin:: Mostra/Oculta: Unidade de Referência
@@ -738,47 +663,7 @@ $(document).ready(function () {
   });
 
   // Sinais Vitais : Calcular IMC -----------
-  $('#SV_Peso, #SV_Altura').on('focusout', function () {
-    // vars
-    var peso = $('#SV_Peso').val().replace(',', '.');
-    var altura = $('#SV_Altura').val().replace(',', '').replace('.', '');
-
-    if ($.isNumeric(peso) && $.isNumeric(altura)) {
-      // vars
-      if (peso !== '' && altura !== '') {
-        // calc
-        var newaltura = altura / 100;
-        var imc = peso / (newaltura * newaltura);
-        var imc_r = imc.toFixed(1).replace('.', ',');
-
-        // check 
-        if (imc < 18.5) {
-          var msg = ' - Abaixo do Peso';
-        }
-        if (imc >= 18.5) {
-          var msg = ' - Peso Normal';
-        }
-        if (imc >= 25) {
-          var msg = ' - Sobrepeso';
-        }
-        if (imc >= 30) {
-          var msg = ' - Obesidade: Grau 1';
-        }
-        if (imc >= 35) {
-          var msg = ' - Obesidade: Grau 2';
-        }
-        if (imc >= 40) {
-          var msg = ' - Obesidade: Grau 3';
-        }
-        // show result
-        $('#SV_IMC').val(imc_r + msg);
-
-      } else {
-        $('#SV_IMC').val('Informe o Peso e a Altura');
-      }
-
-    }
-  });
+ 
 
   // Doenças Pre-Existentes -------------
   $('#dpe_respcron').on('click', function () {

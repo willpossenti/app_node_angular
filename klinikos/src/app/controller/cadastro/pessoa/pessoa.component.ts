@@ -846,6 +846,10 @@ if(this.Nacionalidade.descricao === "ESTRANGEIRO"){
     if (this.auth.canActivate())
       this.auth.onSessaoAcrescimoTempo();
 
+
+    if(e.target.value !== ''){
+          
+
     // var
     var dp_cns = e.target.value.replace(' ', '').replace(' ', '').replace(' ', '').replace('_', '');
 
@@ -900,7 +904,7 @@ if(this.Nacionalidade.descricao === "ESTRANGEIRO"){
 
     }
 
-
+  }
   }
   //end:: validacao e consulta de CNS
 
@@ -1226,7 +1230,7 @@ if(this.Nacionalidade.descricao === "ESTRANGEIRO"){
         this.SituacaoFamiliarConjugal = pessoa.situacaoFamiliarConjugal;
 
 
-      this.onCarregaCamposDadosComplemenares();
+      this.onCarregaCamposDadosComplementares();
     }
   }
   //end:: carregamento padrão de campos para a tela
@@ -1393,7 +1397,7 @@ if(this.Nacionalidade.descricao === "ESTRANGEIRO"){
   //end::  Carregamento Tipo Profissional
 
   //begin:: Carregamento Dados Complementares / carrega todas as combos na aba dados complementares
-  onCarregaCamposDadosComplemenares() {
+  onCarregaCamposDadosComplementares() {
 
     if (this.auth.canActivate())
       this.auth.onSessaoAcrescimoTempo();
@@ -1986,7 +1990,10 @@ if(this.Nacionalidade.descricao === "ESTRANGEIRO"){
       msgCamposObrigatorios = "Informe o nome\n";
 
     if (this.listaLotacaoProfissional.length > 0 && cpf === "")
-      msgCamposObrigatorios = msgCamposObrigatorios + "CPF para o profissional";
+      if (pessoa.nomeCompleto !== "")
+        msgCamposObrigatorios += msgCamposObrigatorios + "Informe o CPF para o profissional";
+      else
+        msgCamposObrigatorios += msgCamposObrigatorios + "e o CPF para o profissional";
 
     if (msgCamposObrigatorios !== "") {
       swal("Campos Obrigatórios", msgCamposObrigatorios, "error");
@@ -2012,7 +2019,7 @@ if(this.Nacionalidade.descricao === "ESTRANGEIRO"){
 
         } else {
           Toastr.success("Profissional salvo com sucesso");
-          this.LimparCampos(p);
+          this.onLimpaFormPessoa(p);
 
         }
       }, (error: HttpErrorResponse) => {
@@ -2039,7 +2046,7 @@ if(this.Nacionalidade.descricao === "ESTRANGEIRO"){
 
       this.pessoaService.SalvarPessoaPaciente(pessoaPaciente).subscribe(async (data: Return) => {
         Toastr.success("Paciente salvo com sucesso");
-        this.LimparCampos(p);
+        this.onLimpaFormPessoa(p);
 
       }, (error: HttpErrorResponse) => {
         Toastr.error("Erro ao comunicar com a API");
@@ -2054,18 +2061,18 @@ if(this.Nacionalidade.descricao === "ESTRANGEIRO"){
   //end:: Salvar Pessoa
 
   //begin:: Limpa Campos/ Mensagens responsáveis pelos avisos com integrações externas
-  public LimparCampos(p: NgForm) {
+  public onLimpaFormPessoa(form: NgForm) {
 
     $("#btn_formclear").trigger("click");
-
-    p.value.DP_NomeCompleto = "";
-    p.value.DP_NomeSocial = "";
-    p.value.DP_NomeRN = "";
-    p.value.DP_NumProntuarioMae = "";
-    p.value.descricaonaoidentificado = "";
-    p.value.DP_IdadeAparente = "";
-    p.value.DP_NomeMae = "";
-    p.value.DP_NomePai = "";
+    form.reset();
+    form.value.DP_NomeCompleto_Pessoa = "";
+    form.value.DP_NomeSocial = "";
+    form.value.DP_NomeRN = "";
+    form.value.DP_NumProntuarioMae = "";
+    form.value.descricaonaoidentificado = "";
+    form.value.DP_IdadeAparente = "";
+    form.value.DP_NomeMae = "";
+    form.value.DP_NomePai = "";
 
     this.listaEtnia = new Array<Etnia>();
     this.listaCidade = new Array<Cidade>();

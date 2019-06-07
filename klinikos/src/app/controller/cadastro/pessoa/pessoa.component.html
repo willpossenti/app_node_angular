@@ -123,7 +123,10 @@
                                           </div>
                                           <div class="k-quick-search__item-wrapper">
                                             <a class="k-quick-search__item-title" style="cursor:pointer;" (click)="onSelectedProfissional(profissional)">
-                                              {{profissional.nomeCompleto}}  - {{profissional.nascimento | date: 'dd/MM/yyyy'}}
+                                              {{profissional.nomeCompleto}} {{profissional.nomeSocial !== null? '('+ profissional.nomeSocial +')': ''}}
+                                              {{profissional.nascimento !== null? '-' : ''}}
+                                               {{profissional.nascimento | date: 'dd/MM/yyyy'}}
+
                                             </a>
                                             <div class="k-quick-search__item-desc">
                                               {{profissional.nomeMae}}
@@ -141,7 +144,9 @@
                                           </div>
                                           <div class="k-quick-search__item-wrapper">
                                             <a class="k-quick-search__item-title" style="cursor:pointer;" (click)="onSelectedPaciente(paciente)">
-                                              {{paciente.nomeCompleto}}  - {{paciente.nascimento | date: 'dd/MM/yyyy'}}
+                                              {{paciente.nomeCompleto}} {{paciente.nomeSocial !== null? '('+ paciente.nomeSocial +')': ''}}
+                                              {{paciente.nascimento !== null? '-' : ''}}
+                                               {{paciente.nascimento | date: 'dd/MM/yyyy'}}
                                             </a>
                                             <div class="k-quick-search__item-desc">
                                               {{paciente.nomeMae}}
@@ -192,7 +197,11 @@
                                           </div>
                                           <div class="k-quick-search__item-wrapper">
                                             <a class="k-quick-search__item-title" style="cursor:pointer;" (click)="onSelectedProfissional(profissional)">
-                                              {{profissional.nomeSocial}}  - {{profissional.nascimento | date: 'dd/MM/yyyy'}}
+
+                                              {{profissional.nomeCompleto}} {{profissional.nomeSocial !== null? '('+ profissional.nomeSocial +')': ''}}
+                                              {{profissional.nascimento !== null? '-' : ''}}
+                                               {{profissional.nascimento | date: 'dd/MM/yyyy'}}
+
                                             </a>
                                             <div class="k-quick-search__item-desc">
                                               {{profissional.nomeMae}}
@@ -210,7 +219,11 @@
                                           </div>
                                           <div class="k-quick-search__item-wrapper">
                                             <a class="k-quick-search__item-title" style="cursor:pointer;" (click)="onSelectedPaciente(paciente)">
-                                              {{paciente.nomeSocial}}  - {{paciente.nascimento | date: 'dd/MM/yyyy'}}
+
+                                              {{paciente.nomeCompleto}} {{paciente.nomeSocial !== null? '('+ paciente.nomeSocial +')': ''}}
+                                              {{paciente.nascimento !== null? '-' : ''}}
+                                               {{paciente.nascimento | date: 'dd/MM/yyyy'}}
+
                                             </a>
                                             <div class="k-quick-search__item-desc">
                                               {{paciente.nomeMae}}
@@ -674,7 +687,7 @@
                 <!--end: Card 4 -->
                 <!--begin: Card 5 -->
                 <div class="card">
-                  <div class="card-header" id="headinFive1" (click)="onCarregaCamposDadosComplemenares()">
+                  <div class="card-header" id="headinFive1" (click)="onCarregaCamposDadosComplementares()">
                     <div class="card-title collapsed" data-toggle="collapse" data-target="#collapseFive1" aria-expanded="false" aria-controls="collapseFive1"> <i class="flaticon2-writing"></i>Dados Complementares</div>
                   </div>
                   <div id="collapseFive1" class="collapse" aria-labelledby="headingFive1" data-parent="#accordionExample1">
@@ -860,7 +873,7 @@
             <div class="row">
               <div class="col-lg-6">
                 <button type="reset" class="btn btn-accent">Biometria</button>
-                <button type="button" id="btn_formclearCadastro" class="btn btn-metal" data-toggle="popover" data-placement="top" data-trigger="hover" data-content="Limpar Campos do Formulário">Limpar</button>
+                <button type="submit" class="btn btn-metal" data-toggle="popover" data-placement="top" data-trigger="hover" data-content="Limpar Campos do Formulário" (click)="onLimpaFormPessoa(pessoa)">Limpar</button>
               </div>
 
               <div class="col-lg-6 text-right">

@@ -31,7 +31,8 @@ import { ClassificacaoRiscoAlergia } from '../../model/ClassificacaoRiscoAlergia
 import * as swal from '../../../assets/vendors/general/sweetalert2/dist/sweetalert2.js';
 import { AuthGuard } from '../../controller/auth/auth.guard';
 import { ActivatedRoute } from '@angular/router';
-
+import { ImcService } from '../util/imc.service';
+import { SinaisVitais } from '../util/sinaisvitais.service';
 
 @Component({
   selector: 'app-classificacaorisco',
@@ -86,7 +87,9 @@ export class ClassificacaoRiscoComponent implements OnInit {
   orderNome: string = 'nome';
   orderVariavel: string = 'variavel';
 
-  constructor(private classificacaoriscoservice: ClassificaoRiscoService, private pessoaService: PessoaService, private auth: AuthGuard, private route: ActivatedRoute ) {
+  constructor(private classificacaoriscoservice: ClassificaoRiscoService, 
+    private pessoaService: PessoaService, private auth: AuthGuard, 
+    private route: ActivatedRoute, private imcService: ImcService, private sinaisvitaisService: SinaisVitais,) {
     this.listaClassificacaoRiscoAlergia = new Array<ClassificacaoRiscoAlergia>();
   }
 
@@ -612,7 +615,7 @@ export class ClassificacaoRiscoComponent implements OnInit {
 
       Toastr.success("Classificação de Risco salvo com sucesso");
 
-      this.LimparCampos(cr);
+      this.onLimpaFormClassificacaoRisco(cr);
 
     }, (error: HttpErrorResponse) => {
         this.auth.onSessaoInvalida(error);
@@ -742,31 +745,32 @@ export class ClassificacaoRiscoComponent implements OnInit {
     });
   }
 
-  public LimparCampos(cr: NgForm) {
+  public onLimpaFormClassificacaoRisco(form: NgForm) {
 
     $("#btn_formclear").trigger("click");
-    cr.value.DescricaoQueixa = "";
-    cr.value.SV_Peso = "";
-    cr.value.SV_Altura = "";
-    cr.value.SV_Temperatura = "";
-    cr.value.SV_PreArterialDiastolica = "";
-    cr.value.SV_PreArterialSistolica = "";
-    cr.value.FreqRespiratoria = "";
-    cr.value.Sutura = "";
-    cr.value.Saturacao = "";
-    cr.value.DPE_Hipertensao = "";
-    cr.value.DPE_Diabete = "";
-    cr.value.DPE_Cardiopata = "";
-    cr.value.DPE_RenalCronico = "";
-    cr.value.DPE_RespCronico = "";
-    cr.value.DPE_Outros = "";
-    cr.value.DoencaPreExistRespCron = "";
-    cr.value.DoencaPreExistOutros = "";
-    cr.value.DO_Procedencia = "";
-    cr.value.DO_Logradouro = "";
-    cr.value.DO_Numero = "";
-    cr.value.DO_Complemento = "";
-    cr.value.DO_Bairro = "";
+    form.reset();
+    form.value.DescricaoQueixa = "";
+    form.value.SV_Peso = "";
+    form.value.SV_Altura = "";
+    form.value.SV_Temperatura = "";
+    form.value.SV_PreArterialDiastolica = "";
+    form.value.SV_PreArterialSistolica = "";
+    form.value.FreqRespiratoria = "";
+    form.value.Sutura = "";
+    form.value.Saturacao = "";
+    form.value.DPE_Hipertensao = "";
+    form.value.DPE_Diabete = "";
+    form.value.DPE_Cardiopata = "";
+    form.value.DPE_RenalCronico = "";
+    form.value.DPE_RespCronico = "";
+    form.value.DPE_Outros = "";
+    form.value.DoencaPreExistRespCron = "";
+    form.value.DoencaPreExistOutros = "";
+    form.value.DO_Procedencia = "";
+    form.value.DO_Logradouro = "";
+    form.value.DO_Numero = "";
+    form.value.DO_Complemento = "";
+    form.value.DO_Bairro = "";
   }
 
   //begin:: Edita Lotacao Profissional / Permite o usuário editar as lotações lançadas na aba profissional
@@ -829,6 +833,125 @@ export class ClassificacaoRiscoComponent implements OnInit {
     this.listaClassificacaoRiscoAlergia.splice(index, 1);
   }
   //end:: Exibe Mensagem Excluir
+
+
+  onCalculaImc(){
+
+    var peso = $("input[name^=Peso]").val();
+    var altura = $("input[name^=Altura]").val();
+  
+      if(peso !== "" && altura !== ""){
+  
+        var imc = this.imcService.CalculaImc(peso, altura);
+  
+        $('input[name^=IMC]').val(imc);
+      }
+  
+      
+    }
+
+    onValidaTemperatura(){
+
+      var temp = $('input[name^=SV_Temperatura]').val();
+ 
+      var msg_validacao = this.sinaisvitaisService.ValidaTemperatura(temp);
+ 
+      switch(msg_validacao) { 
+       case 'normal': { 
+         $('#msg_erro_temperatura').addClass('oculta');
+          break; 
+       } 
+       case 'recomendar': { 
+        $('#msg_erro_temperatura').prop('class','form-text text-info');
+        $('#msg_erro_temperatura').html('<b>Temperatura:</b> Indicado valores entre 35º à 40º');
+        
+          break; 
+       } 
+       case 'bloquear': { 
+        $('#msg_erro_temperatura').prop('class','form-text text-danger');
+        $('#msg_erro_temperatura').html('<b>Temperatura:</b> Não permitido menor que 33º e maior que 45º');
+         break; 
+      } 
+    } 
+ 
+      }
+
+      onValidaSaturacao(){
+
+        var saturacao = $('input[name^=SV_Saturacao]').val();
+       var msg_validacao = this.sinaisvitaisService.ValidaSaturacao(saturacao);
+
+       switch(msg_validacao) { 
+        case 'normal': { 
+          $('#msg_erro_saturacao').addClass('oculta');
+           break; 
+        } 
+        case 'recomendar': { 
+          $('#msg_erro_saturacao').prop('class','form-text text-info');
+          $('#msg_erro_saturacao').html('<b>Saturação:</b> Indicado valor acima de 85%');
+           break; 
+        } 
+        case 'bloquear': { 
+          $('#msg_erro_saturacao').prop('class','form-text text-danger');
+          $('#msg_erro_saturacao').html('<b>Saturação:</b> Não permitido maior que 100%');
+  
+          
+          break; 
+       } 
+     } 
+       }
+
+       onValidaFreqResp(){
+
+        var freq_resp = $('input[name^=SV_FreqResp]').val();
+  
+        var msg_validacao = this.sinaisvitaisService.ValidaFrequenciaRespiratoria(freq_resp);
+  
+        switch(msg_validacao) { 
+         case 'normal': { 
+         $('#msg_erro_freq_respiratoria').addClass('oculta');
+            break; 
+         } 
+         case 'recomendar': { 
+          $('#msg_erro_freq_respiratoria').prop('class','form-text text-info');
+          $('#msg_erro_freq_respiratoria').html('<b>Freq Respiratória:</b> Indicado valores entre 12 e 60 (rpm)');
+            break; 
+         } 
+         case 'bloquear': { 
+          $('#msg_erro_freq_respiratoria').removeClass('oculta');
+          $('#msg_erro_freq_respiratoria').html('Freq Respiratória:</b> Não permitido menor que 10 e maior que 66');
+           
+           break; 
+        } 
+      }
+  
+       }
+
+       onValidaPulso(){
+
+        var pulso = $('input[name^=SV_Pulso]').val();
+    
+        var msg_validacao = this.sinaisvitaisService.ValidaPulso(pulso);
+  
+        switch(msg_validacao) { 
+         case 'normal': { 
+          $('#msg_erro_pulso').addClass('oculta');
+            break; 
+         } 
+         case 'recomendar': { 
+          $('#msg_erro_pulso').prop('class','form-text text-info');
+          $('#msg_erro_pulso').html('Pulso: Indicado valores entre 60 à 120');
+           break; 
+         } 
+         case 'bloquear': { 
+          $('#msg_erro_pulso').removeClass('oculta');
+          $('#msg_erro_pulso').html('Pulso: Não permitido menor que 40 e maior que 150');
+           break; 
+        } 
+      }
+  
+       }
+
 
 }
 

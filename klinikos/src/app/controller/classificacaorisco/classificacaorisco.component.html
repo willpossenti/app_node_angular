@@ -177,9 +177,9 @@
                               <label>Peso, Altura, IMC</label>
                               <div class="input-group-lg">
                                 <div class="input-group-prepend">
-                                  <input type="text" class="form-control sn w-25" name="SV_Peso" id="SV_Peso" maxlength="3" placeholder="(kg)" ngModel>
-                                  <input type="text" class="form-control sn w-25" name="SV_Altura" id="SV_Altura" maxlength="3" placeholder="(cm)" ngModel>
-                                  <input type="text" class="form-control ch w-100" name="SV_IMC" id="SV_IMC" placeholder="IMC" data-content="" data-toggle="popover" data-placement="top" data-trigger="hover" style="background:#E9E8E8;" readonly>
+                                  <input type="text" class="form-control sn w-25" name="Peso" maxlength="3" placeholder="(kg)" (blur)="onCalculaImc()" ngModel>
+                                  <input type="text" class="form-control sn w-25" name="Altura" maxlength="3" placeholder="(cm)" (blur)="onCalculaImc()" ngModel>
+                                  <input type="text" class="form-control ch w-100" name="IMC" placeholder="IMC" data-content="" data-toggle="popover" data-placement="top" data-trigger="hover" style="background:#E9E8E8;" readonly>
                                 </div>
                                 <div class="form-text text-danger" style="height:15px !important;"><span class="oculta">Message Error</span></div>
                               </div>
@@ -195,7 +195,7 @@
 
                             <div class="col-lg-6 float-left">
                               <label>Temperatura</label>
-                              <input type="text" class="form-control sn" name="SV_Temperatura" maxlength="2" placeholder="(ºC)" ngModel>
+                              <input type="number" class="form-control" name="SV_Temperatura" pattern="[0-9]+([\.,][0-9]+)?" step="0.01" maxlength="3" placeholder="(ºC)" (blur)="onValidaTemperatura()" ngModel>
                               <div class="form-text text-danger" style="height:15px !important;"><span class="oculta">Message Error</span></div>
                             </div>
 
@@ -209,22 +209,33 @@
                                 <div class="form-text text-danger" style="height:15px !important;"><span class="oculta">Message Error</span></div>
                               </div>
                             </div>
+                            <!-- Erros: Temperatura, Pre. Arterial (mmHg)-->
+                          <div class="col-lg-12 float-left mr-2 ml-2">
+                            <span class="form-text text-danger oculta" id="msg_erro_temperatura"></span>
+                            <span class="form-text text-danger oculta" id="msg_erro_pressaoarterial">2 Message Error</span>
+                          </div>
 
                             <div class="col-lg-6 float-left">
                               <label>Pulso</label>
-                              <input type="text" class="form-control sn" name="Pulso" placeholder="(bpm)" maxlength="3" ngModel>
+                              <input type="number" class="form-control" name="SV_Pulso" pattern="[0-9]+([\.,][0-9]+)?" step="0.01" placeholder="(bpm)" maxlength="3" (blur)="onValidaPulso()" ngModel>
                               <div class="form-text text-danger" style="height:15px !important;"><span class="oculta">Message Error</span></div>
                             </div>
 
                             <div class="col-lg-6 float-left">
                               <label>Freq. Respiratória</label>
-                              <input type="text" class="form-control sn" name="FreqRespiratoria" placeholder="(rpm)" maxlength="3" ngModel>
+                              <input type="number" class="form-control sn" name="SV_FreqResp" pattern="[0-9]+([\.,][0-9]+)?" step="0.1" maxlength="2" placeholder="(rpm)" (blur)="onValidaFreqResp()" maxlength="3" ngModel>
                               <div class="form-text text-danger" style="height:15px !important;"><span class="oculta">Message Error</span></div>
                             </div>
 
+                                     <!-- Erros: Pulso, Freq. Respiratória -->
+                          <div class="col-lg-12 float-left mr-2 ml-2">
+                            <span class="form-text text-danger oculta" id="msg_erro_pulso"></span>
+                            <span class="form-text text-danger oculta" id="msg_erro_freq_respiratoria">2 Message Error</span>
+                          </div>
+
                             <div class="col-lg-6 float-left">
                               <label>Saturação O2(%)</label>
-                              <input type="text" class="form-control sn" name="Saturacao" placeholder="(%)" maxlength="3" ngModel>
+                              <input type="number" class="form-control" name="SV_Saturacao" pattern="[0-9]+([\.,][0-9]+)?" step="0.01" placeholder="(%)" (blur)="onValidaSaturacao()" maxlength="3" ngModel>
                               <div class="form-text text-danger" style="height:15px !important;"><span class="oculta">Message Error</span></div>
                             </div>
 
@@ -232,6 +243,11 @@
                               <label class="d-block">&nbsp;</label>
                               <button type="button" class="btn btn-accent m-0" data-toggle="popover" data-placement="top" data-trigger="hover" data-content="Capturar Sinais Vitais"><i class="fa fa-heartbeat"></i> Capturar</button>
                             </div>
+                             <!-- Erros: Temperatura, Pre. Arterial (mmHg)-->
+                          <div class="col-lg-12 float-left mr-2 ml-2">
+                            <span class="form-text text-danger oculta" id="msg_erro_saturacao"></span>
+                           
+                          </div>
 
                           </div>
                           <!-- begin:: Bloco 2 -->
@@ -823,7 +839,7 @@
             <div class="row">
               <div class="col-lg-6">
                 <!--<button type="button" class="btn btn-accent">Biometria</button>-->
-                <button type="button" id="btn_formclear" class="btn btn-metal" data-toggle="popover" data-placement="top" data-trigger="hover" data-content="Limpar Campos do Formulário">Limpar</button>
+                <button type="submit" class="btn btn-metal" data-toggle="popover" data-placement="top" data-trigger="hover" data-content="Limpar Campos do Formulário" (click)="onLimpaFormClassificacaoRisco(classificacaorisco)">Limpar</button>
               </div>
               <div class="col-lg-6 text-right">
                 <button type="submit" class="btn btn-primary" tabindex="64">Salvar</button>

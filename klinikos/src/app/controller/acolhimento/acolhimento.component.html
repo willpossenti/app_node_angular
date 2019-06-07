@@ -46,7 +46,9 @@
                             </div>
                             <div class="k-quick-search__item-wrapper">
                               <a class="k-quick-search__item-title" style="cursor:pointer;" (click)="onSelectedPaciente(paciente)">
-                                {{paciente.nomeCompleto}}  - {{paciente.nascimento | date: 'dd/MM/yyyy'}}
+                                {{paciente.nomeCompleto}} {{paciente.nomeSocial !== null? '('+ paciente.nomeSocial +')': ''}}
+                                {{paciente.nascimento !== null? '-' : ''}}
+                                 {{paciente.nascimento | date: 'dd/MM/yyyy'}}
                               </a>
                               <div class="k-quick-search__item-desc">
                                 {{paciente.nomeMae}}
@@ -159,30 +161,30 @@
                 <label>Peso, Altura, IMC</label>
                 <div class="input-group-lg">
                   <div class="input-group-prepend">
-                    <input type="text" class="form-control sn w-25" name="SV_Peso" id="SV_Peso" maxlength="5" placeholder="(kg)"  ngModel>
-                    <input type="text" class="form-control sn w-25" name="SV_Altura" id="SV_Altura" maxlength="4" placeholder="(cm)" ngModel>
-                    <input type="text" class="form-control ch w-100" name="SV_IMC" id="SV_IMC" placeholder="IMC" data-content="" data-toggle="popover" data-placement="top" data-trigger="hover" style="background:#E9E8E8;" readonly ngModel>
+                    <input type="text" class="form-control sn w-25" name="Peso" maxlength="5" placeholder="(kg)" (blur)="onCalculaImc()" ngModel>
+                    <input type="text" class="form-control sn w-25" name="Altura" maxlength="4" placeholder="(cm)" (blur)="onCalculaImc()" ngModel>
+                    <input type="text" class="form-control ch w-100" name="IMC"  placeholder="IMC" data-content="" data-toggle="popover" data-placement="top" data-trigger="hover" style="background:#E9E8E8;" readonly ngModel>
                   </div>
                   <div class="form-text text-danger" style="height:15px !important;"><span class="oculta">Message Error</span></div>
                 </div>
               </div>
               <div class="col-lg-2">
                 <label>Temperatura (&deg;C)</label>
-                <input type="text" class="form-control" name="SV_Temperatura" id="SV_Temperatura" maxlength="3" ngModel>
-                <span class="form-text text-info oculta cm" id="msg_temp_a">Indicado valores entre 35º à 40º</span>
-                <span class="form-text text-danger oculta cm" id="msg_temp_b">Não permitido menor que 33º e maior que 45º</span>
+                <input type="number" class="form-control" name="SV_Temperatura"  pattern="[0-9]+([\.,][0-9]+)?" step="0.01" maxlength="3" (blur)="onValidaTemperatura()" ngModel>
+                <span class="form-text text-info oculta cm" id="msg_temp_acolhimento_a"  >Indicado valores entre 35º à 40º</span>
+                <span class="form-text text-danger oculta cm" id="msg_temp_acolhimento_b">Não permitido menor que 33º e maior que 45º</span>
               </div>
               <div class="col-lg-2">
                 <label>Saturação O2 (%)</label>
-                <input type="text" class="form-control" name="SV_Saturacao" id="SV_Saturacao" maxlength="3" ngModel>
-                <span class="form-text text-info oculta cm" id="msg_sat_a">Indicado valor acima de 85%</span>
-                <span class="form-text text-danger oculta cm" id="msg_sat_b">Não permitido maior que 100%</span>
+                <input type="number" class="form-control" name="SV_Saturacao" pattern="[0-9]+([\.,][0-9]+)?" step="0.01" maxlength="3" (blur)="onValidaSaturacao()" ngModel>
+                <span class="form-text text-info oculta cm" id="msg_sat_acolhimento_a">Indicado valor acima de 85%</span>
+                <span class="form-text text-danger oculta cm" id="msg_sat_acolhimento_b">Não permitido maior que 100%</span>
               </div>
               <div class="col-lg-2">
                 <label>Freq. Resp. (rpm)</label>
-                <input type="text" class="form-control sn" name="SV_FreqResp" id="SV_FreqResp" maxlength="2" ngModel>
-                <span class="form-text text-info oculta cm" id="msg_freqresp_a">Indicado valores entre 12 e 60 (rpm)</span>
-                <span class="form-text text-danger oculta cm" id="msg_freqresp_b">Não permitido menor que 10 e maior que 66</span>
+                <input type="number" class="form-control" name="SV_FreqResp" pattern="[0-9]+([\.,][0-9]+)?" step="0.1" maxlength="2" (blur)="onValidaFreqResp()" ngModel>
+                <span class="form-text text-info oculta cm" id="msg_freqResp_acolhimento_a">Indicado valores entre 12 e 60 (rpm)</span>
+                <span class="form-text text-danger oculta cm" id="msg_freqResp_acolhimento_b">Não permitido menor que 10 e maior que 66</span>
               </div>
             </div>
 
@@ -192,22 +194,22 @@
                 <label>Pressão Arterial</label>
                 <div class="input-group-lg">
                   <div class="input-group-prepend">
-                    <input type="text" class="form-control sn" name="SV_PressaoArterial_Sistolica" id="SV_PressaoArterial_Sistolica" maxlength="3" placeholder="Sistólica" ngModel>
-                    <input type="text" class="form-control sn" name="SV_PressaoArterial_Diastolica" id="SV_PressaoArterial_Diastolica" maxlength="3" placeholder="Diastólica" ngModel>
+                    <input type="number" class="form-control" name="SV_PressaoArterial_Sistolica" pattern="[0-9]+([\.,][0-9]+)?" step="0.01" maxlength="3" placeholder="Sistólica" (blur)="onValidaPresSistolica()" ngModel>
+                    <input type="number" class="form-control" name="SV_PressaoArterial_Diastolica"  pattern="[0-9]+([\.,][0-9]+)?" step="0.01" maxlength="3" placeholder="Diastólica" (blur)="onValidaPresDiastolica()" ngModel>
                   </div>
                 </div>
-                <span class="form-text text-info oculta cm" id="msg_pa1_a"><b>Sistólica:</b> Indicado valores entre 60 à 180</span>
-                <span class="form-text text-danger oculta cm" id="msg_pa1_b"><b>Sistólica:</b> Não permitido menor que 50 e maior que 250</span>
+                <span class="form-text text-info oculta cm" id="msg_pressaosistolica_acolhimento_a"><b>Sistólica:</b> Indicado valores entre 60 à 180</span>
+                <span class="form-text text-danger oculta cm" id="msg_pressaosistolica_acolhimento_b"><b>Sistólica:</b> Não permitido menor que 50 e maior que 250</span>
 
-                <span class="form-text text-info oculta cm" id="msg_pa2_a"><b>Diastólica:</b> Indicado valores entre 30 à 110</span>
-                <span class="form-text text-danger oculta cm" id="msg_pa2_b"><b>Diastólica:</b> Não permitido menor que 20 e maior que 160</span>
+                <span class="form-text text-info oculta cm" id="msg_pressaodiastolica_acolhimento_a"><b>Diastólica:</b> Indicado valores entre 30 à 110</span>
+                <span class="form-text text-danger oculta cm" id="msg_pressaodiastolica_acolhimento_b"><b>Diastólica:</b> Não permitido menor que 20 e maior que 160</span>
               </div>
 
               <div class="col-lg-2">
                 <label>Pulso (bpm)</label>
-                <input type="text" class="form-control sn" name="SV_Pulso" id="SV_Pulso" maxlength="3" ngModel>
-                <span class="form-text text-info oculta cm" id="msg_pulso_a">Indicado valores entre 60 à 120</span>
-                <span class="form-text text-danger oculta cm" id="msg_pulso_b">Não permitido menor que 40 e maior que 150</span>
+                <input type="number" class="form-control" name="SV_Pulso" pattern="[0-9]+([\.,][0-9]+)?" step="0.01" maxlength="3" (blur)="onValidaPulso()" ngModel>
+                <span class="form-text text-info oculta cm" id="msg_pulso_acolhimento_a">Indicado valores entre 60 à 120</span>
+                <span class="form-text text-danger oculta cm" id="msg_pulso_acolhimento_b">Não permitido menor que 40 e maior que 150</span>
               </div>
 
             </div>
@@ -228,7 +230,7 @@
             <div class="row">
               <div class="col-lg-6">
                 <!--<button type="button" class="btn btn-accent">Biometria</button>-->
-                <button type="button" class="btn btn-metal" id="btn_formclear" data-toggle="popover" data-placement="top" data-trigger="hover" data-content="Limpar Campos do Formulário">Limpar</button>
+                <button type="submit" class="btn btn-metal" data-toggle="popover" data-placement="top" data-trigger="hover" data-content="Limpar Campos do Formulário" (click)="onLimpaFormAcolhimento(acolhimento)">Limpar</button>
               </div>
               <div class="col-lg-6 text-right">
                 <button type="submit" class="btn btn-primary">Salvar</button>

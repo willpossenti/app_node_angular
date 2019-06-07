@@ -3,25 +3,19 @@ import { AcolhimentoService } from './acolhimento.service';
 import { Router, ActivatedRoute } from '@angular/router';
 import * as $ from 'jquery';
 import { Especialidade } from '../../model/Especialidade';
-import { TipoChegada } from '../../model/TipoChegada';
-import { TipoOcorrencia } from 'src/app/model/TipoOcorrencia';
 import { HttpErrorResponse } from '@angular/common/http';
-import { Estado } from '../../model/Estado';
-import { Cidade } from '../../model/Cidade';
-import { Cep } from '../../model/Cep';
 import { PessoaService } from '../cadastro/pessoa/pessoa.service';
-import * as RemoveAcentos from 'remove-accents';
 import { CpfService } from '../util/cpf.service';
 import { NgForm } from '@angular/forms';
 import { Acolhimento } from '../../model/Acolhimento';
-import { Pessoa } from '../../model/Pessoa';
 import { PessoaPaciente } from '../../model/PessoaPaciente';
-import { PessoaProfissional } from '../../model/PessoaProfissional';
-import * as moment from 'moment';
 import { Return } from '../../model/Return';
 import * as Toastr from 'toastr';
 import { Preferencial } from '../../model/Preferencial';
 import { AuthGuard } from '../../controller/auth/auth.guard';
+import * as swal from '../../../assets/vendors/general/sweetalert2/dist/sweetalert2.js';
+import { ImcService } from '../util/imc.service';
+import { SinaisVitais } from '../util/sinaisvitais.service';
 
 
 @Component({
@@ -41,7 +35,8 @@ export class AcolhimentoComponent implements OnInit {
   Pessoa: any;
 
   constructor(private AcolhimentoService: AcolhimentoService, private route: ActivatedRoute,
-    private pessoaService: PessoaService, private cpfService: CpfService, private router: Router, private auth: AuthGuard,) {
+    private pessoaService: PessoaService, private cpfService: CpfService, private imcService: ImcService,
+    private sinaisvitaisService: SinaisVitais, private router: Router, private auth: AuthGuard,) {
 
     this.listaPreferencial = new Array<Preferencial>();
     this.listaEspecialidade = new Array<Especialidade>();
@@ -215,9 +210,6 @@ export class AcolhimentoComponent implements OnInit {
     pessoa.ativo = true;
 
     var imc = $("input[name^=SV_IMC]").val();
-    var imc = $("input[name^=SV_IMC]").val();
-
-
 
     if (a.value.IdentificacaoPacienteAcolhimento !== undefined)
       pessoa.nomeCompleto = a.value.IdentificacaoPacienteAcolhimento.toUpperCase();
@@ -275,10 +267,21 @@ export class AcolhimentoComponent implements OnInit {
 
     acolhimento.PessoaPaciente = pessoa;
 
+    var msgCamposObrigatorios = "";
 
-    console.log(JSON.stringify(acolhimento));
+    if (a.value.IdentificacaoPacienteAcolhimento === "")
+    msgCamposObrigatorios = "Informe o nome\n";
 
-    console.log(localStorage['token_accessToken']);
+    if (acolhimento.especialidadeId === undefined)
+      if (a.value.IdentificacaoPacienteAcolhimento !== "")
+        msgCamposObrigatorios += "Informe a especialidade\n";
+      else
+        msgCamposObrigatorios += "e a especialidade\n";
+
+    if (msgCamposObrigatorios !== "") {
+      swal("Campos Obrigatórios", msgCamposObrigatorios, "error");
+      return;
+    }
 
 
     this.AcolhimentoService.SalvarAcolhimento(acolhimento).subscribe(data => {
@@ -286,7 +289,7 @@ export class AcolhimentoComponent implements OnInit {
 
       Toastr.success("Acolhimento salvo com sucesso");
 
-      this.LimparCampos(a);
+      this.onLimpaFormAcolhimento(a);
 
     }, (error: HttpErrorResponse) => {
       this.auth.onSessaoInvalida(error);
@@ -321,25 +324,6 @@ export class AcolhimentoComponent implements OnInit {
   //end:: Fecha as pesquisas
 
 
-  //begin:: Limpa Campos/ mensagens responsáveis pelos avisos com integrações externas
-  public LimparCampos(a: NgForm) {
-
-    $("#btn_formclear").trigger("click");
-    this.Pessoa = undefined;
-    a.value.IdentificacaoPacienteAcolhimento = "";
-    a.value.NomeSocial = "";
-    a.value.SV_Peso = "";
-    a.value.SV_Altura = "";
-    a.value.SV_Temperatura = "";
-    a.value.SV_PressaoArterial_Sistolica = "";
-    a.value.SV_PressaoArterial_Diastolica = "";
-    a.value.SV_Pulso = "";
-    a.value.SV_FreqResp = "";
-    a.value.SV_Saturacao = "";
-  }
-  //end:: Limpa Campos
-
-
   onConsultaNome() {
 
     if (this.auth.canActivate())
@@ -363,8 +347,192 @@ export class AcolhimentoComponent implements OnInit {
 
   }
 
+  onLimpaFormAcolhimento(form: NgForm){
+
+    $("#btn_formclear").trigger("click");
+    form.reset();
+    this.Pessoa = undefined;
+    form.value.IdentificacaoPacienteAcolhimento = "";
+    form.value.DP_NomeSocial = "";
+    form.value.SV_Peso = "";
+    form.value.SV_Altura = "";
+    form.value.SV_Temperatura = "";
+    form.value.SV_PressaoArterial_Sistolica = "";
+    form.value.SV_PressaoArterial_Diastolica = "";
+    form.value.SV_Pulso = "";
+    form.value.SV_FreqResp = "";
+    form.value.SV_Saturacao = "";
+    $("select[name^=Especialidade]").val($("select[name^=Especialidade] option:first").val());
+
+  }
+
+  onCalculaImc(){
+
+  var peso = $("input[name^=Peso]").val();
+  var altura = $("input[name^=Altura]").val();
+
+    if(peso !== "" && altura !== ""){
+
+      var imc = this.imcService.CalculaImc(peso, altura);
+
+      $('input[name^=IMC]').val(imc);
+    }
+
+    
+  }
+
+  onValidaTemperatura(){
+
+     var temp = $('input[name^=SV_Temperatura]').val();
+
+     var msg_validacao = this.sinaisvitaisService.ValidaTemperatura(temp);
+
+     switch(msg_validacao) { 
+      case 'normal': { 
+        $('#msg_temp_acolhimento_a, #msg_temp_acolhimento_b').addClass('oculta');
+         break; 
+      } 
+      case 'recomendar': { 
+        $('#msg_temp_acolhimento_b').removeClass('oculta');
+        $('#msg_temp_acolhimento_a').addClass('oculta');
+         break; 
+      } 
+      case 'bloquear': { 
+        $('#msg_temp_acolhimento_a').removeClass('oculta');
+        $('#msg_temp_acolhimento_b').addClass('oculta');
+        break; 
+     } 
+   } 
+
+     }
 
 
+     onValidaSaturacao(){
+
+      var saturacao = $('input[name^=SV_Saturacao]').val();
+
+     var msg_validacao = this.sinaisvitaisService.ValidaSaturacao(saturacao);
+
+     switch(msg_validacao) { 
+      case 'normal': { 
+        $('#msg_sat_acolhimento_a, #msg_sat_acolhimento_b').addClass('oculta');
+         break; 
+      } 
+      case 'recomendar': { 
+        $('#msg_sat_acolhimento_a').removeClass('oculta');
+        $('#msg_sat_acolhimento_b').addClass('oculta');
+         break; 
+      } 
+      case 'bloquear': { 
+        $('#msg_sat_acolhimento_b').removeClass('oculta');
+        $('#msg_sat_acolhimento_a').addClass('oculta');
+        
+        break; 
+     } 
+   } 
+     }
+
+
+     onValidaFreqResp(){
+
+      var freq_resp = $('input[name^=SV_FreqResp]').val();
+
+      var msg_validacao = this.sinaisvitaisService.ValidaFrequenciaRespiratoria(freq_resp);
+
+      switch(msg_validacao) { 
+       case 'normal': { 
+         $('#msg_freqResp_acolhimento_a, #msg_freqResp_acolhimento_b').addClass('oculta');
+          break; 
+       } 
+       case 'recomendar': { 
+         $('#msg_freqResp_acolhimento_a').removeClass('oculta');
+         $('#msg_freqResp_acolhimento_b').addClass('oculta');
+          break; 
+       } 
+       case 'bloquear': { 
+         $('#msg_freqResp_acolhimento_b').removeClass('oculta');
+         $('#msg_freqResp_acolhimento_a').addClass('oculta');
+         
+         break; 
+      } 
+    }
+
+     }
+
+     onValidaPulso(){
+
+      var pulso = $('input[name^=SV_Pulso]').val();
+  
+      var msg_validacao = this.sinaisvitaisService.ValidaPulso(pulso);
+
+      switch(msg_validacao) { 
+       case 'normal': { 
+        $('#msg_pulso_acolhimento_a, #msg_pulso_acolhimento_b').addClass('oculta');
+          break; 
+       } 
+       case 'recomendar': { 
+        $('#msg_pulso_acolhimento_a').removeClass('oculta');
+        $('#msg_pulso_acolhimento_b').addClass('oculta');      
+         break; 
+       } 
+       case 'bloquear': { 
+        $('#msg_pulso_acolhimento_b').removeClass('oculta');
+         $('#msg_pulso_acolhimento_a').addClass('oculta'); 
+         break; 
+      } 
+    }
+
+     }
+
+     onValidaPresSistolica(){
+
+      var pulso = $('input[name^=SV_PressaoArterial_Sistolica]').val();
+  
+      var msg_validacao = this.sinaisvitaisService.ValidaPressaoArterialSistolica(pulso);
+
+      switch(msg_validacao) { 
+       case 'normal': { 
+        $('#msg_pressaosistolica_acolhimento_a, #msg_pressaosistolica_acolhimento_b').addClass('oculta');
+          break; 
+       } 
+       case 'recomendar': { 
+        $('#msg_pressaosistolica_acolhimento_a').removeClass('oculta');
+        $('#msg_pressaosistolica_acolhimento_b').addClass('oculta');      
+         break; 
+       } 
+       case 'bloquear': { 
+        $('#msg_pressaosistolica_acolhimento_b').removeClass('oculta');
+         $('#msg_pressaosistolica_acolhimento_a').addClass('oculta'); 
+         break; 
+      } 
+    }
+
+     }
+
+     onValidaPresDiastolica(){
+
+      var pulso = $('input[name^=SV_PressaoArterial_Diastolica]').val();
+  
+      var msg_validacao = this.sinaisvitaisService.ValidaPressaoArterialDiastolica(pulso);
+
+      switch(msg_validacao) { 
+       case 'normal': { 
+        $('#msg_pressaodiastolica_acolhimento_a, #msg_pressaodiastolica_acolhimento_b').addClass('oculta');
+          break; 
+       } 
+       case 'recomendar': { 
+        $('#msg_pressaodiastolica_acolhimento_a').removeClass('oculta');
+        $('#msg_pressaodiastolica_acolhimento_b').addClass('oculta');      
+         break; 
+       } 
+       case 'bloquear': { 
+        $('#msg_pressaodiastolica_acolhimento_b').removeClass('oculta');
+         $('#msg_pressaodiastolica_acolhimento_a').addClass('oculta'); 
+         break; 
+      } 
+    }
+
+     }
 
 }
 
