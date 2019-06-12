@@ -215,7 +215,7 @@ export class AcolhimentoComponent implements OnInit {
       pessoa.nomeCompleto = a.value.IdentificacaoPacienteAcolhimento.toUpperCase();
 
 
-    if (a.value.NomeSocial !== "")
+    if (a.value.NomeSocial !== "" && a.value.NomeSocial !== undefined)
       pessoa.nomeSocial = a.value.NomeSocial.toUpperCase();
 
     if (this.Especialidade != null)
@@ -233,31 +233,31 @@ export class AcolhimentoComponent implements OnInit {
     if ($("label[for^=Idoso80]").hasClass("active"))
       acolhimento.preferencialId = this.listaPreferencial.find(x => x.nome === "IDOSO 80 ANOS: PESSOA COM IDADE IGUAL OU SUPERIOR A 80 ANOS").preferencialId;
 
-    if (a.value.SV_Peso !== "")
+    if (a.value.SV_Peso !== "" && a.value.SV_Peso !== undefined)
       acolhimento.peso = a.value.SV_Peso + " kg";
 
-    if (a.value.SV_Altura !== "")
+    if (a.value.SV_Altura !== "" && a.value.SV_Altura !== undefined)
       acolhimento.altura = a.value.SV_Altura + " cm";
 
     if (imc !== "")
       acolhimento.imc = imc;
 
-    if (a.value.SV_Temperatura !== "")
+    if (a.value.SV_Temperatura !== "" && a.value.SV_Temperatura !== undefined)
       acolhimento.temperatura = a.value.SV_Temperatura + " °C";
 
-    if (a.value.SV_PressaoArterial_Sistolica !== "")
+    if (a.value.SV_PressaoArterial_Sistolica !== "" && a.value.SV_PressaoArterial_Sistolica !== undefined)
       acolhimento.PressaoArterialSistolica = a.value.SV_PressaoArterial_Sistolica + " mmHg";
 
-    if (a.value.SV_PressaoArterial_Diastolica !== "")
+    if (a.value.SV_PressaoArterial_Diastolica !== "" && a.value.SV_PressaoArterial_Diastolica !== undefined)
       acolhimento.PressaoArterialDiastolica = a.value.SV_PressaoArterial_Diastolica + " mmHg";
 
-    if (a.value.SV_Pulso !== "")
+    if (a.value.SV_Pulso !== "" && a.value.SV_Pulso !== undefined)
       acolhimento.pulso = a.value.SV_Pulso + " bpm";
 
-    if (a.value.SV_FreqResp !== "")
+    if (a.value.SV_FreqResp !== "" && a.value.SV_FreqResp !== undefined)
       acolhimento.frequenciaRespiratoria = a.value.SV_FreqResp + " rpm";
 
-    if (a.value.SV_Saturacao !== "")
+    if (a.value.SV_Saturacao !== "" && a.value.SV_Saturacao !== undefined)
       acolhimento.saturacao = a.value.SV_Saturacao + " %";
 
     if ($("label[for^=PacienteRisco]").hasClass("active"))
@@ -268,6 +268,8 @@ export class AcolhimentoComponent implements OnInit {
     acolhimento.PessoaPaciente = pessoa;
 
     var msgCamposObrigatorios = "";
+
+
 
     if (a.value.IdentificacaoPacienteAcolhimento === "")
     msgCamposObrigatorios = "Informe o nome\n";
@@ -282,7 +284,7 @@ export class AcolhimentoComponent implements OnInit {
       swal("Campos Obrigatórios", msgCamposObrigatorios, "error");
       return;
     }
-
+    console.log(JSON.stringify(acolhimento));
 
     this.AcolhimentoService.SalvarAcolhimento(acolhimento).subscribe(data => {
 
@@ -349,7 +351,7 @@ export class AcolhimentoComponent implements OnInit {
 
   onLimpaFormAcolhimento(form: NgForm){
 
-    $("#btn_formclear").trigger("click");
+    $("#k_scrolltop").trigger("click");
     form.reset();
     this.Pessoa = undefined;
     form.value.IdentificacaoPacienteAcolhimento = "";
@@ -363,7 +365,16 @@ export class AcolhimentoComponent implements OnInit {
     form.value.SV_FreqResp = "";
     form.value.SV_Saturacao = "";
     $("select[name^=Especialidade]").val($("select[name^=Especialidade] option:first").val());
-
+    $("#msg_temp_acolhimento_a").addClass("oculta");
+    $("#msg_temp_acolhimento_b").addClass("oculta");
+    $("#msg_sat_acolhimento_a").addClass("oculta");
+    $("#msg_sat_acolhimento_b").addClass("oculta");
+    $("#msg_freqResp_acolhimento_a").addClass("oculta");
+    $("#msg_freqResp_acolhimento_b").addClass("oculta");
+    $("#msg_pressaosistolica_acolhimento_a").addClass("oculta");
+    $("#msg_pressaosistolica_acolhimento_b").addClass("oculta");
+    $("#msg_pressaodiastolica_acolhimento_a").addClass("oculta");
+    $("#msg_pressaodiastolica_acolhimento_b").addClass("oculta");
   }
 
   onCalculaImc(){
@@ -393,13 +404,13 @@ export class AcolhimentoComponent implements OnInit {
          break; 
       } 
       case 'recomendar': { 
-        $('#msg_temp_acolhimento_b').removeClass('oculta');
-        $('#msg_temp_acolhimento_a').addClass('oculta');
+        $('#msg_temp_acolhimento_a').removeClass('oculta');
+        $('#msg_temp_acolhimento_b').addClass('oculta');
          break; 
       } 
       case 'bloquear': { 
-        $('#msg_temp_acolhimento_a').removeClass('oculta');
-        $('#msg_temp_acolhimento_b').addClass('oculta');
+        $('#msg_temp_acolhimento_b').removeClass('oculta');
+        $('#msg_temp_acolhimento_a').addClass('oculta');
         break; 
      } 
    } 
@@ -533,6 +544,108 @@ export class AcolhimentoComponent implements OnInit {
     }
 
      }
+
+     onChangeButton(id: any){
+      if(id === 'preferencial'){
+       
+        if(!$('#preferencial').hasClass('active')){
+          $('#preferencial_icone').attr('class','svg fillBranca');
+        }
+       
+      }
+
+      if(id === 'gestante'){
+        if($('#gestante').hasClass('btn btn-outline-info cp clear')){
+          $('#gestante_icone').addClass('svg fillBranca');
+        }
+     
+      }
+      if(id === 'idoso-a'){
+        if($('#idoso-a').hasClass('btn btn-outline-info cp clear')){
+          $('#idoso-a_icone').addClass('svg fillBranca');
+        }
+        
+      }
+
+      if(id === 'idoso-b'){
+        if($('#idoso-b').hasClass('btn btn-outline-info cp clear')){
+          $('#idoso-b_icone').addClass('svg fillBranca');
+          $('#idoso-a_icone').addClass('svg fill');
+          $('#idoso-gestante_icone').addClass('svg fill');
+          $('#preferencial_icone').addClass('svg fill');
+        }
+       
+      }
+     }
+
+     onEnterButton(id: any){
+
+      if(id === 'preferencial'){
+        $('#preferencial_icone').attr('class','svg fillBranca');
+      }
+
+      if(id === 'gestante'){
+        $('#gestante_icone').attr('class','svg fillBranca');
+      }
+
+      if(id === 'idoso-a'){
+        $('#idoso-a_icone').attr('class','svg fillBranca');
+      }
+
+      if(id === 'idoso-b'){
+        $('#idoso-b_icone').attr('class','svg fillBranca');
+      }
+     }
+
+     onLeaveButton(id: any){
+
+      if(id === 'preferencial'){
+        if(!$('#preferencial').hasClass('active'))
+          $('#preferencial_icone').attr('class','svg fill');
+        else{
+        $('#preferencial_icone').attr('class','svg fillBranca');
+        $('#gestante_icone').attr('class','svg fill');
+        $('#idoso-a_icone').attr('class','svg fill');
+        $('#idoso-b_icone').attr('class','svg fill');
+        }
+      }
+
+        if(id === 'gestante'){
+          if(!$('#gestante').hasClass('active'))
+            $('#gestante_icone').attr('class','svg fill');
+          else{
+          $('#gestante_icone').attr('class','svg fillBranca');
+          $('#preferencial_icone').attr('class','svg fill');
+          $('#idoso-a_icone').attr('class','svg fill');
+          $('#idoso-b_icone').attr('class','svg fill');
+          }
+        
+     }
+
+     if(id === 'idoso-a'){
+      if(!$('#idoso-a').hasClass('active'))
+        $('#idoso-a_icone').attr('class','svg fill');
+      else{
+      $('#idoso-a_icone').attr('class','svg fillBranca');
+      $('#preferencial_icone').attr('class','svg fill');
+      $('#gestante_icone').attr('class','svg fill');
+      $('#idoso-b_icone').attr('class','svg fill');
+      }
+    
+ }
+
+ if(id === 'idoso-b'){
+  if(!$('#idoso-b').hasClass('active'))
+    $('#idoso-b_icone').attr('class','svg fill');
+  else{
+  $('#idoso-b_icone').attr('class','svg fillBranca');
+  $('#preferencial_icone').attr('class','svg fill');
+  $('#gestante_icone').attr('class','svg fill');
+  $('#idoso-a_icone').attr('class','svg fill');
+  }
+}
+     }
+
 
 }
 

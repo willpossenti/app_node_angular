@@ -33,6 +33,8 @@ import { AuthGuard } from '../../controller/auth/auth.guard';
 import { ActivatedRoute } from '@angular/router';
 import { ImcService } from '../util/imc.service';
 import { SinaisVitais } from '../util/sinaisvitais.service';
+import { DataService } from '../util/data.service';
+
 
 @Component({
   selector: 'app-classificacaorisco',
@@ -85,11 +87,12 @@ export class ClassificacaoRiscoComponent implements OnInit {
   ClassificacaoRiscoAlergia: ClassificacaoRiscoAlergia;
   orderDescricao: string = 'descricao';
   orderNome: string = 'nome';
-  orderVariavel: string = 'variavel';
+  orderGlasgow: string = 'ordem';
 
   constructor(private classificacaoriscoservice: ClassificaoRiscoService, 
     private pessoaService: PessoaService, private auth: AuthGuard, 
-    private route: ActivatedRoute, private imcService: ImcService, private sinaisvitaisService: SinaisVitais,) {
+    private route: ActivatedRoute, private imcService: ImcService, 
+    private sinaisvitaisService: SinaisVitais, private dataService: DataService,) {
     this.listaClassificacaoRiscoAlergia = new Array<ClassificacaoRiscoAlergia>();
   }
 
@@ -102,6 +105,29 @@ export class ClassificacaoRiscoComponent implements OnInit {
 
       $("select[name^=DP_Endereco_Cidade]").val($("select[name^=DP_Endereco_Cidade] option:first").val());
 
+      $('.ed').on('click', function () {
+
+  
+        // sweep radio-buttons
+        var escala = $(this);
+        var radios = $('input[type="radio"][name="EscalaDor"]').parent();
+    
+        // check
+        if (!$(escala).hasClass('active')) {
+          $(escala).removeClass('ed-opac');
+          // restore opacity other options
+          $(radios).each(function (i, e) {
+            // check each
+            if ($(e) != escala) {
+              if ($(e).hasClass('active')) {
+                $(e).removeClass('active');
+                $(e).addClass('ed-opac');
+              }
+            }
+    
+          });
+        }
+      });
     });
 
     if (this.auth.canActivate())
@@ -227,7 +253,6 @@ export class ClassificacaoRiscoComponent implements OnInit {
 
     if (this.PossuiAlergia.id == 0) {
 
-
       this.classificacaoriscoservice.BindTipoAlergia().subscribe(async (data: Return) => {
         this.listaTipoAlergia = data.result;
         $(document).ready(function () { $("select[name^=TipoAlergia]").val($("select[name^=TipoAlergia] option:first").val()); });
@@ -268,9 +293,6 @@ export class ClassificacaoRiscoComponent implements OnInit {
       }, (error: HttpErrorResponse) => {
           this.auth.onSessaoInvalida(error);
       });
-
-
-
 
 
       // show card : Alergia
@@ -419,9 +441,7 @@ export class ClassificacaoRiscoComponent implements OnInit {
     if (this.auth.canActivate())
       this.auth.onSessaoAcrescimoTempo();
 
-
     $("#k_scrolltop").trigger("click");
-
 
     var imc = $("input[name^=SV_IMC]").val();
     var nivelConsciencia = $("input[name^=nivelConsciencia]:checked").val();
@@ -435,7 +455,9 @@ export class ClassificacaoRiscoComponent implements OnInit {
     if (cr.value.DescricaoQueixa !== "")
       classificacaorisco.descricaoQueixa = cr.value.DescricaoQueixa.toUpperCase();
 
-    if (this.CausaExterna !== undefined)
+
+
+    if (this.CausaExterna !== undefined && this.CausaExterna !== null)
       classificacaorisco.causaExternaId = this.CausaExterna.causaExternaId;
 
     if ($("label[for^=EscalaDor0]").hasClass("active"))
@@ -477,7 +499,7 @@ export class ClassificacaoRiscoComponent implements OnInit {
     if (cr.value.SV_Altura !== "")
       classificacaorisco.altura = cr.value.SV_Altura + " cm";
 
-    if (imc !== "")
+    if (imc !== undefined)
       classificacaorisco.imc = imc.toUpperCase();
 
     if (cr.value.SV_Temperatura !== "")
@@ -517,12 +539,10 @@ export class ClassificacaoRiscoComponent implements OnInit {
     if (cr.value.DPE_Outros === true && cr.value.DoencaPreExistOutros !== "")
       classificacaorisco.observacaoOutros = cr.value.DoencaPreExistOutros;
 
-
-
-    if (this.TipoChegada !== null)
+    if (this.TipoChegada !== undefined && this.TipoChegada !== null)
       classificacaorisco.tipoChegadaId = this.TipoChegada.tipoChegadaId;
 
-    if (this.Especialidade !== null)
+    if (this.Especialidade !== undefined && this.Especialidade !== null)
       classificacaorisco.especialidadeId = this.Especialidade.especialidadeId;
 
     if ($("label[for^=riscoazul]").hasClass("active"))
@@ -543,7 +563,38 @@ export class ClassificacaoRiscoComponent implements OnInit {
     if ($("label[for^=riscovermelho]").hasClass("active"))
       classificacaorisco.riscoId = this.listaRisco.find(x => x.descricao === "VERMELHO").riscoId;
 
-    console.log(localStorage['token_accessToken']);
+      var msgCamposObrigatorios = "";
+
+      if (classificacaorisco.riscoId === undefined)
+        msgCamposObrigatorios = "Informe o risco\n";
+  
+      if (this.TipoChegada === undefined)
+        if (classificacaorisco.riscoId !== undefined)
+          msgCamposObrigatorios = msgCamposObrigatorios + "Informe como chegou ";
+        else
+          msgCamposObrigatorios = msgCamposObrigatorios + ", como chegou ";
+  
+      if (this.Especialidade === undefined)
+        if (this.TipoChegada !== undefined)
+          msgCamposObrigatorios = msgCamposObrigatorios + "Informe a especialidade ";
+        else
+          msgCamposObrigatorios = msgCamposObrigatorios + "e a especialidade ";
+
+
+      if(this.AberturaOcular !== undefined || this.RespostaVerbal !== undefined || this.RespostaMotora !== undefined)
+        if(this.AberturaOcular === undefined || this.RespostaVerbal === undefined || this.RespostaMotora === undefined)
+         if (this.Especialidade !== undefined)
+            msgCamposObrigatorios = msgCamposObrigatorios + "Finalize a escala de Glasgow";
+          else{
+            
+            msgCamposObrigatorios = msgCamposObrigatorios.replace('e a especialidade',', especialidade ');
+            msgCamposObrigatorios = msgCamposObrigatorios + "e finalizar a escala de Glasgow";
+          }
+  
+      if (msgCamposObrigatorios !== "") {
+        swal("Campos Obrigatórios", msgCamposObrigatorios, "error");
+        return;
+      }
 
 
 
@@ -747,7 +798,7 @@ export class ClassificacaoRiscoComponent implements OnInit {
 
   public onLimpaFormClassificacaoRisco(form: NgForm) {
 
-    $("#btn_formclear").trigger("click");
+    $("#k_scrolltop").trigger("click");
     form.reset();
     form.value.DescricaoQueixa = "";
     form.value.SV_Peso = "";
@@ -771,6 +822,23 @@ export class ClassificacaoRiscoComponent implements OnInit {
     form.value.DO_Numero = "";
     form.value.DO_Complemento = "";
     form.value.DO_Bairro = "";
+
+    $(document).ready(function () { 
+      $("select[name^=CausaExterna]").val($("select[name^=CausaExterna] option:first").val()); 
+      $("select[name^=TipoChegada]").val($("select[name^=TipoChegada] option:first").val()); 
+      $("select[name^=Especialidade]").val($("select[name^=Especialidade] option:first").val()); 
+      $("select[name^=PossuiAlergia]").val($("select[name^=PossuiAlergia] option:first").val()); 
+      $("select[name^=AberturaOcular]").val($("select[name^=AberturaOcular] option:first").val()); 
+      $("select[name^=RespostaVerbal]").val($("select[name^=RespostaVerbal] option:first").val()); 
+      $("select[name^=RespostaMotora]").val($("select[name^=RespostaMotora] option:first").val()); 
+      $("select[name^=DO_TipoOcorrencia]").val($("select[name^=DO_TipoOcorrencia] option:first").val()); 
+      $("select[name^=DP_Endereco_Estado]").val($("select[name^=DP_Endereco_Estado] option:first").val()); 
+      $("select[name^=DP_Endereco_Cidade]").val($("select[name^=DP_Endereco_Cidade] option:first").val()); 
+      $("select[name^=TipoAlergia]").val($("select[name^=TipoAlergia] option:first").val()); 
+      $("select[name^=Alergia]").val($("select[name^=Alergia] option:first").val()); 
+      $("select[name^=ReacaoAlergia]").val($("select[name^=ReacaoAlergia] option:first").val()); 
+      $("select[name^=SeveridadeAlergia]").val($("select[name^=SeveridadeAlergia] option:first").val()); 
+    });
   }
 
   //begin:: Edita Lotacao Profissional / Permite o usuário editar as lotações lançadas na aba profissional
@@ -816,7 +884,7 @@ export class ClassificacaoRiscoComponent implements OnInit {
 
     return swal({ title: 'Deseja excluir essa alergia?', text: '', type: 'warning', showCancelButton: true, cancelButtonText: 'Não', confirmButtonText: 'Sim' })
 
-      .then(function (result) {
+      .then(function (result: any) {
         if (result.value) {
           page.onExcluirAlergia(classificacaoRiscoAlergia);
         }
@@ -951,6 +1019,46 @@ export class ClassificacaoRiscoComponent implements OnInit {
       }
   
        }
+
+       onHabilitaDescricao(event: any){
+
+        if(event.target.name === "DPE_Outros")
+          if(event.target.checked){
+            $('#dpe_outros_box').removeClass('oculta');
+            $('textarea[name="DoencaPreExistOutros"]').focus();
+           } else  
+            $('#dpe_outros_box').addClass('oculta');
+          
+
+         if(event.target.name === "DPE_RespCronico")
+            if(event.target.checked){
+              $('#dpe_respcron_box').removeClass('oculta');
+              $('textarea[name="DoencaPreExistRespCron"]').focus();
+             } else  
+             $('#dpe_respcron_box').addClass('oculta');
+
+       }
+
+       onValidaHora(event: any){
+
+        var data = event.target.value.split(':');
+        var d = new Date();
+    
+
+        if(+data[0] > 23 || +data[1] > 59 || event.target.value.length !== 5)
+          $("input[name^=DO_Hora]").val('');
+        
+
+    }
+
+    onValidaData(event: any){
+
+      if(event.target.name === "DO_Data")
+      if(!this.dataService.validarData(event.target.value)){
+        $("input[name^=DO_Data]").val('');
+        return;
+       }
+      }
 
 
 }

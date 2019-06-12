@@ -711,7 +711,7 @@ if(event.target.name === "DC_DataEntrada_Pais")
  
 
   //begin:: validacao e consulta de CPF
-  onConsultaCpf(e) {
+  onConsultaCpf(e: any) {
 
     if (this.auth.canActivate())
       this.auth.onSessaoAcrescimoTempo();
@@ -1765,6 +1765,7 @@ if(this.Nacionalidade.descricao === "ESTRANGEIRO"){
   //begin:: Salvar Pessoa / Salva as informações da tela
   public onSalvarPessoa(p: NgForm) {
 
+
     if (this.auth.canActivate())
       this.auth.onSessaoAcrescimoTempo();
 
@@ -2063,7 +2064,7 @@ if(this.Nacionalidade.descricao === "ESTRANGEIRO"){
   //begin:: Limpa Campos/ Mensagens responsáveis pelos avisos com integrações externas
   public onLimpaFormPessoa(form: NgForm) {
 
-    $("#btn_formclear").trigger("click");
+    $("#k_scrolltop").trigger("click");
     form.reset();
     form.value.DP_NomeCompleto_Pessoa = "";
     form.value.DP_NomeSocial = "";

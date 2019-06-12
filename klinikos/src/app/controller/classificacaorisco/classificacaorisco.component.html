@@ -312,12 +312,12 @@
                             </div>
                             <div class="k-checkbox-list ml-lg-4">
                               <label class="k-checkbox k-checkbox--brand" id="dpe_respcron">
-                                <input type="checkbox" name="DPE_RespCronico" ngModel>Respiratória Crônica<span></span>
+                                <input type="checkbox" name="DPE_RespCronico" (change)="onHabilitaDescricao($event)" ngModel>Respiratória Crônica<span></span>
                               </label>
                             </div>
                             <div class="k-checkbox-list ml-lg-4">
-                              <label class="k-checkbox k-checkbox--brand" id="dpe_outros">
-                                <input type="checkbox" name="DPE_Outros" ngModel>Outros<span></span>
+                              <label class="k-checkbox k-checkbox--brand">
+                                <input type="checkbox" name="DPE_Outros"  (change)="onHabilitaDescricao($event)" ngModel>Outros<span></span>
                               </label>
                             </div>
                           </div>
@@ -339,7 +339,7 @@
 
                         <div class="form-group row">
                           <div class="col-lg-6">
-                            <label>Como Chegou?</label>
+                            <label>Como Chegou?<span class="fld-obg" title="Obrigatório">*</span></label>
                             <select class="form-control" name="TipoChegada" tabindex="12" [(ngModel)]="TipoChegada">
                               <option value="-1">-- Selecione --</option>
                               <option *ngFor="let tipochegada of listaTiposChegada | orderBy: orderDescricao" [ngValue]="tipochegada">{{tipochegada.descricao}}</option>
@@ -352,7 +352,7 @@
                             </select>-->
                           </div>
                           <div class="col-lg-6">
-                            <label>Especialidade</label>
+                            <label>Especialidade<span class="fld-obg" title="Obrigatório">*</span></label>
                             <!--<select class="form-control">
                               <option value="">-- Selecione --</option>
                             </select>-->
@@ -370,7 +370,7 @@
                             <label>Possui Alergia?</label>
 
 
-                            <select class="form-control" name="PossuiAlergia" tabindex="12" [(ngModel)]="PossuiAlergia" (change)="onPossuiAlergia()">
+                            <select id="PossuiAlergia" class="form-control" name="PossuiAlergia" tabindex="12" [(ngModel)]="PossuiAlergia" (change)="onPossuiAlergia()">
                               <option value="-1">-- Selecione --</option>
                               <option *ngFor="let possuialergia of ListaPossuiAlergia" [ngValue]="possuialergia">{{possuialergia.descricao}}</option>
                             </select>
@@ -589,7 +589,7 @@
                             </select>-->
                             <select class="form-control" name="AberturaOcular" tabindex="12" [(ngModel)]="AberturaOcular" (change)="onCalculaStatusEscalaGlasgow()">
                               <option value="-1">-- Selecione --</option>
-                              <option *ngFor="let aberturaocular of listaAberturaOcular | orderBy: orderVariavel" [ngValue]="aberturaocular">{{aberturaocular.variavel}}</option>
+                              <option *ngFor="let aberturaocular of listaAberturaOcular | orderBy: orderGlasgow" [ngValue]="aberturaocular">{{aberturaocular.variavel}}</option>
                             </select>
                           </div>
                           <div class="col-lg-3">
@@ -605,7 +605,7 @@
                             </select>-->
                             <select class="form-control" name="RespostaVerbal" tabindex="12" [(ngModel)]="RespostaVerbal" (change)="onCalculaStatusEscalaGlasgow()">
                               <option value="-1">-- Selecione --</option>
-                              <option *ngFor="let respostaverbal of listaRespostaVerbal | orderBy: orderVariavel" [ngValue]="respostaverbal">{{respostaverbal.variavel}}</option>
+                              <option *ngFor="let respostaverbal of listaRespostaVerbal | orderBy: orderGlasgow" [ngValue]="respostaverbal">{{respostaverbal.variavel}}</option>
                             </select>
                           </div>
                           <div class="col-lg-3">
@@ -622,7 +622,7 @@
                             </select>-->
                             <select class="form-control" name="RespostaMotora" tabindex="12" [(ngModel)]="RespostaMotora" (change)="onCalculaStatusEscalaGlasgow()">
                               <option value="-1">-- Selecione --</option>
-                              <option *ngFor="let respostamotora of listaRespostaMotora | orderBy: orderVariavel" [ngValue]="respostamotora">{{respostamotora.variavel}}</option>
+                              <option *ngFor="let respostamotora of listaRespostaMotora | orderBy: orderGlasgow" [ngValue]="respostamotora">{{respostamotora.variavel}}</option>
                             </select>
                           </div>
                           <div class="col-lg-3">
@@ -672,11 +672,11 @@
                           </div>
                           <div class="col-lg-2">
                             <label>Data</label>
-                            <input type="text" class="form-control mask_data" name="DO_Data" placeholder="" mask="00/00/0000" tabindex="20" ngModel>
+                            <input type="text" class="form-control" name="DO_Data" placeholder="" mask="00/00/0000" tabindex="20" (blur)="onValidaData($event)" ngModel>
                           </div>
                           <div class="col-lg-1">
                             <label>Hora</label>
-                            <input type="text" class="form-control mask_hour" name="DO_Hora" placeholder="" mask="00:00" tabindex="21" ngModel>
+                            <input type="text" class="form-control mask_hour" name="DO_Hora" placeholder="" mask="00:00" tabindex="21" (blur)="onValidaHora($event)" ngModel>
                           </div>
                           <div class="col-lg-2">
                             <label class="d-block">&nbsp;</label>
@@ -772,7 +772,7 @@
               <div class="card">
                 <div class="card-header" id="headingOne6">
                   <div class="card-title" data-toggle="collapse" data-target="#collapseOne6" aria-expanded="false" aria-controls="collapseOne6">
-                    <i class="flaticon-users-1"></i> Risco do Paciente
+                    <i class="flaticon-users-1"></i> Risco do Paciente<span class="fld-obg" title="Obrigatório">*</span>
                   </div>
                 </div>
                 <div id="collapseOne6" class="collapse show" aria-labelledby="headingOne6" data-parent="#accordionExample1" style="">
@@ -839,7 +839,7 @@
             <div class="row">
               <div class="col-lg-6">
                 <!--<button type="button" class="btn btn-accent">Biometria</button>-->
-                <button type="submit" class="btn btn-metal" data-toggle="popover" data-placement="top" data-trigger="hover" data-content="Limpar Campos do Formulário" (click)="onLimpaFormClassificacaoRisco(classificacaorisco)">Limpar</button>
+                <button type="button" class="btn btn-metal" data-toggle="popover" data-placement="top" data-trigger="hover" data-content="Limpar Campos do Formulário" (click)="onLimpaFormClassificacaoRisco(classificacaorisco)">Limpar</button>
               </div>
               <div class="col-lg-6 text-right">
                 <button type="submit" class="btn btn-primary" tabindex="64">Salvar</button>

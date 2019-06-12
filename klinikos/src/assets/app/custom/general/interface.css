@@ -140,142 +140,95 @@ input[type="text"], input[type="password"], input[type="email"], input[type="dat
   font-size: 1.1em;
   cursor: help;
 }
-
 /*=Acolhimento : ----------------------------------- */
-.fill {
-  fill: #5578eb !important;
-  width: 1.8em;
-  height: 1.8em;
-}
+ /*#deficiente, #gestante, #idoso-a, #idoso-b {
+ fill: #5578eb !important;
 
-.fill-hover {
+ /* width: 1.8em;
+  height: 1.8em;
+}*/
+#deficiente:hover{
   fill: #fff !important;
 }
 
+
+.fill {
+  /*fill: #5578eb !important;*/
+  fill: #5578eb !important;
+ /* width: 1.8em;
+  height: 1.8em;*/
+}
+
+.fillBranca {
+  /*fill: #5578eb !important;*/
+  fill: #fff !important;
+ /* width: 1.8em;
+  height: 1.8em;*/
+}
+
+
+
 /*=Classificação de Risco : ----------------------------------- */
 /*Escala de Dor */
-.smile {
-  width: 85px !important;
-  height: 85px !important;
-}
+.smile { width: 85px !important; height: 85px !important; }
+.ed-0 { background: #097BC3 !important; }
 
-.ed-0 {
-  background: #097BC3 !important;
-  ;
-}
+.ed-1 { background: #11D01B !important; }
+.ed-2 { background: #308A01 !important; }
 
-.ed-1 {
-  background: #11D01B !important;
-  ;
-}
+.ed-3 { background: #E0D101 !important; }
+.ed-4 { background: #C8C702 !important; }
+.ed-5 { background: #CFA100 !important; }
 
-.ed-2 {
-  background: #308A01 !important;
-  ;
-}
+.ed-6 { background: #FF9E00 !important; }
+.ed-7 { background: #C87710 !important; }
+.ed-8 { background: #AD6100 !important; }
 
-.ed-3 {
-  background: #E0D101 !important;
-  ;
-}
+.ed-9 { background: #FF0004 !important; }
+.ed-10 { background: #9C0709 !important; }
 
-.ed-4 {
-  background: #C8C702 !important;
-  ;
-}
-
-.ed-5 {
-  background: #CFA100 !important;
-  ;
-}
-
-.ed-6 {
-  background: #FF9E00 !important;
-  ;
-}
-
-.ed-7 {
-  background: #C87710 !important;
-  ;
-}
-
-.ed-8 {
-  background: #AD6100 !important;
-  ;
-}
-
-.ed-9 {
-  background: #FF0004 !important;
-  ;
-}
-
-.ed-10 {
-  background: #9C0709 !important;
-  ;
-}
-
-.ed-opac {
-  opacity: 0.4 !important;
-  ;
-}
-
-.ed-text {
-  font-size: 0.9em;
-  font-weight: 400 !important;
-  color: #333;
-}
+.ed-opac { opacity: 0.4 !important; }
+.ed-text { font-size: 0.9em; font-weight: 400 !important; color: #333; }
 
 /*Opções de Risco */
 .risco-azul {
   border: 1px solid #269AE3 !important;
   color: #666;
 }
-
   .risco-azul.active {
     background: #269AE3 !important;
     color: #fff !important;
   }
-
 .risco-verde {
   border: 1px solid #45B91C !important;
   color: #666;
 }
-
   .risco-verde.active {
     background: #45B91C !important;
-    color: #fff !important;
-    ;
+    color: #fff !important; 
   }
-
 .risco-amarelo {
   border: 1px solid #F4DC06 !important;
   color: #666;
 }
-
   .risco-amarelo.active {
     background: #F4DC06 !important;
     color: #000 !important;
-    ;
   }
-
 .risco-laranja {
   border: 1px solid #F4B42B !important;
   color: #666;
 }
-
   .risco-laranja.active {
     background: #F4B42B !important;
     color: #fff !important;
-    ;
   }
-
 .risco-vermelho {
   border: 1px solid #E10B0B !important;
   color: #666;
 }
-
   .risco-vermelho.active {
     background: #E10B0B !important;
     color: #fff !important;
-    ;
   }
+

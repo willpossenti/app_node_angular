@@ -1,3 +1,4 @@
+
 // Check CPF
 function validarCPF(cpf) {
   cpf = cpf.replace(/[^\d]+/g, '');
@@ -324,11 +325,6 @@ $(document).ready(function () {
     });
   });
 
-  // Adiciona Novos Campos de Contato ???
-  //$('#btn_addContact').on('click', function(){
-  //$('#box_newcontact').clone().appendTo('#bodyContact');
-  //});
-
 
   // Limpar Formulário -------------------------
   $('#btn_formclearCadastro').on('click', function () {
@@ -361,8 +357,8 @@ $(document).ready(function () {
       $('.deficiente, .gestante, .idoso-a, idoso-b').removeClass('fill-hover');
     }
     // limpa combos dinâmicos
-    $('select[name="DP_Etnia"]').find('option').remove().end().append('<option value="-1">-- Selecione --</option>');
-    $('select[name="DP_NaturalidadeCidade"]').find('option').remove().end().append('<option value="-1">-- Selecione --</option>');
+    $('select[name^=DP_Etnia]').find('option').remove().end().append('<option value="-1">-- Selecione --</option>');
+    $('select[name^=DP_NaturalidadeCidade]').find('option').remove().end().append('<option value="-1">-- Selecione --</option>');
     $("select[name^=DP_Etnia]").val($("select[name^=DP_Etnia] option:first").val());
     $("select[name^=DP_NaturalidadeCidade]").val($("select[name^=DP_NaturalidadeCidade] option:first").val());
 
@@ -396,90 +392,6 @@ $(document).ready(function () {
   });
 
 
-
-
-  /*=Acolhimento: --------------------------------------------------- */
-
-  // Sinais Vitais 
-  // begin::Sistólica
-  $('#SV_PressaoArterial_1').on('keyup', function () {
-    // var
-    var pre_art_1 = $(this).val();
-
-    if (pre_art_1 !== '') {
-
-      if (((pre_art_1 > 49) && (pre_art_1 <= 59)) || ((pre_art_1 > 180) && (pre_art_1 <= 250))) {
-        $('#msg_pa1_a').removeClass('oculta');
-        $('#msg_pa1_b').addClass('oculta');
-      }
-      if ((pre_art_1 < 50) || (pre_art_1 > 250)) {
-        $('#msg_pa1_b').removeClass('oculta');
-        $('#msg_pa1_a').addClass('oculta');
-      }
-
-      if ((pre_art_1 <= 180) && (pre_art_1 >= 60)) {
-        $('#msg_pa1_a, #msg_pa1_b').addClass('oculta');
-      }
-
-    } else {
-      $('#msg_pa1_a, #msg_pa1_b').addClass('oculta');
-    }
-  });
-  //end::Sistólica
-
-  //begin::Disatólica
-  $('#SV_PressaoArterial_2').on('keyup', function () {
-    // var
-    var pre_art_2 = $(this).val();
-
-    if (pre_art_2 !== '') {
-
-      if (((pre_art_2 > 19) && (pre_art_2 <= 29)) || ((pre_art_2 > 110) && (pre_art_2 <= 160))) {
-        $('#msg_pa2_a').removeClass('oculta');
-        $('#msg_pa2_b').addClass('oculta');
-      }
-      if ((pre_art_2 < 20) || (pre_art_2 > 160)) {
-        $('#msg_pa2_b').removeClass('oculta');
-        $('#msg_pa2_a').addClass('oculta');
-      }
-
-      if ((pre_art_2 <= 110) && (pre_art_2 >= 30)) {
-        $('#msg_pa2_a, #msg_pa2_b').addClass('oculta');
-      }
-
-    } else {
-      $('#msg_pa2_a, #msg_pa2_b').addClass('oculta');
-    }
-  });
-  //end::Diastólica
-
-  //begin::Pulso
-  $('#SV_Pulso').on('keyup', function () {
-    // var
-    var pulso = $(this).val();
-
-    if (pulso !== '') {
-
-      if (((pulso > 39) && (pulso <= 59)) || ((pulso > 120) && (pulso <= 150))) {
-        $('#msg_pulso_a').removeClass('oculta');
-        $('#msg_pulso_b').addClass('oculta');
-      }
-      if ((pulso < 40) || (pulso > 150)) {
-        $('#msg_pulso_b').removeClass('oculta');
-        $('#msg_pulso_a').addClass('oculta');
-      }
-      if ((pulso <= 120) && (pulso >= 60)) {
-        $('#msg_pulso_a, #msg_pulso_b').addClass('oculta');
-      }
-
-    } else {
-      $('#msg_pulso_a, #msg_pulso_b').addClass('oculta');
-    }
-  });
-  //end::Pulso
-
-
-
   // Outros -------
   //begin:: Mostra/Oculta: Unidade de Referência
   $('#PacGuiaRefer').on('change', function () {
@@ -494,6 +406,7 @@ $(document).ready(function () {
 
   //begin: Outras Condições (Ao marcar 'Dor Torácica força a marcação da opção Risco) -----
   $('#OC_DorToracica').on('click', function () {
+
     var dortoracica = $(this).find('input[type="checkbox"]');
     var risco = $('#OC_Risco').find('input[type="checkbox"]');
 
@@ -638,54 +551,6 @@ $(document).ready(function () {
 
 
   /*=Classificação de Risco: --------------------------------------------------- */
-
-  // Escala de Dor : Sweep label [radio buttons] with class: "ed" ------
-  $('.ed').on('click', function () {
-    // sweep radio-buttons
-    var escala = $(this);
-    var radios = $('input[type="radio"][name="EscalaDor"]').parent();
-
-    // check
-    if (!$(escala).hasClass('active')) {
-      $(escala).removeClass('ed-opac');
-      // restore opacity other options
-      $(radios).each(function (i, e) {
-        // check each
-        if ($(e) != escala) {
-          if ($(e).hasClass('active')) {
-            $(e).removeClass('active');
-            $(e).addClass('ed-opac');
-          }
-        }
-
-      });
-    }
-  });
-
-  // Sinais Vitais : Calcular IMC -----------
- 
-
-  // Doenças Pre-Existentes -------------
-  $('#dpe_respcron').on('click', function () {
-    // Respiratória Crônica
-    var dpe_respcron = $('input[type="checkbox"][name="DPE_RespCronico"]').prop('checked');
-    if (dpe_respcron === true) {
-      $('#dpe_respcron_box').removeClass('oculta');
-      $('textarea[name="DoencaPreExistRespCron"]').focus();
-    } else {
-      $('#dpe_respcron_box').addClass('oculta');
-    }
-  });
-  $('#dpe_outros').on('click', function () {
-    // Outros
-    var dpe_outros = $('input[type="checkbox"][name="DPE_Outros"]').prop('checked');
-    if (dpe_outros === true) {
-      $('#dpe_outros_box').removeClass('oculta');
-      $('textarea[name="DoencaPreExistOutros"]').focus();
-    } else {
-      $('#dpe_outros_box').addClass('oculta');
-    }
-  });
 
   // Possui Alergia
   $('#PossuiAlergia').on('change', function () {

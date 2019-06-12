@@ -20,6 +20,7 @@ import { Return } from '../../model/Return';
 import * as Toastr from 'toastr';
 import { AuthGuard } from '../../controller/auth/auth.guard';
 import * as swal from '../../../assets/vendors/general/sweetalert2/dist/sweetalert2.js';
+import { DataService } from '../util/data.service';
 
 @Component({
   selector: 'app-registroboletim',
@@ -42,7 +43,8 @@ export class RegistroBoletimComponent implements OnInit {
   customMask: string;
 
   constructor(private registroBoletimService: RegistroBoletimService, private route: ActivatedRoute,
-    private pessoaService: PessoaService, private cpfService: CpfService, private router: Router, private auth: AuthGuard) {
+    private pessoaService: PessoaService, private cpfService: CpfService, private router: Router, 
+    private dataService: DataService, private auth: AuthGuard) {
 
 
   }
@@ -181,14 +183,14 @@ export class RegistroBoletimComponent implements OnInit {
   //end:: Seleciona Endereco
 
   //begin:: validacao e consulta de CPF
-  onConsultaCpf(e) {
+  onConsultaCpf(e: any) {
 
     if (this.auth.canActivate())
       this.auth.onSessaoAcrescimoTempo();
 
     var cpf = e.target.value;
 
-    if (cpf !== '___.___.___-__') {
+    if (cpf !== '') {
 
       var verifica = this.cpfService.validarCPF(cpf);
 
@@ -219,7 +221,7 @@ export class RegistroBoletimComponent implements OnInit {
 
     this.Pessoa = pessoa;
 
-    if (pessoa.cpf !== "")
+    if (pessoa.cpf !== null)
       $("input[name^=P_CPF]").val([pessoa.cpf.slice(0, 3)] + "." + [pessoa.cpf.slice(3, 6)] + "." + [pessoa.cpf.slice(6, 9)] + "-" + [pessoa.cpf.slice(9, 11)]);
 
 
@@ -235,10 +237,11 @@ export class RegistroBoletimComponent implements OnInit {
       $("input[name^=IB_Nascimento]").val(("0" + day).slice(-2) + "/" + ("0" + month).slice(-2) + "/" + year);
     }
 
-    if (pessoa.contato1.length === 10)
-      $("input[name^=DP_Telefone]").val("(" + [pessoa.contato1.slice(0, 2)] + ")" + [pessoa.contato1.slice(2, 6)] + "-" + [pessoa.contato1.slice(6, 10)]);
-    else
-      $("input[name^=DP_Telefone]").val("(" + [pessoa.contato1.slice(0, 2)] + ")" + [pessoa.contato1.slice(2, 7)] + "-" + [pessoa.contato1.slice(7, 11)]);
+    if(pessoa.contato1 !== null)
+      if (pessoa.contato1.length === 10)
+        $("input[name^=DP_Telefone]").val("(" + [pessoa.contato1.slice(0, 2)] + ")" + [pessoa.contato1.slice(2, 6)] + "-" + [pessoa.contato1.slice(6, 10)]);
+      else
+        $("input[name^=DP_Telefone]").val("(" + [pessoa.contato1.slice(0, 2)] + ")" + [pessoa.contato1.slice(2, 7)] + "-" + [pessoa.contato1.slice(7, 11)]);
 
 
 
@@ -382,7 +385,7 @@ export class RegistroBoletimComponent implements OnInit {
       Toastr.success("Registro Boletim salvo com sucesso");
 
       $("input[name^=IB_NumeroBoletim]").val(data.result.numeroBoletim);
-      this.onLimpaFormRegistroBoletim(rb);
+
 
     }, (error: HttpErrorResponse) => {
       this.auth.onSessaoInvalida(error);
@@ -460,24 +463,9 @@ export class RegistroBoletimComponent implements OnInit {
         this.auth.onSessaoInvalida(error);
       });
 
-    console.log(this.listaPessoaProfissional);
-    console.log(this.listaPessoaPaciente);
   }
   //end:: Consulta o nome do paciente
 
-  //begin:: Carregamento do Profissional pela Busca
-  onSelectedProfissional(profissional: PessoaProfissional) {
-
-    if (this.auth.canActivate())
-      this.auth.onSessaoAcrescimoTempo();
-
-    Toastr.info("Profissional carregado");
-    this.CarregaPessoa(profissional);
-    $("#divPesquisaNomeCompleto").removeClass('show');
-    $("#divPesquisaNomeSocial").removeClass('show');
-
-  }
-  //end::  Carregamento do Profissional pela Busca
 
   //begin:: Carregamento do Paciente pela Busca
   onSelectedPaciente(paciente: PessoaPaciente) {
@@ -486,6 +474,7 @@ export class RegistroBoletimComponent implements OnInit {
       this.auth.onSessaoAcrescimoTempo();
 
     Toastr.info("Paciente carregado");
+    console.log(paciente);
     this.CarregaPessoa(paciente);
 
     $("#divPesquisaNomeCompleto").removeClass('show');
@@ -497,7 +486,7 @@ export class RegistroBoletimComponent implements OnInit {
   //begin:: Limpa Campos/ mensagens responsáveis pelos avisos com integrações externas
   public onLimpaFormRegistroBoletim(form: NgForm) {
 
-    $("#btn_formclear").trigger("click");
+    $("#k_scrolltop").trigger("click");
     form.reset();
     this.Pessoa = undefined;
     form.value.IN_Endereco = "";
@@ -505,6 +494,15 @@ export class RegistroBoletimComponent implements OnInit {
     form.value.IN_GrauParentesco = "";
     form.value.DO_Logradouro = "";
     form.value.DO_Complemento = "";
+
+    $(document).ready(function () { 
+      $("select[name^=IB_ComoChegou]").val($("select[name^=IB_ComoChegou] option:first").val()); 
+      $("select[name^=IB_Especialidade]").val($("select[name^=IB_Especialidade] option:first").val()); 
+      $("input[name^=P_CPF]").val(""); 
+      $("input[name^=IB_Nascimento]").val(""); 
+      $("input[name^=DP_Telefone]").val(""); 
+      
+    });
 
   }
   //end:: Limpa Campos
@@ -521,10 +519,24 @@ export class RegistroBoletimComponent implements OnInit {
 
   onValidaData(event: any){
 
+    var data = event.target.value.split(':');
+    var d = new Date();
 
 
-  }
+    if(+data[0] > d.getHours() || (+data[0] == d.getHours() && +data[1] > d.getMinutes()))
+      $("input[name^=IB_Hora]").val(("0" + d.getHours()).slice(-2) +":"+("0" + d.getMinutes()).slice(-2));
+    
+    
+  
+
+}
+
+onValidaIdade(){
+
+  if(!this.dataService.validarData($("input[name^=IB_Nascimento]").val()))
+    $("input[name^=IB_Nascimento]").val('');
 
 }
 
 
+}

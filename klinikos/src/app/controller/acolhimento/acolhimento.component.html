@@ -1,3 +1,4 @@
+
 <!-- begin:: Content -->
 <div class="k-content k-grid__item k-grid__item--fluid" id="k_content">
   <div class="row">
@@ -104,25 +105,25 @@
               <div class="col-lg-3">
                 <label class="text-left d-block">Preferencial</label>
                 <div class="btn-group btn-group-toggle" data-toggle="buttons">
-                  <label class="btn btn-outline-info cp clear rounded-left" id="deficiente" data-toggle="popover" data-placement="top" data-trigger="hover" data-content="Deficiente Físico">
+                  <label class="btn btn-outline-info cp clear rounded-left" id="preferencial" data-toggle="popover" data-placement="top" data-trigger="hover" data-content="Deficiente Físico" (click)="onChangeButton('preferencial')" (mouseenter) ="onEnterButton('preferencial')" (mouseleave) ="onLeaveButton('preferencial')" >
                     <input type="radio" name="Preferencial" autocomplete="off" value="1" tabindex="">
                     <!--<i class="fab fa-accessible-icon fa-fw" style="font-size: 1.4em;"></i>-->
-                    <img src="../assets/media/icons/icon-prioridade-pregnant.svg" class="svg fill deficiente">
+                    <img src="../assets/media/icons/icon-prioridade-pregnant.svg" id="preferencial_icone" class="svg fill">
                   </label>
 
-                  <label class="btn btn-outline-info cp clear" id="gestante" data-toggle="popover" data-placement="top" data-trigger="hover" data-content="Gestante">
+                  <label class="btn btn-outline-info cp clear" id="gestante" data-toggle="popover" data-placement="top" data-trigger="hover" data-content="Gestante" (click)="onChangeButton('gestante')" (mouseenter) ="onEnterButton('gestante')" (mouseleave) ="onLeaveButton('gestante')">
                     <input type="radio" name="Preferencial" autocomplete="off" value="2" tabindex="">
-                    <img src="../assets/media/icons/icon-prioridade-pregnant.svg" class="svg fill gestante">
+                    <img src="../assets/media/icons/icon-prioridade-pregnant.svg" id="gestante_icone" class="svg fill">
                   </label>
 
-                  <label class="btn btn-outline-info cp clear" id="idoso-a" data-toggle="popover" data-placement="top" data-trigger="hover" data-content="Pessoa com idade entre 60 e 79 anos">
+                  <label class="btn btn-outline-info cp clear" id="idoso-a" data-toggle="popover" data-placement="top" data-trigger="hover" data-content="Pessoa com idade entre 60 e 79 anos" (click)="onChangeButton('idoso-a')" (mouseenter) ="onEnterButton('idoso-a')"  (mouseleave) ="onLeaveButton('idoso-a')">
                     <input type="radio" name="Preferencial" autocomplete="off" value="3" tabindex="">
-                    <img src="../assets/media/icons/icon-prioridade-elderly-60.svg" class="svg fill idoso-a">
+                    <img src="../assets/media/icons/icon-prioridade-elderly-60.svg" id="idoso-a_icone" class="svg fill">
                   </label>
 
-                  <label class="btn btn-outline-info cp clear" id="idoso-b" data-toggle="popover" data-placement="top" data-trigger="hover" data-content="Pessoa acima de 80 anos">
+                  <label class="btn btn-outline-info cp clear" id="idoso-b" data-toggle="popover" data-placement="top" data-trigger="hover" data-content="Pessoa acima de 80 anos" (click)="onChangeButton('idoso-b')" (mouseenter) ="onEnterButton('idoso-b')" (mouseleave) ="onLeaveButton('idoso-b')">
                     <input type="radio" name="Preferencial" autocomplete="off" value="4" tabindex="">
-                    <img src="../assets/media/icons/icon-prioridade-elderly-80.svg" class="svg fill idoso-b">
+                    <img src="../assets/media/icons/icon-prioridade-elderly-80.svg" id="idoso-b_icone" class="svg fill">
                   </label>
                 </div>
                 <!--<span class="form-text text-muted">Please enter your full name</span>-->
@@ -230,7 +231,7 @@
             <div class="row">
               <div class="col-lg-6">
                 <!--<button type="button" class="btn btn-accent">Biometria</button>-->
-                <button type="submit" class="btn btn-metal" data-toggle="popover" data-placement="top" data-trigger="hover" data-content="Limpar Campos do Formulário" (click)="onLimpaFormAcolhimento(acolhimento)">Limpar</button>
+                <button type="button" class="btn btn-metal" data-toggle="popover" data-placement="top" data-trigger="hover" data-content="Limpar Campos do Formulário" (click)="onLimpaFormAcolhimento(acolhimento)">Limpar</button>
               </div>
               <div class="col-lg-6 text-right">
                 <button type="submit" class="btn btn-primary">Salvar</button>

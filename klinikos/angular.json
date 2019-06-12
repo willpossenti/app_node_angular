@@ -111,7 +111,7 @@
               "src/assets/app/custom/general/jquery.maskedinput.js",
               "src/assets/app/custom/general/jquery.maskedinput.min.js",
               "node_modules/sweetalert2/dist/sweetalert2.js",
-              "node_modules/jquery/dist/jquery.min.js"
+              "node_modules/jquery/dist/jquery.min.js",
             ],
             "es5BrowserSupport": true
           },
