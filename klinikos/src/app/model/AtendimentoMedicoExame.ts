@@ -1,6 +1,7 @@
 import { AtendimentoMedico } from './AtendimentoMedico';
 import { GrupoExame } from './GrupoExame';
 import { Exame } from './Exame';
+import { PessoaProfissional } from './PessoaProfissional';
 
 export interface AtendimentoMedicoExame {
 
@@ -10,6 +11,7 @@ export interface AtendimentoMedicoExame {
   Exame?: Exame;
   observacaoExame?: string;
   dataExame?: Date;
+  Profissional?: PessoaProfissional;
   ativo?: boolean;
 }
 

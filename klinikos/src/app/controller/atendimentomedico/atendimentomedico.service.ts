@@ -3,6 +3,8 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Return } from '../../model/Return';
 import { AtendimentoMedico } from '../../model/AtendimentoMedico';
+import { ConsultaCID } from 'src/app/model/ConsultaCID';
+import { CID } from 'src/app/model/CID';
 
 
 @Injectable({
@@ -24,7 +26,8 @@ export class AtendimentoMedicoService {
     this.baseUrl = 'https://localhost:44307/api/';
   }
 
-  BindCID() { return this.http.get<Return>(`${this.baseUrl}cid`, this.httpOptions); }
+  ConsultarCIDByCapitulo(cid: CID) { return this.http.post<Return>(`${this.baseUrl}cid/GetCIDByCapitulo`, cid, this.httpOptions); }
+  //BindCID(consultacid: ConsultaCID) { return this.http.post<Return>(`${this.baseUrl}cid/GetCIDByCapitulo`+ consultacid, this.httpOptions); }
   BindConsultaCID() { return this.http.get<Return>(`${this.baseUrl}consultacid`, this.httpOptions); }
   BindGrupoExame() { return this.http.get<Return>(`${this.baseUrl}grupoexame`, this.httpOptions); }
   BindExame() { return this.http.get<Return>(`${this.baseUrl}exame`, this.httpOptions); }
@@ -47,6 +50,7 @@ export class AtendimentoMedicoService {
   Bindatendimentomedicoalergia() { return this.http.get<Return>(`${this.baseUrl}atendimentomedicoalergia`, this.httpOptions); }
   ConsultaMedicamento(nome: string) { return this.http.get<Return>(`${this.baseUrl}medicamento/consultamedicamento/` + nome, this.httpOptions); }
   ConsultaExame(nome: string) { return this.http.get<Return>(`${this.baseUrl}exame/consultaexame/` + nome, this.httpOptions); }
+  // ConsultaCids(nome: string) {return this.http.get<Return>(`${this.baseUrl}cid/consultacids/` + nome, this.httpOptions); }
   SalvarAtendimentoMedico(atendimentomedico: AtendimentoMedico) {
 
     return this.http.post<Return>(`${this.baseUrl}atendimentomedico/incluir`, atendimentomedico, this.httpOptions);

@@ -62,6 +62,8 @@ export class LoginComponent implements OnInit {
         localStorage.setItem('token_accessToken', data.token.accessToken.replace(RegExp, ""));
         localStorage.setItem('token_expiracao', data.token.expiration.toString());
 
+
+        
         setTimeout(() =>
 
           //this.router.navigate(['klinikos'])

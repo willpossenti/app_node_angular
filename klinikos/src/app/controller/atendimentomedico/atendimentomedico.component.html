@@ -340,66 +340,51 @@
               </div>
           </div>
           -->
-                        <div class="k-portlet__body p-1">
-                          <div class="form-group row">
-                            <div class="col-lg-12">
-                              <label>Suspeita Diagnóstica <span class="fld-obg" title="Obrigatório">*</span></label>
-                              <textarea class="form-control rn" name="SuspeitaDiagnostica" rows="4" ngModel></textarea>
-                              <span class="form-text text-danger cm oculta">Message Error</span>
-                            </div>
-                          </div>
+                          <div class="k-portlet__body p-1">
+                           <div class="form-group row">
+                             <div class="col-lg-12">
+                               <label>Suspeita Diagnóstica <span class="fld-obg" title="Obrigatório">*</span></label>
+                               <textarea class="form-control rn" name="SuspeitaDiagnostica" rows="4" ngModel></textarea>
+                               <span class="form-text text-danger cm oculta">Message Error</span>
+                              </div>
+                           </div>
 
-                          <div class="form-group row">
-                            <div class="col-lg-10">
-                              <label>CID <span class="fld-obg" title="Obrigatório">*</span></label>
-                              <input type="text" class="form-control" name="CID" placeholder="Informe o CID" ngModel>
-                              <span class="form-text text-danger cm oculta">Message Error</span>
-                            </div>
-                            <div class="col-lg-2">
-                              <label class="d-block">&nbsp;</label>
-                              <button type="button" class="btn btn-success" data-toggle="modal" data-target="#modalTabelaCID">Capítulo CID-10</button>
-                            </div>
+                            <div class="form-group row">
+                              <div class="col-lg-12">
+                                <label>CID - Capítulos <span class="fld-obg" title="Obrigatório">*</span></label>
+                                  <select class="form-control custom-select"  name="ConsultaCID" [(ngModel)]="ConsultaCID">
+                                    <option value="">-- Selecione --</option>
+                                    <option *ngFor="let consultacid of listaConsultaCID | orderBy: orderOrdem" [ngValue]="consultacid">{{consultacid.capitulo}} - {{consultacid.nome}}, {{consultacid.posicao}}</option>                                  
+                                  </select>
+                                 <span class="form-text text-danger cm oculta">Message Error</span>
+                             </div>
 
-                            <!--begin:Modal Tabela CID -->
-                            <div class="modal fade" id="modalTabelaCID" tabindex="-1" role="dialog" aria-labelledby="modalTabelaCIDTitle" aria-hidden="true">
-                              <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
-                                <div class="modal-content">
-                                  <div class="modal-header">
-                                    <h5 class="modal-title" id="modalTabelaCIDTitle">
-                                      Capítulo CID-10
-                                    </h5>
-                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"> <span aria-hidden="true">&times;</span> </button>
-                                  </div>
-                                  <div class="modal-body">
-                                    <div class="k-scroll" data-scroll="true" style="height:400;">
+														  <div class="col-lg-12 mt-3">
+															  <label>CID <span class="fld-obg" title="Obrigatório">*</span></label>
+															  <input type="text" class="form-control maisc" name="CID" placeholder="Informe o CID" [(ngModel)]="CID" (keyup)="onConsultaCIDs($event)" ngModel>
+                              <!--<span class="form-text text-danger cm oculta">Message Error</span>-->
+                              <div class="dropdown-menu dropdown-menu-fit dropdown-menu-right dropdown-menu-top-unround dropdown-menu-anim dropdown-menu-lg" x-placement="bottom-end" style="position: absolute; left: 10px;  width: 95%; will-change: transform; top: 65px;" id="divPesquisaCID">
+                                <div class="k-quick-search k-quick-search--dropdown k-quick-search--result-compact k-quick-search--has-result" id="k_quick_search_dropdown">
+                                  <div class="k-quick-search__wrapper k-scroll ps ps--active-y m-0 p-0" data-scroll="true" data-height="325" data-mobile-height="200" style="overflow: hidden; height: 325px;">
+                                    <!--begin::k-quick-search__result-->
+                                    <div class="k-quick-search__result">
 
-                                      <!--begin:Lista de CIDs -->
-                                      <label><strong>Capítulos</strong></label>
-                                      <div class="k-list k-list--badge">
-
-                                        <!-- Cap 01 : Nivel 1 -->
-                                        <div class="k-list__item">
-                                          <span class="k-list__badge k-list__badge--primary"></span>
-                                          <!--<span class="k-list__icon"><i class="flaticon-folder-1 k-font-primary"></i></span> -->
-                                          <span class="k-list__text"><a href="#A00" class="k-link k-font-primary" data-toggle="collapse" aria-expanded="true" aria-controls="A00">I - Algumas doenças infecciosas e parasitárigumas doenças infecciosas</a></span>
-                                          <span class="k-list__time">A00-B99</span>
+                                      <div class="k-quick-search__category border-bottom text-primary">CID</div>
+                                      <div class="k-quick-search__section p-0 mb-1" *ngFor="let cid of listaCID"> 
+                                        <div class="k-quick-search__item">
+                                          <div class="k-quick-search__item-wrapper">
+                                            <a class="k-quick-search__item-title" style="cursor:pointer;" (click)="onSelectedCID(cid)">
+                                              {{cid.codigo}} - {{cid.nome}}
+                                            </a>
+                                          </div>
                                         </div>
-
                                       </div>
-                                      <!--end:Lista de CIDs -->
-
                                     </div>
-                                  </div>
-                                  <div class="modal-footer">
-                                    <button type="button" class="btn btn-metal" data-dismiss="modal">Fechar</button>
-                                    <button type="button" class="btn btn-brand">Selecionar</button>
                                   </div>
                                 </div>
                               </div>
+                             </div>
                             </div>
-                            <!--end:Modal Tabela CID -->
-
-                          </div>
 
                           <div class="form-group row">
                             <style type="text/css">
@@ -559,7 +544,7 @@
                                 <!-- <td>25/04/2019</td> -->
                                 <!-- <td> -->
                                 <!-- <label class="k-checkbox k-checkbox--brand"> -->
-                                <!-- <!-- Ao inserir um novo registro de Exame, o campo Ativo já deverá vir marcado --> -->
+                                <!--  Ao inserir um novo registro de Exame, o campo Ativo já deverá vir marcado --> 
                                 <!-- <input type="checkbox" checked name="ExameAtivo"><span></span> -->
                                 <!-- </label> -->
                                 <!-- </td> -->
@@ -570,11 +555,12 @@
                                 <tbody id="tableExame" *ngFor="let item of listaAtendimentoMedicoExame; let i = index">
 
                                   <tr class="text-center" id="row{{i}}">
-                                    <td>{{ item.Observacao }}</td>
+                                    <td>{{ item.observacaoExame }}</td>
                                     <td>{{ item.GrupoExame? item.GrupoExame.nome.substr(0,50) : '' }}</td>
                                     <td>{{ item.Exame? item.Exame.nome: '' }}</td>
-                                    <td>{{ item.DataExame }}</td>
-                                    <!-- <td>{{ item.exameSituacao === true? 'Ativo': 'Inativa'}}</td> -->
+                                    <td>{{ item.dataExame | date: 'dd/MM/yyyy' }}</td>
+                                    <td>{{ item.Profissional.nomeCompleto }}</td>
+                                    
                                     <!--<td>
         <label class="k-checkbox k-checkbox--bold">
           <input type="checkbox" class="form-control" name="Prof_Ativo" id="ckativo{{i}}" [checked]="item.ativo"> <span></span>
@@ -589,6 +575,34 @@
                               </table>
                             </div>
                           </div>
+
+                           <!--begin:Modal Exame Observação -->
+                           <div class="modal fade show" id="modalExameObservacao" tabindex="-1" role="dialog" aria-labelledby="modalExameObservacaoTitle" aria-modal="true">
+                              <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable" role="document">
+                                  <div class="modal-content">
+                                      <div class="modal-header">
+                                          <h5 class="modal-title" id="modalExameObservacaoTitle">
+                                              Ácido Cítrico - Urina 24HS - CIT
+                                          </h5>
+                                          <button type="button" class="close" data-dismiss="modal" aria-label="Close"> <span aria-hidden="true">×</span> </button>
+                                      </div>
+                                      <div class="modal-body">
+                                          <div class="k-scroll ps ps--active-y" data-scroll="true" style="height:350px; overflow:hidden;">
+                                              <p>Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum.</p>
+                                              <p>Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum.</p>
+                                              <p>Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum.</p>
+                                              <p>Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum.</p>
+                                              <p>Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum.</p>
+                                          </div>
+                                      </div>
+                                      <div class="modal-footer">
+                                          <button type="button" class="btn btn-metal" data-dismiss="modal">Fechar</button>
+                                      </div>
+                                  </div>
+                              </div>
+                          </div>
+                          <!--end:Modal Exame Observação -->
+
 
                           <div class="form-group row">
                             <div class="col-lg-12 text-right">
@@ -637,11 +651,11 @@
                               <label class="d-block text-left">Tipo <span class="fld-obg" title="Obrigatório">*</span></label>
 
                               <div class="btn-group btn-group-toggle" data-toggle="buttons">
-                                <label class="btn btn-outline-dark cp pr-4 pl-4" id="">
-                                  <input type="radio" name="Prescrição" autocomplete="off" > Prescrição
-                                </label>
-                                <label class="btn btn-outline-dark cp pr-5 pl-5" id="">
-                                  <input type="radio" name="Receita" autocomplete="off" > Receita
+                                <label class="btn btn-outline-dark cp pr-4 pl-4" id="btnPrescricao">
+                                  <input type="radio" name="Prescrição" autocomplete="off" ngModel> Prescrição
+                                </label> 
+                                <label class="btn btn-outline-dark cp pr-5 pl-5" id="btnReceita">
+                                  <input type="radio" name="Receita" autocomplete="off" ngModel> Receita
                                 </label>
                               </div>
                               <span class="form-text text-danger cm oculta">Message Error</span>
@@ -775,10 +789,10 @@
                                     <td><i id="rowmedicamento" class="flaticon2-information-circular-button-symbol ch text-info" style="font-size: 1.5em;" data-toggle="popover" data-placement="top" data-trigger="hover" data-content="asdfa" (mouseenter) ="mouseEnter()"></i>{{ item.observacao }}</td>
                                     <td>{{ item.Medicamento? item.Medicamento.nome.substr(0,50)  : '' }}</td>
                                     <td>{{ item.dose }}</td>
-                                    <td>{{ item.Unidade? item.Unidade.descricao: ''}}</td>
+                                    <td>{{ item.UnidadeMedicamento? item.UnidadeMedicamento.descricao: ''}}</td>
                                     <td>{{ item.ViaAdministracaoMedicamento? item.ViaAdministracaoMedicamento.descricao: '' }}</td>
                                     <td>{{ item.IntervaloMedicamento? item.IntervaloMedicamento.descricao: ''}}</td>
-                                    <!-- <td>{{ item.medicamentoSituacao === true? 'Ativo': 'Inativa'}}</td> -->
+                                    
                                     <!--<td>
     <label class="k-checkbox k-checkbox--bold">
       <input type="checkbox" class="form-control" name="Prof_Ativo" id="ckativo{{i}}" [checked]="item.ativo"> <span></span>
@@ -868,8 +882,9 @@
                           <div class="form-group row mb-3">
                             <div class="col-lg-6 pb-2">
                               <label>Selecione o Modelo</label>
-                              <select class="form-control" name="ModeloAtestado" ngModel>
+                              <select class="form-control" name="ModeloAtestado" [(ngModel)]="ModeloAtestado">
                                 <option value="">-- Selecione --</option>
+                                <option *ngFor="let grupoexame of listaModeloAtestado | orderBy: orderNome" [ngValue]="modeloatestado">{{modeloatestado.nome}}</option>
                               </select>
                               <span class="form-text text-danger cm oculta">Message Error</span>
                             </div>
@@ -911,7 +926,7 @@
               </div>
             <!--end::Accordion-->
             <!--begin:Modal Finalizar Atendimento Médico-->
-            <div class="modal fade show" id="modalFinalizarAtend" tabindex="-1" role="dialog" aria-labelledby="modalFinalizarAtendTitle" aria-modal="true">
+            <div class="modal fade show" id="modalFinalizarAtend" tabindex="-1" role="dialog" aria-labelledby="modalFinalizarAtendTitle" aria-modal="true" >
               <div class="modal-dialog modal-dialog-centered" role="document">
                 <div class="modal-content">
                   <div class="modal-header">
@@ -934,13 +949,14 @@
                         </div>
                         <div class="col-lg-6" id="colModalFinAlta" >
                           <label>Data / Hora</label>
-                          <input type="datetime-local" class="form-control" name="DataHora" ngModel>
+                          <input type="datetime-local" class="form-control" name="DataHora" id="dataFinalizarAM" ngModel>                          
                           <span class="form-text text-danger oculta">Message Error</span>
                         </div>
                         <!--Saída por Óbito-->
                         <div class="col-lg-6 oculta" id="colModalFinObito">
                           <label>Data / Hora Óbito</label>
                           <input type="datetime-local" class="form-control" name="DataHoraObito" ngModel>
+
                           <span class="form-text text-danger oculta">Message Error</span>
                         </div>
 
@@ -971,7 +987,7 @@
               </div>
               <div class="col-lg-6 text-right">
                 <!-- <button type="reset" class="btn btn-accent"><i class="fa flaticon2-reload fa-fw"></i> Reavaliar</button> -->
-                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modalFinalizarAtend">Finalizar</button>
+                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modalFinalizarAtend" (click)="onLoadModal()">Finalizar</button>
                 <button type="reset" class="btn btn-metal" data-toggle="popover" data-placement="top" data-trigger="hover" data-content="Cancela o atendimento e retorna o paciente para Fila">Cancelar</button>
               </div>
             </div>

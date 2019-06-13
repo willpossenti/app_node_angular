@@ -61,6 +61,11 @@ export class PessoaService {
 
   }
   BuscarCidade(nomecidade: string) { return this.http.get<Return>(`${this.baseUrl}cidade/buscacidade/` + nomecidade, this.httpOptions); }
+
+  ConsultaProfissional(pessoaId: string) {
+    return this.http.get<Return>(`${this.baseUrl}pessoa/pessoaprofissional/consultaprofissional/` + pessoaId, this.httpOptions);
+  }
+
   ConsultaCpfProfissional(cpf: string) {
     return this.http.get<Return>(`${this.baseUrl}pessoa/pessoaprofissional/consultacpf/` + cpf, this.httpOptions);
   }

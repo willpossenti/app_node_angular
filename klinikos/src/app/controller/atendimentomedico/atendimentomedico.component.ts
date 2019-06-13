@@ -29,6 +29,7 @@ import { PessoaService } from '../cadastro/pessoa/pessoa.service';
 import { NgForm } from '@angular/forms';
 import { AtendimentoMedico } from '../../model/AtendimentoMedico';
 import * as swal from '../../../assets/vendors/general/sweetalert2/dist/sweetalert2.js';
+import { PessoaProfissional } from 'src/app/model/PessoaProfissional';
 
 
 @Component({
@@ -38,8 +39,9 @@ import * as swal from '../../../assets/vendors/general/sweetalert2/dist/sweetale
 })
 
 
-
 export class AtendimentoMedicoComponent implements OnInit {
+
+
 
   listaCID: Array<CID>;
   listaConsultaCID: Array<ConsultaCID>;
@@ -87,6 +89,11 @@ export class AtendimentoMedicoComponent implements OnInit {
   orderDescricao: string = 'descricao';
   orderNome: string = 'nome';
   orderVariavel: string = 'variavel';
+  orderOrdem: string = 'ordem';
+  Profissional: PessoaProfissional;
+  filterargs = {title: 'hello'};
+items = [{title: 'hello world'}, {title: 'hello kitty'}, {title: 'foo bar'}];
+
 
   constructor(private atendimentomedicoservice: AtendimentoMedicoService, private pessoaService: PessoaService) {
     this.listaAtendimentoMedicoAlergia = new Array<AtendimentoMedicoAlergia>();
@@ -96,6 +103,21 @@ export class AtendimentoMedicoComponent implements OnInit {
   }
 
   ngOnInit() {
+
+    let user = JSON.parse(localStorage.getItem('user'));
+
+    this.pessoaService.ConsultaProfissional(user.userId).subscribe(async (data: Return) => {
+     this.Profissional = data.result;
+    
+
+    }, (error: HttpErrorResponse) => {
+      Toastr.error("Falha ao carregar o profissional");
+      console.log(`Error. ${error.message}.`);
+    });
+
+    
+
+
 
     $(document).ready(function () {
 
@@ -145,19 +167,41 @@ export class AtendimentoMedicoComponent implements OnInit {
       });
 
 
+      $("#divPesquisaCID")
+        .mouseover(function () {
+          $("#divPesquisaCID").addClass('show');
+        })
+        .mouseout(function () {
+          $("#divPesquisaCID").removeClass('show');
+        });
+
+      $("input[name^=CID]").focus(function () {
+        if ($('input[name^=CID]').val().length > 2 && $('input[name^=CID]').is(':hover') === true)
+          $("#divPesquisaCID").addClass('show');
+      });
+
+      $("input[name^=CID]").focusout(function () {
+        if ($('#divPesquisaCID').is(':hover') === false)
+          $("#divPesquisaCID").removeClass('show');
+        else
+          $("#divPesquisaCID").addClass('show');
+      });
+
+
+
     });
 
-    this.atendimentomedicoservice.BindCID().subscribe(async (data: Return) => {
-      this.listaCID = data.result;
+    // this.atendimentomedicoservice.BindCID(this.ConsultaCID).subscribe(async (data: Return) => {
+    //   this.listaCID = data.result;
 
 
-      $(document).ready(function () { $("select[name^=CID]").val($("select[name^=CID] option:first").val()); });
+    //   $(document).ready(function () { $("select[name^=CID]").val($("select[name^=CID] option:first").val()); });
 
 
-    }, (error: HttpErrorResponse) => {
-      Toastr.error("Falha ao carregar CID na aba Atendimento Médico");
-      console.log(`Error. ${error.message}.`);
-    });
+    // }, (error: HttpErrorResponse) => {
+    //   Toastr.error("Falha ao carregar CID na aba Atendimento Médico");
+    //   console.log(`Error. ${error.message}.`);
+    // });
 
     this.atendimentomedicoservice.BindConsultaCID().subscribe(async (data: Return) => {
       this.listaConsultaCID = data.result;
@@ -258,15 +302,35 @@ export class AtendimentoMedicoComponent implements OnInit {
       console.log(`Error. ${error.message}.`);
     });
 
-    //$(document).ready(function () {
-    //  $("#colModalFinAlta").val(Date.now());
-    //});
-
-    //$(document).ready(function () {
-    //  $("#colModalFinObito").val(Date.now());
-    //});
+   
 
   }
+
+
+  onSelectedCapitulo() {
+
+    $(document).ready(function () { $("select[name^=CID]").val($("select[name^=CID] option:first").val()); });
+
+    // this.atendimentomedicoservice.BindCID(this.ConsultaCID).subscribe(async (data: Return) => {
+    //   this.listaCID = data.result;
+
+    //   if (this.CID != null) {
+
+    //     var cidId = this.CID.cidId;
+    //     this.CID = this.listaCID.find(x => x.cidId === cidId);
+    //   }
+    //   else
+    //     $(document).ready(function () { $("select[name^=CID]").val($("select[name^=CID] option:first").val()); });
+
+    // }, (error: HttpErrorResponse) => {
+    //   Toastr.error("Falha ao carregar UF(s) na aba Dados Pessoais");
+    //   console.log(`Error. ${error.message}.`);
+    // });
+
+
+  }
+
+
   onPossuiAlergia() {
 
 
@@ -379,7 +443,7 @@ export class AtendimentoMedicoComponent implements OnInit {
       atendimentomedico.saturacao = rb.value.AM_Saturacao;
 
     if (rb.value.Observacoes !== "")
-      atendimentomedico.campoObservacao = rb.value.Observacoes.toUpperCase;
+      atendimentomedico.campoObservacao = rb.value.Observacoes.toUpperCase();
 
     if (rb.value.SuspeitaDiagnostica != "")
       atendimentomedico.suspeitaDiagnostico = rb.value.SuspeitaDiagnostica.toUpperCase();
@@ -402,31 +466,60 @@ export class AtendimentoMedicoComponent implements OnInit {
       if (rb.value.AtestadoValidade != "")
         atendimentomedico.validadeatestado = rb.value.AtestadoValidade + " dias";
     }
-
-    if (rb.value.TipoSaida != "")
-    {
-      if (rb.value.TipoSaida == 1) {
-        atendimentomedico.tipoSaida = "A";
-      }
-      if (rb.value.TipoSaida == 2) {
-        atendimentomedico.tipoSaida = "B";
+    if($("#AtendMedTipoSaida").val("1")){
+      atendimentomedico.tipoSaida = "A";
     }
+    if($("#AtendMedTipoSaida").val("2")){
+      atendimentomedico.tipoSaida = "O";
     }
-    else
+    if($("#AtendMedTipoSaida").val("")){
       atendimentomedico.tipoSaida = "";
+    }
+    // if (rb.value.TipoSaida != "")
+    // {
+    //   if (rb.value.TipoSaida == "1") {
+    //     atendimentomedico.tipoSaida = "A";
+    //   }
+    //   if (rb.value.TipoSaida == "2") {
+    //     atendimentomedico.tipoSaida = "O";
+    // }
+    // }
+    // else{
+    //   atendimentomedico.tipoSaida = "";
+    // }
 
     if (rb.value.colModalFinAlta != "")
       atendimentomedico.dataSaida = rb.value.colModalFinAlta;
 
     if (rb.value.colModalFinObito != "")
       atendimentomedico.dataSaida = rb.value.colModalFinObito;
-   
+
+    if (this.listaAtendimentoMedicoAlergia.length > 0) {
+
+      atendimentomedico.AtendimentoMedicoAlergia = [];
+      atendimentomedico.AtendimentoMedicoAlergia = this.listaAtendimentoMedicoAlergia;
+    }
+    if (this.listaAtendimentoMedicoExame.length > 0) {
+      
+      atendimentomedico.AtendimentoMedicoExame = [];
+      atendimentomedico.AtendimentoMedicoExame = this.listaAtendimentoMedicoExame;
+    }  
+    if (this.listaAtendimentoMedicoPrescricaoReceita.length > 0) {
+
+      atendimentomedico.AtendimentoMedicoPrescricaoReceita = [];
+      atendimentomedico.AtendimentoMedicoPrescricaoReceita = this.listaAtendimentoMedicoPrescricaoReceita;
+    }
+
+
     console.log(JSON.stringify(atendimentomedico));
 
     console.log(localStorage['token_accessToken']);
 
+    
+
 
     this.atendimentomedicoservice.SalvarAtendimentoMedico(atendimentomedico).subscribe(data => {
+
 
       Toastr.success("Atendimento Médico salvo com sucesso");
 
@@ -444,7 +537,7 @@ export class AtendimentoMedicoComponent implements OnInit {
     if (this.GrupoExame !== null && this.Exame !== null) {
 
       var observacaoexame = $("input[name^=ExamesObservacao]").val();
-      //var dataexame = $("input[name^=Data/Hora]")/*.val(Date.now)*/;
+      
 
 
       var atendimentomedicoExame: AtendimentoMedicoExame = {};
@@ -452,8 +545,14 @@ export class AtendimentoMedicoComponent implements OnInit {
       atendimentomedicoExame.GrupoExame = this.GrupoExame;
       atendimentomedicoExame.Exame = this.Exame;
       atendimentomedicoExame.observacaoExame = observacaoexame.toUpperCase();
+      atendimentomedicoExame.dataExame = new Date();
+      atendimentomedicoExame.Profissional = this.Profissional;
+      
+    
 
- 
+      //atendimentomedicoExame.Profissional = localStorage.getItem('user');
+
+ //this.pessoaService.ConsultaCpfProfissional()
 
 
       //if (dataexame !== "") {
@@ -573,10 +672,10 @@ export class AtendimentoMedicoComponent implements OnInit {
 
     if (this.Medicamento !== null) {
 
+     
 
-      var receita = $('input[type=checkbox][name^=Receita]').prop("checked");
-      var prescricao = $('input[type=checkbox][name^=Prescricao]').prop("checked");
       var observacao = $('input[name^=ObservacaoMedicamento]').val();
+      var dose = $('input[name^=Dose]').val();
 
       var atendimentomedicoPrescricaoReceita: AtendimentoMedicoPrescricaoReceita = {};
 
@@ -593,13 +692,12 @@ export class AtendimentoMedicoComponent implements OnInit {
         atendimentomedicoPrescricaoReceita.GrupoMedicamento = this.GrupoMedicamento;
 
 
-
-      atendimentomedicoPrescricaoReceita.receita = receita;
-
-      atendimentomedicoPrescricaoReceita.prescricao = prescricao;
-
       atendimentomedicoPrescricaoReceita.observacao = observacao;
 
+      atendimentomedicoPrescricaoReceita.dose = dose;
+
+      atendimentomedicoPrescricaoReceita.prescricao = $("#btnPrescricao").hasClass("active");
+      atendimentomedicoPrescricaoReceita.receita = $("#btnReceita").hasClass("active");
 
       console.log(atendimentomedicoPrescricaoReceita);
 
@@ -637,12 +735,17 @@ console.log( this.listaAtendimentoMedicoPrescricaoReceita);
   onLimparCamposMedicamento() {
 
     $("input[name^=Prof_NumConselho]").val("");
+    $("input[name^=Dose]").val("");
+    $("input[name^=ExamesObservacao").val("");
+    $('input[type=checkbox][name^=Receita]').prop("unchecked");
+    $('input[type=checkbox][name^=Prescricao]').prop("unchecked");
     this.GrupoMedicamento = undefined;
     this.Medicamento = undefined;
     this.UnidadeMedicamento = undefined;
     this.ViaAdministracaoMedicamento = undefined;
     this.IntervaloMedicamento = undefined;
     this.AtendimentoMedicoPrescricaoReceita = undefined;
+
 
     $(document).ready(function () {
       $("select[name^=GrupoMedicamento]").val($("select[name^=GrupoMedicamento] option:first").val());
@@ -713,7 +816,7 @@ console.log( this.listaAtendimentoMedicoPrescricaoReceita);
     if (this.TipoAlergia !== null && this.Alergia !== null) {
 
 
-      //var datasintomas = $("input[name^=AlergiaData]").val();
+      var datasintomas = $("input[name^=AlergiaData]").val();
 
       var alergiaSituacao = $('input[type=checkbox][name^=AlergiaAtivo]').prop("checked");
 
@@ -732,11 +835,11 @@ console.log( this.listaAtendimentoMedicoPrescricaoReceita);
         atendimentomedicoAlergia.SeveridadeAlergia = this.SeveridadeAlergia;
 
 
-      //if (datasintomas !== "") {
+      if (datasintomas !== "") {
 
-      //  var data = datasintomas.split("/");
-      //  atendimentomedicoAlergia.dataSintomas = new Date(data[2] + '/' + data[1] + '/' + data[0]);
-      //}
+        var data = datasintomas.split("/");
+        atendimentomedicoAlergia.dataSintomas = new Date(data[2] + '/' + data[1] + '/' + data[0]);
+      }
 
       atendimentomedicoAlergia.alergiaSituacao = alergiaSituacao;
 
@@ -955,17 +1058,80 @@ console.log( this.listaAtendimentoMedicoPrescricaoReceita);
   }
   //end::  Carregamento do Exame pela Busca
 
+  //begin:: consulta CID/ Consulta e monta um grid com as opções
+  onConsultaCIDs(event: any) {
 
 
-  mouseEnter(){
+    if (event.target.value.length > 3) {
 
-    
-    $( "#rowmedicamento" ).prop( "data-content", 'teste' );
+      var consultaFiltro: CID = {
+
+        ConsultaCid: this.ConsultaCID,
+        nome : event.target.value,
+        ativo: true
+     };
+
+      $('#divPesquisaCID').addClass('show');
+
+      this.atendimentomedicoservice.ConsultarCIDByCapitulo(consultaFiltro)
+        .subscribe(async (data: Return) => {
+
+          console.log(data.result);
+
+          this.listaCID = data.result;
+
+        }, (error: HttpErrorResponse) => {
+          Toastr.error("Falha ao consultar o CID");
+          console.log(`Error. ${error.message}.`);
+        });
+
+
+    }
+
+  }
+  //end:: consulta CID
+
+  //begin:: carregamento padrão de campos para a tela
+  CarregaCID(cid: any) {
+
+    this.CID = cid;
+  
+    $("input[name^=CID]").val(cid.nome);
+  
+  
+  }
+  //end:: carregamento padrão de campos para a tela
+  
+  
+  //begin:: Carregamento do CID pela Busca
+  onSelectedCID(cid: CID) {
+  
+    Toastr.info("CID carregado");
+    this.CarregaMedicamento(cid);
+  
+    $("#divPesquisaCID").removeClass('show');
+      
+  }
+  //end::  Carregamento do CID pela Busca
+
+
+
+  onLoadModal(){
+
+    $(document).ready(function () {
+     
+      $("#DataHora1").val(new Date());
+     
+     });
+ 
+     $(document).ready(function () {
+      $("#colModalFinObito").val(new Date());
+     });
+
   }
 
+
 }
-
-
 
 
 

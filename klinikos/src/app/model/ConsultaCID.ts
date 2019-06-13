@@ -5,7 +5,8 @@ export interface ConsultaCID {
   capitulo?: string;
   nome?: string;
   posicao?: string;
-  ativo: boolean;
+  ordem?: number;
+  ativo?: boolean;
 
 
 }
