@@ -24,6 +24,8 @@ import { BrowserAnimationsModule} from '@angular/platform-browser/animations';
 
 import { ClassificacaoRiscoPipe } from './controller/classificacaorisco/classificacaorisco.pipe';
 import { NgxMaskModule, IConfig } from 'ngx-mask'
+import { AtendimentoMedicoComponent } from './controller/atendimentomedico/atendimentomedico.component';
+import { AtendimentoMedicoService } from './controller/atendimentomedico/atendimentomedico.service';
 
 const appRoutes: Routes = [
   { path: '', redirectTo: '/login', pathMatch: 'full' },
@@ -35,6 +37,8 @@ const appRoutes: Routes = [
       { path: 'registroboletim', component: RegistroBoletimComponent },
       { path: 'acolhimento', component: AcolhimentoComponent },
       { path: 'classificacaorisco', component: ClassificacaoRiscoComponent }
+      { path: 'classificacaorisco', component: ClassificacaoRiscoComponent },
+      { path: 'atendimentomedico', component: AtendimentoMedicoComponent }
     ]
   },
 
@@ -74,6 +78,8 @@ export const options: Partial<IConfig> | (() => Partial<IConfig>) = {};
     CpfService,
     AcolhimentoService,
     ClassificaoRiscoService
+    ClassificaoRiscoService,
+    AtendimentoMedicoService
   ],
   bootstrap: [AppComponent]
 })

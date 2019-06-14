@@ -1,0 +1,1005 @@
+ <!-- begin:: Content -->
+<div class="k-content k-grid__item k-grid__item--fluid" id="k_content">
+  <div class="row">
+    <div class="col-lg-12">
+
+      <!--begin::Form-->
+      <form class="k-form k-form--label-right clean_on" #atendimentomedico="ngForm" (ngSubmit)="onSalvarAtendimentoMedico(atendimentomedico);">
+
+        <!--begin: Portlet Main-->
+        <div class="k-portlet">
+          <div class="k-portlet__body">
+
+            <!--begin::Accordion-->
+            <div class="accordion accordion-light" id="accordionExample1">
+
+              <!--begin: Card 1 : Avaliação -->
+              <div class="card">
+                <div class="card-header" id="headingOne1">
+                  <div class="card-title" data-target="#collapseOne1" data-toggle="collapse" aria-expanded="false" aria-controls="collapseOne1">
+                    <i class="fa fa-user-md fa-fw"></i> Avaliação
+                  </div>
+
+                </div>
+                <!-- show: #accordionExample1 -->
+                <div id="collapseOne1" class="collapse show" aria-labelledby="headingOne1" data-parent="#accordionExample1" style="">
+
+                    <div class="card-body">
+
+                      <!--begin::Portlet 1-->
+                      <div class="k-portlet">
+                        <!--
+        <div class="k-portlet__head">
+            <div class="k-portlet__head-label">
+                <h3 class="k-portlet__head-title">
+                    Atendimento Médico
+                </h3>
+            </div>
+        </div>
+        -->
+
+                        <div class="k-portlet__body p-1">
+                          <div class="form-group row">
+                            <div class="col-lg-12">
+                              <label>Anamnese <span class="fld-obg" title="Obrigatório">*</span></label>
+                              <textarea class="form-control rn" name="AM_Anamnese" rows="4" ngModel></textarea>
+                              <span class="form-text text-danger cm oculta">Message Error</span>
+                            </div>
+                          </div>
+
+                          <div class="form-group row">
+                            <div class="col-lg-3">
+                              <label>Possui Alergia? <span class="fld-obg" title="Obrigatório">*</span></label>
+                              <select class="form-control" name="PossuiAlergia" id="PossuiAlergia" [(ngModel)]="PossuiAlergia" (change)="onPossuiAlergia()">
+                                <option value="-1">-- Selecione --</option>
+                                <option *ngFor="let possuialergia of ListaPossuiAlergia" [ngValue]="possuialergia">{{possuialergia.descricao}}</option>
+                              </select>
+                              <span class="form-text text-danger cm oculta">Message Error</span>
+                            </div>
+                          </div>
+
+                        </div>
+
+                      </div>
+                      <!--end::Portlet 1-->
+
+                    </div>
+                  </div>
+                </div>
+              <!--end: Card 1 -->
+              <!--begin: Card 3 : Alergia -->
+              <div class="card oculta" id="AlergiaCardAM">
+                <!-- scroll anchor -->
+                <a id="boxAlergiaScroll"></a>
+
+                <div class="card-header" id="headingOne2">
+                  <div class="card-title" data-toggle="#collapseOne2" data-target="collapse" aria-expanded="true" aria-controls="collapseOne2">
+                      <i class="fa fa-allergies fa-fw"></i> Alergia
+                    </div>
+                  </div>
+                <div id="collapseOne2" class="collapse" aria-labelledby="headingOne2" data-parent="#accordionExample1" style="">
+                    <div class="card-body">
+
+                      <!--begin::Portlet 1-->
+                      <div class="k-portlet">
+                        <!--
+        <div class="k-portlet__head">
+            <div class="k-portlet__head-label">
+                <h3 class="k-portlet__head-title">Alergia</h3>
+            </div>
+        </div>
+        -->
+                        <div class="k-portlet__body p-1">
+
+                          <div class="form-group row">
+                            <div class="col-lg-4">
+                              <label>Tipo de Alergia <span class="fld-obg" title="Obrigatório">*</span></label>
+                              <select class="form-control" name="TipoAlergia" tabindex="12" [(ngModel)]="TipoAlergia">
+                                <option value="">-- Selecione --</option>
+                                <option *ngFor="let tipoAlergia of listaTipoAlergia | orderBy: orderDescricao" [ngValue]="tipoAlergia">{{tipoAlergia.descricao}}</option>
+                              </select>
+                              <span class="form-text text-danger cm oculta">Message Error</span>
+                            </div>
+                            <div class="col-lg-4">
+                              <label>Alergia <span class="fld-obg" title="Obrigatório">*</span></label>
+                              <select class="form-control" name="Alergia" [(ngModel)]="Alergia">
+                                <option value="">-- Selecione --</option>
+                                <option *ngFor="let alergia of listaAlergia | orderBy: orderNome" [ngValue]="alergia">{{alergia.nome}}</option>
+                              </select>
+                              <span class="form-text text-danger cm oculta">Message Error</span>
+                            </div>
+                            <div class="col-lg-4">
+                              <label>Localização</label>
+                              <select class="form-control" name="LocalizacaoAlergia" [(ngModel)]="LocalizacaoAlergia">
+                                <option value="">-- Selecione --</option>
+                                <option *ngFor="let localizacaoalergia of listaLocalizacaoAlergia | orderBy: orderNome" [ngValue]="localizacaoalergia">{{localizacaoalergia.nome}}</option>
+                              </select>
+                              <span class="form-text text-danger cm oculta">Message Error</span>
+                            </div>
+                          </div>
+
+                          <div class="form-group row">
+                            <div class="col-lg-4">
+                              <label>Reação</label>
+                              <select class="form-control" name="ReacaoAlergia" [(ngModel)]="ReacaoAlergia">
+                                <option value="">-- Selecione --</option>
+                                <option *ngFor="let reacaoalergia of listaReacaoAlergia | orderBy: orderDescricao" [ngValue]="reacaoalergia">{{reacaoalergia.descricao}}</option>
+                              </select>
+                              <span class="form-text text-danger cm oculta">Message Error</span>
+                            </div>
+                            <div class="col-lg-4">
+                              <label>Severidade</label>
+                              <select class="form-control" name="SeveridadeAlergia" [(ngModel)]="SeveridadeAlergia">
+                                <option value="">-- Selecione --</option>
+                                <option *ngFor="let severidadeAlergia of listaSeveridadeAlergia | orderBy: orderNome" [ngValue]="severidadeAlergia">{{severidadeAlergia.nome}}</option>
+                              </select>
+                              <span class="form-text text-danger cm oculta">Message Error</span>
+                            </div>
+                            <div class="col-lg-2">
+                              <label>Data dos Sintomas</label>
+                              <input type="text" class="form-control mask_data" name="AlergiaData" placeholder="00/00/0000" ngModel>
+                              <span class="form-text text-danger  cm oculta">Message Error</span>
+                            </div>
+                            <div class="col-lg-2 pt-1">
+                              <label class="d-block">&nbsp;</label>
+                              <button type="button" class="btn btn-success" (click)="onAdicionaAlergia()" id="btnAddNovaAlergia"><i class="fa fa-plus"></i>Adicionar</button>
+                            </div>
+                          </div>
+                          <!--
+          <div class="form-group row">
+            <div class="col">
+              <button type="button" class="btn btn-sm btn-success"><i class="fa fa-plus fa-fw"></i> Adicionar</button>
+            </div>
+          </div>
+          -->
+
+                          <div class="form-group row">
+                            <div class="col">
+                              <table class="table">
+                                <thead class="thead-light">
+                                  <tr class="text-center">
+                                    <th>Alergia</th>
+                                    <th>Localização</th>
+                                    <th>Reação</th>
+                                    <th>Severidade</th>
+                                    <th>Data</th>
+                                    <th>Ativo</th>
+                                    <th colspan="2">Ações</th>
+                                  </tr>
+                                </thead>
+                                <!-- <tbody> -->
+                                <!-- <tr class="text-center"> -->
+                                <!-- <td>Bactrim</td> -->
+                                <!-- <td>Pele</td> -->
+                                <!-- <td>Coceira</td> -->
+                                <!-- <td>Suave</td> -->
+                                <!-- <td>25/04/2019</td> -->
+                                <!-- <td> -->
+                                <!-- <label class="k-checkbox k-checkbox--brand"> -->
+                                <!-- <!-- Ao inserir um novo registro de Alergia, o campo Ativo já deverá vir marcado --> -->
+                                <!-- <input type="checkbox" checked name="AlergiaAtivo"><span></span> -->
+                                <!-- </label> -->
+                                <!-- </td> -->
+                                <!-- <td><a href="#"><i class="fa fa-pen fa-fw" title="Editar"></i></a></td> -->
+                                <!-- <td><a href="#"><i class="fa fa-trash fa-fw" title="Excluir"></i></a></td> -->
+                                <!-- </tr> -->
+                                <!-- </tbody> -->
+                                <tbody id="tableAlergia" *ngFor="let item of listaAtendimentoMedicoAlergia; let i = index">
+
+                                  <tr class="text-center" id="row{{i}}">
+                                    <td>{{ item.Alergia? item.Alergia.nome: '' }}</td>
+                                    <td>{{ item.LocalizacaoAlergia? item.LocalizacaoAlergia.nome: '' }}</td>
+                                    <td>{{ item.ReacaoAlergia? item.ReacaoAlergia.descricao: '' }}</td>
+                                    <td>{{ item.SeveridadeAlergia? item.SeveridadeAlergia.nome: '' }}</td>
+                                    <td>{{ item.dataSintomas | date: 'dd/MM/yyyy'}}</td>
+                                    <!-- <td>{{ item.alergiaSituacao === true? 'Ativo': 'Inativa'}}</td> -->
+                                    <!--<td>
+                      <label class="k-checkbox k-checkbox--bold">
+                        <input type="checkbox" class="form-control" name="Prof_Ativo" id="ckativo{{i}}" [checked]="item.ativo"> <span></span>
+                      </label>
+                    </td>-->
+                                    <td id="lotacaoActions">
+                                      <button class="btn p-2 border-0 btn-sm btn-outline-secondary" type="button" title="Editar"><i class="fa fa-pen fa-fw" (click)="onEditarAlergia(item)"></i></button>
+                                      <button class="btn p-2 border-0 btn-sm btn-outline-secondary" name="btn_excluir_lotacao" type="button" title="Editar" (click)="onExibeMensagemExcluir(item)"><i class="fa fa-trash fa-fw"></i></button>
+                                    </td>
+                                  </tr>
+                                </tbody>
+                              </table>
+                            </div>
+                          </div>
+
+                        </div>
+                      </div>
+                      <!--end::Portlet 1-->
+
+                    </div>
+                  </div>
+                </div>
+              <!--end: Card 3 -->
+              <!--begin: Card 2 : Exame Físico -->
+              <div class="card">
+                <div class="card-header" id="headingOne3">
+                  <div class="card-title" data-target="#collapseOne3" data-toggle="collapse" aria-expanded="false" aria-controls="collapseOne3">
+                    <i class="fa fa-stethoscope fa-fw"></i> Exame Físico
+                  </div>
+                </div>
+                <!-- show -->
+
+                  <div id="collapseOne3" class="collapse show" aria-labelledby="headingOne3" data-parent="#accordionExample1" style="">
+                    <div class="card-body">
+
+                      <!--begin::Portlet 1-->
+                      <div class="k-portlet">
+                        <!--
+                                      <div class="k-portlet__head">
+                                          <div class="k-portlet__head-label">
+                                              <h3 class="k-portlet__head-title">
+          Exame Físico
+                                              </h3>
+                                          </div>
+                                      </div>
+                                      -->
+                        <div class="k-portlet__body p-1">
+
+                          <div class="form-group row mb-0 pb-0">
+                            <div class="col-lg-6">
+                              <label>Peso, Altura, IMC</label>
+                              <div class="input-group-lg">
+                                <div class="input-group-prepend">
+                                  <input type="text" class="form-control sn w-25" name="AM_Peso" id="SV_Peso" placeholder="(kg)" maxlength="5" ngModel>
+                                  <input type="text" class="form-control sn w-25" name="AM_Altura" id="SV_Altura" placeholder="(cm)" maxlength="4" ngModel>
+                                  <input type="text" class="form-control ch w-100" name="AM_IMC" id="SV_IMC" placeholder="IMC" data-content="" data-toggle="popover" data-placement="top" data-trigger="hover" style="background:#E9E8E8;" readonly ngModel>
+                                </div>
+                                <div class="form-text text-danger" style="height:15px !important;"><span class="oculta cm">Message Error</span></div>
+                              </div>
+                            </div>
+                            <div class="col-lg-2 pb-3">
+                              <label>Temperatura (&deg;C)</label>
+                              <input type="text" class="form-control" name="AM_Temperatura" id="SV_Temperatura" maxlength="3" ngModel>
+                              <span class="form-text text-info oculta cm" id="msg_temp_a">Indicado valores entre 35º à 40º</span>
+                              <span class="form-text text-danger oculta cm" id="msg_temp_b">Não permitido menor que 33º e maior que 45º</span>
+                            </div>
+                            <div class="col-lg-2 pb-3">
+                              <label>Saturação O2 (%)</label>
+                              <input type="text" class="form-control" name="AM_Saturacao" id="SV_Saturacao" maxlength="3" ngModel>
+                              <span class="form-text text-info oculta cm" id="msg_sat_a">Indicado valor acima de 85%</span>
+                              <span class="form-text text-danger oculta cm" id="msg_sat_b">Não permitido maior que 100%</span>
+                            </div>
+                            <div class="col-lg-2 pb-3">
+                              <label>Freq. Resp. (rpm)</label>
+                              <input type="text" class="form-control sn" name="AM_FreqResp" id="SV_FreqResp" maxlength="2" ngModel>
+                              <span class="form-text text-info oculta cm" id="msg_freqresp_a">Indicado valores entre 12 e 60 (rpm)</span>
+                              <span class="form-text text-danger oculta cm" id="msg_freqresp_b">Não permitido menor que 10 e maior que 66</span>
+                            </div>
+                          </div>
+
+                          <div class="form-group row">
+                            <div class="col-lg-4 col-md-12 pb-3">
+                              <label>Pressão Arterial</label>
+                              <div class="input-group-lg">
+                                <div class="input-group-prepend">
+                                  <input type="text" class="form-control sn" name="AM_PressaoArterial_Sistolica" id="SV_PressaoArterial_Sistolica" maxlength="3" placeholder="Sistólica" ngModel>
+                                  <input type="text" class="form-control sn" name="AM_PressaoArterial_Diastolica" id="SV_PressaoArterial_Diastolica" maxlength="3" placeholder="Diastólica" ngModel>
+                                </div>
+                              </div>
+                              <span class="form-text text-info oculta cm" id="msg_pa1_a"><b>Sistólica:</b> Indicado valores entre 60 à 180</span>
+                              <span class="form-text text-danger oculta cm" id="msg_pa1_b"><b>Sistólica:</b> Não permitido menor que 50 e maior que 250</span>
+
+                              <span class="form-text text-info oculta cm" id="msg_pa2_a"><b>Diastólica:</b> Indicado valores entre 30 à 110</span>
+                              <span class="form-text text-danger oculta cm" id="msg_pa2_b"><b>Diastólica:</b> Não permitido menor que 20 e maior que 160</span>
+                            </div>
+
+                            <div class="col-lg-2">
+                              <label>Pulso (bpm)</label>
+                              <input type="text" class="form-control sn" name="AM_Pulso" id="SV_Pulso" maxlength="3" ngModel>
+                              <span class="form-text text-info oculta cm" id="msg_pulso_a">Indicado valores entre 60 à 120</span>
+                              <span class="form-text text-danger oculta cm" id="msg_pulso_b">Não permitido menor que 40 e maior que 150</span>
+                            </div>
+
+                            <div class="col-lg-2">
+                              <label class="d-block">&nbsp;</label>
+                              <button type="button" class="btn btn-success" data-toggle="popover" data-placement="top" data-trigger="hover" data-content="Capturar Sinais Vitais"><i class="fa fa-heartbeat fa-fw"></i> Capturar</button>
+                            </div>
+                          </div>
+
+                          <div class="form-group row">
+                            <div class="col-lg-12">
+                              <label>Observações</label>
+                              <textarea class="form-control rn" rows="4" name="Observacoes" ngModel></textarea>
+                            </div>
+                          </div>
+
+                        </div>
+
+                      </div>
+                      <!--end::Portlet 1-->
+
+                    </div>
+                  </div>
+                </div>
+                <!--end: Card 2 -->
+                <!--begin: Card 4 : Diagnóstico -->
+                <div class="card">
+                  <div class="card-header" id="headingOne4">
+                    <div class="card-title" data-target="#collapseOne4" data-toggle="collapse" aria-expanded="false" aria-controls="collapseOne4">
+                      <i class="fa fa-diagnoses fa-fw"></i> Diagnóstico
+                    </div>
+                  </div>
+                  <!-- show -->
+                  <div id="collapseOne4" class="collapse show" aria-labelledby="headingOne4" data-parent="#accordionExample1" style="">
+                    <div class="card-body">
+
+                      <!--begin::Portlet 1-->
+                      <div class="k-portlet">
+                        <!--
+          <div class="k-portlet__head">
+              <div class="k-portlet__head-label">
+                  <h3 class="k-portlet__head-title">
+                      Diagnóstico
+                  </h3>
+              </div>
+          </div>
+          -->
+                          <div class="k-portlet__body p-1">
+                           <div class="form-group row">
+                             <div class="col-lg-12">
+                               <label>Suspeita Diagnóstica <span class="fld-obg" title="Obrigatório">*</span></label>
+                               <textarea class="form-control rn" name="SuspeitaDiagnostica" rows="4" ngModel></textarea>
+                               <span class="form-text text-danger cm oculta">Message Error</span>
+                              </div>
+                           </div>
+
+                            <div class="form-group row">
+                              <div class="col-lg-12">
+                                <label>CID - Capítulos <span class="fld-obg" title="Obrigatório">*</span></label>
+                                  <select class="form-control custom-select"  name="ConsultaCID" [(ngModel)]="ConsultaCID">
+                                    <option value="">-- Selecione --</option>
+                                    <option *ngFor="let consultacid of listaConsultaCID | orderBy: orderOrdem" [ngValue]="consultacid">{{consultacid.capitulo}} - {{consultacid.nome}}, {{consultacid.posicao}}</option>                                  
+                                  </select>
+                                 <span class="form-text text-danger cm oculta">Message Error</span>
+                             </div>
+
+														  <div class="col-lg-12 mt-3">
+															  <label>CID <span class="fld-obg" title="Obrigatório">*</span></label>
+															  <input type="text" class="form-control maisc" name="CID" placeholder="Informe o CID" [(ngModel)]="CID" (keyup)="onConsultaCIDs($event)" ngModel>
+                              <!--<span class="form-text text-danger cm oculta">Message Error</span>-->
+                              <div class="dropdown-menu dropdown-menu-fit dropdown-menu-right dropdown-menu-top-unround dropdown-menu-anim dropdown-menu-lg" x-placement="bottom-end" style="position: absolute; left: 10px;  width: 95%; will-change: transform; top: 65px;" id="divPesquisaCID">
+                                <div class="k-quick-search k-quick-search--dropdown k-quick-search--result-compact k-quick-search--has-result" id="k_quick_search_dropdown">
+                                  <div class="k-quick-search__wrapper k-scroll ps ps--active-y m-0 p-0" data-scroll="true" data-height="325" data-mobile-height="200" style="overflow: hidden; height: 325px;">
+                                    <!--begin::k-quick-search__result-->
+                                    <div class="k-quick-search__result">
+
+                                      <div class="k-quick-search__category border-bottom text-primary">CID</div>
+                                      <div class="k-quick-search__section p-0 mb-1" *ngFor="let cid of listaCID"> 
+                                        <div class="k-quick-search__item">
+                                          <div class="k-quick-search__item-wrapper">
+                                            <a class="k-quick-search__item-title" style="cursor:pointer;" (click)="onSelectedCID(cid)">
+                                              {{cid.codigo}} - {{cid.nome}}
+                                            </a>
+                                          </div>
+                                        </div>
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                             </div>
+                            </div>
+
+                          <div class="form-group row">
+                            <style type="text/css">
+                              /* Botões Auxiliares Fixos : Opções de Diagnóstico */
+                              .k-sticky-toolbar__item--demo-toggle a {
+                                color: #fff !important;
+                                font-weight: normal !important;
+                                letter-spacing: 0 !important;
+                                font-size: 1em !important;
+                              }
+
+                              .k-sticky-toolbar__item--demo-toggle a {
+                                cursor: default !important;
+                                background: transparent !important;
+                              }
+
+                              .btn-conduta a:hover {
+                                background: #c9c9c9 !important;
+                              }
+                            </style>
+                            <!-- Botões Auxiliares Fixos : Opções de Diagnóstico -->
+                            <ul class="k-sticky-toolbar" style="margin-top:10px; background:rgba(60, 60, 60, 0.5);">
+                              <li class="k-sticky-toolbar__item k-sticky-toolbar__item--demo-toggle"> <a href="javascript:void(0);">Condutas</a> </li>
+                              <li id="btnAuxExames" class="k-sticky-toolbar__item k-sticky-toolbar__item btn-conduta cp" data-toggle="k-tooltip" title="Exames" data-placement="left" data-original-title="Exames">
+                                <a><i class="fa fa-prescription fa-fw"></i></a>
+                              </li>
+                              <li id="btnAuxPrescricao" class="k-sticky-toolbar__item k-sticky-toolbar__item btn-conduta cp" data-toggle="k-tooltip" title="Prescrição ou Receita" data-placement="left" data-original-title="Prescrição ou Receita">
+                                <a><i class="fa fa-pills fa-fw"></i></a>
+                              </li>
+                              <li id="btnAuxAtestado" class="k-sticky-toolbar__item k-sticky-toolbar__item btn-conduta cp" data-toggle="k-tooltip" title="Atestado" data-placement="left" data-original-title="Atestado">
+                                <a><i class="fa fa-notes-medical fa-fw"></i></a>
+                              </li>
+                            </ul>
+
+                            <div class="col-lg-6">
+                              <label class="d-block text-left">Conduta</label>
+                              <div class="btn-group btn-group-toggle" data-toggle="buttons">
+                                <label class="btn btn-outline-dark cp clear" id="CondutaExames">
+                                  <input type="checkbox" name="Conduta" autocomplete="off" value="" ngModel> Exames
+                                </label>
+                                <label class="btn btn-outline-dark cp clear" id="CondutaPrescricao">
+                                  <input type="checkbox" name="Conduta" autocomplete="off" value="" ngModel> Prescrição / Receita
+                                </label>
+                                <label class="btn btn-outline-dark cp clear" id="CondutaAtestado">
+                                  <input type="checkbox" name="Conduta" autocomplete="off" value="" ngModel> Atestado
+                                </label>
+                              </div>
+                              <span class="form-text text-danger cm oculta">Message Error</span>
+                            </div>
+                          </div>
+                        </div>
+
+                      </div>
+                      <!--end::Portlet 1-->
+
+                    </div>
+                  </div>
+                </div>
+                <!--end: Card 4 -->
+                <!--begin: Card 5 : Diagnóstico > Exames -->
+                <div class="card cacc oculta" id="boxExames">
+                  <!-- scroll anchor -->
+                  <a id="boxExamesScroll"></a>
+
+                  <div class="card-header" id="headingOne5">
+                    <div class="card-title" data-target="#collapseOne5" data-toggle="collapse" aria-expanded="false" aria-controls="collapseOne5">
+                      <i class="fa fa-prescription fa-fw"></i> Diagnóstico > Exames
+                    </div>
+                  </div>
+                  <!-- show -->
+                  <div id="collapseOne5" class="collapse" aria-labelledby="headingOne5" data-parent="#accordionExample1" style="">
+                    <div class="card-body">
+
+                      <!--begin::Portlet 1-->
+                      <div class="k-portlet">
+                        <!--
+          <div class="k-portlet__head">
+              <div class="k-portlet__head-label">
+                  <h3 class="k-portlet__head-title">
+                      Conduta > Exames
+                  </h3>
+              </div>
+          </div>
+          -->
+                        <div class="k-portlet__body p-1">
+
+                          <div class="form-group row">
+                            <div class="col-lg-6 pb-3">
+                              <label>Grupo de Exames</label>
+                              <select class="form-control" name="GrupoExame" [(ngModel)]="GrupoExame" >
+                                <option value="">-- Selecione --</option>
+                                <option *ngFor="let grupoexame of listaGrupoExame | orderBy: orderNome" [ngValue]="grupoexame">{{grupoexame.nome}}</option>
+                              </select>
+                              <span class="form-text text-danger cm oculta">Message Error</span>
+                            </div>
+
+                            <div class="col-lg-6 pb-3">
+                              <label>Exame <span class="fld-obg" title="Obrigatório">*</span></label>
+                              <input type="text" class="form-control maisc" name="Exames" placeholder="Informe o exame" (keyup)="onConsultaExame()" ngModel>
+                              <!--<span class="form-text text-danger cm oculta">Message Error</span>-->
+                              <div class="dropdown-menu dropdown-menu-fit dropdown-menu-right dropdown-menu-top-unround dropdown-menu-anim dropdown-menu-lg" x-placement="bottom-end" style="position: absolute; left: 10px;  width: 95%; will-change: transform; top: 65px;" id="divPesquisaExame">
+                                <div class="k-quick-search k-quick-search--dropdown k-quick-search--result-compact k-quick-search--has-result" id="k_quick_search_dropdown">
+                                  <div class="k-quick-search__wrapper k-scroll ps ps--active-y m-0 p-0" data-scroll="true" data-height="325" data-mobile-height="200" style="overflow: hidden; height: 325px;">
+                                    <!--begin::k-quick-search__result-->
+                                    <div class="k-quick-search__result">
+
+                                      <div class="k-quick-search__category border-bottom text-primary">Exames</div>
+                                      <div class="k-quick-search__section p-0 mb-1" *ngFor="let exame of listaExame;">
+                                        <div class="k-quick-search__item">
+                                          <div class="k-quick-search__item-wrapper">
+                                            <a class="k-quick-search__item-title" style="cursor:pointer;" (click)="onSelectedExame(exame)">
+                                              {{exame.nome}}
+                                            </a>
+                                          </div>
+                                        </div>
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+
+                          <div class="form-group row">
+                            <div class="col-lg-10 pb-3">
+                              <label>Observação</label>
+                              <input type="text" class="form-control" name="ExamesObservacao" ngModel>
+                              <span class="form-text text-danger cm oculta">Message Error</span>
+                            </div>
+                            <div class="col">
+                              <label class="d-block text-left">&nbsp;</label>
+                              <button type="button" class="btn btn-metal" data-toggle="popover" data-placement="top" data-trigger="hover" data-content="Adicionar um novo exame" (click)="onAdicionaExame()" id="btnAddNovoExame"><i class="fa fa-plus fa-fw"></i>Adicionar</button>
+                              <button type="button" class="btn btn-metal oculta" data-toggle="popover" data-placement="top" data-trigger="hover" data-content="Cancelar a edição da lotação" style="float: right;" (click)="onLimparCamposExame()" id="btnCancelarExame"><i class="fa fa-plus"></i>Cancelar</button>
+                            </div>
+                          </div>
+                         
+
+                          <div class="form-group row">
+                            <div class="col">
+                              <table class="table">
+                                <thead class="thead-light">
+                                  <tr class="text-center">
+                                    <th>Obs.</th>
+                                    <th>Tipo de Solicitação</th>
+                                    <th>Descrição</th>
+                                    <th>Data/Hora</th>
+                                    <th>Profissional</th>
+                                    <th colspan="2">Ações</th>
+                                  </tr>
+                                </thead>
+                                <!-- <tbody> -->
+                                <!-- <tr class="text-center"> -->
+                                <!-- <td>Bactrim</td> -->
+                                <!-- <td>Pele</td> -->
+                                <!-- <td>Coceira</td> -->
+                                <!-- <td>Suave</td> -->
+                                <!-- <td>25/04/2019</td> -->
+                                <!-- <td> -->
+                                <!-- <label class="k-checkbox k-checkbox--brand"> -->
+                                <!--  Ao inserir um novo registro de Exame, o campo Ativo já deverá vir marcado --> 
+                                <!-- <input type="checkbox" checked name="ExameAtivo"><span></span> -->
+                                <!-- </label> -->
+                                <!-- </td> -->
+                                <!-- <td><a href="#"><i class="fa fa-pen fa-fw" title="Editar"></i></a></td> -->
+                                <!-- <td><a href="#"><i class="fa fa-trash fa-fw" title="Excluir"></i></a></td> -->
+                                <!-- </tr> -->
+                                <!-- </tbody> -->
+                                <tbody id="tableExame" *ngFor="let item of listaAtendimentoMedicoExame; let i = index">
+
+                                  <tr class="text-center" id="row{{i}}">
+                                    <td>{{ item.observacaoExame }}</td>
+                                    <td>{{ item.GrupoExame? item.GrupoExame.nome.substr(0,50) : '' }}</td>
+                                    <td>{{ item.Exame? item.Exame.nome: '' }}</td>
+                                    <td>{{ item.dataExame | date: 'dd/MM/yyyy' }}</td>
+                                    <td>{{ item.Profissional.nomeCompleto }}</td>
+                                    
+                                    <!--<td>
+        <label class="k-checkbox k-checkbox--bold">
+          <input type="checkbox" class="form-control" name="Prof_Ativo" id="ckativo{{i}}" [checked]="item.ativo"> <span></span>
+        </label>
+      </td>-->
+                                    <td id="lotacaoActions">
+                                      <button class="btn p-2 border-0 btn-sm btn-outline-secondary" type="button" title="Editar"><i class="fa fa-pen fa-fw" (click)="onEditarExame(item)"></i></button>
+                                      <button class="btn p-2 border-0 btn-sm btn-outline-secondary" name="btn_excluir_lotacao_exame" type="button" title="Editar" (click)="onExibeMensagemExcluirExame(item)"><i class="fa fa-trash fa-fw"></i></button>
+                                    </td>
+                                  </tr>
+                                </tbody>
+                              </table>
+                            </div>
+                          </div>
+
+                           <!--begin:Modal Exame Observação -->
+                           <div class="modal fade show" id="modalExameObservacao" tabindex="-1" role="dialog" aria-labelledby="modalExameObservacaoTitle" aria-modal="true">
+                              <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable" role="document">
+                                  <div class="modal-content">
+                                      <div class="modal-header">
+                                          <h5 class="modal-title" id="modalExameObservacaoTitle">
+                                              Ácido Cítrico - Urina 24HS - CIT
+                                          </h5>
+                                          <button type="button" class="close" data-dismiss="modal" aria-label="Close"> <span aria-hidden="true">×</span> </button>
+                                      </div>
+                                      <div class="modal-body">
+                                          <div class="k-scroll ps ps--active-y" data-scroll="true" style="height:350px; overflow:hidden;">
+                                              <p>Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum.</p>
+                                              <p>Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum.</p>
+                                              <p>Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum.</p>
+                                              <p>Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum.</p>
+                                              <p>Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum.</p>
+                                          </div>
+                                      </div>
+                                      <div class="modal-footer">
+                                          <button type="button" class="btn btn-metal" data-dismiss="modal">Fechar</button>
+                                      </div>
+                                  </div>
+                              </div>
+                          </div>
+                          <!--end:Modal Exame Observação -->
+
+
+                          <div class="form-group row">
+                            <div class="col-lg-12 text-right">
+                              <button type="button" class="btn btn-sm btn-metal"><i class="fa fa-print fa-fw"></i> Imprimir</button>
+                            </div>
+                          </div>
+
+                        </div>
+
+                      </div>
+                      <!--end::Portlet 1-->
+
+                    </div>
+                  </div>
+                </div>
+                <!--end: Card 5 -->
+                <!--begin: Card 6 : Diagnóstico > Prescrição e Receita -->
+                <div class="card cacc oculta" id="boxPrescricaoReceita">
+                  <!-- scroll anchor -->
+                  <a id="boxPrescricaoReceitaScroll"></a>
+
+                  <div class="card-header" id="headingOne6">
+                    <div class="card-title" data-target="#collapseOne6" data-toggle="collapse" aria-expanded="false" aria-controls="collapseOne6">
+                      <i class="fa fa-pills fa-fw"></i> Diagnóstico > Prescrição ou Receita
+                    </div>
+                  </div>
+                  <!-- show -->
+                  <div id="collapseOne6" class="collapse" aria-labelledby="headingOne6" data-parent="#accordionExample1" style="">
+                    <div class="card-body">
+
+                      <!--begin::Portlet 1-->
+                      <div class="k-portlet">
+                        <!--
+          <div class="k-portlet__head">
+              <div class="k-portlet__head-label">
+                  <h3 class="k-portlet__head-title">
+                     Diagnóstico > Conduta > Prescrição e Receita
+                  </h3>
+              </div>
+          </div>
+          -->
+                        <div class="k-portlet__body p-1">
+
+                          <div class="form-group row mb-3">
+                            <div class="col-lg-6 pb-3">
+                              <label class="d-block text-left">Tipo <span class="fld-obg" title="Obrigatório">*</span></label>
+
+                              <div class="btn-group btn-group-toggle" data-toggle="buttons">
+                                <label class="btn btn-outline-dark cp pr-4 pl-4" id="btnPrescricao">
+                                  <input type="radio" name="Prescrição" autocomplete="off" ngModel> Prescrição
+                                </label> 
+                                <label class="btn btn-outline-dark cp pr-5 pl-5" id="btnReceita">
+                                  <input type="radio" name="Receita" autocomplete="off" ngModel> Receita
+                                </label>
+                              </div>
+                              <span class="form-text text-danger cm oculta">Message Error</span>
+                            </div>
+
+                            <div class="col-lg-6 pb-3">
+                              <label>Modelo <span class="fld-obg" title="Obrigatório">*</span></label>
+                              <select name="PR_Modelo" class="form-control" [(ngModel)]="ModeloPrescricaoReceitaDetalhe">
+                                <option value="">-- Selecione --</option>
+                                <option *ngFor="let modeloprescricaoreceitadetalhe of listaModeloPrescricaoReceitaDetalhe | orderBy: orderNome" [ngValue]="modeloprescricaoreceitadetalhe">{{modeloprescricaoreceitadetalhe.modeloprescricaoreceita.nome}}</option>
+                              </select>
+                              <span class="form-text text-danger cm oculta">Message Error</span>
+                            </div>
+                          </div>
+
+                          <div class="form-group row mb-3">
+                            <div class="col-lg-6 pb-3">
+                              <label>Grupo</label>
+                              <select name="M_Grupo" class="form-control" [(ngModel)]="GrupoMedicamento" >
+                                <option value="">-- Selecione --</option>
+                                <option *ngFor="let grupomedicamento of listaGrupoMedicamento | orderBy: orderNome" [ngValue]="grupomedicamento">{{grupomedicamento.grupomedicamentodetalhe.nome}}</option>
+                              </select>
+                              <span class="form-text text-danger cm oculta">Message Error</span>
+                            </div>
+
+                            <div class="col-lg-6 pb-3">
+                              <label>Medicamento <span class="fld-obg" title="Obrigatório">*</span></label>
+                              <input type="text" class="form-control maisc" name="Medicamentos" placeholder="Informe o medicamento" (keyup)="onConsultaMedicamento()" ngModel>
+                              <!--<span class="form-text text-danger cm oculta">Message Error</span>-->
+                              <div class="dropdown-menu dropdown-menu-fit dropdown-menu-right dropdown-menu-top-unround dropdown-menu-anim dropdown-menu-lg" x-placement="bottom-end" style="position: absolute; left: 10px;  width: 95%; will-change: transform; top: 65px;" id="divPesquisaMedicamento">
+                                <div class="k-quick-search k-quick-search--dropdown k-quick-search--result-compact k-quick-search--has-result" id="k_quick_search_dropdown">
+                                  <div class="k-quick-search__wrapper k-scroll ps ps--active-y m-0 p-0" data-scroll="true" data-height="325" data-mobile-height="200" style="overflow: hidden; height: 325px;">
+                                    <!--begin::k-quick-search__result-->
+                                    <div class="k-quick-search__result">
+
+                                      <div class="k-quick-search__category border-bottom text-primary">Medicamentos</div>
+                                      <div class="k-quick-search__section p-0 mb-1" *ngFor="let medicamento of listaMedicamento;">
+                                        <div class="k-quick-search__item">
+                                          <div class="k-quick-search__item-wrapper">
+                                            <a class="k-quick-search__item-title" style="cursor:pointer;" (click)="onSelectedMedicamento(medicamento)">
+                                              {{medicamento.nome}}
+                                            </a>
+                                          </div>
+                                        </div>
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+
+                          <div class="form-group row mb-3">
+                            <div class="col-lg-3 pb-3">
+                              <label>Dose</label>
+                              <input type="text" class="form-control" name="Dose" placeholder="" ngModel>
+                              <span class="form-text text-danger cm oculta">Message Error</span>
+                            </div>
+                            <div class="col-lg-3 pb-3">
+                              <label>Via Administração</label>
+                              <select name="M_Via_Administracao" class="form-control" [(ngModel)]="ViaAdministracaoMedicamento" >
+                                <option value="">-- Selecione --</option>
+                                <option *ngFor="let viaadministracaomedicamento of listaViaAdministracaoMedicamento | orderBy: orderDescricao" [ngValue]="viaadministracaomedicamento">{{viaadministracaomedicamento.descricao}}</option>
+                              </select>
+                              <span class="form-text text-danger cm oculta">Message Error</span>
+                            </div>
+                            <div class="col-lg-3 pb-3">
+                              <label>Unidade</label>
+                              <select name="M_Unidade" class="form-control" [(ngModel)]="UnidadeMedicamento" >
+                                <option value="">-- Selecione --</option>
+                                <option *ngFor="let unidademedicamento of listaUnidadeMedicamento | orderBy: orderDescricao" [ngValue]="unidademedicamento">{{unidademedicamento.descricao}}</option>
+                              </select>
+                              <span class="form-text text-danger cm oculta">Message Error</span>
+                            </div>
+                            <div class="col-lg-3 pb-3">
+                              <label>Intervalo</label>
+                              <select class="form-control" name="M_Intervalo">
+                                <option value="">-- Selecione --</option>
+                              </select>
+                              <span class="form-text text-danger cm oculta">Message Error</span>
+                            </div>
+                          </div>
+
+                          <div class="form-group row mb-3">
+                            <div class="col-lg-9 pb-3">
+                              <label>Observação</label>
+                              <input type="text" class="form-control" name="ObservacaoMedicamento" ngModel>
+                              <span class="form-text text-danger cm oculta">Message Error</span>
+                            </div>
+                            <div class="col-lg-2 pb-3">
+                              <label class="d-block text-left">&nbsp;</label>
+                              <button type="button" class="btn btn-metal" (click)="onAdicionaMedicamento()" id="btnAddNovoMedicamento"><i class="fa fa-plus fa-fw"></i>Adicionar</button>
+                            </div>
+                          </div>
+                          
+                          <div class="form-group row mb-1">
+                            <div class="col">
+                              <table class="table">
+                                <thead class="thead-light">
+                                  <tr class="text-center">
+                                    <th>Obs.</th>
+                                    <th>Tipo de Medicamento</th>
+                                    <th>Dose</th>
+                                    <th>Unidade</th>
+                                    <th>Via Administração</th>
+                                    <th>Intervalo</th>
+                                    <th colspan="2">Ações</th>
+                                   
+                                  </tr>
+                                </thead>
+                                <!--<tbody>
+                                  <tr class="text-center">
+                                    <td><i class="flaticon2-information-circular-button-symbol ch text-info" style="font-size: 1.5em;" data-content="Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt." data-toggle="popover" data-placement="top" data-trigger="hover"></i></td>
+                                    <td>Adenosina 3mg/ml Solução Injetável</td>
+                                    <td>____</td>
+                                    <td>ml</td>
+                                    <td>Intravenosa</td>
+                                    <td>12h/12h</td>
+                                    <td><a href="#"><i class="fa fa-pen fa-fw" title="Editar"></i></a></td>
+                                    <td><a href="#"><i class="fa fa-trash fa-fw" title="Excluir"></i></a></td>
+                                  </tr>
+
+                                </tbody>-->
+                                <tbody id="tableMedicamento" *ngFor="let item of listaAtendimentoMedicoPrescricaoReceita; let i = index">
+                                  
+                                  <!-- <tr class="text-center"> -->
+                                     <!-- <td><i class="flaticon2-information-circular-button-symbol ch text-info" style="font-size: 1.5em;" data-content="Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt." data-toggle="popover" data-placement="top" data-trigger="hover"></i></td> -->
+                                     
+
+                                  <tr class="text-center" id="row{{i}}">
+                                    <td><i id="rowmedicamento" class="flaticon2-information-circular-button-symbol ch text-info" style="font-size: 1.5em;" data-toggle="popover" data-placement="top" data-trigger="hover" data-content="asdfa" (mouseenter) ="mouseEnter()"></i>{{ item.observacao }}</td>
+                                    <td>{{ item.Medicamento? item.Medicamento.nome.substr(0,50)  : '' }}</td>
+                                    <td>{{ item.dose }}</td>
+                                    <td>{{ item.UnidadeMedicamento? item.UnidadeMedicamento.descricao: ''}}</td>
+                                    <td>{{ item.ViaAdministracaoMedicamento? item.ViaAdministracaoMedicamento.descricao: '' }}</td>
+                                    <td>{{ item.IntervaloMedicamento? item.IntervaloMedicamento.descricao: ''}}</td>
+                                    
+                                    <!--<td>
+    <label class="k-checkbox k-checkbox--bold">
+      <input type="checkbox" class="form-control" name="Prof_Ativo" id="ckativo{{i}}" [checked]="item.ativo"> <span></span>
+    </label>
+  </td>-->
+                                    <td id="lotacaoActions">
+                                      <button class="btn p-2 border-0 btn-sm btn-outline-secondary" type="button" title="Editar"><i class="fa fa-pen fa-fw" (click)="onEditarMedicamento(item)"></i></button>
+                                      <button class="btn p-2 border-0 btn-sm btn-outline-secondary" name="btn_excluir_lotacao_medicamento" type="button" title="Editar" (click)="onExibeMensagemExcluirMedicamento(item)"><i class="fa fa-trash fa-fw"></i></button>
+                                    </td>
+                                  </tr>
+                                </tbody>
+                              </table>
+                            </div>
+                          </div>
+
+                          <div class="form-group row mb-0">
+                            <div class="col-lg-12 text-right">
+                              <button type="button" class="btn btn-sm btn-success" data-toggle="modal" data-target="#modalSalvarPrescricao"><i class="fa fa-save fa-fw"></i> Salvar Modelo</button>
+                            </div>
+                          </div>
+
+                          <!--begin:Modal Salvar Modelo -->
+                          <div class="modal fade show" id="modalSalvarPrescricao" tabindex="-1" role="dialog" aria-labelledby="modalSalvarPrescricaoTitle" aria-modal="true">
+                            <div class="modal-dialog modal-dialog-centered" role="document">
+                              <div class="modal-content">
+                                <div class="modal-header">
+                                  <h5 class="modal-title" id="modalSalvarPrescricaoTitle">
+                                    Salvar modelo de Prescrição
+                                  </h5>
+                                  <button type="button" class="close" data-dismiss="modal" aria-label="Close"> <span aria-hidden="true">×</span> </button>
+                                </div>
+                                <div class="modal-body">
+                                  <form action="" method="" accept-charset="utf-8">
+                                    <div class="form-group row mb-1">
+                                      <div class="col-lg-12">
+                                        <label>Informe o nome da Prescrição</label>
+                                        <input type="text" class="form-control" name="ModeloPrescricao" placeholder="" ngModel>
+                                      </div>
+                                    </div>
+                                  </form>
+                                </div>
+                                <div class="modal-footer">
+                                  <button type="button" class="btn btn-metal" data-dismiss="modal">Fechar</button>
+                                  <button type="button" class="btn btn-brand">Salvar</button>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                          <!--end:Salvar Modelo -->
+
+                        </div>
+
+                      </div>
+                      <!--end::Portlet 1-->
+
+                    </div>
+                  </div>
+                </div>
+                <!--end: Card 6 -->
+                <!--begin: Card 7 : Diagnóstico > Atestado -->
+                <div class="card cacc oculta" id="boxAtestado">
+                  <!-- scroll anchor -->
+                  <a id="boxAtestadoScroll"></a>
+
+                  <div class="card-header" id="headingOne7">
+                    <div class="card-title" data-target="#collapseOne7" data-toggle="collapse" aria-expanded="false" aria-controls="collapseOne7">
+                      <i class="fa fa-notes-medical fa-fw"></i> Diagnóstico > Atestado
+                    </div>
+                  </div>
+                  <!-- show -->
+                  <div id="collapseOne7" class="collapse" aria-labelledby="headingOne7" data-parent="#accordionExample1" style="">
+                    <div class="card-body">
+
+                      <!--begin::Portlet 1-->
+                      <div class="k-portlet">
+                        <!--
+          <div class="k-portlet__head">
+              <div class="k-portlet__head-label">
+                  <h3 class="k-portlet__head-title">
+                      Diagnóstico > Atestado
+                  </h3>
+              </div>
+          </div>
+          -->
+                        <div class="k-portlet__body p-1">
+
+                          <div class="form-group row mb-3">
+                            <div class="col-lg-6 pb-2">
+                              <label>Selecione o Modelo</label>
+                              <select class="form-control" name="ModeloAtestado" [(ngModel)]="ModeloAtestado">
+                                <option value="">-- Selecione --</option>
+                                <option *ngFor="let grupoexame of listaModeloAtestado | orderBy: orderNome" [ngValue]="modeloatestado">{{modeloatestado.nome}}</option>
+                              </select>
+                              <span class="form-text text-danger cm oculta">Message Error</span>
+                            </div>
+                            <div class="col-lg-2 pb-2">
+                              <label>Validade  <span class="fld-obg" title="Obrigatório">*</span></label>
+                              <div class="input-group">
+                                <input type="text" class="form-control" name = "AtestadoValidade" placeholder="" ngModel>
+                                <div class="input-group-append"><span class="input-group-text">dias</span></div>
+                              </div>
+                              <span class="form-text text-danger cm oculta">Message Error</span>
+                            </div>
+                          </div>
+
+                          <div class="form-group row mb-1">
+                            <div class="col-lg-12 pb-2">
+                              <label>Descrição <span class="fld-obg" title="Obrigatório">*</span></label>
+                              <textarea class="form-control rn" name="AtestadoObservacao" rows="4" ngModel></textarea>
+                              <span class="form-text text-danger oculta">Message Error</span>
+                            </div>
+                          </div>
+
+                          <div class="form-group row mb-1">
+                            <div class="col-lg-2 pb-3">
+                              <label class="d-block text-left">&nbsp;</label>
+                              <button type="button" class="btn btn-sm btn-metal"><i class="fa fa-plus fa-fw"></i> Imprirmir</button>
+                            </div>
+                          </div>
+
+                        </div>
+
+                      </div>
+                      <!--end::Portlet 1-->
+
+                    </div>
+                  </div>
+                </div>
+                <!--end: Card 7 -->
+
+              </div>
+            <!--end::Accordion-->
+            <!--begin:Modal Finalizar Atendimento Médico-->
+            <div class="modal fade show" id="modalFinalizarAtend" tabindex="-1" role="dialog" aria-labelledby="modalFinalizarAtendTitle" aria-modal="true" >
+              <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h5 class="modal-title" id="modalFinalizarAtendTitle">
+                      Finalizar Atendimento Médico
+                    </h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"> <span aria-hidden="true">×</span> </button>
+                  </div>
+                  <div class="modal-body">
+                    <form action="" method="" accept-charset="utf-8">
+                      <div class="form-group row ">
+                        <div class="col-lg-6 pb-3">
+                          <label>Tipo de Saída</label>
+                          <select class="form-control" name="TipoSaida" id="AtendMedTipoSaida" ngModel>
+                            <option value="">-- Selecione --</option>
+                            <option value="1">Óbito</option>
+                            <option value="2">Alta</option>
+                          </select>
+                          <span class="form-text text-danger oculta">Message Error</span>
+                        </div>
+                        <div class="col-lg-6" id="colModalFinAlta" >
+                          <label>Data / Hora</label>
+                          <input type="datetime-local" class="form-control" name="DataHora" id="dataFinalizarAM" ngModel>                          
+                          <span class="form-text text-danger oculta">Message Error</span>
+                        </div>
+                        <!--Saída por Óbito-->
+                        <div class="col-lg-6 oculta" id="colModalFinObito">
+                          <label>Data / Hora Óbito</label>
+                          <input type="datetime-local" class="form-control" name="DataHoraObito" ngModel>
+
+                          <span class="form-text text-danger oculta">Message Error</span>
+                        </div>
+
+                      </div>
+                    </form>
+                  </div>
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-metal" data-dismiss="modal">Fechar</button>
+                    <button type="submit" class="btn btn-brand">Concluir</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!--end:Modal Finalizar Atendimento Médico-->
+
+          </div>
+          <!--end::Portlet-body -->
+
+        </div>
+        <!--begin::Portlet Main-->
+        <!--begin:: Form Buttons -->
+        <div class="k-portlet__foot">
+          <div class="k-form__actions">
+            <div class="form-group row">
+              <div class="col-lg-6">
+                <!--<button type="button" class="btn btn-accent">Biometria</button>-->
+                <button type="button" id="btn_formclear" class="btn btn-metal" data-toggle="popover" data-placement="top" data-trigger="hover" data-content="Limpar Campos do Formulário">Limpar</button>
+              </div>
+              <div class="col-lg-6 text-right">
+                <!-- <button type="reset" class="btn btn-accent"><i class="fa flaticon2-reload fa-fw"></i> Reavaliar</button> -->
+                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modalFinalizarAtend" (click)="onLoadModal()">Finalizar</button>
+                <button type="reset" class="btn btn-metal" data-toggle="popover" data-placement="top" data-trigger="hover" data-content="Cancela o atendimento e retorna o paciente para Fila">Cancelar</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!--end:: Form Buttons -->
+
+
+      </form>
+      <!--end::Form-->
+    </div>
+  </div>
+
+</div>
+<!-- end:: Content -->
