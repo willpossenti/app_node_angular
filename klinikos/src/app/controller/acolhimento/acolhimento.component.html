@@ -162,8 +162,8 @@
                 <label>Peso, Altura, IMC</label>
                 <div class="input-group-lg">
                   <div class="input-group-prepend">
-                    <input type="text" class="form-control sn w-25" name="Peso" maxlength="5" placeholder="(kg)" (blur)="onCalculaImc()" ngModel>
-                    <input type="text" class="form-control sn w-25" name="Altura" maxlength="4" placeholder="(cm)" (blur)="onCalculaImc()" ngModel>
+                    <input type="text" class="form-control sn w-25" name="Peso" maxlength="5" placeholder="(kg)" (blur)="onCalculaImc($event)" ngModel>
+                    <input type="text" class="form-control sn w-25" name="Altura" maxlength="4" placeholder="(cm)" (blur)="onCalculaImc($event)" ngModel>
                     <input type="text" class="form-control ch w-100" name="IMC"  placeholder="IMC" data-content="" data-toggle="popover" data-placement="top" data-trigger="hover" style="background:#E9E8E8;" readonly ngModel>
                   </div>
                   <div class="form-text text-danger" style="height:15px !important;"><span class="oculta">Message Error</span></div>

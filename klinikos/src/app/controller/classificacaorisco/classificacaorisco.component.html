@@ -177,8 +177,8 @@
                               <label>Peso, Altura, IMC</label>
                               <div class="input-group-lg">
                                 <div class="input-group-prepend">
-                                  <input type="text" class="form-control sn w-25" name="Peso" maxlength="3" placeholder="(kg)" (blur)="onCalculaImc()" ngModel>
-                                  <input type="text" class="form-control sn w-25" name="Altura" maxlength="3" placeholder="(cm)" (blur)="onCalculaImc()" ngModel>
+                                  <input type="text" class="form-control w-25" name="Peso" maxlength="5" placeholder="(kg)" (blur)="onCalculaImc($event)" ngModel>
+                                  <input type="text" class="form-control w-25" name="Altura" maxlength="4" placeholder="(cm)" (blur)="onCalculaImc($event)" ngModel>
                                   <input type="text" class="form-control ch w-100" name="IMC" placeholder="IMC" data-content="" data-toggle="popover" data-placement="top" data-trigger="hover" style="background:#E9E8E8;" readonly>
                                 </div>
                                 <div class="form-text text-danger" style="height:15px !important;"><span class="oculta">Message Error</span></div>
@@ -468,8 +468,8 @@
                           </div>
                           <div class="col-lg-2">
                             <label>Data dos Sintomas</label>
-                            <input type="text" class="form-control mask_data" name="AlergiaData" placeholder="00/00/0000" value="">
-
+                            <input type="text" class="form-control" name="AlergiaData" placeholder="00/00/0000" mask="00/00/0000" (blur)="onValidaData($event)">
+                            
                           </div>
                           <div class="col-lg-2">
                             <div class="k-checkbox-list">
@@ -839,7 +839,7 @@
             <div class="row">
               <div class="col-lg-6">
                 <!--<button type="button" class="btn btn-accent">Biometria</button>-->
-                <button type="button" class="btn btn-metal" data-toggle="popover" data-placement="top" data-trigger="hover" data-content="Limpar Campos do Formulário" (click)="onLimpaFormClassificacaoRisco(classificacaorisco)">Limpar</button>
+                <button type="button" class="btn btn-metal" data-toggle="popover" data-placement="top" data-trigger="hover" data-content="Limpar Campos do Formulário"  (click)="onLimpaFormClassificacaoRisco(classificacaorisco)">Limpar</button>
               </div>
               <div class="col-lg-6 text-right">
                 <button type="submit" class="btn btn-primary" tabindex="64">Salvar</button>

@@ -377,7 +377,16 @@ export class AcolhimentoComponent implements OnInit {
     $("#msg_pressaodiastolica_acolhimento_b").addClass("oculta");
   }
 
-  onCalculaImc(){
+  onCalculaImc(event: any){
+
+  if(!this.imcService.ValidaImc(event.target.value)){
+
+      if(event.target.name === "Peso")
+         $("input[name^=Peso]").val('');
+      else
+         $("input[name^=Altura]").val('');
+
+  }
 
   var peso = $("input[name^=Peso]").val();
   var altura = $("input[name^=Altura]").val();

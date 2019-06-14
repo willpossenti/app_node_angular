@@ -20,20 +20,11 @@
                     <i class="flaticon2-user"></i> Dados Pessoais
                   </div>
                 </div>
-                <div id="collapseOne1" class="collapse show" aria-labelledby="headingOne1" data-parent="#accordionExample1" style="">
+                <div id="collapseOne1" class="collapse show" aria-labelledby="headingOne1" data-parent="#accordionExample1" >
                   <div class="card-body">
 
                     <!--begin::Portlet 1-->
                     <div class="k-portlet">
-                      <!--
-                      <div class="k-portlet__head">
-                          <div class="k-portlet__head-label">
-                              <h3 class="k-portlet__head-title">
-                                  Dados Pessoais
-                              </h3>
-                          </div>
-                      </div>
-                      -->
                       <div class="k-portlet__body p-1">
                         <div class="form-group row">
                           <div class="col-lg-2">
@@ -46,12 +37,6 @@
                               <span class="k-avatar__cancel" data-toggle="k-tooltip" title="Cancel avatar">
                                 <i class="fa fa-times"></i>
                               </span>
-
-
-
-                              <!--<div class="k-section">
-                                                       <div class="k-section__content k-section__content--border">-->
-                                  <!-- Button trigger modal -->
 
                                   <!-- Modal -->
                                   <div class="modal fade" id="exampleModalLong" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
@@ -69,11 +54,6 @@
                                             <div><video #video id="video"  class="m-0 p-0 w-100"  ></video></div>
 
                                             <canvas #canvas id="canvas" width="430" height="480"></canvas>
-                                            <!--<ul>
-      <li *ngFor="let c of captures">
-        <img src="{{ c }}" height="50" />
-      </li>
-    </ul>-->
                                           </div>
                                         </div>
                                         <div class="modal-footer border-0">
@@ -873,7 +853,7 @@
             <div class="row">
               <div class="col-lg-6">
                 <button type="reset" class="btn btn-accent">Biometria</button>
-                <button type="button" class="btn btn-metal" data-toggle="popover" data-placement="top" data-trigger="hover" data-content="Limpar Campos do Formulário" (click)="onLimpaFormPessoa(pessoa)">Limpar</button>
+                <button type="button" id="btnLimparCadastro" class="btn btn-metal" data-toggle="popover" data-placement="top" data-trigger="hover" data-content="Limpar Campos do Formulário" (click)="onLimpaFormPessoa(pessoa)">Limpar</button>
               </div>
 
               <div class="col-lg-6 text-right">

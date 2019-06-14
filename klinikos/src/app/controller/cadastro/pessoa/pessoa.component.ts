@@ -712,7 +712,7 @@ if(event.target.name === "DC_DataEntrada_Pais")
 
   //begin:: validacao e consulta de CPF
   onConsultaCpf(e: any) {
-
+alert('1564');
     if (this.auth.canActivate())
       this.auth.onSessaoAcrescimoTempo();
 
@@ -2084,7 +2084,7 @@ if(this.Nacionalidade.descricao === "ESTRANGEIRO"){
     $("div").find("#box_newcontact3").remove();
     $("div").find("#box_newcontact4").remove();
     $("div").find("#box_newcontact5").remove();
-    $('.k-avatar__holder').css('background-image', 'url(../../assets/media/users/default.jpg)');
+    
   }
   //end:: Limpa Campos
 

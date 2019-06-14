@@ -12,6 +12,14 @@ export class ImcService {
 
   }
 
+
+  ValidaImc(value: any){
+
+    if(isNaN(value.replace(',','.')))
+        return false;
+    return true;
+  }
+
   //begin:: validacao de formatação do cpf
   CalculaImc(_peso: any, _altura: any) {
 

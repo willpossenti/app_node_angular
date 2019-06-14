@@ -66,7 +66,8 @@ export class ClassificacaoRiscoComponent implements OnInit {
   listaCidade: Array<Cidade>;
   listaCep: Array<Cep>;
   listaRisco: Array<Risco>;
-  listaClassificacaoRiscoAlergia: Array<ClassificacaoRiscoAlergia>;
+  //listaClassificacaoRiscoAlergia: Array<ClassificacaoRiscoAlergia>;
+  listaClassificacaoRiscoAlergia: any;
 
   CausaExterna: CausaExterna;
   NivelConsciencia: NivelConsciencia;
@@ -619,7 +620,7 @@ export class ClassificacaoRiscoComponent implements OnInit {
     if (cr.value.DO_Procedencia !== "")
       classificacaorisco.procedencia = cr.value.DO_Procedencia.toUpperCase();
 
-    if (this.listaTipoOcorrencia !== null)
+    if (this.listaTipoOcorrencia !== undefined)
       classificacaorisco.tipoOcorrenciaId = this.TipoOcorrencia.tipoOcorrenciaId;
 
 
@@ -689,20 +690,13 @@ export class ClassificacaoRiscoComponent implements OnInit {
 
       var alergiaSituacao = $('input[type=checkbox][name^=AlergiaAtivo]').prop("checked");
 
-      var classificacaoriscoAlergia: ClassificacaoRiscoAlergia = {};
+      var classificacaoriscoAlergia: any = {
 
-
-      classificacaoriscoAlergia.tipoAlergiaId = this.TipoAlergia.tipoAlergiaId;
-      classificacaoriscoAlergia.alergiaId = this.Alergia.alergiaId;
-
-      if (this.LocalizacaoAlergia !== null)
-        classificacaoriscoAlergia.localizacaoAlergiaId = this.LocalizacaoAlergia.localizacaoAlergiaId;
-
-      if (this.ReacaoAlergia !== null)
-        classificacaoriscoAlergia.reacaoAlergiaId = this.ReacaoAlergia.reacaoAlergiaId;
-
-      if (this.SeveridadeAlergia !== null)
-        classificacaoriscoAlergia.severidadeAlergiaId = this.SeveridadeAlergia.severidadeAlergiaId;
+        Alergia: this.Alergia,
+        LocalizacaoAlergia: this.LocalizacaoAlergia,
+        ReacaoAlergia: this.ReacaoAlergia,
+        SeveridadeAlergia: this.SeveridadeAlergia
+      };
 
 
       if (datasintomas !== "") {
@@ -903,7 +897,16 @@ export class ClassificacaoRiscoComponent implements OnInit {
   //end:: Exibe Mensagem Excluir
 
 
-  onCalculaImc(){
+  onCalculaImc(event: any){
+
+    if(!this.imcService.ValidaImc(event.target.value)){
+
+      if(event.target.name === "Peso")
+         $("input[name^=Peso]").val('');
+      else
+         $("input[name^=Altura]").val('');
+
+    }
 
     var peso = $("input[name^=Peso]").val();
     var altura = $("input[name^=Altura]").val();
@@ -1058,6 +1061,12 @@ export class ClassificacaoRiscoComponent implements OnInit {
         $("input[name^=DO_Data]").val('');
         return;
        }
+
+       if(event.target.name === "AlergiaData")
+       if(!this.dataService.validarData(event.target.value)){
+         $("input[name^=AlergiaData]").val('');
+         return;
+        }
       }
 
 
