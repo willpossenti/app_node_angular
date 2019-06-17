@@ -105,6 +105,18 @@ export class ClassificacaoRiscoComponent implements OnInit {
 
       $("select[name^=DP_Endereco_Cidade]").val($("select[name^=DP_Endereco_Cidade] option:first").val());
 
+      // Start Popovers
+ $("[data-toggle=popover]").popover({
+   trigger: 'hover'
+ });
+// Start Tooltips
+
+// alert('123');
+$('[data-toggle="tooltip"]').tooltip();
+// alert('1234');
+
+
+
       $('.ed').on('click', function () {
 
   
@@ -731,9 +743,9 @@ export class ClassificacaoRiscoComponent implements OnInit {
     } else {
 
       $(document).ready(function () {
-
-        //$('#msg_tipoprofissional').removeClass('oculta');
+     
       });
+
 
     }
 

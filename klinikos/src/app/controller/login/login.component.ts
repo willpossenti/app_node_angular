@@ -50,10 +50,10 @@ export class LoginComponent implements OnInit {
       username: p.value.usuario,
       password: p.value.senha
     };
-
+console.log('1');
     this.loginService.Authenticate(user).subscribe(async (data: any) => {
 
-
+      console.log('2');
       if (data.statusCode === 404 || data.statusCode === 401) {
         $('.form-group').find('span').text(data.message);
       } else {

@@ -422,12 +422,7 @@ export class RegistroBoletimComponent implements OnInit {
         this.listaPessoaPaciente = data.result;
 
       }, (error: HttpErrorResponse) => {
-<<<<<<< HEAD
         this.auth.onSessaoInvalida(error);
-=======
-        Toastr.error("Falha ao consultar o nome completo na aba Nome");
-        console.log(`Error. ${error.message}.`);
->>>>>>> sprint_yl_24052019
       });
 
 
@@ -465,12 +460,8 @@ export class RegistroBoletimComponent implements OnInit {
         this.listaPessoaPaciente = data.result;
 
       }, (error: HttpErrorResponse) => {
-<<<<<<< HEAD
         this.auth.onSessaoInvalida(error);
-=======
-        Toastr.error("Falha ao consultar o nome social na aba Nome");
-        console.log(`Error. ${error.message}.`);
->>>>>>> sprint_yl_24052019
+
       });
 
   }

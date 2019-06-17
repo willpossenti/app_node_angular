@@ -24,14 +24,13 @@ export class AtendimentoMedicoService {
 
   constructor(private http: HttpClient) {
     this.baseUrl = 'https://localhost:44307/api/';
+    //this.baseUrl = 'https://apinew.ecosistemas.com.br/api/';
   }
 
   ConsultarCIDByCapitulo(cid: CID) { return this.http.post<Return>(`${this.baseUrl}cid/GetCIDByCapitulo`, cid, this.httpOptions); }
-  //BindCID(consultacid: ConsultaCID) { return this.http.post<Return>(`${this.baseUrl}cid/GetCIDByCapitulo`+ consultacid, this.httpOptions); }
   BindConsultaCID() { return this.http.get<Return>(`${this.baseUrl}consultacid`, this.httpOptions); }
   BindGrupoExame() { return this.http.get<Return>(`${this.baseUrl}grupoexame`, this.httpOptions); }
   BindExame() { return this.http.get<Return>(`${this.baseUrl}exame`, this.httpOptions); }
-  BindPessoaProfissional() { return this.http.get<Return>(`${this.baseUrl}pessoaprofissional`, this.httpOptions); }
   BindModeloPrescricaoReceita() { return this.http.get<Return>(`${this.baseUrl}ModeloPrescricaoReceita`, this.httpOptions); }
   BindTipoAlergia() { return this.http.get<Return>(`${this.baseUrl}tipoalergia`, this.httpOptions); }
   BindAlergia() { return this.http.get<Return>(`${this.baseUrl}alergia`, this.httpOptions); }
@@ -50,7 +49,6 @@ export class AtendimentoMedicoService {
   Bindatendimentomedicoalergia() { return this.http.get<Return>(`${this.baseUrl}atendimentomedicoalergia`, this.httpOptions); }
   ConsultaMedicamento(nome: string) { return this.http.get<Return>(`${this.baseUrl}medicamento/consultamedicamento/` + nome, this.httpOptions); }
   ConsultaExame(nome: string) { return this.http.get<Return>(`${this.baseUrl}exame/consultaexame/` + nome, this.httpOptions); }
-  // ConsultaCids(nome: string) {return this.http.get<Return>(`${this.baseUrl}cid/consultacids/` + nome, this.httpOptions); }
   SalvarAtendimentoMedico(atendimentomedico: AtendimentoMedico) {
 
     return this.http.post<Return>(`${this.baseUrl}atendimentomedico/incluir`, atendimentomedico, this.httpOptions);

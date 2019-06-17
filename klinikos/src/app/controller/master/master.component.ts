@@ -98,25 +98,11 @@ export class MasterComponent implements OnInit {
     $(document).ready(function () {
 
 
-      $.getScript("../../../assets/demo/default/base/scripts.bundle.js", function (data, textStatus, jqxhr) {
+      $.getScript("../../../assets/demo/default/base/scripts.bundle.js", function (data: any, textStatus: any, jqxhr: any) {
       });
-      $.getScript("../../../assets/app/bundle/app.bundle.js", function (data, textStatus, jqxhr) {
+      $.getScript("../../../assets/app/bundle/app.bundle.js", function (data: any, textStatus: any, jqxhr: any) {
       });
 
-            //this.route.navigate(['registroboletim'], { relativeTo: this.router })
-            window.location.replace("http://localhost:4200/klinikos/classificacaorisco")
-            , 1000);
-
-        else if (id === "atendimentomedico")
-          setTimeout(() =>
-
-            //this.route.navigate(['registroboletim'], { relativeTo: this.router })
-            window.location.replace("http://localhost:4200/klinikos/atendimentomedico")
-            , 1000);
-        else if (id === "cadastro")
-          setTimeout(() =>
-            window.location.replace("http://localhost:4200/klinikos/cadastro")
-            //this.route.navigate(['cadastro'], { relativeTo: this.router })
 
 
       $('body').css("background", "");
@@ -200,9 +186,8 @@ export class MasterComponent implements OnInit {
     this.route.navigate(['login']);
   }
 
-  changePage(page) {
+  changePage(page: any) {
 
-    console.log(localStorage.getItem('token_expiracao'));
     
     this.route.navigate([page], { relativeTo: this.router });
     this.changeFechaMenuRapido();

@@ -36,7 +36,6 @@ const appRoutes: Routes = [
       { path: 'cadastro', component: PessoaComponent },
       { path: 'registroboletim', component: RegistroBoletimComponent },
       { path: 'acolhimento', component: AcolhimentoComponent },
-      { path: 'classificacaorisco', component: ClassificacaoRiscoComponent }
       { path: 'classificacaorisco', component: ClassificacaoRiscoComponent },
       { path: 'atendimentomedico', component: AtendimentoMedicoComponent }
     ]
@@ -58,7 +57,8 @@ export const options: Partial<IConfig> | (() => Partial<IConfig>) = {};
     MasterComponent,
     AcolhimentoComponent,
     ClassificacaoRiscoComponent,
-    ClassificacaoRiscoPipe
+    ClassificacaoRiscoPipe,
+    AtendimentoMedicoComponent
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),
@@ -77,7 +77,6 @@ export const options: Partial<IConfig> | (() => Partial<IConfig>) = {};
     LoginService,
     CpfService,
     AcolhimentoService,
-    ClassificaoRiscoService
     ClassificaoRiscoService,
     AtendimentoMedicoService
   ],

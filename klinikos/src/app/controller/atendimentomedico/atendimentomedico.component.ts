@@ -91,8 +91,6 @@ export class AtendimentoMedicoComponent implements OnInit {
   orderVariavel: string = 'variavel';
   orderOrdem: string = 'ordem';
   Profissional: PessoaProfissional;
-  filterargs = {title: 'hello'};
-items = [{title: 'hello world'}, {title: 'hello kitty'}, {title: 'foo bar'}];
 
 
   constructor(private atendimentomedicoservice: AtendimentoMedicoService, private pessoaService: PessoaService) {
@@ -188,7 +186,23 @@ items = [{title: 'hello world'}, {title: 'hello kitty'}, {title: 'foo bar'}];
       });
 
 
+      $.getScript("../../../assets/app/custom/general/interface.js", function (data: any, textStatus: any, jqxhr: any) {
+      });
 
+
+    });
+
+
+this.atendimentomedicoservice.BindConsultaCID().subscribe(async (data: Return) => {
+      this.listaConsultaCID = data.result;
+
+
+      $(document).ready(function () { $("select[name^=ConsultaCID]").val($("select[name^=ConsultaCID] option:first").val()); });
+
+
+    }, (error: HttpErrorResponse) => {
+      Toastr.error("Falha ao carregar os capítulos na aba Atendimento Médico");
+      console.log(`Error. ${error.message}.`);
     });
 
     // this.atendimentomedicoservice.BindCID(this.ConsultaCID).subscribe(async (data: Return) => {
@@ -203,15 +217,6 @@ items = [{title: 'hello world'}, {title: 'hello kitty'}, {title: 'foo bar'}];
     //   console.log(`Error. ${error.message}.`);
     // });
 
-    this.atendimentomedicoservice.BindConsultaCID().subscribe(async (data: Return) => {
-      this.listaConsultaCID = data.result;
-
-
-
-    }, (error: HttpErrorResponse) => {
-      Toastr.error("Falha ao carregar Capítulo CID-10 na aba Atendimento Médico");
-      console.log(`Error. ${error.message}.`);
-    });
 
     this.atendimentomedicoservice.BindGrupoExame().subscribe(async (data: Return) => {
       this.listaGrupoExame = data.result;
@@ -224,15 +229,7 @@ items = [{title: 'hello world'}, {title: 'hello kitty'}, {title: 'foo bar'}];
     });
 
 
-    this.atendimentomedicoservice.BindExame().subscribe(async (data: Return) => {
-      this.listaExame = data.result;
-      $(document).ready(function () { $("select[name^=Exames]").val($("select[name^=Exames] option:first").val()); });
-
-    }, (error: HttpErrorResponse) => {
-      Toastr.error("Falha ao carregar Exame na aba Prescrição e Receita");
-      console.log(`Error. ${error.message}.`);
-    });
-
+   
 
     this.ListaPossuiAlergia = [{ 'id': '0', 'descricao': 'SIM' }, { 'id': '1', 'descricao': 'NÃO' }, { 'id': '2', 'descricao': 'NÃO INFORMADO' }];
     $(document).ready(function () { $("select[name^=PossuiAlergia]").val($("select[name^=PossuiAlergia] option:first").val()); });
@@ -246,23 +243,16 @@ items = [{title: 'hello world'}, {title: 'hello kitty'}, {title: 'foo bar'}];
       console.log(`Error. ${error.message}.`);
     });
 
-    this.atendimentomedicoservice.BindMedicamento().subscribe(async (data: Return) => {
-      this.listaMedicamento = data.result;
-      $(document).ready(function () { $("select[name^=Medicamentos]").val($("select[name^=Medicamentos] option:first").val()); });
+   
 
-    }, (error: HttpErrorResponse) => {
-      Toastr.error("Falha ao carregar Medicamento na aba Prescrição e Receita");
-      console.log(`Error. ${error.message}.`);
-    });
+    // this.atendimentomedicoservice.BindGrupoMedicamento().subscribe(async (data: Return) => {
+    //   this.listaGrupoMedicamento = data.result;
+    //   $(document).ready(function () { $("select[name^=M_Grupo]").val($("select[name^=M_Grupo] option:first").val()); });
 
-    this.atendimentomedicoservice.BindGrupoMedicamento().subscribe(async (data: Return) => {
-      this.listaGrupoMedicamento = data.result;
-      $(document).ready(function () { $("select[name^=M_Grupo]").val($("select[name^=M_Grupo] option:first").val()); });
-
-    }, (error: HttpErrorResponse) => {
-      Toastr.error("Falha ao carregar Grupo de Medicamento na aba Prescrição e Receita");
-      console.log(`Error. ${error.message}.`);
-    });
+    // }, (error: HttpErrorResponse) => {
+    //   Toastr.error("Falha ao carregar Grupo de Medicamento na aba Prescrição e Receita");
+    //   console.log(`Error. ${error.message}.`);
+    // });
 
 
     this.atendimentomedicoservice.BindViaAdministracaoMedicamento().subscribe(async (data: Return) => {
@@ -292,15 +282,15 @@ items = [{title: 'hello world'}, {title: 'hello kitty'}, {title: 'foo bar'}];
       console.log(`Error. ${error.message}.`);
     });
 
-    this.atendimentomedicoservice.BindModeloAtestado().subscribe(async (data: Return) => {
-      this.listaModeloAtestado = data.result;
-      $(document).ready(function () { $("select[name^=ModeloAtestado]").val($("select[name^=ModeloAtestado] option:first").val()); });
+    // this.atendimentomedicoservice.BindModeloAtestado().subscribe(async (data: Return) => {
+    //   this.listaModeloAtestado = data.result;
+    //   $(document).ready(function () { $("select[name^=ModeloAtestado]").val($("select[name^=ModeloAtestado] option:first").val()); });
 
 
-    }, (error: HttpErrorResponse) => {
-      Toastr.error("Falha ao carregar Modelo Atestado na aba Prescrição Receita");
-      console.log(`Error. ${error.message}.`);
-    });
+    // }, (error: HttpErrorResponse) => {
+    //   Toastr.error("Falha ao carregar Modelo Atestado na aba Prescrição Receita");
+    //   console.log(`Error. ${error.message}.`);
+    // });
 
    
 
