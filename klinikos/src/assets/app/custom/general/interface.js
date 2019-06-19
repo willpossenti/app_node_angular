@@ -10,7 +10,7 @@ $(document).ready(function () {
   //   trigger: 'hover'
   // });
   // Start Tooltips
-  // $('[data-toggle="tooltip"]').tooltip();
+ //  $('[data-toggle="tooltip"]').tooltip();
 
 
   /*=CadastroDePessoas: ------------------------------------------- */
@@ -39,21 +39,6 @@ $(document).ready(function () {
       $('#box_descricao, #box_nomeRN').addClass('oculta');
     }
 
-    /* Varre formulário que possui a classe '.clean_on') -------------------- */
-    // limpa: input, textarea
-    $('.clean_on').find('input, textarea').val('');
-    // limpa: checkbox, radio
-    $('.clean_on').find('input[type="radio"], input[type="checkbox"]').prop('checked', false);
-    // limpa: select
-    $('.clean_on').find('option:selected').prop('selected', false);
-    // limpa: elementos com a classe 'clear' (bootstrap label buttons)
-    if ($('.clear').hasClass('active')) {
-      $('.clear').removeClass('active');
-      // class.risco > escala de dor : campos com opacidade
-      $('.ed').addClass('ed-opac');
-      // acolhimento > preferencial : icones svg
-      $('.deficiente, .gestante, .idoso-a, idoso-b').removeClass('fill-hover');
-    }
     // limpa combos dinâmicos
     $('select[name^=DP_Etnia]').find('option').remove().end().append('<option value="-1">-- Selecione --</option>');
     $('select[name^=DP_NaturalidadeCidade]').find('option').remove().end().append('<option value="-1">-- Selecione --</option>');
@@ -65,11 +50,38 @@ $(document).ready(function () {
     $(btnchk).prop('checked', false);
     $('#box_dadosprof').addClass('oculta');
 
-    //oculta todas as mensagens de erro abaixo dos campos: <span class="cm"> -> 'clean message'
-    $('.cm').addClass('oculta');
+    LimparTela();
 
   });
 
+
+  $('#btnLimparClassificacaoRisco').on('click', function () {
+    LimparTela();
+  });
+
+  function LimparTela(){
+
+alert('123');
+    /* Varre formulário que possui a classe '.clean_on') -------------------- */
+    // limpa: input, textarea
+    $('.clean_on').find('input, textarea').val('');
+    // limpa: checkbox, radio
+    $('.clean_on').find('input[type="radio"], input[type="checkbox"]').prop('checked', false);
+    // limpa: select
+    $('select').val($("select option:first").val());
+    // limpa: elementos com a classe 'clear' (bootstrap label buttons)
+    if ($('.clear').hasClass('active')) {
+      $('.clear').removeClass('active');
+      // class.risco > escala de dor : campos com opacidade
+      $('.ed').addClass('ed-opac');
+      // acolhimento > preferencial : icones svg
+      $('.deficiente, .gestante, .idoso-a, idoso-b').removeClass('fill-hover');
+    }
+    
+
+     //oculta todas as mensagens de erro abaixo dos campos: <span class="cm"> -> 'clean message'
+     $('.cm').addClass('oculta');
+  }
  
 
 

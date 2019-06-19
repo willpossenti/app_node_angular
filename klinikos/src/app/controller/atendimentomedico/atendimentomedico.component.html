@@ -299,7 +299,7 @@
 
                             <div class="col-lg-2">
                               <label class="d-block">&nbsp;</label>
-                              <button type="button" class="btn btn-success" data-toggle="popover" data-placement="top" data-trigger="hover" data-content="Capturar Sinais Vitais"><i class="fa fa-heartbeat fa-fw"></i> Capturar</button>
+                              <button type="button" class="btn btn-success" data-toggle="k-tooltip" data-placement="top" title="Capturar Sinais Vitais"><i class="fa fa-heartbeat fa-fw"></i> Capturar</button>
                             </div>
                           </div>
 
@@ -517,8 +517,8 @@
                             </div>
                             <div class="col">
                               <label class="d-block text-left">&nbsp;</label>
-                              <button type="button" class="btn btn-metal" data-toggle="popover" data-placement="top" data-trigger="hover" data-content="Adicionar um novo exame" (click)="onAdicionaExame()" id="btnAddNovoExame"><i class="fa fa-plus fa-fw"></i>Adicionar</button>
-                              <button type="button" class="btn btn-metal oculta" data-toggle="popover" data-placement="top" data-trigger="hover" data-content="Cancelar a edição da lotação" style="float: right;" (click)="onLimparCamposExame()" id="btnCancelarExame"><i class="fa fa-plus"></i>Cancelar</button>
+                              <button type="button" class="btn btn-metal" data-toggle="k-tooltip" data-placement="top" title="Adicionar um novo exame" (click)="onAdicionaExame()" id="btnAddNovoExame"><i class="fa fa-plus fa-fw"></i>Adicionar</button>
+                              <button type="button" class="btn btn-metal oculta" data-toggle="k-tooltip" data-placement="top" title="Cancelar a edição da lotação" style="float: right;" (click)="onLimparCamposExame()" id="btnCancelarExame"><i class="fa fa-plus"></i>Cancelar</button>
                             </div>
                           </div>
                          
@@ -984,12 +984,12 @@
             <div class="form-group row">
               <div class="col-lg-6">
                 <!--<button type="button" class="btn btn-accent">Biometria</button>-->
-                <button type="button" id="btn_formclear" class="btn btn-metal" data-toggle="popover" data-placement="top" data-trigger="hover" data-content="Limpar Campos do Formulário">Limpar</button>
+                <button type="button" id="btn_formclear" class="btn btn-metal" data-toggle="k-tooltip" data-placement="top" title="Limpar Campos do Formulário">Limpar</button>
               </div>
               <div class="col-lg-6 text-right">
                 <!-- <button type="reset" class="btn btn-accent"><i class="fa flaticon2-reload fa-fw"></i> Reavaliar</button> -->
                 <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modalFinalizarAtend" (click)="onLoadModal()">Finalizar</button>
-                <button type="reset" class="btn btn-metal" data-toggle="popover" data-placement="top" data-trigger="hover" data-content="Cancela o atendimento e retorna o paciente para Fila">Cancelar</button>
+                <button type="reset" class="btn btn-metal" data-toggle="k-tooltip" data-placement="top" title="Cancela o atendimento e retorna o paciente para Fila">Cancelar</button>
               </div>
             </div>
           </div>

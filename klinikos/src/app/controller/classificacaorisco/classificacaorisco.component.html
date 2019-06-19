@@ -1,4 +1,5 @@
-  <!-- begin:: Content -->
+
+<!-- begin:: Content -->
 <div class="k-content k-grid__item k-grid__item--fluid" id="k_content">
   <div class="row">
     <div class="col-lg-12">
@@ -241,7 +242,7 @@
 
                             <div class="col-lg-6 mb-3 float-left">
                               <label class="d-block">&nbsp;</label>
-                              <button type="button" class="btn btn-accent m-0" data-toggle="popover" data-placement="top" data-trigger="hover" data-content="Capturar Sinais Vitais"><i class="fa fa-heartbeat"></i> Capturar</button>
+                              <button type="button" class="btn btn-accent m-0" data-toggle="k-tooltip" data-placement="top" title="Capturar Sinais Vitais" ><i class="fa fa-heartbeat"></i> Capturar</button>
                             </div>
                              <!-- Erros: Temperatura, Pre. Arterial (mmHg)-->
                           <div class="col-lg-12 float-left mr-2 ml-2">
@@ -468,7 +469,7 @@
                           </div>
                           <div class="col-lg-2">
                             <label>Data dos Sintomas</label>
-                            <input type="text" class="form-control mask_data" name="AlergiaData" placeholder="00/00/0000" value="">
+                            <input type="text" class="form-control mask_data" name="AlergiaData" placeholder="00/00/0000" mask="00/00/0000" value="">
 
                           </div>
                           <div class="col-lg-2">
@@ -484,9 +485,8 @@
                         <div class="form-group row">
                           <div class="col">
                             <!--<button type="button" class="btn btn-success"><i class="fa fa-plus fa-fw"></i> Adicionar</button>-->
-                            <button type="button" tabindex="33" class="btn btn-metal" data-toggle="popover" data-placement="top" data-trigger="hover" data-content="Adicionar uma nova alergia" style="float: right; margin-left: 10px;" (click)="onAdicionaAlergia()" id="btnAddNovaAlergia"><i class="fa fa-plus"></i>Adicionar</button>
-                            <button type="button" class="btn btn-metal oculta" data-toggle="popover" data-placement="top" data-trigger="hover" data-content="Cancelar a edição da lotação" style="float: right;"  id="btnCancelarAlergia"><i class="fa fa-plus"></i>Cancelar</button>
-
+                            <button type="button" tabindex="33" class="btn btn-metal" data-toggle="k-tooltip" data-placement="top" title="Adicionar uma nova alergia"  style="float: right; margin-left: 10px;" (click)="onAdicionaAlergia()" id="btnAddNovaAlergia"><i class="fa fa-plus"></i>Adicionar</button>
+                            <button type="button" class="btn btn-metal oculta" data-toggle="k-tooltip" data-placement="top" title="Cancelar a edição da lotação"  style="float: right;"  id="btnCancelarAlergia"><i class="fa fa-plus"></i>Cancelar</button>
 
                           </div>
                         </div>
@@ -521,10 +521,10 @@
 
 
                                 <tr class="text-center" id="row{{i}}">
-                                  <td>{{ item.Alergia? item.Alergia.nome: '' }}</td>
-                                  <td>{{ item.LocalizacaoAlergia? item.LocalizacaoAlergia.nome: '' }}</td>
-                                  <td>{{ item.ReacaoAlergia? item.ReacaoAlergia.descricao: '' }}</td>
-                                  <td>{{ item.SeveridadeAlergia? item.SeveridadeAlergia.nome: '' }}</td>
+                                  <td>{{ item.Alergia }}</td>
+                                  <td>{{ item.LocalizacaoAlergia}}</td>
+                                  <td>{{ item.ReacaoAlergia }}</td>
+                                  <td>{{ item.SeveridadeAlergia }}</td>
                                   <td>{{ item.dataSintomas | date: 'dd/MM/yyyy'}}</td>
                                   <td>{{ item.alergiaSituacao === true? 'Ativo': 'Inativa'}}</td>
                                   <!--<td>
@@ -681,10 +681,10 @@
                           <div class="col-lg-2">
                             <label class="d-block">&nbsp;</label>
                             <div class="btn-group btn-group-toggle" data-toggle="buttons">
-                              <label class="btn btn-outline-info clear" for="PAB" style="cursor:pointer;" data-toggle="popover" data-placement="top" data-trigger="hover" data-content="Perfuração por Arma Branca">
+                              <label class="btn btn-outline-info clear" for="PAB" style="cursor:pointer;" data-toggle="k-tooltip" data-placement="top" title="Perfuração por Arma Branca" >
                                 <input type="checkbox" name="DO_PAB" autocomplete="off" value=""> PAB
                               </label>
-                              <label class="btn btn-outline-info clear" for="PAF" style="cursor:pointer;" data-toggle="popover" data-placement="top" data-trigger="hover" data-content="Perfuração por Arma de Fogo">
+                              <label class="btn btn-outline-info clear" for="PAF" style="cursor:pointer;" data-toggle="k-tooltip" data-placement="top" title="Perfuração por Arma de Fogo" >
                                 <input type="checkbox" name="DO_PAF" autocomplete="off" value=""> PAF
                               </label>
                             </div>
@@ -793,9 +793,7 @@
 
                         <div class="form-group row">
                           <div class="col-lg-6">
-                            <button type="button" class="btn btn-outline-secondary mr-2" placement="top" ngbTooltip="Tooltip on top">
-                              Tooltip on top
-                            </button>
+                            
                             <div class="btn-group btn-group-toggle" data-toggle="buttons">
                               <label class="btn risco-azul cp clear" data-toggle="popover" data-placement="top" data-trigger="hover" data-content=""  for="riscoazul"  >
                                 <input type="radio" name="Risco" autocomplete="off" value="" id="riscoazul"> AZUL
@@ -803,10 +801,10 @@
                               <label class="btn risco-verde cp clear" data-toggle="popover" data-placement="top" data-trigger="hover" data-content="" for="riscoverde">
                                 <input type="radio" name="Risco" autocomplete="off" value="" id="riscoverde"> VERDE
                               </label>
-                              <label class="btn risco-amarelo cp clear d-flex" data-toggle="popover" data-placement="top" data-trigger="hover" data-content="Consultório" for="riscoamareloconsultorio">
+                              <label class="btn risco-amarelo cp clear d-flex" data-toggle="k-tooltip" data-placement="top" title="Consultório" for="riscoamareloconsultorio">
                                 <input type="radio" name="Risco" autocomplete="off" value="" id="riscoamareloconsultorio"><i class="fa fa-user-md fa-fw d-block mr-1"></i><span class="d-block"> AMARELO</span>
                               </label>
-                              <label class="btn risco-amarelo cp clear d-flex" data-toggle="popover" data-placement="top" data-trigger="hover" data-content="Observação" for="riscoamareloobservacao">
+                              <label class="btn risco-amarelo cp clear d-flex" data-toggle="k-tooltip" data-placement="top" title="Observação"  for="riscoamareloobservacao">
                                 <input type="radio" name="Risco" autocomplete="off" value="" id="riscoamareloobservacao"><i class="fa fa-eye fa-fw d-block mr-1"></i><span class="d-block"> AMARELO</span>
                               </label>
                               <label class="btn risco-laranja cp clear" data-toggle="popover" data-placement="top" data-trigger="hover" data-content="" for="riscolaranja">
@@ -841,7 +839,9 @@
             <div class="row">
               <div class="col-lg-6">
                 <!--<button type="button" class="btn btn-accent">Biometria</button>-->
-                <button type="button" class="btn btn-metal" data-toggle="popover" data-placement="top" data-trigger="hover" data-content="Limpar Campos do Formulário" (click)="onLimpaFormClassificacaoRisco(classificacaorisco)">Limpar</button>
+                <button type="button" id="btnLimparClassificacaoRisco" class="btn btn-metal" data-toggle="k-tooltip" data-placement="right" title="Limpar Campos do Formulário"  (click)="onLimpaFormClassificacaoRisco(classificacaorisco)">Limpar</button>
+                
+
               </div>
               <div class="col-lg-6 text-right">
                 <button type="submit" class="btn btn-primary" tabindex="64">Salvar</button>
@@ -851,8 +851,7 @@
           </div>
         </div>
         <!--end:: Form Buttons -->
-
-
+        
       </form>
       <!--end::Form-->
     </div>

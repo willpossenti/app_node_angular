@@ -497,8 +497,7 @@ export class RegistroBoletimComponent implements OnInit {
     form.value.DO_Complemento = "";
 
     $(document).ready(function () { 
-      $("select[name^=IB_ComoChegou]").val($("select[name^=IB_ComoChegou] option:first").val()); 
-      $("select[name^=IB_Especialidade]").val($("select[name^=IB_Especialidade] option:first").val()); 
+      $('select').val($("select option:first").val());
       $("input[name^=P_CPF]").val(""); 
       $("input[name^=IB_Nascimento]").val(""); 
       $("input[name^=DP_Telefone]").val(""); 

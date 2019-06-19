@@ -89,7 +89,7 @@
 
 
                             </div>
-                            <div class="k-checkbox-list mt-2" data-toggle="popover" data-trigger="hover" tabindex="7" data-placement="top" data-content="Remove a obrigatoriedade dos demais campos e impõe o preenchimento do campo [Descrição]">
+                            <div class="k-checkbox-list mt-2" tabindex="7" data-toggle="k-tooltip" data-placement="top" title="Remove a obrigatoriedade dos demais campos e impõe o preenchimento do campo [Descrição]">
                               <label class="k-checkbox k-checkbox--bold" id="btn_naoidentificado">
                                 <input type="checkbox" name="DP_NaoIdentificado" (change)="onHabilitaNaoIdentificado()" ngModel>Não Identificado<span></span>
                                 
@@ -414,7 +414,7 @@
                           <div class="col-lg-6">
                             <label>Tipo de Cadastro</label>
                             <div class="k-checkbox-list mt-2">
-                              <label class="k-checkbox k-checkbox--brand" id="btn_dadosprof" data-toggle="popover" data-placement="top" data-trigger="hover" data-content="Mostra/Oculta campos de registro de Dados Profissionais">
+                              <label class="k-checkbox k-checkbox--brand" id="btn_dadosprof" data-toggle="k-tooltip" data-placement="top" title="Mostra/Oculta campos de registro de Dados Profissionais">
                                 <input type="checkbox" name="DP_TipoCadastro" id="DP_TipoCadastro" value="" (click)="onHabilitaProfissional()" tabindex="26" (focus)="onFechaPesquisa()">Preencher informações do Profissional<span></span>
                               </label>
                             </div>
@@ -459,7 +459,7 @@
 
                             <div class="col-lg-2">
                               <label class="d-block">&nbsp;</label>
-                              <button type="button" class="btn btn-metal" tabindex="28" data-toggle="popover" data-placement="top" data-trigger="hover" data-content="Gera uma Nova Senha temporária para o usuário"><i class="fa fa-unlock-alt"></i> Nova Senha</button>
+                              <button type="button" class="btn btn-metal" tabindex="28" data-toggle="k-tooltip" data-placement="top" title="Gera uma Nova Senha temporária para o usuário"><i class="fa fa-unlock-alt"></i> Nova Senha</button>
                             </div>
                           </div>
                           <div style="margin: 1.5rem 0; border-bottom: 1px dashed #c9cbce;"></div>
@@ -497,8 +497,8 @@
 
                             <div class="col-lg-12">
 
-                              <button type="button" tabindex="33" class="btn btn-metal" data-toggle="popover" data-placement="top" data-trigger="hover" data-content="Adicionar uma nova lotação" style="float: right; margin-left: 10px;" (click)="onAdicionaLotacao()" id="btnAddNovaLotacao"><i class="fa fa-plus"></i>Adicionar</button>
-                              <button type="button" class="btn btn-metal oculta" data-toggle="popover" data-placement="top" data-trigger="hover" data-content="Cancelar a edição da lotação" style="float: right;" (click)="onLimparCamposProfissional()" id="btnCancelarLotacao"><i class="fa fa-plus"></i>Cancelar</button>
+                              <button type="button" tabindex="33" class="btn btn-metal" data-toggle="k-tooltip" data-placement="top" title="Adicionar uma nova lotação" style="float: right; margin-left: 10px;" (click)="onAdicionaLotacao()" id="btnAddNovaLotacao"><i class="fa fa-plus"></i>Adicionar</button>
+                              <button type="button" class="btn btn-metal oculta" data-toggle="k-tooltip" data-placement="top" title="Cancelar a edição da lotação" style="float: right;" (click)="onLimparCamposProfissional()" id="btnCancelarLotacao"><i class="fa fa-plus"></i>Cancelar</button>
                             </div>
                           </div>
                           <!-- Grid -->
@@ -872,7 +872,7 @@
             <div class="row">
               <div class="col-lg-6">
                 <button type="reset" class="btn btn-accent">Biometria</button>
-                <button type="button" class="btn btn-metal" data-toggle="popover" data-placement="top" data-trigger="hover" data-content="Limpar Campos do Formulário" (click)="onLimpaFormPessoa(pessoa)">Limpar</button>
+                <button type="button" class="btn btn-metal" data-toggle="k-tooltip" data-placement="top" title="Limpar Campos do Formulário" (click)="onLimpaFormPessoa(pessoa)">Limpar</button>
               </div>
 
               <div class="col-lg-6 text-right">

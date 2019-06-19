@@ -97,12 +97,14 @@ export class MasterComponent implements OnInit {
    
     $(document).ready(function () {
 
+   
 
       $.getScript("../../../assets/demo/default/base/scripts.bundle.js", function (data: any, textStatus: any, jqxhr: any) {
       });
       $.getScript("../../../assets/app/bundle/app.bundle.js", function (data: any, textStatus: any, jqxhr: any) {
       });
-
+     
+      
 
 
       $('body').css("background", "");

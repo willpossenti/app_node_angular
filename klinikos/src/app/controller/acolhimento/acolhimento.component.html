@@ -105,23 +105,23 @@
               <div class="col-lg-3">
                 <label class="text-left d-block">Preferencial</label>
                 <div class="btn-group btn-group-toggle" data-toggle="buttons">
-                  <label class="btn btn-outline-info cp clear rounded-left" id="preferencial" data-toggle="popover" data-placement="top" data-trigger="hover" data-content="Deficiente Físico" (click)="onChangeButton('preferencial')" (mouseenter) ="onEnterButton('preferencial')" (mouseleave) ="onLeaveButton('preferencial')" >
+                  <label class="btn btn-outline-info cp clear rounded-left" id="preferencial" data-toggle="k-tooltip" data-placement="top" title="Deficiente Físico"  (click)="onChangeButton('preferencial')" (mouseenter) ="onEnterButton('preferencial')" (mouseleave) ="onLeaveButton('preferencial')" >
                     <input type="radio" name="Preferencial" autocomplete="off" value="1" tabindex="">
                     <!--<i class="fab fa-accessible-icon fa-fw" style="font-size: 1.4em;"></i>-->
                     <img src="../assets/media/icons/icon-prioridade-pregnant.svg" id="preferencial_icone" class="svg fill">
                   </label>
 
-                  <label class="btn btn-outline-info cp clear" id="gestante" data-toggle="popover" data-placement="top" data-trigger="hover" data-content="Gestante" (click)="onChangeButton('gestante')" (mouseenter) ="onEnterButton('gestante')" (mouseleave) ="onLeaveButton('gestante')">
+                  <label class="btn btn-outline-info cp clear" id="gestante" data-toggle="k-tooltip" data-placement="top" title="Gestante" (click)="onChangeButton('gestante')" (mouseenter) ="onEnterButton('gestante')" (mouseleave) ="onLeaveButton('gestante')">
                     <input type="radio" name="Preferencial" autocomplete="off" value="2" tabindex="">
                     <img src="../assets/media/icons/icon-prioridade-pregnant.svg" id="gestante_icone" class="svg fill">
                   </label>
 
-                  <label class="btn btn-outline-info cp clear" id="idoso-a" data-toggle="popover" data-placement="top" data-trigger="hover" data-content="Pessoa com idade entre 60 e 79 anos" (click)="onChangeButton('idoso-a')" (mouseenter) ="onEnterButton('idoso-a')"  (mouseleave) ="onLeaveButton('idoso-a')">
+                  <label class="btn btn-outline-info cp clear" id="idoso-a" data-toggle="k-tooltip" data-placement="top" title="Pessoa com idade entre 60 e 79 anos" (click)="onChangeButton('idoso-a')" (mouseenter) ="onEnterButton('idoso-a')"  (mouseleave) ="onLeaveButton('idoso-a')">
                     <input type="radio" name="Preferencial" autocomplete="off" value="3" tabindex="">
                     <img src="../assets/media/icons/icon-prioridade-elderly-60.svg" id="idoso-a_icone" class="svg fill">
                   </label>
 
-                  <label class="btn btn-outline-info cp clear" id="idoso-b" data-toggle="popover" data-placement="top" data-trigger="hover" data-content="Pessoa acima de 80 anos" (click)="onChangeButton('idoso-b')" (mouseenter) ="onEnterButton('idoso-b')" (mouseleave) ="onLeaveButton('idoso-b')">
+                  <label class="btn btn-outline-info cp clear" id="idoso-b"  data-toggle="k-tooltip" data-placement="top" title="Pessoa acima de 80 anos" (click)="onChangeButton('idoso-b')" (mouseenter) ="onEnterButton('idoso-b')" (mouseleave) ="onLeaveButton('idoso-b')">
                     <input type="radio" name="Preferencial" autocomplete="off" value="4" tabindex="">
                     <img src="../assets/media/icons/icon-prioridade-elderly-80.svg" id="idoso-b_icone" class="svg fill">
                   </label>
@@ -133,7 +133,7 @@
               <div class="col-lg-3">
                 <label>&nbsp;</label>
                 <div class="k-checkbox-list mt-2">
-                  <label class="k-checkbox k-checkbox--brand" data-toggle="popover" data-placement="top" data-trigger="hover" data-content="Pacientes definidos com Risco terão prioridade acima dos demais">
+                  <label class="k-checkbox k-checkbox--brand" data-toggle="k-tooltip" data-placement="top" title="Pacientes definidos com Risco terão prioridade acima dos demais">
                     <input type="checkbox" name="PacienteRisco">Paciente em Risco<span></span>
                   </label>
                 </div>
@@ -217,7 +217,7 @@
 
             <div class="form-group row mb-0 pb-0 pt-4">
               <div class="col-lg-4">
-                <button type="button" class="btn btn-sm btn-accent m-0" data-toggle="popover" data-placement="top" data-trigger="hover" data-content="Capturar Sinais Vitais"><i class="fa fa-heartbeat"></i> Capturar</button>
+                <button type="button" class="btn btn-sm btn-accent m-0" data-toggle="k-tooltip" data-placement="top" title="Capturar Sinais Vitais"><i class="fa fa-heartbeat"></i> Capturar</button>
               </div>
             </div>
           </div>
@@ -231,7 +231,7 @@
             <div class="row">
               <div class="col-lg-6">
                 <!--<button type="button" class="btn btn-accent">Biometria</button>-->
-                <button type="button" class="btn btn-metal" data-toggle="popover" data-placement="top" data-trigger="hover" data-content="Limpar Campos do Formulário" (click)="onLimpaFormAcolhimento(acolhimento)">Limpar</button>
+                <button type="button" class="btn btn-metal" data-toggle="k-tooltip" data-placement="right" title="Limpar Campos do Formulário" (click)="onLimpaFormAcolhimento(acolhimento)">Limpar</button>
               </div>
               <div class="col-lg-6 text-right">
                 <button type="submit" class="btn btn-primary">Salvar</button>

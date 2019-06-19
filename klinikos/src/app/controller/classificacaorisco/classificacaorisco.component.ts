@@ -1,5 +1,5 @@
 import { Component, OnInit, Pipe, PipeTransform } from '@angular/core';
-import * as $ from 'jquery';
+import * as $C from 'jquery';
 import { ClassificaoRiscoService } from './classificacaorisco.service';
 import { Return } from '../../model/Return';
 import { CausaExterna } from '../../model/CausaExterna';
@@ -66,7 +66,8 @@ export class ClassificacaoRiscoComponent implements OnInit {
   listaCidade: Array<Cidade>;
   listaCep: Array<Cep>;
   listaRisco: Array<Risco>;
-  listaClassificacaoRiscoAlergia: Array<ClassificacaoRiscoAlergia>;
+ // listaClassificacaoRiscoAlergia: Array<ClassificacaoRiscoAlergia>;
+ listaClassificacaoRiscoAlergia: any;
 
   CausaExterna: CausaExterna;
   NivelConsciencia: NivelConsciencia;
@@ -97,43 +98,43 @@ export class ClassificacaoRiscoComponent implements OnInit {
   }
 
   ngOnInit() {
+    $C.noConflict();
 
-    $(document).ready(function () {
+    $C(document).ready(function () {
+ 
 
       document.title = 'Classificação de Risco | Klinikos';
-      $("h3[class^=k-subheader__title]").html("Classificação de Risco");
+      $C("h3[class^=k-subheader__title]").html("Classificação de Risco");
 
-      $("select[name^=DP_Endereco_Cidade]").val($("select[name^=DP_Endereco_Cidade] option:first").val());
+      $C("select[name^=DP_Endereco_Cidade]").val($C("select[name^=DP_Endereco_Cidade] option:first").val());
 
-      // Start Popovers
- $("[data-toggle=popover]").popover({
-   trigger: 'hover'
- });
-// Start Tooltips
+      $C.getScript("../../../assets/demo/default/base/scripts.bundle.js", function (data: any, textStatus: any, jqxhr: any) {
+      });
 
-// alert('123');
-$('[data-toggle="tooltip"]').tooltip();
-// alert('1234');
+      $C.getScript("../../../assets/vendors/general/bootstrap/dist/js/bootstrap.min.js", function (data: any, textStatus: any, jqxhr: any) {
+      });
+  
+      $C.getScript("../../../assets/vendors/general/tooltip.js/dist/umd/tooltip.min.js", function (data: any, textStatus: any, jqxhr: any) {
+      });
+    
 
-
-
-      $('.ed').on('click', function () {
+      $C('.ed').on('click', function () {
 
   
         // sweep radio-buttons
-        var escala = $(this);
-        var radios = $('input[type="radio"][name="EscalaDor"]').parent();
+        var escala = $C(this);
+        var radios = $C('input[type="radio"][name="EscalaDor"]').parent();
     
         // check
-        if (!$(escala).hasClass('active')) {
-          $(escala).removeClass('ed-opac');
+        if (!$C(escala).hasClass('active')) {
+          $C(escala).removeClass('ed-opac');
           // restore opacity other options
-          $(radios).each(function (i, e) {
+          $C(radios).each(function (i, e) {
             // check each
-            if ($(e) != escala) {
-              if ($(e).hasClass('active')) {
-                $(e).removeClass('active');
-                $(e).addClass('ed-opac');
+            if ($C(e) != escala) {
+              if ($C(e).hasClass('active')) {
+                $C(e).removeClass('active');
+                $C(e).addClass('ed-opac');
               }
             }
     
@@ -149,7 +150,7 @@ $('[data-toggle="tooltip"]').tooltip();
       this.listaCausasExterna = data.result;
 
 
-      $(document).ready(function () { $("select[name^=CausaExterna]").val($("select[name^=CausaExterna] option:first").val()); });
+      $C(document).ready(function () { $C("select[name^=CausaExterna]").val($C("select[name^=CausaExterna] option:first").val()); });
 
 
     }, (error: HttpErrorResponse) => {
@@ -176,7 +177,7 @@ $('[data-toggle="tooltip"]').tooltip();
 
     this.classificacaoriscoservice.BindTipoChegada().subscribe(async (data: Return) => {
       this.listaTiposChegada = data.result;
-      $(document).ready(function () { $("select[name^=TipoChegada]").val($("select[name^=TipoChegada] option:first").val()); });
+      $C(document).ready(function () { $C("select[name^=TipoChegada]").val($C("select[name^=TipoChegada] option:first").val()); });
 
     }, (error: HttpErrorResponse) => {
         this.auth.onSessaoInvalida(error);
@@ -186,7 +187,7 @@ $('[data-toggle="tooltip"]').tooltip();
 
     this.classificacaoriscoservice.BindEspecialidade().subscribe(async (data: Return) => {
       this.listaEspecialidade = data.result;
-      $(document).ready(function () { $("select[name^=Especialidade]").val($("select[name^=Especialidade] option:first").val()); });
+      $C(document).ready(function () { $C("select[name^=Especialidade]").val($C("select[name^=Especialidade] option:first").val()); });
 
     }, (error: HttpErrorResponse) => {
         this.auth.onSessaoInvalida(error);
@@ -194,12 +195,12 @@ $('[data-toggle="tooltip"]').tooltip();
 
 
     this.ListaPossuiAlergia = [{ 'id': '0', 'descricao': 'SIM' }, { 'id': '1', 'descricao': 'NÃO' }, { 'id': '2', 'descricao': 'NÃO INFORMADO' }];
-    $(document).ready(function () { $("select[name^=PossuiAlergia]").val($("select[name^=PossuiAlergia] option:first").val()); });
+    $C(document).ready(function () { $C("select[name^=PossuiAlergia]").val($C("select[name^=PossuiAlergia] option:first").val()); });
 
 
     this.classificacaoriscoservice.BindAberturaOcular().subscribe(async (data: Return) => {
       this.listaAberturaOcular = data.result;
-      $(document).ready(function () { $("select[name^=AberturaOcular]").val($("select[name^=AberturaOcular] option:first").val()); });
+      $C(document).ready(function () { $C("select[name^=AberturaOcular]").val($C("select[name^=AberturaOcular] option:first").val()); });
 
     }, (error: HttpErrorResponse) => {
         this.auth.onSessaoInvalida(error);
@@ -207,7 +208,7 @@ $('[data-toggle="tooltip"]').tooltip();
 
     this.classificacaoriscoservice.BindRespostaVerbal().subscribe(async (data: Return) => {
       this.listaRespostaVerbal = data.result;
-      $(document).ready(function () { $("select[name^=RespostaVerbal]").val($("select[name^=RespostaVerbal] option:first").val()); });
+      $C(document).ready(function () { $C("select[name^=RespostaVerbal]").val($C("select[name^=RespostaVerbal] option:first").val()); });
 
     }, (error: HttpErrorResponse) => {
         this.auth.onSessaoInvalida(error);
@@ -215,7 +216,7 @@ $('[data-toggle="tooltip"]').tooltip();
 
     this.classificacaoriscoservice.BindRespostaVerbal().subscribe(async (data: Return) => {
       this.listaRespostaVerbal = data.result;
-      $(document).ready(function () { $("select[name^=RespostaVerbal]").val($("select[name^=RespostaVerbal] option:first").val()); });
+      $C(document).ready(function () { $C("select[name^=RespostaVerbal]").val($C("select[name^=RespostaVerbal] option:first").val()); });
 
     }, (error: HttpErrorResponse) => {
         this.auth.onSessaoInvalida(error);
@@ -224,7 +225,7 @@ $('[data-toggle="tooltip"]').tooltip();
 
     this.classificacaoriscoservice.BindRespostaMotora().subscribe(async (data: Return) => {
       this.listaRespostaMotora = data.result;
-      $(document).ready(function () { $("select[name^=RespostaMotora]").val($("select[name^=RespostaMotora] option:first").val()); });
+      $C(document).ready(function () { $C("select[name^=RespostaMotora]").val($C("select[name^=RespostaMotora] option:first").val()); });
 
     }, (error: HttpErrorResponse) => {
         this.auth.onSessaoInvalida(error);
@@ -234,7 +235,7 @@ $('[data-toggle="tooltip"]').tooltip();
       this.listaTipoOcorrencia = data.result;
       console.log(data.result);
 
-      $(document).ready(function () { $("select[name^=DO_TipoOcorrencia]").val($("select[name^=DO_TipoOcorrencia] option:first").val()); });
+      $C(document).ready(function () { $C("select[name^=DO_TipoOcorrencia]").val($C("select[name^=DO_TipoOcorrencia] option:first").val()); });
     }, (error: HttpErrorResponse) => {
         this.auth.onSessaoInvalida(error);
     });
@@ -242,7 +243,7 @@ $('[data-toggle="tooltip"]').tooltip();
     this.pessoaService.BindEstado().subscribe(async (data: Return) => {
       this.listaEstado = data.result;
 
-      $(document).ready(function () { $("select[name^=DP_Endereco_Estado]").val($("select[name^=DP_Endereco_Estado] option:first").val()); });
+      $C(document).ready(function () { $C("select[name^=DP_Endereco_Estado]").val($C("select[name^=DP_Endereco_Estado] option:first").val()); });
     }, (error: HttpErrorResponse) => {
         this.auth.onSessaoInvalida(error);
     });
@@ -267,7 +268,7 @@ $('[data-toggle="tooltip"]').tooltip();
 
       this.classificacaoriscoservice.BindTipoAlergia().subscribe(async (data: Return) => {
         this.listaTipoAlergia = data.result;
-        $(document).ready(function () { $("select[name^=TipoAlergia]").val($("select[name^=TipoAlergia] option:first").val()); });
+        $C(document).ready(function () { $C("select[name^=TipoAlergia]").val($C("select[name^=TipoAlergia] option:first").val()); });
 
       }, (error: HttpErrorResponse) => {
           this.auth.onSessaoInvalida(error);
@@ -275,7 +276,7 @@ $('[data-toggle="tooltip"]').tooltip();
 
       this.classificacaoriscoservice.BindAlergia().subscribe(async (data: Return) => {
         this.listaAlergia = data.result;
-        $(document).ready(function () { $("select[name^=Alergia]").val($("select[name^=Alergia] option:first").val()); });
+        $C(document).ready(function () { $C("select[name^=Alergia]").val($C("select[name^=Alergia] option:first").val()); });
 
       }, (error: HttpErrorResponse) => {
           this.auth.onSessaoInvalida(error);
@@ -284,7 +285,7 @@ $('[data-toggle="tooltip"]').tooltip();
 
       this.classificacaoriscoservice.BindLocalizacaoAlergia().subscribe(async (data: Return) => {
         this.listaLocalizacaoAlergia = data.result;
-        $(document).ready(function () { $("select[name^=LocalizacaoAlergia]").val($("select[name^=LocalizacaoAlergia] option:first").val()); });
+        $C(document).ready(function () { $C("select[name^=LocalizacaoAlergia]").val($C("select[name^=LocalizacaoAlergia] option:first").val()); });
 
       }, (error: HttpErrorResponse) => {
           this.auth.onSessaoInvalida(error);
@@ -292,7 +293,7 @@ $('[data-toggle="tooltip"]').tooltip();
 
       this.classificacaoriscoservice.BindReacaoAlergia().subscribe(async (data: Return) => {
         this.listaReacaoAlergia = data.result;
-        $(document).ready(function () { $("select[name^=ReacaoAlergia]").val($("select[name^=ReacaoAlergia] option:first").val()); });
+        $C(document).ready(function () { $C("select[name^=ReacaoAlergia]").val($C("select[name^=ReacaoAlergia] option:first").val()); });
 
       }, (error: HttpErrorResponse) => {
           this.auth.onSessaoInvalida(error);
@@ -300,7 +301,7 @@ $('[data-toggle="tooltip"]').tooltip();
 
       this.classificacaoriscoservice.BindSeveridade().subscribe(async (data: Return) => {
         this.listaSeveridadeAlergia = data.result;
-        $(document).ready(function () { $("select[name^=SeveridadeAlergia]").val($("select[name^=SeveridadeAlergia] option:first").val()); });
+        $C(document).ready(function () { $C("select[name^=SeveridadeAlergia]").val($C("select[name^=SeveridadeAlergia] option:first").val()); });
 
       }, (error: HttpErrorResponse) => {
           this.auth.onSessaoInvalida(error);
@@ -308,13 +309,13 @@ $('[data-toggle="tooltip"]').tooltip();
 
 
       // show card : Alergia
-      $('#AlergiaCard').removeClass('oculta');
-      $('#collapseOne3').addClass('show');
-      $('select[name="AlergiaTipo"]').focus();
+      $C('#AlergiaCard').removeClass('oculta');
+      $C('#collapseOne3').addClass('show');
+      $C('select[name="AlergiaTipo"]').focus();
 
     } else {
-      $('#AlergiaCard').addClass('oculta');
-      $('#collapseOne3').removeClass('show');
+      $C('#AlergiaCard').addClass('oculta');
+      $C('#collapseOne3').removeClass('show');
     }
 
   }
@@ -325,12 +326,12 @@ $('[data-toggle="tooltip"]').tooltip();
     if (this.auth.canActivate())
       this.auth.onSessaoAcrescimoTempo();
 
-    var dp_cep = $("input[name^=DO_CEP]").val().replace('-', '');
-    var dp_logradouro = $.trim($("input[name^=DO_Logradouro]").val());
+    var dp_cep = $C("input[name^=DO_CEP]").val().replace('-', '');
+    var dp_logradouro = $C.trim($C("input[name^=DO_Logradouro]").val());
 
     var cep: Cep = {}
 
-    if ($.isNumeric(dp_cep) && dp_cep.length === 8)
+    if ($C.isNumeric(dp_cep) && dp_cep.length === 8)
       cep.cep = dp_cep;
 
     if (this.Estado != undefined)
@@ -343,7 +344,7 @@ $('[data-toggle="tooltip"]').tooltip();
       cep.logradouro = dp_logradouro.toLowerCase();
 
 
-    if ($.isNumeric(dp_cep) && dp_cep.length === 8 && dp_logradouro === "") {
+    if ($C.isNumeric(dp_cep) && dp_cep.length === 8 && dp_logradouro === "") {
 
 
       this.pessoaService.BuscarCep(cep)
@@ -354,8 +355,8 @@ $('[data-toggle="tooltip"]').tooltip();
           } else {
 
 
-            $("input[name^=DO_Logradouro]").val(data.logradouro.toUpperCase())
-            $("input[name^=DO_Bairro]").val(data.bairro.toUpperCase())
+            $C("input[name^=DO_Logradouro]").val(data.logradouro.toUpperCase())
+            $C("input[name^=DO_Bairro]").val(data.bairro.toUpperCase())
 
             this.Estado = this.listaEstado.find(x => x.uf == data.uf.toUpperCase())
 
@@ -378,11 +379,11 @@ $('[data-toggle="tooltip"]').tooltip();
         });
     } else {
 
-      if (dp_logradouro !== "" && !$.isNumeric(dp_cep) && dp_cep.length === 0) {
+      if (dp_logradouro !== "" && !$C.isNumeric(dp_cep) && dp_cep.length === 0) {
 
         if (dp_logradouro.length > 3) {
-          //$('#divPesquisaLogradouro').removeClass('oculta');
-          $('#divPesquisaLogradouro').addClass('show');
+          //$C('#divPesquisaLogradouro').removeClass('oculta');
+          $C('#divPesquisaLogradouro').addClass('show');
           this.pessoaService.BuscarCepPorLogradouro(cep)
             .subscribe(data => {
 
@@ -392,8 +393,8 @@ $('[data-toggle="tooltip"]').tooltip();
             });
 
         } else {
-          $('#divPesquisaLogradouro').removeClass('show');
-          //$('#divPesquisaLogradouro').addClass('oculta');
+          $C('#divPesquisaLogradouro').removeClass('show');
+          //$C('#divPesquisaLogradouro').addClass('oculta');
         }
 
 
@@ -406,25 +407,25 @@ $('[data-toggle="tooltip"]').tooltip();
   //begin:: Fecha as pesquisas
   onFechaPesquisa() {
 
-    if ($("#divPesquisaNomeCompleto").hasClass('show'))
-      $("#divPesquisaNomeCompleto").removeClass('show');
+    if ($C("#divPesquisaNomeCompleto").hasClass('show'))
+      $C("#divPesquisaNomeCompleto").removeClass('show');
 
-    if ($("#divPesquisaLogradouro").hasClass('show'))
-      $("#divPesquisaLogradouro").removeClass('show');
+    if ($C("#divPesquisaLogradouro").hasClass('show'))
+      $C("#divPesquisaLogradouro").removeClass('show');
 
-    if ($("#divPesquisaNomeSocial").hasClass('show'))
-      $("#divPesquisaNomeSocial").removeClass('show');
+    if ($C("#divPesquisaNomeSocial").hasClass('show'))
+      $C("#divPesquisaNomeSocial").removeClass('show');
   }
   //end:: Fecha as pesquisas
 
   //begin:: Seleciona Endereco / Responsável por selecionar o cep vindo da consulta cep logradouro
   public onSelectedCep(cep: any) {
 
-    $("input[name^=DO_CEP]").val(cep.cep);
-    $("input[name^=DO_Logradouro]").val(cep.logradouro.toUpperCase());
-    $("input[name^=DO_Bairro]").val(cep.bairro.toUpperCase());
-    $("input[name^=DO_Complemento]").val(cep.complemento.toUpperCase());
-    $('#divPesquisaLogradouro').addClass('oculta');
+    $C("input[name^=DO_CEP]").val(cep.cep);
+    $C("input[name^=DO_Logradouro]").val(cep.logradouro.toUpperCase());
+    $C("input[name^=DO_Bairro]").val(cep.bairro.toUpperCase());
+    $C("input[name^=DO_Complemento]").val(cep.complemento.toUpperCase());
+    $C('#divPesquisaLogradouro').addClass('oculta');
   }
   //end:: Seleciona Endereco
 
@@ -433,12 +434,12 @@ $('[data-toggle="tooltip"]').tooltip();
     if (this.auth.canActivate())
       this.auth.onSessaoAcrescimoTempo();
 
-    $(document).ready(function () { $("select[name^=DP_Endereco_Cidade]").val($("select[name^=DP_Endereco_Cidade] option:first").val()); });
+    $C(document).ready(function () { $C("select[name^=DP_Endereco_Cidade]").val($C("select[name^=DP_Endereco_Cidade] option:first").val()); });
 
     this.pessoaService.BindCidade(this.Estado).subscribe(async (data: Return) => {
       this.listaCidade = data.result;
 
-      $(document).ready(function () { $("select[name^=DP_Endereco_Cidade]").val($("select[name^=DP_Endereco_Cidade] option:first").val()); });
+      $C(document).ready(function () { $C("select[name^=DP_Endereco_Cidade]").val($C("select[name^=DP_Endereco_Cidade] option:first").val()); });
 
     }, (error: HttpErrorResponse) => {
         this.auth.onSessaoInvalida(error);
@@ -453,14 +454,14 @@ $('[data-toggle="tooltip"]').tooltip();
     if (this.auth.canActivate())
       this.auth.onSessaoAcrescimoTempo();
 
-    $("#k_scrolltop").trigger("click");
+    $C("#k_scrolltop").trigger("click");
 
-    var imc = $("input[name^=SV_IMC]").val();
-    var nivelConsciencia = $("input[name^=nivelConsciencia]:checked").val();
-    var escalaGlasgow = $("input[name^=EscalaGlasgow]").val();
-    var dataOcorrencia = $("input[name^=DO_Data]").val();
-    var horaOcorrencia = $("input[name^=DO_Hora]").val();
-    var cep = $("input[name^=DO_CEP]").val();
+    var imc = $C("input[name^=SV_IMC]").val();
+    var nivelConsciencia = $C("input[name^=nivelConsciencia]:checked").val();
+    var escalaGlasgow = $C("input[name^=EscalaGlasgow]").val();
+    var dataOcorrencia = $C("input[name^=DO_Data]").val();
+    var horaOcorrencia = $C("input[name^=DO_Hora]").val();
+    var cep = $C("input[name^=DO_CEP]").val();
 
     var classificacaorisco: ClassificacaoRisco = {};
 
@@ -472,37 +473,37 @@ $('[data-toggle="tooltip"]').tooltip();
     if (this.CausaExterna !== undefined && this.CausaExterna !== null)
       classificacaorisco.causaExternaId = this.CausaExterna.causaExternaId;
 
-    if ($("label[for^=EscalaDor0]").hasClass("active"))
+    if ($C("label[for^=EscalaDor0]").hasClass("active"))
       classificacaorisco.escalaDorId = this.listaEscalasDor.find(x => x.codigoEscalaDor === 0).escalaDorId;
 
-    if ($("label[for^=EscalaDor1]").hasClass("active"))
+    if ($C("label[for^=EscalaDor1]").hasClass("active"))
       classificacaorisco.escalaDorId = this.listaEscalasDor.find(x => x.codigoEscalaDor === 1).escalaDorId;
 
-    if ($("label[for^=EscalaDor2]").hasClass("active"))
+    if ($C("label[for^=EscalaDor2]").hasClass("active"))
       classificacaorisco.escalaDorId = this.listaEscalasDor.find(x => x.codigoEscalaDor === 2).escalaDorId;
 
-    if ($("label[for^=EscalaDor3]").hasClass("active"))
+    if ($C("label[for^=EscalaDor3]").hasClass("active"))
       classificacaorisco.escalaDorId = this.listaEscalasDor.find(x => x.codigoEscalaDor === 3).escalaDorId;
 
-    if ($("label[for^=EscalaDor4]").hasClass("active"))
+    if ($C("label[for^=EscalaDor4]").hasClass("active"))
       classificacaorisco.escalaDorId = this.listaEscalasDor.find(x => x.codigoEscalaDor === 4).escalaDorId;
 
-    if ($("label[for^=EscalaDor5]").hasClass("active"))
+    if ($C("label[for^=EscalaDor5]").hasClass("active"))
       classificacaorisco.escalaDorId = this.listaEscalasDor.find(x => x.codigoEscalaDor === 5).escalaDorId;
 
-    if ($("label[for^=EscalaDor6]").hasClass("active"))
+    if ($C("label[for^=EscalaDor6]").hasClass("active"))
       classificacaorisco.escalaDorId = this.listaEscalasDor.find(x => x.codigoEscalaDor === 6).escalaDorId;
 
-    if ($("label[for^=EscalaDor7]").hasClass("active"))
+    if ($C("label[for^=EscalaDor7]").hasClass("active"))
       classificacaorisco.escalaDorId = this.listaEscalasDor.find(x => x.codigoEscalaDor === 7).escalaDorId;
 
-    if ($("label[for^=EscalaDor8]").hasClass("active"))
+    if ($C("label[for^=EscalaDor8]").hasClass("active"))
       classificacaorisco.escalaDorId = this.listaEscalasDor.find(x => x.codigoEscalaDor === 8).escalaDorId;
 
-    if ($("label[for^=EscalaDor9]").hasClass("active"))
+    if ($C("label[for^=EscalaDor9]").hasClass("active"))
       classificacaorisco.escalaDorId = this.listaEscalasDor.find(x => x.codigoEscalaDor === 9).escalaDorId;
 
-    if ($("label[for^=EscalaDor10]").hasClass("active"))
+    if ($C("label[for^=EscalaDor10]").hasClass("active"))
       classificacaorisco.escalaDorId = this.listaEscalasDor.find(x => x.codigoEscalaDor === 10).escalaDorId;
 
     if (cr.value.SV_Peso !== "")
@@ -557,22 +558,22 @@ $('[data-toggle="tooltip"]').tooltip();
     if (this.Especialidade !== undefined && this.Especialidade !== null)
       classificacaorisco.especialidadeId = this.Especialidade.especialidadeId;
 
-    if ($("label[for^=riscoazul]").hasClass("active"))
+    if ($C("label[for^=riscoazul]").hasClass("active"))
       classificacaorisco.riscoId = this.listaRisco.find(x => x.descricao === "AZUL").riscoId;
 
-    if ($("label[for^=riscoverde]").hasClass("active"))
+    if ($C("label[for^=riscoverde]").hasClass("active"))
       classificacaorisco.riscoId = this.listaRisco.find(x => x.descricao === "VERDE").riscoId;
 
-    if ($("label[for^=riscoamareloconsultorio]").hasClass("active"))
+    if ($C("label[for^=riscoamareloconsultorio]").hasClass("active"))
       classificacaorisco.riscoId = this.listaRisco.find(x => x.descricao === "AMARELO CONSULTÓRIO").riscoId;
 
-    if ($("label[for^=riscoId]").hasClass("active"))
+    if ($C("label[for^=riscoId]").hasClass("active"))
       classificacaorisco.riscoId = this.listaRisco.find(x => x.descricao === "AMARELO OBSERVAÇÃO").riscoId;
 
-    if ($("label[for^=riscolaranja]").hasClass("active"))
+    if ($C("label[for^=riscolaranja]").hasClass("active"))
       classificacaorisco.riscoId = this.listaRisco.find(x => x.descricao === "LARANJA").riscoId;
 
-    if ($("label[for^=riscovermelho]").hasClass("active"))
+    if ($C("label[for^=riscovermelho]").hasClass("active"))
       classificacaorisco.riscoId = this.listaRisco.find(x => x.descricao === "VERMELHO").riscoId;
 
       var msgCamposObrigatorios = "";
@@ -647,8 +648,8 @@ $('[data-toggle="tooltip"]').tooltip();
       classificacaorisco.dataOcorrencia = newData;
     }
 
-    classificacaorisco.pab = $("label[for^=PAB]").hasClass("active") ? true : false;
-    classificacaorisco.paf = $("label[for^=PAF]").hasClass("active") ? true : false;
+    classificacaorisco.pab = $C("label[for^=PAB]").hasClass("active") ? true : false;
+    classificacaorisco.paf = $C("label[for^=PAF]").hasClass("active") ? true : false;
 
     if (cep !== "")
       classificacaorisco.cep = cep.replace('-', '');
@@ -697,24 +698,24 @@ $('[data-toggle="tooltip"]').tooltip();
     if (this.TipoAlergia !== null && this.Alergia !== null) {
 
 
-      var datasintomas = $("input[name^=AlergiaData]").val();
+      var datasintomas = $C("input[name^=AlergiaData]").val();
 
-      var alergiaSituacao = $('input[type=checkbox][name^=AlergiaAtivo]').prop("checked");
+      var alergiaSituacao = $C('input[type=checkbox][name^=AlergiaAtivo]').prop("checked");
 
-      var classificacaoriscoAlergia: ClassificacaoRiscoAlergia = {};
+      var classificacaoriscoAlergia: any = {};
 
 
-      classificacaoriscoAlergia.tipoAlergiaId = this.TipoAlergia.tipoAlergiaId;
-      classificacaoriscoAlergia.alergiaId = this.Alergia.alergiaId;
+      classificacaoriscoAlergia.TipoAlergia = this.TipoAlergia.descricao;
+      classificacaoriscoAlergia.Alergia = this.Alergia.nome;
 
       if (this.LocalizacaoAlergia !== null)
-        classificacaoriscoAlergia.localizacaoAlergiaId = this.LocalizacaoAlergia.localizacaoAlergiaId;
+        classificacaoriscoAlergia.LocalizacaoAlergia = this.LocalizacaoAlergia.nome;
 
       if (this.ReacaoAlergia !== null)
-        classificacaoriscoAlergia.reacaoAlergiaId = this.ReacaoAlergia.reacaoAlergiaId;
+        classificacaoriscoAlergia.ReacaoAlergia = this.ReacaoAlergia.descricao;
 
       if (this.SeveridadeAlergia !== null)
-        classificacaoriscoAlergia.severidadeAlergiaId = this.SeveridadeAlergia.severidadeAlergiaId;
+        classificacaoriscoAlergia.SeveridadeAlergia = this.SeveridadeAlergia.nome;
 
 
       if (datasintomas !== "") {
@@ -742,9 +743,8 @@ $('[data-toggle="tooltip"]').tooltip();
       }
     } else {
 
-      $(document).ready(function () {
-     
-      });
+        $C('select').val($C("select option:first").val());
+      
 
 
     }
@@ -755,7 +755,7 @@ $('[data-toggle="tooltip"]').tooltip();
 
   onLimparCamposAlergia() {
 
-    $("input[name^=Prof_NumConselho]").val("");
+    $C("input[name^=Prof_NumConselho]").val("");
     this.TipoAlergia = undefined;
     this.Alergia = undefined;
     this.LocalizacaoAlergia = undefined;
@@ -763,17 +763,17 @@ $('[data-toggle="tooltip"]').tooltip();
     this.SeveridadeAlergia = undefined;
     this.ClassificacaoRiscoAlergia = undefined;
 
-    $(document).ready(function () {
-      $("select[name^=TipoAlergia]").val($("select[name^=TipoAlergia] option:first").val());
-      $("select[name^=Alergia]").val($("select[name^=Alergia] option:first").val());
-      $("select[name^=LocalizacaoAlergia]").val($("select[name^=LocalizacaoAlergia] option:first").val());
-      $("select[name^=ReacaoAlergia]").val($("select[name^=ReacaoAlergia] option:first").val());
-      $("select[name^=SeveridadeAlergia]").val($("select[name^=SeveridadeAlergia] option:first").val());
-      $("input[name^=AlergiaData]").val("");
-      $("input[name^=AlergiaAtivo]").prop("checked", false);
-      //$('#msg_tipoprofissional').addClass('oculta');
-      $('#btnCancelarAlergia').addClass('oculta');
-      $("#btnAddNovaAlergia").html('<i class="fa fa-plus"></i>Adicionar');
+    $C(document).ready(function () {
+      $C("select[name^=TipoAlergia]").val($C("select[name^=TipoAlergia] option:first").val());
+      $C("select[name^=Alergia]").val($C("select[name^=Alergia] option:first").val());
+      $C("select[name^=LocalizacaoAlergia]").val($C("select[name^=LocalizacaoAlergia] option:first").val());
+      $C("select[name^=ReacaoAlergia]").val($C("select[name^=ReacaoAlergia] option:first").val());
+      $C("select[name^=SeveridadeAlergia]").val($C("select[name^=SeveridadeAlergia] option:first").val());
+      $C("input[name^=AlergiaData]").val("");
+      $C("input[name^=AlergiaAtivo]").prop("checked", false);
+      //$C('#msg_tipoprofissional').addClass('oculta');
+      $C('#btnCancelarAlergia').addClass('oculta');
+      $C("#btnAddNovaAlergia").html('<i class="fa fa-plus"></i>Adicionar');
     });
   }
 
@@ -784,11 +784,11 @@ $('[data-toggle="tooltip"]').tooltip();
       var totalRespostas = this.AberturaOcular.escore + this.RespostaVerbal.escore + this.RespostaMotora.escore;
 
       if (8 >= totalRespostas)
-        $("input[name^=EscalaGlasgow]").val(totalRespostas + " - Trauma Grave");
+        $C("input[name^=EscalaGlasgow]").val(totalRespostas + " - Trauma Grave");
       else if (12 >= totalRespostas)
-        $("input[name^=EscalaGlasgow]").val(totalRespostas + " - Trauma Moderado");
+        $C("input[name^=EscalaGlasgow]").val(totalRespostas + " - Trauma Moderado");
       else if (15 >= totalRespostas)
-        $("input[name^=EscalaGlasgow]").val(totalRespostas + " - Trauma Leve");
+        $C("input[name^=EscalaGlasgow]").val(totalRespostas + " - Trauma Leve");
     }
   }
 
@@ -797,20 +797,20 @@ $('[data-toggle="tooltip"]').tooltip();
     this.AberturaOcular = null;
     this.RespostaVerbal = null;
     this.RespostaMotora = null;
-    $("input[name^=EscalaGlasgow]").val("");
+    $C("input[name^=EscalaGlasgow]").val("");
 
-    $(document).ready(function () {
+    $C(document).ready(function () {
 
-      $("select[name^=AberturaOcular]").val($("select[name^=AberturaOcular] option:first").val());
-      $("select[name^=RespostaVerbal]").val($("select[name^=RespostaVerbal] option:first").val());
-      $("select[name^=RespostaMotora]").val($("select[name^=RespostaMotora] option:first").val());
+      $C("select[name^=AberturaOcular]").val($C("select[name^=AberturaOcular] option:first").val());
+      $C("select[name^=RespostaVerbal]").val($C("select[name^=RespostaVerbal] option:first").val());
+      $C("select[name^=RespostaMotora]").val($C("select[name^=RespostaMotora] option:first").val());
 
     });
   }
 
   public onLimpaFormClassificacaoRisco(form: NgForm) {
 
-    $("#k_scrolltop").trigger("click");
+    $C("#k_scrolltop").trigger("click");
     form.reset();
     form.value.DescricaoQueixa = "";
     form.value.SV_Peso = "";
@@ -835,22 +835,9 @@ $('[data-toggle="tooltip"]').tooltip();
     form.value.DO_Complemento = "";
     form.value.DO_Bairro = "";
 
-    $(document).ready(function () { 
-      $("select[name^=CausaExterna]").val($("select[name^=CausaExterna] option:first").val()); 
-      $("select[name^=TipoChegada]").val($("select[name^=TipoChegada] option:first").val()); 
-      $("select[name^=Especialidade]").val($("select[name^=Especialidade] option:first").val()); 
-      $("select[name^=PossuiAlergia]").val($("select[name^=PossuiAlergia] option:first").val()); 
-      $("select[name^=AberturaOcular]").val($("select[name^=AberturaOcular] option:first").val()); 
-      $("select[name^=RespostaVerbal]").val($("select[name^=RespostaVerbal] option:first").val()); 
-      $("select[name^=RespostaMotora]").val($("select[name^=RespostaMotora] option:first").val()); 
-      $("select[name^=DO_TipoOcorrencia]").val($("select[name^=DO_TipoOcorrencia] option:first").val()); 
-      $("select[name^=DP_Endereco_Estado]").val($("select[name^=DP_Endereco_Estado] option:first").val()); 
-      $("select[name^=DP_Endereco_Cidade]").val($("select[name^=DP_Endereco_Cidade] option:first").val()); 
-      $("select[name^=TipoAlergia]").val($("select[name^=TipoAlergia] option:first").val()); 
-      $("select[name^=Alergia]").val($("select[name^=Alergia] option:first").val()); 
-      $("select[name^=ReacaoAlergia]").val($("select[name^=ReacaoAlergia] option:first").val()); 
-      $("select[name^=SeveridadeAlergia]").val($("select[name^=SeveridadeAlergia] option:first").val()); 
-    });
+      $C('select').val($C("select option:first").val());
+   
+    
   }
 
   //begin:: Edita Lotacao Profissional / Permite o usuário editar as lotações lançadas na aba profissional
@@ -872,15 +859,15 @@ $('[data-toggle="tooltip"]').tooltip();
         day = '' + dataSintomas.getDate(),
         year = dataSintomas.getFullYear();
 
-      $("input[name^=AlergiaData]").val(("0" + day).slice(-2) + "/" + ("0" + month).slice(-2) + "/" + year);
+      $C("input[name^=AlergiaData]").val(("0" + day).slice(-2) + "/" + ("0" + month).slice(-2) + "/" + year);
     }
 
-    $("input[name^=AlergiaAtivo]").prop("checked", false);
+    $C("input[name^=AlergiaAtivo]").prop("checked", false);
 
     this.ClassificacaoRiscoAlergia = classificacaoRiscoAlergia;
 
-    $("#btnAddNovaAlergia").html("<i class='fa fa-plus'></i>Salvar");
-    $('#btnCancelarAlergia').removeClass('oculta');
+    $C("#btnAddNovaAlergia").html("<i class='fa fa-plus'></i>Salvar");
+    $C('#btnCancelarAlergia').removeClass('oculta');
 
   }
   //end::  Edita Lotacao Profissional
@@ -917,14 +904,14 @@ $('[data-toggle="tooltip"]').tooltip();
 
   onCalculaImc(){
 
-    var peso = $("input[name^=Peso]").val();
-    var altura = $("input[name^=Altura]").val();
+    var peso = $C("input[name^=Peso]").val();
+    var altura = $C("input[name^=Altura]").val();
   
       if(peso !== "" && altura !== ""){
   
         var imc = this.imcService.CalculaImc(peso, altura);
   
-        $('input[name^=IMC]').val(imc);
+        $C('input[name^=IMC]').val(imc);
       }
   
       
@@ -932,24 +919,24 @@ $('[data-toggle="tooltip"]').tooltip();
 
     onValidaTemperatura(){
 
-      var temp = $('input[name^=SV_Temperatura]').val();
+      var temp = $C('input[name^=SV_Temperatura]').val();
  
       var msg_validacao = this.sinaisvitaisService.ValidaTemperatura(temp);
  
       switch(msg_validacao) { 
        case 'normal': { 
-         $('#msg_erro_temperatura').addClass('oculta');
+         $C('#msg_erro_temperatura').addClass('oculta');
           break; 
        } 
        case 'recomendar': { 
-        $('#msg_erro_temperatura').prop('class','form-text text-info');
-        $('#msg_erro_temperatura').html('<b>Temperatura:</b> Indicado valores entre 35º à 40º');
+        $C('#msg_erro_temperatura').prop('class','form-text text-info');
+        $C('#msg_erro_temperatura').html('<b>Temperatura:</b> Indicado valores entre 35º à 40º');
         
           break; 
        } 
        case 'bloquear': { 
-        $('#msg_erro_temperatura').prop('class','form-text text-danger');
-        $('#msg_erro_temperatura').html('<b>Temperatura:</b> Não permitido menor que 33º e maior que 45º');
+        $C('#msg_erro_temperatura').prop('class','form-text text-danger');
+        $C('#msg_erro_temperatura').html('<b>Temperatura:</b> Não permitido menor que 33º e maior que 45º');
          break; 
       } 
     } 
@@ -958,22 +945,22 @@ $('[data-toggle="tooltip"]').tooltip();
 
       onValidaSaturacao(){
 
-        var saturacao = $('input[name^=SV_Saturacao]').val();
+        var saturacao = $C('input[name^=SV_Saturacao]').val();
        var msg_validacao = this.sinaisvitaisService.ValidaSaturacao(saturacao);
 
        switch(msg_validacao) { 
         case 'normal': { 
-          $('#msg_erro_saturacao').addClass('oculta');
+          $C('#msg_erro_saturacao').addClass('oculta');
            break; 
         } 
         case 'recomendar': { 
-          $('#msg_erro_saturacao').prop('class','form-text text-info');
-          $('#msg_erro_saturacao').html('<b>Saturação:</b> Indicado valor acima de 85%');
+          $C('#msg_erro_saturacao').prop('class','form-text text-info');
+          $C('#msg_erro_saturacao').html('<b>Saturação:</b> Indicado valor acima de 85%');
            break; 
         } 
         case 'bloquear': { 
-          $('#msg_erro_saturacao').prop('class','form-text text-danger');
-          $('#msg_erro_saturacao').html('<b>Saturação:</b> Não permitido maior que 100%');
+          $C('#msg_erro_saturacao').prop('class','form-text text-danger');
+          $C('#msg_erro_saturacao').html('<b>Saturação:</b> Não permitido maior que 100%');
   
           
           break; 
@@ -983,23 +970,23 @@ $('[data-toggle="tooltip"]').tooltip();
 
        onValidaFreqResp(){
 
-        var freq_resp = $('input[name^=SV_FreqResp]').val();
+        var freq_resp = $C('input[name^=SV_FreqResp]').val();
   
         var msg_validacao = this.sinaisvitaisService.ValidaFrequenciaRespiratoria(freq_resp);
   
         switch(msg_validacao) { 
          case 'normal': { 
-         $('#msg_erro_freq_respiratoria').addClass('oculta');
+         $C('#msg_erro_freq_respiratoria').addClass('oculta');
             break; 
          } 
          case 'recomendar': { 
-          $('#msg_erro_freq_respiratoria').prop('class','form-text text-info');
-          $('#msg_erro_freq_respiratoria').html('<b>Freq Respiratória:</b> Indicado valores entre 12 e 60 (rpm)');
+          $C('#msg_erro_freq_respiratoria').prop('class','form-text text-info');
+          $C('#msg_erro_freq_respiratoria').html('<b>Freq Respiratória:</b> Indicado valores entre 12 e 60 (rpm)');
             break; 
          } 
          case 'bloquear': { 
-          $('#msg_erro_freq_respiratoria').removeClass('oculta');
-          $('#msg_erro_freq_respiratoria').html('Freq Respiratória:</b> Não permitido menor que 10 e maior que 66');
+          $C('#msg_erro_freq_respiratoria').removeClass('oculta');
+          $C('#msg_erro_freq_respiratoria').html('Freq Respiratória:</b> Não permitido menor que 10 e maior que 66');
            
            break; 
         } 
@@ -1009,23 +996,23 @@ $('[data-toggle="tooltip"]').tooltip();
 
        onValidaPulso(){
 
-        var pulso = $('input[name^=SV_Pulso]').val();
+        var pulso = $C('input[name^=SV_Pulso]').val();
     
         var msg_validacao = this.sinaisvitaisService.ValidaPulso(pulso);
   
         switch(msg_validacao) { 
          case 'normal': { 
-          $('#msg_erro_pulso').addClass('oculta');
+          $C('#msg_erro_pulso').addClass('oculta');
             break; 
          } 
          case 'recomendar': { 
-          $('#msg_erro_pulso').prop('class','form-text text-info');
-          $('#msg_erro_pulso').html('Pulso: Indicado valores entre 60 à 120');
+          $C('#msg_erro_pulso').prop('class','form-text text-info');
+          $C('#msg_erro_pulso').html('Pulso: Indicado valores entre 60 à 120');
            break; 
          } 
          case 'bloquear': { 
-          $('#msg_erro_pulso').removeClass('oculta');
-          $('#msg_erro_pulso').html('Pulso: Não permitido menor que 40 e maior que 150');
+          $C('#msg_erro_pulso').removeClass('oculta');
+          $C('#msg_erro_pulso').html('Pulso: Não permitido menor que 40 e maior que 150');
            break; 
         } 
       }
@@ -1036,18 +1023,18 @@ $('[data-toggle="tooltip"]').tooltip();
 
         if(event.target.name === "DPE_Outros")
           if(event.target.checked){
-            $('#dpe_outros_box').removeClass('oculta');
-            $('textarea[name="DoencaPreExistOutros"]').focus();
+            $C('#dpe_outros_box').removeClass('oculta');
+            $C('textarea[name="DoencaPreExistOutros"]').focus();
            } else  
-            $('#dpe_outros_box').addClass('oculta');
+            $C('#dpe_outros_box').addClass('oculta');
           
 
          if(event.target.name === "DPE_RespCronico")
             if(event.target.checked){
-              $('#dpe_respcron_box').removeClass('oculta');
-              $('textarea[name="DoencaPreExistRespCron"]').focus();
+              $C('#dpe_respcron_box').removeClass('oculta');
+              $C('textarea[name="DoencaPreExistRespCron"]').focus();
              } else  
-             $('#dpe_respcron_box').addClass('oculta');
+             $C('#dpe_respcron_box').addClass('oculta');
 
        }
 
@@ -1058,7 +1045,7 @@ $('[data-toggle="tooltip"]').tooltip();
     
 
         if(+data[0] > 23 || +data[1] > 59 || event.target.value.length !== 5)
-          $("input[name^=DO_Hora]").val('');
+          $C("input[name^=DO_Hora]").val('');
         
 
     }
@@ -1067,7 +1054,7 @@ $('[data-toggle="tooltip"]').tooltip();
 
       if(event.target.name === "DO_Data")
       if(!this.dataService.validarData(event.target.value)){
-        $("input[name^=DO_Data]").val('');
+        $C("input[name^=DO_Data]").val('');
         return;
        }
       }

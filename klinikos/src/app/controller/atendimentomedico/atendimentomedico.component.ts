@@ -189,6 +189,14 @@ export class AtendimentoMedicoComponent implements OnInit {
       $.getScript("../../../assets/app/custom/general/interface.js", function (data: any, textStatus: any, jqxhr: any) {
       });
 
+      $.getScript("../../../assets/demo/default/base/scripts.bundle.js", function (data: any, textStatus: any, jqxhr: any) {
+      });
+
+      $.getScript("../../../assets/vendors/general/bootstrap/dist/js/bootstrap.min.js", function (data: any, textStatus: any, jqxhr: any) {
+      });
+  
+      $.getScript("../../../assets/vendors/general/tooltip.js/dist/umd/tooltip.min.js", function (data: any, textStatus: any, jqxhr: any) {
+      });
 
     });
 

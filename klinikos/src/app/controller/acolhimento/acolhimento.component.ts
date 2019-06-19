@@ -148,7 +148,16 @@ export class AcolhimentoComponent implements OnInit {
       });
 
 
+      $.getScript("../../../assets/demo/default/base/scripts.bundle.js", function (data: any, textStatus: any, jqxhr: any) {
+      });
 
+      $.getScript("../../../assets/vendors/general/bootstrap/dist/js/bootstrap.min.js", function (data: any, textStatus: any, jqxhr: any) {
+      });
+  
+      $.getScript("../../../assets/vendors/general/tooltip.js/dist/umd/tooltip.min.js", function (data: any, textStatus: any, jqxhr: any) {
+      });
+  
+  
 
     });
 
@@ -284,7 +293,6 @@ export class AcolhimentoComponent implements OnInit {
       swal("Campos Obrigatórios", msgCamposObrigatorios, "error");
       return;
     }
-    console.log(JSON.stringify(acolhimento));
 
     this.AcolhimentoService.SalvarAcolhimento(acolhimento).subscribe(data => {
 
@@ -364,7 +372,7 @@ export class AcolhimentoComponent implements OnInit {
     form.value.SV_Pulso = "";
     form.value.SV_FreqResp = "";
     form.value.SV_Saturacao = "";
-    $("select[name^=Especialidade]").val($("select[name^=Especialidade] option:first").val());
+    $('select').val($("select option:first").val());
     $("#msg_temp_acolhimento_a").addClass("oculta");
     $("#msg_temp_acolhimento_b").addClass("oculta");
     $("#msg_sat_acolhimento_a").addClass("oculta");
