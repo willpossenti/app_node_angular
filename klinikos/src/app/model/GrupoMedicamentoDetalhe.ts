@@ -2,7 +2,7 @@
 
 export interface GrupoMedicamentoDetalhe {
 
-  GrupoMedicamentoDetalheId?: string;
+  grupoMedicamentoDetalheId?: string;
   nome?: string;
   ativo?: boolean;
 }

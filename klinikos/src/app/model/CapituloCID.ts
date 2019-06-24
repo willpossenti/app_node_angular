@@ -1,7 +1,7 @@
 
-export interface ConsultaCID {
+export interface CapituloCID {
 
-  colsultaCidId?: string;
+  capituloCidId?: string;
   capitulo?: string;
   nome?: string;
   posicao?: string;
