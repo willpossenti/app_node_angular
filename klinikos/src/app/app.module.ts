@@ -37,7 +37,7 @@ const appRoutes: Routes = [
       { path: 'registroboletim', component: RegistroBoletimComponent },
       { path: 'acolhimento', component: AcolhimentoComponent },
       { path: 'classificacaorisco', component: ClassificacaoRiscoComponent },
-      { path: 'atendimentomedico', component: AtendimentoMedicoComponent }
+      { path: 'atendimentomedico', component: AtendimentoMedicoComponent },
     ]
   },
 
@@ -58,7 +58,7 @@ export const options: Partial<IConfig> | (() => Partial<IConfig>) = {};
     AcolhimentoComponent,
     ClassificacaoRiscoComponent,
     ClassificacaoRiscoPipe,
-    AtendimentoMedicoComponent
+    AtendimentoMedicoComponent,
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),

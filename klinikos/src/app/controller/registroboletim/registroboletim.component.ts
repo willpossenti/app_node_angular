@@ -140,6 +140,7 @@ export class RegistroBoletimComponent implements OnInit {
       $("input[name^=IB_Data]").val(dataAtual);
       $("input[name^=IB_Hora]").val(horaAtual);
       $("select[name^=DP_Endereco_Cidade]").val($("select[name^=DP_Endereco_Cidade] option:first").val());
+
     });
 
 
@@ -504,6 +505,7 @@ export class RegistroBoletimComponent implements OnInit {
       
     });
 
+
   }
   //end:: Limpa Campos
 
@@ -517,7 +519,7 @@ export class RegistroBoletimComponent implements OnInit {
 
   }
 
-  onValidaData(event: any){
+  onValidaHora(event: any){
 
     var data = event.target.value.split(':');
     var d = new Date();

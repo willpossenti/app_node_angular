@@ -157,7 +157,6 @@ export class AcolhimentoComponent implements OnInit {
       $.getScript("../../../assets/vendors/general/tooltip.js/dist/umd/tooltip.min.js", function (data: any, textStatus: any, jqxhr: any) {
       });
   
-  
 
     });
 
@@ -383,6 +382,8 @@ export class AcolhimentoComponent implements OnInit {
     $("#msg_pressaosistolica_acolhimento_b").addClass("oculta");
     $("#msg_pressaodiastolica_acolhimento_a").addClass("oculta");
     $("#msg_pressaodiastolica_acolhimento_b").addClass("oculta");
+
+  
   }
 
   onCalculaImc(){
@@ -598,10 +599,12 @@ export class AcolhimentoComponent implements OnInit {
 
       if(id === 'idoso-a'){
         $('#idoso-a_icone').attr('class','svg fillBranca');
+
       }
 
       if(id === 'idoso-b'){
         $('#idoso-b_icone').attr('class','svg fillBranca');
+
       }
      }
 

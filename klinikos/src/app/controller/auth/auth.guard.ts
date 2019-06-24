@@ -13,7 +13,6 @@ export class AuthGuard implements CanActivate {
 
   canActivate() {
 
-
     if (localStorage['token_accessToken'] != null) {
 
       var expiracao = new Date(Date.parse(localStorage['token_expiracao']));

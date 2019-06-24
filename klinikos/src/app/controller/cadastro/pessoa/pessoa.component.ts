@@ -227,7 +227,6 @@ export class PessoaComponent implements OnInit {
       });
 
 
-
       $("select[name^=DP_Etnia]").val($("select[name^=DP_Etnia] option:first").val());
 
       $("select[name^=DP_OrgaoEmissor]").val($("select[name^=DP_OrgaoEmissor] option:first").val());

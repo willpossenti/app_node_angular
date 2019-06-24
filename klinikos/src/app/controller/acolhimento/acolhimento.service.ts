@@ -20,8 +20,6 @@ export class AcolhimentoService {
   };
 
   constructor(private http: HttpClient) {
-    this.baseUrl = 'https://localhost:44307/api/';
-    //this.baseUrl = 'https://apinew.ecosistemas.com.br/api/';
   }
 
   BindEspecialidade() { return this.http.get<Return>(`${this.baseUrl}especialidade`, this.httpOptions); }

@@ -116,6 +116,7 @@ export class ClassificacaoRiscoComponent implements OnInit {
   
       $C.getScript("../../../assets/vendors/general/tooltip.js/dist/umd/tooltip.min.js", function (data: any, textStatus: any, jqxhr: any) {
       });
+
     
 
       $C('.ed').on('click', function () {
@@ -464,6 +465,7 @@ export class ClassificacaoRiscoComponent implements OnInit {
     var cep = $C("input[name^=DO_CEP]").val();
 
     var classificacaorisco: ClassificacaoRisco = {};
+
 
     if (cr.value.DescricaoQueixa !== "")
       classificacaorisco.descricaoQueixa = cr.value.DescricaoQueixa.toUpperCase();
@@ -836,6 +838,7 @@ export class ClassificacaoRiscoComponent implements OnInit {
     form.value.DO_Bairro = "";
 
       $C('select').val($C("select option:first").val());
+  
    
     
   }
@@ -1058,6 +1061,9 @@ export class ClassificacaoRiscoComponent implements OnInit {
         return;
        }
       }
+
+
+      
 
 
 }

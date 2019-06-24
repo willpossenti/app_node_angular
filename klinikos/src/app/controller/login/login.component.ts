@@ -72,7 +72,7 @@ export class LoginComponent implements OnInit {
           senha: "prime_fcard"
         };
 
-
+        console.log(data.token.accessToken);
 
         var js = JSON.stringify(userCadeco);
 

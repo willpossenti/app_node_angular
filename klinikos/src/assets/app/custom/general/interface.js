@@ -61,7 +61,6 @@ $(document).ready(function () {
 
   function LimparTela(){
 
-alert('123');
     /* Varre formulário que possui a classe '.clean_on') -------------------- */
     // limpa: input, textarea
     $('.clean_on').find('input, textarea').val('');
@@ -81,6 +80,8 @@ alert('123');
 
      //oculta todas as mensagens de erro abaixo dos campos: <span class="cm"> -> 'clean message'
      $('.cm').addClass('oculta');
+
+     
   }
  
 

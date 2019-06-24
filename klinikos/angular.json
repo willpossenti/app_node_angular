@@ -61,7 +61,7 @@
               "src/assets/vendors/general/perfect-scrollbar/dist/perfect-scrollbar.js",
               "src/assets/vendors/general/popper.js/dist/umd/popper.js",
               "src/assets/vendors/general/sticky-js/dist/sticky.min.js",
-              "src/assets/vendors/general/tooltip.js/dist/umd/tooltip.min.js"
+              "src/assets/vendors/general/tooltip.js/dist/umd/tooltip.min.js",
              
             ],
             "es5BrowserSupport": true
