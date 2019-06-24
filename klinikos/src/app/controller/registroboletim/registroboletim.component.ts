@@ -141,6 +141,8 @@ export class RegistroBoletimComponent implements OnInit {
       $("input[name^=IB_Hora]").val(horaAtual);
       $("select[name^=DP_Endereco_Cidade]").val($("select[name^=DP_Endereco_Cidade] option:first").val());
 
+      $.getScript("../../../assets/app/custom/general/interface.js", function (data: any, textStatus: any, jqxhr: any) {
+      });
     });
 
 
@@ -497,13 +499,6 @@ export class RegistroBoletimComponent implements OnInit {
     form.value.DO_Logradouro = "";
     form.value.DO_Complemento = "";
 
-    $(document).ready(function () { 
-      $('select').val($("select option:first").val());
-      $("input[name^=P_CPF]").val(""); 
-      $("input[name^=IB_Nascimento]").val(""); 
-      $("input[name^=DP_Telefone]").val(""); 
-      
-    });
 
 
   }

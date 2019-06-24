@@ -470,7 +470,6 @@
                           <div class="col-lg-2">
                             <label>Data dos Sintomas</label>
                             <input type="text" class="form-control mask_data" name="AlergiaData" placeholder="00/00/0000" mask="00/00/0000" value="">
-
                           </div>
                           <div class="col-lg-2">
                             <div class="k-checkbox-list">
@@ -672,11 +671,11 @@
                           </div>
                           <div class="col-lg-2">
                             <label>Data</label>
-                            <input type="text" class="form-control" name="DO_Data" placeholder="" mask="00/00/0000" tabindex="20" (blur)="onValidaData($event)" ngModel>
+                            <input type="text" class="form-control" name="DO_Data" placeholder="00/00/0000" mask="00/00/0000"  tabindex="20" (blur)="onValidaData($event)" ngModel>
                           </div>
                           <div class="col-lg-1">
                             <label>Hora</label>
-                            <input type="text" class="form-control mask_hour" name="DO_Hora" placeholder="" mask="00:00" tabindex="21" (blur)="onValidaHora($event)" ngModel>
+                            <input type="text" class="form-control" name="DO_Hora" placeholder="00:00" mask="00:00" tabindex="21" (blur)="onValidaHora($event)" ngModel>
                           </div>
                           <div class="col-lg-2">
                             <label class="d-block">&nbsp;</label>

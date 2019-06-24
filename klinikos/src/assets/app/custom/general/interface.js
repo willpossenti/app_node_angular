@@ -1,16 +1,7 @@
 
-
-
 // Comportamentos de Interface ----------------------------------
 $(document).ready(function () {
   "use strict";
-
-  // Start Popovers
-  // $("[data-toggle=popover]").popover({
-  //   trigger: 'hover'
-  // });
-  // Start Tooltips
- //  $('[data-toggle="tooltip"]').tooltip();
 
 
   /*=CadastroDePessoas: ------------------------------------------- */
@@ -23,10 +14,9 @@ $(document).ready(function () {
     });
   });
 
-
-  // Limpar Formulário -------------------------
-  $('#btn_formclearCadastro').on('click', function () {
-
+ 
+ 
+  $('#btnLimparCadastro').on('click', function () {
     // Reestrutura campos iniciais de Dados Pessoais -------------------
     if ($('input[name="DP_RecemNascido"]').is(":checked")) {
       // Reexibe : Nome Completo, Nome Social (opção: Recém Nascido)
@@ -39,27 +29,53 @@ $(document).ready(function () {
       $('#box_descricao, #box_nomeRN').addClass('oculta');
     }
 
-    // limpa combos dinâmicos
-    $('select[name^=DP_Etnia]').find('option').remove().end().append('<option value="-1">-- Selecione --</option>');
-    $('select[name^=DP_NaturalidadeCidade]').find('option').remove().end().append('<option value="-1">-- Selecione --</option>');
-    $("select[name^=DP_Etnia]").val($("select[name^=DP_Etnia] option:first").val());
-    $("select[name^=DP_NaturalidadeCidade]").val($("select[name^=DP_NaturalidadeCidade] option:first").val());
-
     var btnchk = $(this).find('input[name^=DP_TipoCadastro]');
 
     $(btnchk).prop('checked', false);
     $('#box_dadosprof').addClass('oculta');
 
+    $('.k-avatar__holder').css('background-image', 'url(../../../assets/media/users/default.jpg)');
+
     LimparTela();
 
   });
 
+  $('#btnLimparRegistroBoletim').on('click', function () {
+
+    LimparTela();
+  });
+
+  $('#btnLimparAcolhimento').on('click', function () {
+
+    $("#msg_temp_acolhimento_a").addClass("oculta");
+    $("#msg_temp_acolhimento_b").addClass("oculta");
+    $("#msg_sat_acolhimento_a").addClass("oculta");
+    $("#msg_sat_acolhimento_b").addClass("oculta");
+    $("#msg_freqResp_acolhimento_a").addClass("oculta");
+    $("#msg_freqResp_acolhimento_b").addClass("oculta");
+    $("#msg_pressaosistolica_acolhimento_a").addClass("oculta");
+    $("#msg_pressaosistolica_acolhimento_b").addClass("oculta");
+    $("#msg_pressaodiastolica_acolhimento_a").addClass("oculta");
+    $("#msg_pressaodiastolica_acolhimento_b").addClass("oculta");
+    $('#preferencial_icone').attr('class','svg fill');
+    $('#gestante_icone').attr('class','svg fill');
+    $('#idoso-a_icone').attr('class','svg fill');
+    $('#idoso-b_icone').attr('class','svg fill');
+    LimparTela();
+  });
 
   $('#btnLimparClassificacaoRisco').on('click', function () {
+
+    $("#msg_erro_temperatura").addClass("oculta");
+    $("#msg_erro_pressaoarterial").addClass("oculta");
+    $("#msg_erro_pulso").addClass("oculta");
+    $("#msg_erro_freq_respiratoria").addClass("oculta");
+    $("#msg_erro_saturacao").addClass("oculta");
     LimparTela();
   });
 
   function LimparTela(){
+
 
     /* Varre formulário que possui a classe '.clean_on') -------------------- */
     // limpa: input, textarea
@@ -73,8 +89,7 @@ $(document).ready(function () {
       $('.clear').removeClass('active');
       // class.risco > escala de dor : campos com opacidade
       $('.ed').addClass('ed-opac');
-      // acolhimento > preferencial : icones svg
-      $('.deficiente, .gestante, .idoso-a, idoso-b').removeClass('fill-hover');
+
     }
     
 
@@ -136,15 +151,15 @@ $(document).ready(function () {
 
   // Ícone de Prioridade : Permite alterar cor de imagens SVG, classe 'fill'; -------
   $(function () {
-    jQuery('img.svg').each(function () {
-      var $img = jQuery(this);
+    $('img.svg').each(function () {
+      var $img = $(this);
       var imgID = $img.attr('id');
       var imgClass = $img.attr('class');
       var imgURL = $img.attr('src');
 
-      jQuery.get(imgURL, function (data) {
+      $.get(imgURL, function (data) {
         // Get the SVG tag, ignore the rest
-        var $svg = jQuery(data).find('svg');
+        var $svg = $(data).find('svg');
 
         // Add replaced image's ID to the new SVG
         if (typeof imgID !== 'undefined') {
@@ -170,79 +185,6 @@ $(document).ready(function () {
 
     });
   });
-
-  // Ícone de Prioridade (Click) : Add and remove class 'fill' -------------------------------------
-  $('#deficiente').on('click', function () {
-    if (!$(this).hasClass('active')) {
-      $('.deficiente').addClass('fill-hover');
-      $('.gestante, .idoso-a, .idoso-b').removeClass('fill-hover');
-    }
-  });
-  $('#gestante').on('click', function () {
-    if (!$(this).hasClass('active')) {
-      $('.gestante').addClass('fill-hover');
-      $('.deficiente, .idoso-a, .idoso-b').removeClass('fill-hover');
-    }
-  });
-  $('#idoso-a').on('click', function () {
-    if (!$(this).hasClass('active')) {
-      $('.idoso-a').addClass('fill-hover');
-      $('.deficiente, .gestante, .idoso-b').removeClass('fill-hover');
-    }
-  });
-  $('#idoso-b').on('click', function () {
-    if (!$(this).hasClass('active')) {
-      $('.idoso-b').addClass('fill-hover');
-      $('.deficiente, .gestante, .idoso-a').removeClass('fill-hover');
-    }
-  });
-
-  // Ícone de Prioridade (Hover) : Add and remove class 'fill' -------------------------------------
-  $(function () {
-    // Prioridades
-    $('#deficiente').hover(
-      function () {
-        $('.deficiente').addClass('fill-hover');
-      },
-      function () {
-        if (!$(this).hasClass('active')) {
-          $('.deficiente').removeClass('fill-hover');
-        }
-      }
-    );
-    $('#gestante').hover(
-      function () {
-        $('.gestante').addClass('fill-hover');
-      },
-      function () {
-        if (!$(this).hasClass('active')) {
-          $('.gestante').removeClass('fill-hover');
-        }
-      }
-    );
-    $('#idoso-a').hover(
-      function () {
-        $('.idoso-a').addClass('fill-hover');
-      },
-      function () {
-        if (!$(this).hasClass('active')) {
-          $('.idoso-a').removeClass('fill-hover');
-        }
-      }
-    );
-    $('#idoso-b').hover(
-      function () {
-        $('.idoso-b').addClass('fill-hover');
-      },
-      function () {
-        if (!$(this).hasClass('active')) {
-          $('.idoso-b').removeClass('fill-hover');
-        }
-      }
-    );
-  });
-
-
 
   /*=Classificação de Risco: --------------------------------------------------- */
 

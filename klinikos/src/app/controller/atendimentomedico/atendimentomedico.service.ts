@@ -23,6 +23,8 @@ export class AtendimentoMedicoService {
 
 
   constructor(private http: HttpClient) {
+    //this.baseUrl = 'https://localhost:44307/api/';
+    this.baseUrl = 'https://apinew.ecosistemas.com.br/api/';
   }
 
   ConsultarCIDByCapitulo(cid: CID) { return this.http.post<Return>(`${this.baseUrl}cid/GetCIDByCapitulo`, cid, this.httpOptions); }

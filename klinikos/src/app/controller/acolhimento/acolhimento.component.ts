@@ -157,6 +157,8 @@ export class AcolhimentoComponent implements OnInit {
       $.getScript("../../../assets/vendors/general/tooltip.js/dist/umd/tooltip.min.js", function (data: any, textStatus: any, jqxhr: any) {
       });
   
+      $.getScript("../../../assets/app/custom/general/interface.js", function (data: any, textStatus: any, jqxhr: any) {
+      });
 
     });
 
@@ -371,17 +373,6 @@ export class AcolhimentoComponent implements OnInit {
     form.value.SV_Pulso = "";
     form.value.SV_FreqResp = "";
     form.value.SV_Saturacao = "";
-    $('select').val($("select option:first").val());
-    $("#msg_temp_acolhimento_a").addClass("oculta");
-    $("#msg_temp_acolhimento_b").addClass("oculta");
-    $("#msg_sat_acolhimento_a").addClass("oculta");
-    $("#msg_sat_acolhimento_b").addClass("oculta");
-    $("#msg_freqResp_acolhimento_a").addClass("oculta");
-    $("#msg_freqResp_acolhimento_b").addClass("oculta");
-    $("#msg_pressaosistolica_acolhimento_a").addClass("oculta");
-    $("#msg_pressaosistolica_acolhimento_b").addClass("oculta");
-    $("#msg_pressaodiastolica_acolhimento_a").addClass("oculta");
-    $("#msg_pressaodiastolica_acolhimento_b").addClass("oculta");
 
   
   }
@@ -559,6 +550,9 @@ export class AcolhimentoComponent implements OnInit {
        
         if(!$('#preferencial').hasClass('active')){
           $('#preferencial_icone').attr('class','svg fillBranca');
+          $('#gestante_icone').attr('class','svg fill');
+          $('#idoso-a_icone').attr('class','svg fill');
+          $('#idoso-b_icone').attr('class','svg fill');
         }
        
       }
@@ -566,12 +560,18 @@ export class AcolhimentoComponent implements OnInit {
       if(id === 'gestante'){
         if($('#gestante').hasClass('btn btn-outline-info cp clear')){
           $('#gestante_icone').addClass('svg fillBranca');
+          $('#preferencial_icone').attr('class','svg fill');
+          $('#idoso-a_icone').attr('class','svg fill');
+          $('#idoso-b_icone').attr('class','svg fill');
         }
      
       }
       if(id === 'idoso-a'){
         if($('#idoso-a').hasClass('btn btn-outline-info cp clear')){
           $('#idoso-a_icone').addClass('svg fillBranca');
+          $('#preferencial_icone').attr('class','svg fill');
+          $('#gestante_icone').attr('class','svg fill');
+          $('#idoso-b_icone').attr('class','svg fill');
         }
         
       }
@@ -579,9 +579,9 @@ export class AcolhimentoComponent implements OnInit {
       if(id === 'idoso-b'){
         if($('#idoso-b').hasClass('btn btn-outline-info cp clear')){
           $('#idoso-b_icone').addClass('svg fillBranca');
-          $('#idoso-a_icone').addClass('svg fill');
-          $('#idoso-gestante_icone').addClass('svg fill');
-          $('#preferencial_icone').addClass('svg fill');
+          $('#preferencial_icone').attr('class','svg fill');
+          $('#gestante_icone').attr('class','svg fill');
+          $('#idoso-a_icone').attr('class','svg fill');
         }
        
       }

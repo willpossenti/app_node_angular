@@ -50,7 +50,7 @@
                           </div>
                           <div class="col-lg-1">
                             <label>Hora <span class="fld-obg" title="Obrigatório">*</span></label>
-                            <input type="text" name="IB_Hora" class="form-control" mask="00:00" placeholder="00:00" tabindex="2" (blur)="onValidaData($event)" >
+                            <input type="text" name="IB_Hora" class="form-control" mask="00:00" placeholder="00:00" tabindex="2" (blur)="onValidaHora($event)" >
                           </div>
 
                           <div class="col-lg-6">
@@ -225,7 +225,7 @@
             <div class="row">
               <div class="col-lg-6">
                 <!-- <button type="button" class="btn btn-accent">Biometria</button> -->
-                <button type="button" class="btn btn-metal" data-toggle="k-tooltip" data-placement="top" title="Limpar Campos do Formulário" (click)="onLimpaFormRegistroBoletim(registroboletim)">Limpar</button>
+                <button type="button" id="btnLimparRegistroBoletim" class="btn btn-metal" data-toggle="k-tooltip" data-placement="top" title="Limpar Campos do Formulário" (click)="onLimpaFormRegistroBoletim(registroboletim)">Limpar</button>
               </div>
               <div class="col-lg-6 text-right">
                 <button type="submit" class="btn btn-primary" tabindex="64">Salvar</button>

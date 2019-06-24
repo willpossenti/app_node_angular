@@ -26,6 +26,7 @@ import { ClassificacaoRiscoPipe } from './controller/classificacaorisco/classifi
 import { NgxMaskModule, IConfig } from 'ngx-mask'
 import { AtendimentoMedicoComponent } from './controller/atendimentomedico/atendimentomedico.component';
 import { AtendimentoMedicoService } from './controller/atendimentomedico/atendimentomedico.service';
+import { FilaatendimentoComponent } from './controller/filaatendimento/filaatendimento.component';
 
 const appRoutes: Routes = [
   { path: '', redirectTo: '/login', pathMatch: 'full' },
@@ -38,6 +39,7 @@ const appRoutes: Routes = [
       { path: 'acolhimento', component: AcolhimentoComponent },
       { path: 'classificacaorisco', component: ClassificacaoRiscoComponent },
       { path: 'atendimentomedico', component: AtendimentoMedicoComponent },
+      { path: 'filaatendimento', component: FilaatendimentoComponent }
     ]
   },
 
@@ -59,6 +61,7 @@ export const options: Partial<IConfig> | (() => Partial<IConfig>) = {};
     ClassificacaoRiscoComponent,
     ClassificacaoRiscoPipe,
     AtendimentoMedicoComponent,
+    FilaatendimentoComponent
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),

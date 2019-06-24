@@ -22,6 +22,8 @@ export class LoginService {
 
 
   constructor(private http: HttpClient) {
+        //this.baseUrl = 'https://localhost:44307/api/';
+        this.baseUrl = 'https://apinew.ecosistemas.com.br/api/';
         this.cadecoUrl = 'https://integrador.ecosistemas.com.br/auth-rest/api/auth/login';
   }
 

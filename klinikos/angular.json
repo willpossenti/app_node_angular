@@ -62,6 +62,7 @@
               "src/assets/vendors/general/popper.js/dist/umd/popper.js",
               "src/assets/vendors/general/sticky-js/dist/sticky.min.js",
               "src/assets/vendors/general/tooltip.js/dist/umd/tooltip.min.js",
+              "src/assets/vendors/general/bootstrap/dist/js/bootstrap.min.js"
              
             ],
             "es5BrowserSupport": true

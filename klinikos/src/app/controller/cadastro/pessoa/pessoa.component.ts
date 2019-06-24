@@ -226,6 +226,8 @@ export class PessoaComponent implements OnInit {
       $.getScript("../../../../assets/vendors/general/tooltip.js/dist/umd/tooltip.min.js", function (data: any, textStatus: any, jqxhr: any) {
       });
 
+      $.getScript("../../../../assets/app/custom/general/interface.js", function (data: any, textStatus: any, jqxhr: any) {
+      });
 
       $("select[name^=DP_Etnia]").val($("select[name^=DP_Etnia] option:first").val());
 
@@ -2086,12 +2088,7 @@ if(this.Nacionalidade.descricao === "ESTRANGEIRO"){
     this.listaCidade = new Array<Cidade>();
     this.listaLotacaoProfissional = new Array<LotacaoProfissional>();
 
-    $("div").find("#box_newcontact1").remove();
-    $("div").find("#box_newcontact2").remove();
-    $("div").find("#box_newcontact3").remove();
-    $("div").find("#box_newcontact4").remove();
-    $("div").find("#box_newcontact5").remove();
-    $('.k-avatar__holder').css('background-image', 'url(../../assets/media/users/default.jpg)');
+   
   }
   //end:: Limpa Campos
 
