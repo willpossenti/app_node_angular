@@ -1,9 +1,7 @@
 import { AtendimentoMedicoAlergia } from './AtendimentoMedicoAlergia';
-import { CID } from './CID';
-import { ConsultaCID } from './ConsultaCID';
 import { AtendimentoMedicoExame } from './AtendimentoMedicoExame';
 import { ModeloPrescricaoReceitaDetalhe } from './ModeloPrescricaoReceitaDetalhe';
-import { AtendimentoMedicoPrescricaoReceita } from './AtendimentoMedicoPrescricaoReceita';
+import { AtendimentoMedicoPrescricaoReceitaDetalhe } from './AtendimentoMedicoPrescricaoReceitaDetalhe';
 import { ModeloAtestado } from './ModeloAtestado';
 
 export interface AtendimentoMedico {
@@ -22,13 +20,13 @@ export interface AtendimentoMedico {
   saturacao?: string;
   campoObservacao?: string;
   suspeitaDiagnostico?: string;
-  CID?: CID;
-  ConsultaCID?: ConsultaCID;
+  CIDId?: string;
+  CapituloCIDId?: string;
   Prescricao?: boolean;
   Receita?: boolean;
   AtendimentoMedicoExame?: Array<AtendimentoMedicoExame>;
   ModeloPrescricaoReceitaDetalhe?: ModeloPrescricaoReceitaDetalhe;
-  AtendimentoMedicoPrescricaoReceita?: Array<AtendimentoMedicoPrescricaoReceita>;
+  AtendimentoMedicoPrescricaoReceitaDetalhe?: Array<AtendimentoMedicoPrescricaoReceitaDetalhe>;
   ModeloAtestado?: ModeloAtestado;
   atestado?: string;
   validadeatestado?: string;

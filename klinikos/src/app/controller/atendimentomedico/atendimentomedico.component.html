@@ -164,7 +164,7 @@
                                     <th>Reação</th>
                                     <th>Severidade</th>
                                     <th>Data</th>
-                                    <th>Ativo</th>
+                                    <!-- <th>Ativo</th> -->
                                     <th colspan="2">Ações</th>
                                   </tr>
                                 </thead>
@@ -188,10 +188,10 @@
                                 <tbody id="tableAlergia" *ngFor="let item of listaAtendimentoMedicoAlergia; let i = index">
 
                                   <tr class="text-center" id="row{{i}}">
-                                    <td>{{ item.Alergia? item.Alergia.nome: '' }}</td>
-                                    <td>{{ item.LocalizacaoAlergia? item.LocalizacaoAlergia.nome: '' }}</td>
-                                    <td>{{ item.ReacaoAlergia? item.ReacaoAlergia.descricao: '' }}</td>
-                                    <td>{{ item.SeveridadeAlergia? item.SeveridadeAlergia.nome: '' }}</td>
+                                    <td>{{ item.Alergia }}</td>
+                                    <td>{{ item.LocalizacaoAlergia }}</td>
+                                    <td>{{ item.ReacaoAlergia }}</td>
+                                    <td>{{ item.SeveridadeAlergia }}</td>
                                     <td>{{ item.dataSintomas | date: 'dd/MM/yyyy'}}</td>
                                     <!-- <td>{{ item.alergiaSituacao === true? 'Ativo': 'Inativa'}}</td> -->
                                     <!--<td>
@@ -353,9 +353,9 @@
                             <div class="form-group row">
                               <div class="col-lg-12">
                                 <label>CID - Capítulos <span class="fld-obg" title="Obrigatório">*</span></label>
-                                  <select class="form-control custom-select"  name="ConsultaCID" [(ngModel)]="ConsultaCID">
+                                  <select class="form-control custom-select"  name="CapituloCID" [(ngModel)]="CapituloCID">
                                     <option value="">-- Selecione --</option>
-                                    <option *ngFor="let consultacid of listaConsultaCID | orderBy: orderOrdem" [ngValue]="consultacid">{{consultacid.capitulo}} - {{consultacid.nome}}, {{consultacid.posicao}}</option>                                  
+                                    <option *ngFor="let capitulocid of listaCapituloCID | orderBy: orderOrdem" [ngValue]="capitulocid">{{capitulocid.capitulo}} - {{capitulocid.nome}}, {{capitulocid.posicao}}</option>                                  
                                   </select>
                                  <span class="form-text text-danger cm oculta">Message Error</span>
                              </div>
@@ -557,10 +557,10 @@
 
                                   <tr class="text-center" id="row{{i}}">
                                     <td>{{ item.observacaoExame }}</td>
-                                    <td>{{ item.GrupoExame? item.GrupoExame.nome.substr(0,50) : '' }}</td>
-                                    <td>{{ item.Exame? item.Exame.nome: '' }}</td>
+                                    <td>{{ item.GrupoExame.substr(0,50) }}</td>
+                                    <td>{{ item.Exame.substr(0,50) }}</td>
                                     <td>{{ item.dataExame | date: 'dd/MM/yyyy' }}</td>
-                                    <td>{{ item.Profissional.nomeCompleto }}</td>
+                                    <td>{{ item.Profissional }}</td>
                                     
                                     <!--<td>
         <label class="k-checkbox k-checkbox--bold">
@@ -746,9 +746,14 @@
                               <input type="text" class="form-control" name="ObservacaoMedicamento" ngModel>
                               <span class="form-text text-danger cm oculta">Message Error</span>
                             </div>
-                            <div class="col-lg-2 pb-3">
+                            <!-- <div class="col-lg-2 pb-3">
                               <label class="d-block text-left">&nbsp;</label>
                               <button type="button" class="btn btn-metal" (click)="onAdicionaMedicamento()" id="btnAddNovoMedicamento"><i class="fa fa-plus fa-fw"></i>Adicionar</button>
+                            </div> -->
+                            <div class="col">
+                              <label class="d-block text-left">&nbsp;</label>
+                              <button type="button" class="btn btn-metal" data-toggle="popover" data-placement="top" data-trigger="hover" data-content="Adicionar um novo medicamento" (click)="onAdicionaMedicamento()" id="btnAddNovoMedicamento"><i class="fa fa-plus fa-fw"></i>Adicionar</button>
+                              <button type="button" class="btn btn-metal oculta" data-toggle="popover" data-placement="top" data-trigger="hover" data-content="Cancelar a edição da lotação" style="float: right;" (click)="onLimparCamposMedicamento()" id="btnCancelarMedicamento"><i class="fa fa-plus"></i>Cancelar</button>
                             </div>
                           </div>
                           
@@ -780,19 +785,18 @@
                                   </tr>
 
                                 </tbody>-->
-                                <tbody id="tableMedicamento" *ngFor="let item of listaAtendimentoMedicoPrescricaoReceita; let i = index">
+                                <tbody id="tableMedicamento" *ngFor="let item of listaAtendimentoMedicoPrescricaoReceitaDetalhe; let i = index">
                                   
                                   <!-- <tr class="text-center"> -->
                                      <!-- <td><i class="flaticon2-information-circular-button-symbol ch text-info" style="font-size: 1.5em;" data-content="Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt." data-toggle="popover" data-placement="top" data-trigger="hover"></i></td> -->
-                                     
 
                                   <tr class="text-center" id="row{{i}}">
                                     <td><i id="rowmedicamento" class="flaticon2-information-circular-button-symbol ch text-info" style="font-size: 1.5em;" data-toggle="popover" data-placement="top" data-trigger="hover" data-content="asdfa" (mouseenter) ="mouseEnter()"></i>{{ item.observacao }}</td>
-                                    <td>{{ item.Medicamento? item.Medicamento.nome.substr(0,50)  : '' }}</td>
+                                    <td>{{ item.Medicamento.substr(0,50) }}</td>
                                     <td>{{ item.dose }}</td>
-                                    <td>{{ item.UnidadeMedicamento? item.UnidadeMedicamento.descricao: ''}}</td>
-                                    <td>{{ item.ViaAdministracaoMedicamento? item.ViaAdministracaoMedicamento.descricao: '' }}</td>
-                                    <td>{{ item.IntervaloMedicamento? item.IntervaloMedicamento.descricao: ''}}</td>
+                                    <td>{{ item.UnidadeMedicamento }}</td>
+                                    <td>{{ item.ViaAdministracaoMedicamento }}</td>
+                                    <td>{{ item.IntervaloMedicamento }}</td>
                                     
                                     <!--<td>
     <label class="k-checkbox k-checkbox--bold">
@@ -885,7 +889,7 @@
                               <label>Selecione o Modelo</label>
                               <select class="form-control" name="ModeloAtestado" [(ngModel)]="ModeloAtestado">
                                 <option value="">-- Selecione --</option>
-                                <option *ngFor="let grupoexame of listaModeloAtestado | orderBy: orderNome" [ngValue]="modeloatestado">{{modeloatestado.nome}}</option>
+                                <option *ngFor="let modeloatestado of listaModeloAtestado | orderBy: orderNome" [ngValue]="modeloatestado">{{modeloatestado.nome}}</option>
                               </select>
                               <span class="form-text text-danger cm oculta">Message Error</span>
                             </div>

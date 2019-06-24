@@ -3,7 +3,6 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Return } from '../../model/Return';
 import { AtendimentoMedico } from '../../model/AtendimentoMedico';
-import { ConsultaCID } from 'src/app/model/ConsultaCID';
 import { CID } from 'src/app/model/CID';
 
 
@@ -28,7 +27,7 @@ export class AtendimentoMedicoService {
   }
 
   ConsultarCIDByCapitulo(cid: CID) { return this.http.post<Return>(`${this.baseUrl}cid/GetCIDByCapitulo`, cid, this.httpOptions); }
-  BindConsultaCID() { return this.http.get<Return>(`${this.baseUrl}consultacid`, this.httpOptions); }
+  BindCapituloCID() { return this.http.get<Return>(`${this.baseUrl}capitulocid`, this.httpOptions); }
   BindGrupoExame() { return this.http.get<Return>(`${this.baseUrl}grupoexame`, this.httpOptions); }
   BindExame() { return this.http.get<Return>(`${this.baseUrl}exame`, this.httpOptions); }
   BindModeloPrescricaoReceita() { return this.http.get<Return>(`${this.baseUrl}ModeloPrescricaoReceita`, this.httpOptions); }

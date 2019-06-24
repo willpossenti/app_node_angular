@@ -1,12 +1,12 @@
-import { ModeloPrescricaoReceita } from './ModeloPrescricaoReceita';
 import { GrupoMedicamento } from './GrupoMedicamento';
 
-export interface ModeloPrescricaoReceitaDetalhe {
 
-  modeloPrescricaoReceitaDetalheId?: string;
-  ModeloPrescricaoReceita?: ModeloPrescricaoReceita;
+export interface AtendimentoMedicoPrescricaoReceitaDetalhe {
+
+  AtendimentoMedicoPrescricaoReceitaDetalheId?: string;
   GrupoMedicamento?: GrupoMedicamento;
   medicamentoId?: string;
+  dose?: string;
   viaAdministracaoMedicamentoId?: string;
   unidadeMedicamentoId?: string;
   intervaloMedicamentoId?: string;

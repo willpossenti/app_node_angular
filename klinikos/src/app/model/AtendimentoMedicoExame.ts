@@ -1,6 +1,6 @@
 import { AtendimentoMedico } from './AtendimentoMedico';
 import { GrupoExame } from './GrupoExame';
-import { Exame } from './Exame';
+
 import { PessoaProfissional } from './PessoaProfissional';
 
 export interface AtendimentoMedicoExame {
@@ -8,7 +8,7 @@ export interface AtendimentoMedicoExame {
   atendimentoMedicoExameId?: string;
   AtendimentoMedico?: AtendimentoMedico;
   GrupoExame?: GrupoExame;
-  Exame?: Exame;
+  exameId?: string;
   observacaoExame?: string;
   dataExame?: Date;
   Profissional?: PessoaProfissional;

@@ -2,16 +2,15 @@ import { Component, OnInit, Pipe, PipeTransform } from '@angular/core';
 import * as $ from 'jquery';
 import { AtendimentoMedicoService } from './atendimentomedico.service';
 import { Return } from '../../model/Return';
-import { CausaExterna } from '../../model/CausaExterna';
 import { HttpErrorResponse } from '@angular/common/http';
 import * as Toastr from 'toastr';
 import { AtendimentoMedicoAlergia } from '../../model/AtendimentoMedicoAlergia';
 import { CID } from '../../model/CID';
-import { ConsultaCID } from '../../model/ConsultaCID';
+import { CapituloCID } from '../../model/CapituloCID';
 import { AtendimentoMedicoExame } from '../../model/AtendimentoMedicoExame';
 import { ModeloPrescricaoReceitaDetalhe } from '../../model/ModeloPrescricaoReceitaDetalhe';
 import { ModeloPrescricaoReceita } from '../../model/ModeloPrescricaoReceita';
-import { AtendimentoMedicoPrescricaoReceita } from '../../model/AtendimentoMedicoPrescricaoReceita';
+import { AtendimentoMedicoPrescricaoReceitaDetalhe } from '../../model/AtendimentoMedicoPrescricaoReceitaDetalhe';
 import { ModeloAtestado } from '../../model/ModeloAtestado';
 import { GrupoExame } from '../../model/GrupoExame';
 import { Exame } from '../../model/Exame';
@@ -44,8 +43,9 @@ export class AtendimentoMedicoComponent implements OnInit {
 
 
   listaCID: Array<CID>;
-  listaConsultaCID: Array<ConsultaCID>;
-  listaAtendimentoMedicoExame: Array<AtendimentoMedicoExame>;
+  listaCapituloCID: Array<CapituloCID>;
+  // listaAtendimentoMedicoExame: Array<AtendimentoMedicoExame>;
+  listaAtendimentoMedicoExame: any;
   listaModeloPrescricaoReceitaDetalhe: Array<ModeloPrescricaoReceitaDetalhe>;
   ListaPossuiAlergia: any;
   listaTipoAlergia: Array<TipoAlergia>;
@@ -53,7 +53,8 @@ export class AtendimentoMedicoComponent implements OnInit {
   listaLocalizacaoAlergia: Array<LocalizacaoAlergia>;
   listaReacaoAlergia: Array<ReacaoAlergia>;
   listaSeveridadeAlergia: Array<SeveridadeAlergia>;
-  listaAtendimentoMedicoPrescricaoReceita: Array<AtendimentoMedicoPrescricaoReceita>;
+  // listaAtendimentoMedicoPrescricaoReceitaDetalhe: Array<AtendimentoMedicoPrescricaoReceitaDetalhe>;
+  listaAtendimentoMedicoPrescricaoReceitaDetalhe: any;
   listaModeloAtestado: Array<ModeloAtestado>;
   listaGrupoExame: Array<GrupoExame>;
   listaExame: Array<Exame>;
@@ -62,11 +63,12 @@ export class AtendimentoMedicoComponent implements OnInit {
   listaViaAdministracaoMedicamento: Array<ViaAdministracaoMedicamento>;
   listaUnidadeMedicamento: Array<UnidadeMedicamento>;
   listaIntervaloMedicamento: Array<IntervaloMedicamento>;
-  listaAtendimentoMedicoAlergia: Array<AtendimentoMedicoAlergia>;
+  // listaAtendimentoMedicoAlergia: Array<AtendimentoMedicoAlergia>;
+  listaAtendimentoMedicoAlergia: any;
   listaModeloPrescricaoReceita: Array<ModeloPrescricaoReceita>;
 
   CID: CID;
-  ConsultaCID: ConsultaCID;
+  CapituloCID: CapituloCID;
   AtendimentoMedicoExame: AtendimentoMedicoExame;
   ModeloPrescricaoReceitaDetalhe: ModeloPrescricaoReceitaDetalhe;
   ModeloPrescricaoReceita: ModeloPrescricaoReceita;
@@ -76,7 +78,7 @@ export class AtendimentoMedicoComponent implements OnInit {
   LocalizacaoAlergia: LocalizacaoAlergia;
   ReacaoAlergia: ReacaoAlergia;
   SeveridadeAlergia: SeveridadeAlergia;
-  AtendimentoMedicoPrescricaoReceita: AtendimentoMedicoPrescricaoReceita;
+  AtendimentoMedicoPrescricaoReceita: AtendimentoMedicoPrescricaoReceitaDetalhe;
   ModeloAtestado: ModeloAtestado;
   GrupoExame: GrupoExame;
   Exame: Exame;
@@ -96,7 +98,7 @@ export class AtendimentoMedicoComponent implements OnInit {
   constructor(private atendimentomedicoservice: AtendimentoMedicoService, private pessoaService: PessoaService) {
     this.listaAtendimentoMedicoAlergia = new Array<AtendimentoMedicoAlergia>();
     this.listaAtendimentoMedicoExame = new Array<AtendimentoMedicoExame>();
-    this.listaAtendimentoMedicoPrescricaoReceita = new Array<AtendimentoMedicoPrescricaoReceita>();
+    this.listaAtendimentoMedicoPrescricaoReceitaDetalhe = new Array<AtendimentoMedicoPrescricaoReceitaDetalhe>();
 
   }
 
@@ -200,12 +202,11 @@ export class AtendimentoMedicoComponent implements OnInit {
 
     });
 
+this.atendimentomedicoservice.BindCapituloCID().subscribe(async (data: Return) => {
+      this.listaCapituloCID = data.result;
 
-this.atendimentomedicoservice.BindConsultaCID().subscribe(async (data: Return) => {
-      this.listaConsultaCID = data.result;
 
-
-      $(document).ready(function () { $("select[name^=ConsultaCID]").val($("select[name^=ConsultaCID] option:first").val()); });
+      $(document).ready(function () { $("select[name^=CapituloCID]").val($("select[name^=CapituloCID] option:first").val()); });
 
 
     }, (error: HttpErrorResponse) => {
@@ -213,7 +214,7 @@ this.atendimentomedicoservice.BindConsultaCID().subscribe(async (data: Return) =
       console.log(`Error. ${error.message}.`);
     });
 
-    // this.atendimentomedicoservice.BindCID(this.ConsultaCID).subscribe(async (data: Return) => {
+    // this.atendimentomedicoservice.BindCID(this.CapituloCID).subscribe(async (data: Return) => {
     //   this.listaCID = data.result;
 
 
@@ -228,7 +229,7 @@ this.atendimentomedicoservice.BindConsultaCID().subscribe(async (data: Return) =
 
     this.atendimentomedicoservice.BindGrupoExame().subscribe(async (data: Return) => {
       this.listaGrupoExame = data.result;
-      $(document).ready(function () { $("select[name^=GrupoExames]").val($("select[name^=GrupoExames] option:first").val()); });
+      $(document).ready(function () { $("select[name^=GrupoExame]").val($("select[name^=GrupoExame] option:first").val()); });
 
 
     }, (error: HttpErrorResponse) => {
@@ -309,7 +310,7 @@ this.atendimentomedicoservice.BindConsultaCID().subscribe(async (data: Return) =
 
     $(document).ready(function () { $("select[name^=CID]").val($("select[name^=CID] option:first").val()); });
 
-    // this.atendimentomedicoservice.BindCID(this.ConsultaCID).subscribe(async (data: Return) => {
+    // this.atendimentomedicoservice.BindCID(this.CapituloCID).subscribe(async (data: Return) => {
     //   this.listaCID = data.result;
 
     //   if (this.CID != null) {
@@ -408,7 +409,7 @@ this.atendimentomedicoservice.BindConsultaCID().subscribe(async (data: Return) =
 
     var imc = $("input[name^=AM_IMC]").val();
 
-    atendimentomedico.CID = this.CID;
+    atendimentomedico.CIDId = this.CID.cidId;
 
     if (rb.value.AM_Anamnese !== "")
       atendimentomedico.anamnese = rb.value.AM_Anamnese.toUpperCase();
@@ -460,9 +461,9 @@ this.atendimentomedicoservice.BindConsultaCID().subscribe(async (data: Return) =
       
     if (rb.value.AtestadoObservacao != "")
     {
-      atendimentomedico.atestado = rb.value.AtestadoObservacao.toUpperCase();
+      atendimentomedico.atestado = rb.value.AtestadoObservacao();
       if (rb.value.AtestadoValidade != "")
-        atendimentomedico.validadeatestado = rb.value.AtestadoValidade + " dias";
+        atendimentomedico.validadeatestado = rb.value.AtestadoValidade;
     }
     if($("#AtendMedTipoSaida").val("1")){
       atendimentomedico.tipoSaida = "A";
@@ -502,10 +503,10 @@ this.atendimentomedicoservice.BindConsultaCID().subscribe(async (data: Return) =
       atendimentomedico.AtendimentoMedicoExame = [];
       atendimentomedico.AtendimentoMedicoExame = this.listaAtendimentoMedicoExame;
     }  
-    if (this.listaAtendimentoMedicoPrescricaoReceita.length > 0) {
+    if (this.listaAtendimentoMedicoPrescricaoReceitaDetalhe.length > 0) {
 
-      atendimentomedico.AtendimentoMedicoPrescricaoReceita = [];
-      atendimentomedico.AtendimentoMedicoPrescricaoReceita = this.listaAtendimentoMedicoPrescricaoReceita;
+      atendimentomedico.AtendimentoMedicoPrescricaoReceitaDetalhe = [];
+      atendimentomedico.AtendimentoMedicoPrescricaoReceitaDetalhe = this.listaAtendimentoMedicoPrescricaoReceitaDetalhe;
     }
 
 
@@ -538,13 +539,13 @@ this.atendimentomedicoservice.BindConsultaCID().subscribe(async (data: Return) =
       
 
 
-      var atendimentomedicoExame: AtendimentoMedicoExame = {};
+      var atendimentomedicoExame: any = {};
 
-      atendimentomedicoExame.GrupoExame = this.GrupoExame;
-      atendimentomedicoExame.Exame = this.Exame;
+      atendimentomedicoExame.GrupoExame = this.GrupoExame.GrupoExameDetalhe.nome;
+      atendimentomedicoExame.Exame = this.Exame.nome;
       atendimentomedicoExame.observacaoExame = observacaoexame.toUpperCase();
       atendimentomedicoExame.dataExame = new Date();
-      atendimentomedicoExame.Profissional = this.Profissional;
+      atendimentomedicoExame.Profissional = this.Profissional.nomeCompleto;
       
     
 
@@ -616,7 +617,7 @@ this.atendimentomedicoservice.BindConsultaCID().subscribe(async (data: Return) =
   onEditarExame(atendimentomedicoExame: AtendimentoMedicoExame) {
 
     this.GrupoExame = atendimentomedicoExame.GrupoExame;
-    this.Exame = atendimentomedicoExame.Exame;
+    this.Exame.exameId = atendimentomedicoExame.exameId;
 
 
     // if (atendimentomedicoExame.dataExame != null) {
@@ -661,7 +662,7 @@ this.atendimentomedicoservice.BindConsultaCID().subscribe(async (data: Return) =
   //begin:: Exclui lotacao Profissional / Alerta o usuário da confirmação da exclusão na aba profissional
   onExcluirExame(atendimentomedicoExame: AtendimentoMedicoExame) {
 
-    var index = this.listaAtendimentoMedicoExame.findIndex(x => x.Exame === atendimentomedicoExame.Exame);
+    var index = this.listaAtendimentoMedicoExame.findIndex(x => x.exameId === atendimentomedicoExame.exameId);
     this.listaAtendimentoMedicoExame.splice(index, 1);
   }
   //end:: Exibe Mensagem Excluir
@@ -675,37 +676,37 @@ this.atendimentomedicoservice.BindConsultaCID().subscribe(async (data: Return) =
       var observacao = $('input[name^=ObservacaoMedicamento]').val();
       var dose = $('input[name^=Dose]').val();
 
-      var atendimentomedicoPrescricaoReceita: AtendimentoMedicoPrescricaoReceita = {};
+      var atendimentomedicoPrescricaoReceitaDetalhe: any = {};
 
-      atendimentomedicoPrescricaoReceita.GrupoMedicamento = this.GrupoMedicamento;
-      atendimentomedicoPrescricaoReceita.Medicamento = this.Medicamento;
+      if (this.Medicamento !== null)
+      atendimentomedicoPrescricaoReceitaDetalhe.Medicamento = this.Medicamento.nome;
 
       if (this.UnidadeMedicamento !== null)
-        atendimentomedicoPrescricaoReceita.UnidadeMedicamento = this.UnidadeMedicamento;
+        atendimentomedicoPrescricaoReceitaDetalhe.UnidadeMedicamento = this.UnidadeMedicamento.descricao;
 
       if (this.ViaAdministracaoMedicamento !== null)
-        atendimentomedicoPrescricaoReceita.ViaAdministracaoMedicamento = this.ViaAdministracaoMedicamento;
+        atendimentomedicoPrescricaoReceitaDetalhe.ViaAdministracaoMedicamento = this.ViaAdministracaoMedicamento.descricao;
 
       if (this.GrupoMedicamento !== null)
-        atendimentomedicoPrescricaoReceita.GrupoMedicamento = this.GrupoMedicamento;
+        atendimentomedicoPrescricaoReceitaDetalhe.GrupoMedicamento = this.GrupoMedicamento;
 
 
-      atendimentomedicoPrescricaoReceita.observacao = observacao;
+      atendimentomedicoPrescricaoReceitaDetalhe.observacao = observacao;
 
-      atendimentomedicoPrescricaoReceita.dose = dose;
+      atendimentomedicoPrescricaoReceitaDetalhe.dose = dose;
 
-      atendimentomedicoPrescricaoReceita.prescricao = $("#btnPrescricao").hasClass("active");
-      atendimentomedicoPrescricaoReceita.receita = $("#btnReceita").hasClass("active");
+      atendimentomedicoPrescricaoReceitaDetalhe.prescricao = $("#btnPrescricao").hasClass("active");
+      atendimentomedicoPrescricaoReceitaDetalhe.receita = $("#btnReceita").hasClass("active");
 
-      console.log(atendimentomedicoPrescricaoReceita);
+      console.log(atendimentomedicoPrescricaoReceitaDetalhe);
 
 
       //if (this.listaAtendimentoMedicoPrescricaoReceita.find(x => x.GrupoMedicamento === this.GrupoMedicamento && x.Medicamento === this.Medicamento) === undefined && this.AtendimentoMedicoPrescricaoReceita === undefined) {
 
-        this.listaAtendimentoMedicoPrescricaoReceita.push(atendimentomedicoPrescricaoReceita);
+        this.listaAtendimentoMedicoPrescricaoReceitaDetalhe.push(atendimentomedicoPrescricaoReceitaDetalhe);
 
 
-console.log( this.listaAtendimentoMedicoPrescricaoReceita);
+console.log( this.listaAtendimentoMedicoPrescricaoReceitaDetalhe);
 
      // } else if (this.AtendimentoMedicoPrescricaoReceita !== undefined) {
 
@@ -764,16 +765,16 @@ console.log( this.listaAtendimentoMedicoPrescricaoReceita);
 
 
   //begin:: Edita Lotacao Profissional / Permite o usuário editar as lotações lançadas na aba profissional
-  onEditarMedicamento(atendimentomedicoPrescricaoReceita: AtendimentoMedicoPrescricaoReceita) {
+  onEditarMedicamento(atendimentomedicoPrescricaoReceitaDetalhe: AtendimentoMedicoPrescricaoReceitaDetalhe) {
 
-    this.GrupoMedicamento = atendimentomedicoPrescricaoReceita.GrupoMedicamento;
-    this.Medicamento = atendimentomedicoPrescricaoReceita.Medicamento;
-    this.UnidadeMedicamento = atendimentomedicoPrescricaoReceita.UnidadeMedicamento;
-    this.ViaAdministracaoMedicamento = atendimentomedicoPrescricaoReceita.ViaAdministracaoMedicamento;
-    this.IntervaloMedicamento = atendimentomedicoPrescricaoReceita.IntervaloMedicamento;
+    this.GrupoMedicamento = atendimentomedicoPrescricaoReceitaDetalhe.GrupoMedicamento;
+    this.Medicamento.medicamentoId = atendimentomedicoPrescricaoReceitaDetalhe.medicamentoId;
+    this.UnidadeMedicamento.unidadeMedicamentoId = atendimentomedicoPrescricaoReceitaDetalhe.unidadeMedicamentoId;
+    this.ViaAdministracaoMedicamento.viaAdministracaoMedicamentoId = atendimentomedicoPrescricaoReceitaDetalhe.viaAdministracaoMedicamentoId;
+    this.IntervaloMedicamento.intervaloMedicamentoId = atendimentomedicoPrescricaoReceitaDetalhe.intervaloMedicamentoId;
    
 
-    this.AtendimentoMedicoPrescricaoReceita = atendimentomedicoPrescricaoReceita;
+    this.AtendimentoMedicoPrescricaoReceita = atendimentomedicoPrescricaoReceitaDetalhe;
 
     $("#btnAddNovaMedicamento").html("<i class='fa fa-plus'></i>Salvar");
     $('#btnCancelarMedicamento').removeClass('oculta');
@@ -783,7 +784,7 @@ console.log( this.listaAtendimentoMedicoPrescricaoReceita);
 
 
   //begin:: Exibe Mensagem Excluir / Alerta o usuário da confirmação da exclusão na aba profissional
-  onExibeMensagemExcluirMedicamento(atendimentomedicoPrescricaoReceita: AtendimentoMedicoPrescricaoReceita) {
+  onExibeMensagemExcluirMedicamento(atendimentomedicoPrescricaoReceitaDetalhe: AtendimentoMedicoPrescricaoReceitaDetalhe) {
 
     var page = this;
 
@@ -791,7 +792,7 @@ console.log( this.listaAtendimentoMedicoPrescricaoReceita);
 
       .then(function (result) {
         if (result.value) {
-          page.onExcluirMedicamento(atendimentomedicoPrescricaoReceita);
+          page.onExcluirMedicamento(atendimentomedicoPrescricaoReceitaDetalhe);
         }
 
       });
@@ -800,10 +801,10 @@ console.log( this.listaAtendimentoMedicoPrescricaoReceita);
   //end:: Exibe Mensagem Excluir
 
   //begin:: Exclui lotacao Profissional / Alerta o usuário da confirmação da exclusão na aba profissional
-  onExcluirMedicamento(atendimentomedicoPrescricaoReceita: AtendimentoMedicoPrescricaoReceita) {
+  onExcluirMedicamento(atendimentomedicoPrescricaoReceitaDetalhe: AtendimentoMedicoPrescricaoReceitaDetalhe) {
 
-    var index = this.listaAtendimentoMedicoPrescricaoReceita.findIndex(x => x.Medicamento === atendimentomedicoPrescricaoReceita.Medicamento);
-    this.listaAtendimentoMedicoPrescricaoReceita.splice(index, 1);
+    var index = this.listaAtendimentoMedicoPrescricaoReceitaDetalhe.findIndex(x => x.medicamentoId === atendimentomedicoPrescricaoReceitaDetalhe.medicamentoId);
+    this.listaAtendimentoMedicoPrescricaoReceitaDetalhe.splice(index, 1);
   }
   //end:: Exibe Mensagem Excluir
 
@@ -818,19 +819,19 @@ console.log( this.listaAtendimentoMedicoPrescricaoReceita);
 
       var alergiaSituacao = $('input[type=checkbox][name^=AlergiaAtivo]').prop("checked");
 
-      var atendimentomedicoAlergia: AtendimentoMedicoAlergia = {};
+      var atendimentomedicoAlergia: any = {};
 
-      atendimentomedicoAlergia.TipoAlergia = this.TipoAlergia;
-      atendimentomedicoAlergia.Alergia = this.Alergia;
+      atendimentomedicoAlergia.TipoAlergia = this.TipoAlergia.descricao;
+      atendimentomedicoAlergia.Alergia = this.Alergia.nome;
 
       if (this.LocalizacaoAlergia !== null)
-        atendimentomedicoAlergia.LocalizacaoAlergia = this.LocalizacaoAlergia;
+        atendimentomedicoAlergia.LocalizacaoAlergia = this.LocalizacaoAlergia.nome;
 
       if (this.ReacaoAlergia !== null)
-        atendimentomedicoAlergia.ReacaoAlergia = this.ReacaoAlergia;
+        atendimentomedicoAlergia.ReacaoAlergia = this.ReacaoAlergia.descricao;
 
       if (this.SeveridadeAlergia !== null)
-        atendimentomedicoAlergia.SeveridadeAlergia = this.SeveridadeAlergia;
+        atendimentomedicoAlergia.SeveridadeAlergia = this.SeveridadeAlergia.nome;
 
 
       if (datasintomas !== "") {
@@ -842,17 +843,17 @@ console.log( this.listaAtendimentoMedicoPrescricaoReceita);
       atendimentomedicoAlergia.alergiaSituacao = alergiaSituacao;
 
 
-      if (this.listaAtendimentoMedicoAlergia.find(x => x.TipoAlergia === this.TipoAlergia && x.Alergia === this.Alergia) === undefined && this.AtendimentoMedicoAlergia === undefined) {
+      if (this.listaAtendimentoMedicoAlergia.find(x => x.tipoAlergiaId === this.TipoAlergia.tipoAlergiaId && x.alergiaId === this.Alergia.alergiaId) === undefined && this.AtendimentoMedicoAlergia === undefined) {
 
         this.listaAtendimentoMedicoAlergia.push(atendimentomedicoAlergia);
 
       } else if (this.AtendimentoMedicoAlergia !== undefined) {
 
-        if (this.AtendimentoMedicoAlergia.TipoAlergia != atendimentomedicoAlergia.TipoAlergia && this.AtendimentoMedicoAlergia.Alergia != atendimentomedicoAlergia.Alergia)
-          if (this.listaAtendimentoMedicoAlergia.find(x => x.TipoAlergia === this.TipoAlergia && x.Alergia === this.Alergia))
+        if (this.AtendimentoMedicoAlergia.tipoAlergiaId != atendimentomedicoAlergia.tipoAlergiaId && this.AtendimentoMedicoAlergia.alergiaId != atendimentomedicoAlergia.alergiaId)
+          if (this.listaAtendimentoMedicoAlergia.find(x => x.tipoAlergiaId === this.TipoAlergia.tipoAlergiaId && x.alergiaId === this.Alergia.alergiaId))
             return;
 
-        var index = this.listaAtendimentoMedicoAlergia.findIndex(x => x.TipoAlergia === this.TipoAlergia || x.Alergia === this.Alergia);
+        var index = this.listaAtendimentoMedicoAlergia.findIndex(x => x.tipoAlergiaId === this.TipoAlergia.tipoAlergiaId || x.alergiaId === this.Alergia.alergiaId);
         this.listaAtendimentoMedicoAlergia[index] = atendimentomedicoAlergia;
 
       }
@@ -903,11 +904,11 @@ console.log( this.listaAtendimentoMedicoPrescricaoReceita);
   //begin:: Edita Lotacao Profissional / Permite o usuário editar as lotações lançadas na aba profissional
   onEditarAlergia(atendimentomedicoAlergia: AtendimentoMedicoAlergia) {
 
-    this.TipoAlergia = atendimentomedicoAlergia.TipoAlergia;
-    this.Alergia = atendimentomedicoAlergia.Alergia;
-    this.LocalizacaoAlergia = atendimentomedicoAlergia.LocalizacaoAlergia;
-    this.ReacaoAlergia = atendimentomedicoAlergia.ReacaoAlergia;
-    this.SeveridadeAlergia = atendimentomedicoAlergia.SeveridadeAlergia;
+    this.TipoAlergia.tipoAlergiaId = atendimentomedicoAlergia.tipoAlergiaId;
+    this.Alergia.alergiaId = atendimentomedicoAlergia.alergiaId;
+    this.LocalizacaoAlergia.localizacaoAlergiaId = atendimentomedicoAlergia.localizacaoAlergiaId;
+    this.ReacaoAlergia.reacaoAlergiaId = atendimentomedicoAlergia.reacaoAlergiaId;
+    this.SeveridadeAlergia.severidadeAlergiaId = atendimentomedicoAlergia.severidadeAlergiaId;
 
     if (atendimentomedicoAlergia.dataSintomas != null) {
 
@@ -950,7 +951,7 @@ console.log( this.listaAtendimentoMedicoPrescricaoReceita);
   //begin:: Exclui lotacao Profissional / Alerta o usuário da confirmação da exclusão na aba profissional
   onExcluirAlergia(atendimentomedicoAlergia: AtendimentoMedicoAlergia) {
 
-    var index = this.listaAtendimentoMedicoAlergia.findIndex(x => x.Alergia === atendimentomedicoAlergia.Alergia);
+    var index = this.listaAtendimentoMedicoAlergia.findIndex(x => x.alergiaId === atendimentomedicoAlergia.alergiaId);
     this.listaAtendimentoMedicoAlergia.splice(index, 1);
   }
   //end:: Exibe Mensagem Excluir
@@ -1064,10 +1065,11 @@ console.log( this.listaAtendimentoMedicoPrescricaoReceita);
 
       var consultaFiltro: CID = {
 
-        ConsultaCid: this.ConsultaCID,
+        CapituloCID: this.CapituloCID,
         nome : event.target.value,
         ativo: true
      };
+     console.log(consultaFiltro);
 
       $('#divPesquisaCID').addClass('show');
 

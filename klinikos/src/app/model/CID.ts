@@ -1,4 +1,4 @@
-import { ConsultaCID } from './ConsultaCID';
+import { CapituloCID } from './CapituloCID';
 
 export interface CID {
 
@@ -8,7 +8,7 @@ export interface CID {
   agravo?: string;
   sexo?: string;
   estadio?: string;
-  ConsultaCid?: ConsultaCID;
+  CapituloCID?: CapituloCID;
   ativo: boolean;
 
 
