@@ -1,5 +1,5 @@
 import { BrowserModule } from '@angular/platform-browser';
-import { NgModule } from '@angular/core';
+import { NgModule, Pipe, PipeTransform } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { RouterModule, Routes } from '@angular/router';
@@ -28,6 +28,7 @@ import { AtendimentoMedicoComponent } from './controller/atendimentomedico/atend
 import { AtendimentoMedicoService } from './controller/atendimentomedico/atendimentomedico.service';
 import { FilaatendimentoComponent } from './controller/filaatendimento/filaatendimento.component';
 
+
 const appRoutes: Routes = [
   { path: '', redirectTo: '/login', pathMatch: 'full' },
   { path: 'login', component: LoginComponent },
@@ -47,7 +48,9 @@ const appRoutes: Routes = [
   { path: '**', redirectTo: '/login' },
 ];
 
+
 export const options: Partial<IConfig> | (() => Partial<IConfig>) = {};
+
 
 @NgModule({
   declarations: [

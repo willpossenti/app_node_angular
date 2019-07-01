@@ -23,7 +23,11 @@ export class AtendimentoMedicoService {
 
 
   constructor(private http: HttpClient) {
+<<<<<<< HEAD
      this.baseUrl = 'https://localhost:44307/api/';
+=======
+    this.baseUrl = 'https://localhost:44307/api/';
+>>>>>>> sprint_wp_28062019_2
     //this.baseUrl = 'https://apinew.ecosistemas.com.br/api/';
   }
 

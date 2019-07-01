@@ -3,6 +3,8 @@
 $(document).ready(function () {
   "use strict";
 
+  
+
 
   /*=CadastroDePessoas: ------------------------------------------- */
 
@@ -44,9 +46,9 @@ $(document).ready(function () {
 
     LimparTela();
   });
-
+ 
   $('#btnLimparAcolhimento').on('click', function () {
-
+ 
     $("#msg_temp_acolhimento_a").addClass("oculta");
     $("#msg_temp_acolhimento_b").addClass("oculta");
     $("#msg_sat_acolhimento_a").addClass("oculta");
@@ -299,5 +301,28 @@ $(document).ready(function () {
   });
 
 
+/*=FilaRegistro ----------------------------------------------------- */
+	// Grid Action Icon (gai) : Chamar Painel
+
+	// (gai) : Exibir detalhes
+	$('.gai-detail').click(function() {
+		// change icon
+		$(this).find('i').toggleClass('la la-plus-circle').toggleClass('la la-minus-circle');
+		// toggle (tr.box-detail)
+		var boxDetailAtual = $(this).parent().parent().next();
+		$(boxDetailAtual).toggleClass('oculta');
+
+	});
+	
+
+	/*=Atendimento Social ----------------------------------------------- */
+	// Limpa os campos de relatos
+	$('.clear-relato').on('click', function(){
+		var relato = $(this).parent().parent().find('textarea').val('').focus();
+	});
+
+
+
 });
 // close: Interface
+

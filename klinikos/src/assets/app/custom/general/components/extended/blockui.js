@@ -54,7 +54,8 @@ var KBlockUIDemo = function () {
         });
 
         $('#k_blockui_1_5').click(function() {
-            KApp.block('#k_blockui_1_content', {
+    
+            KApp.block('#k_content', {
                 overlayColor: '#000000',
                 type: 'v2',
                 state: 'primary',
@@ -62,7 +63,7 @@ var KBlockUIDemo = function () {
             });
 
             setTimeout(function() {
-                KApp.unblock('#k_blockui_1_content');
+                KApp.unblock('#k_content');
             }, 2000);
         });
     }
@@ -191,6 +192,7 @@ var KBlockUIDemo = function () {
         });
     }
 
+
     // modal blocking
     var demo4 = function () {
         // default
@@ -251,6 +253,29 @@ var KBlockUIDemo = function () {
         });
     }
 
+    var klinikos = function () {
+
+
+        $('#k_AtualizaGrid').click(function() {
+    
+            KApp.block('#k_content', {
+                overlayColor: '#000000',
+                type: 'v2',
+                state: 'primary',
+                message: 'Atualizando...'
+            });
+
+            setTimeout(function() {
+                KApp.unblock('#k_content');
+            }, 1000);
+        });
+
+    }
+
+  
+  
+   
+
     return {
         // public functions
         init: function() {
@@ -258,10 +283,11 @@ var KBlockUIDemo = function () {
             demo2(); 
             demo3(); 
             demo4(); 
+            klinikos();
         }
     };
 }();
 
 jQuery(document).ready(function() {    
-    KBlockUIDemo.init();
+    //KBlockUIDemo.init();
 });

@@ -3,100 +3,150 @@
 
 /* placeholders browsers colors : -------------- */
 /* Chrome/Opera/Safari */
-::-webkit-input-placeholder {
-  color: #C6C6C6 !important;
-}
+::-webkit-input-placeholder { color: #C6C6C6 !important; }
 /* Firefox 19+ */
-::-moz-placeholder {
-  color: #C6C6C6 !important;
-}
+::-moz-placeholder { color: #C6C6C6 !important; }
 /* IE 10+ */
-:-ms-input-placeholder {
-  color: #C6C6C6 !important;
-}
+:-ms-input-placeholder { color: #C6C6C6 !important; }
 /* Firefox 18- */
-:-moz-placeholder {
-  color: #C6C6C6 !important;
-}
+:-moz-placeholder { color: #C6C6C6 !important; }
 /* fields */
-input[type="text"], input[type="password"], input[type="email"], input[type="date"], select, textarea {
-  border: 1px solid #D6D6D6 !important;
+input[type="text"], input[type="password"], input[type="email"], input[type="date"], input[type="number"], select, textarea {
+	border: 1px solid #D6D6D6 !important;
+}
+input[type="text"]:focus, input[type="password"]:focus, input[type="email"]:focus, input[type="date"]:focus, input[type="number"]:focus, select:focus, textarea:focus {
+	border-color: #A5B6FF !important;
+	-webkit-box-shadow: 3px 3px 36px -13px rgba(38,72,204,1) !important;
+	-moz-box-shadow: 3px 3px 36px -13px rgba(38,72,204,1) !important;
+	box-shadow: 3px 3px 36px -13px rgba(38,72,204,1) !important;
 }
 
-  input[type="text"]:focus, input[type="password"]:focus, input[type="email"]:focus, input[type="date"]:focus, select:focus, textarea:focus {
-    border-color: #A5B6FF !important;
-    -webkit-box-shadow: 3px 3px 36px -13px rgba(38,72,204,1) !important;
-    -moz-box-shadow: 3px 3px 36px -13px rgba(38,72,204,1) !important;
-    box-shadow: 3px 3px 36px -13px rgba(38,72,204,1) !important;
-  }
+
+/* =Default : Campos de formulário ---------------------------- */
+.oculta {
+	display: none !important;
+}
+.maisc {
+	text-transform: uppercase !important;
+}
+.minus {
+	text-transform: lowercase !important;
+}
+/* Paginaçãop 
+li.page-item .active:first {
+	background: black !important;
+}
+*/
+
+/* Cursor */
+.cp { 
+	cursor: pointer;
+}
+.ch {
+	cursor: help;
+}
+.rn {
+	resize: none !important;
+}
+
+/* Size of grid icons */
+.i-s1 {
+	font-size: 1.4em !important;
+}
+.i-s2 {
+	font-size: 1.8em !important;
+}
+
+/* Start Sort Tables with class Table Grid (.tblgrid) */
+th[data-sort] {
+	cursor: pointer !important;
+}
+
+
+/* Colors ------------ */
+.c-branco { color: #ffffff !important; }
+.c-amarelo { color: #ffcc00; }
+.c-azul { color: #0088d4; }
+.c-laranja { color: #fa9400; }
+.c-verde { color: #01c02e; }
+.c-vermelho { color: #ff251d; }
+.c-cinza { color: #bfbfbf; }
+
+/* Backgrounds used in grids -------------- */
+.bgg-cinza { background:#b5b5b5 !important; }
+.bgg-branco { background:#fff !important; }
+
+/* Letter Spacing */
+.ls-1 { letter-spacing: 1px !important; }
+.ls-2 { letter-spacing: 2px !important; }
+.ls-3 {	letter-spacing: 3px !important; }
+
+/* Campo Obrigatório*/
+.fld-obg {
+	color: red;
+	font-weight: 400;
+	font-size: 1.1em;
+	cursor: help;
+}
 
 /*=Dados do Paciente (bs: Barra Superior) -------------------- */
 .bs-avatar {
-  width: 70px;
-  /*background: #069 !important;*/
-  float: left;
+	width: 70px;
+	/*background: #069 !important;*/
+	float: left;
+	background: transparent;
 }
-
-  .bs-avatar img {
-    width: 65px !important;
-    height: 65px !important;
-    border-radius: 100%;
-    background: #666;
-    color: #fff !important;
-  }
-
-    .bs-avatar img:hover {
-      filter: brightness(1.1);
-      cursor: pointer;
-    }
-
+.bs-avatar img {
+	width: 65px !important;
+	height: 65px !important;
+	border-radius: 100%;
+	background: #666;
+	color: #fff !important;
+}
+	.bs-avatar img:hover {
+		filter: brightness(1.1);
+		cursor: pointer;
+	}
 .bs-nomes {
-  /*background: #53F5B6;*/
-  float: left;
+	/*background: #53F5B6;*/
+	float: left;
 }
-
-  .bs-nomes .maior {
-    font-family: Poppins;
-    font-weight: 400;
-    font-size: 1.3em;
-    color: #000;
-    /*background: #CCC;*/
-  }
-
-  .bs-nomes .menor {
-    font-family: Poppins;
-    font-weight: 400;
-    font-size: 0.9em;
-    color: #333;
-  }
-
+	.bs-nomes .maior {
+		font-family: Poppins;
+		font-weight: 400;
+		font-size: 1.3em;
+		color: #000;
+		/*background: #CCC;*/
+	}
+	.bs-nomes .menor {
+		font-family: Poppins;
+		font-weight: 400;
+		font-size: 0.9em;
+		color: #333;
+	}
 .bs-icones {
-  float: left;
-  /*background: #FDC2C2;*/
+	float: left;
+	/*background: #FDC2C2;*/
 }
-
-  .bs-icones .idade {
-    font-size: 2.4em;
-    font-weight: 400;
-  }
-
-  .bs-icones .sexo {
-    font-size: 2em;
-    float: left;
-    cursor: help;
-  }
-
+	.bs-icones .idade {
+		font-size: 2.4em;
+		font-weight: 400;
+	}
+	.bs-icones .sexo {
+		font-size: 2em;
+		float: left;
+		cursor: help;
+	}
 .bs-infopac {
-  float: left;
-  color: #666;
+	float: left;
+	color: #666;
 }
-
-  .bs-infopac span {
-    display: block !important;
-    font-size: 0.9rem;
-    font-weight: 300;
-    /*background: #F7B275;*/
-  }
+.bs-infopac span {
+	display: block !important;
+	font-size: 0.9rem;
+	font-weight: 300;
+	/*background: #F7B275;*/
+}
 /*
 .bs-infopac i:nth-child(1):hover {
 	cursor: pointer;
@@ -107,39 +157,6 @@ input[type="text"], input[type="password"], input[type="email"], input[type="dat
 	color: #51AA8E;
 }
 */
-/* Campos de formulário */
-.oculta {
-  display: none !important;
-}
-
-.maisc {
-  text-transform: uppercase !important;
-}
-
-.minus {
-  text-transform: lowercase !important;
-}
-/* Cursor */
-.cp {
-  cursor: pointer;
-}
-
-.ch {
-  cursor: help;
-}
-
-.rn {
-  resize: none !important;
-}
-
-
-/* Campo Obrigatório*/
-.fld-obg {
-  color: red;
-  font-weight: 400;
-  font-size: 1.1em;
-  cursor: help;
-}
 /*=Acolhimento : ----------------------------------- */
  /*#deficiente, #gestante, #idoso-a, #idoso-b {
  fill: #5578eb !important;
@@ -166,69 +183,106 @@ input[type="text"], input[type="password"], input[type="email"], input[type="dat
   height: 1.8em;*/
 }
 
+.fillCinza {
+	/*fill: #5578eb !important;*/
+	fill: #bfbfbf !important;
+   /* width: 1.8em;
+	height: 1.8em;*/
+  }
+
 
 
 /*=Classificação de Risco : ----------------------------------- */
 /*Escala de Dor */
 .smile { width: 85px !important; height: 85px !important; }
-.ed-0 { background: #097BC3 !important; }
+.ed-0 { background: #097BC3 !important;; }
 
-.ed-1 { background: #11D01B !important; }
-.ed-2 { background: #308A01 !important; }
+.ed-1 { background: #11D01B !important;; }
+.ed-2 { background: #308A01 !important;; }
 
-.ed-3 { background: #E0D101 !important; }
-.ed-4 { background: #C8C702 !important; }
-.ed-5 { background: #CFA100 !important; }
+.ed-3 { background: #E0D101 !important;; }
+.ed-4 { background: #C8C702 !important;; }
+.ed-5 { background: #CFA100 !important;; }
 
-.ed-6 { background: #FF9E00 !important; }
-.ed-7 { background: #C87710 !important; }
-.ed-8 { background: #AD6100 !important; }
+.ed-6 { background: #FF9E00 !important;; }
+.ed-7 { background: #C87710 !important;; }
+.ed-8 { background: #AD6100 !important;; }
 
-.ed-9 { background: #FF0004 !important; }
-.ed-10 { background: #9C0709 !important; }
+.ed-9 { background: #FF0004 !important;; }
+.ed-10 { background: #9C0709 !important;; }
 
-.ed-opac { opacity: 0.4 !important; }
+.ed-opac { opacity: 0.4 !important;; }
 .ed-text { font-size: 0.9em; font-weight: 400 !important; color: #333; }
 
 /*Opções de Risco */
 .risco-azul {
-  border: 1px solid #269AE3 !important;
-  color: #666;
-}
-  .risco-azul.active {
-    background: #269AE3 !important;
-    color: #fff !important;
-  }
-.risco-verde {
-  border: 1px solid #45B91C !important;
-  color: #666;
-}
-  .risco-verde.active {
-    background: #45B91C !important;
-    color: #fff !important; 
-  }
-.risco-amarelo {
-  border: 1px solid #F4DC06 !important;
-  color: #666;
-}
-  .risco-amarelo.active {
-    background: #F4DC06 !important;
-    color: #000 !important;
-  }
-.risco-laranja {
-  border: 1px solid #F4B42B !important;
-  color: #666;
-}
-  .risco-laranja.active {
-    background: #F4B42B !important;
-    color: #fff !important;
-  }
-.risco-vermelho {
-  border: 1px solid #E10B0B !important;
-  color: #666;
-}
-  .risco-vermelho.active {
-    background: #E10B0B !important;
-    color: #fff !important;
-  }
+		border: 1px solid #269AE3 !important;
+		color: #666;
+	}
+		.risco-azul.active {
+			background: #269AE3 !important;
+			color: #fff !important;
+		}
+	.risco-verde {
+		border: 1px solid #45B91C !important;
+		color: #666;
+	}
+		.risco-verde.active {
+			background: #45B91C !important;
+			color: #fff !important;; 
+		}
+	.risco-amarelo {
+		border: 1px solid #F4DC06 !important;
+		color: #666;
+	}
+		.risco-amarelo.active {
+			background: #F4DC06 !important;
+			color: #000 !important;;
+		}
+	.risco-laranja {
+		border: 1px solid #F4B42B !important;
+		color: #666;
+	}
+		.risco-laranja.active {
+			background: #F4B42B !important;
+			color: #fff !important;;
+		}
+	.risco-vermelho {
+		border: 1px solid #E10B0B !important;
+		color: #666;
+	}
+		.risco-vermelho.active {
+			background: #E10B0B !important;
+			color: #fff !important;;
+		}
 
+		/*Fila Atendimento Grid's*/
+		table .table-bordered th, table .table-bordered td {
+			border: 1px solid #eee !important;
+		}
+
+
+		.page-link2{
+
+			position: relative;
+			display: block;
+			padding: 0.5rem 0.75rem;
+			margin-left: -1px;
+			line-height: 1.25;
+			/* color: #5d78ff; */
+			background-color: #fff;
+			border: 1px solid #ebedf2;
+		}
+
+		.page-link2:first-child .page-link2{
+			margin-left: 0;
+    		border-top-left-radius: 0.25rem;
+    		border-bottom-left-radius: 0.25
+		}
+
+		.page-item2.active .page-link {
+			z-index: 1;
+			color: #fff;
+			/* background-color: #5867dd;
+			border-color: #5867dd; */
+		}

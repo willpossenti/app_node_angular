@@ -5,6 +5,7 @@ import { Acolhimento } from '../../model/Acolhimento';
 import { PessoaPaciente } from '../../model/PessoaPaciente';
 import { Preferencial } from '../../model/Preferencial';
 
+
 @Injectable({
   providedIn: 'root',
 })
@@ -21,7 +22,11 @@ export class AcolhimentoService {
 
   constructor(private http: HttpClient) {
     this.baseUrl = 'https://localhost:44307/api/';
+<<<<<<< HEAD
     // this.baseUrl = 'https://apinew.ecosistemas.com.br/api/';
+=======
+    //this.baseUrl = 'https://apinew.ecosistemas.com.br/api/';
+>>>>>>> sprint_wp_28062019_2
   }
 
   BindEspecialidade() { return this.http.get<Return>(`${this.baseUrl}especialidade`, this.httpOptions); }

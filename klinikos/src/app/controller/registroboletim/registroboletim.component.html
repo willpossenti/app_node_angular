@@ -74,7 +74,7 @@
                                         </div>
                                         <div class="k-quick-search__item-wrapper">
                                           <a class="k-quick-search__item-title" style="cursor:pointer;" (click)="onSelectedPaciente(paciente)">
-                                            {{paciente.nomeCompleto}}  - {{paciente.nascimento | date: 'dd/MM/yyyy'}}
+                                            {{paciente.nomeSocial !== null? paciente.nomeSocial +' ['+ paciente.nomeCompleto +']': paciente.nomeCompleto}}
                                           </a>
                                           <div class="k-quick-search__item-desc">
                                             {{paciente.nomeMae}}
@@ -118,24 +118,6 @@
                                   <!--begin::k-quick-search__result-->
                                   <div class="k-quick-search__result">
 
-                                    <div class="k-quick-search__category border-bottom text-primary">Profissionais</div>
-                                    <div class="k-quick-search__section p-0 mb-1" *ngFor="let profissional of listaPessoaProfissional;">
-                                      <div class="k-quick-search__item">
-                                        <div class="k-quick-search__item-img k-quick-search__item-img--file">
-                                          <i class="fa fa-user-md ml-2" style="font-size:1.5em; color:#069;"></i>
-                                        </div>
-                                        <div class="k-quick-search__item-wrapper">
-                                          <a class="k-quick-search__item-title" style="cursor:pointer;" (click)="onSelectedProfissional(profissional)">
-                                            {{profissional.nomeSocial}}  - {{profissional.nascimento | date: 'dd/MM/yyyy'}}
-                                          </a>
-                                          <div class="k-quick-search__item-desc">
-                                            {{profissional.nomeMae}}
-                                          </div>
-                                        </div>
-
-                                      </div>
-                                    </div>
-
                                     <div class="k-quick-search__category mt-2 border-bottom text-primary">Pacientes</div>
                                     <div class="k-quick-search__section p-0 mb-1" *ngFor="let paciente of listaPessoaPaciente;">
                                       <div class="k-quick-search__item">
@@ -144,7 +126,7 @@
                                         </div>
                                         <div class="k-quick-search__item-wrapper">
                                           <a class="k-quick-search__item-title" style="cursor:pointer;" (click)="onSelectedPaciente(paciente)">
-                                            {{paciente.nomeSocial}}  - {{paciente.nascimento | date: 'dd/MM/yyyy'}}
+                                            {{paciente.nomeSocial !== null? paciente.nomeSocial +' ['+ paciente.nomeCompleto +']': paciente.nomeCompleto}}
                                           </a>
                                           <div class="k-quick-search__item-desc">
                                             {{paciente.nomeMae}}

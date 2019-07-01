@@ -27,7 +27,6 @@ export class AcolhimentoComponent implements OnInit {
   listaEspecialidade: Array<Especialidade>;
   listaPreferencial: Array<Preferencial>;
   listaPessoaPaciente: Array<PessoaPaciente>;
-
   Especialidade: Especialidade;
   Preferencial: Preferencial;
   orderNome: string = 'nome';
@@ -63,10 +62,8 @@ export class AcolhimentoComponent implements OnInit {
 
   public ngOnInit() {
 
-  
-
+ 
     $(document).ready(function () {
-
 
 
       $('img.svg').each(function () {
@@ -160,6 +157,9 @@ export class AcolhimentoComponent implements OnInit {
       $.getScript("../../../assets/app/custom/general/interface.js", function (data: any, textStatus: any, jqxhr: any) {
       });
 
+
+
+      
     });
 
 
@@ -184,7 +184,7 @@ export class AcolhimentoComponent implements OnInit {
       this.auth.onSessaoInvalida(error);
     });
 
-
+      
   }
 
 
@@ -215,9 +215,11 @@ export class AcolhimentoComponent implements OnInit {
     var acolhimento: Acolhimento = {};
 
 
+
     var pessoa: PessoaPaciente = {};
 
     pessoa.ativo = true;
+
 
     var imc = $("input[name^=SV_IMC]").val();
 
@@ -275,6 +277,9 @@ export class AcolhimentoComponent implements OnInit {
     else
       acolhimento.risco = false;
 
+  
+   
+
     acolhimento.PessoaPaciente = pessoa;
 
     var msgCamposObrigatorios = "";
@@ -297,6 +302,7 @@ export class AcolhimentoComponent implements OnInit {
 
     this.AcolhimentoService.SalvarAcolhimento(acolhimento).subscribe(data => {
 
+      
 
       Toastr.success("Acolhimento salvo com sucesso");
 
@@ -373,7 +379,6 @@ export class AcolhimentoComponent implements OnInit {
     form.value.SV_Pulso = "";
     form.value.SV_FreqResp = "";
     form.value.SV_Saturacao = "";
-
   
   }
 

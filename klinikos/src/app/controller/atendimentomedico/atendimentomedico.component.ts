@@ -103,6 +103,7 @@ export class AtendimentoMedicoComponent implements OnInit {
     this.listaAtendimentoMedicoExame = new Array<AtendimentoMedicoExame>();
     this.listaAtendimentoMedicoPrescricaoReceitaDetalhe = new Array<AtendimentoMedicoPrescricaoReceitaDetalhe>();
 
+  
   }
 
   ngOnInit() {

@@ -95,6 +95,9 @@ export class ClassificacaoRiscoComponent implements OnInit {
     private route: ActivatedRoute, private imcService: ImcService, 
     private sinaisvitaisService: SinaisVitais, private dataService: DataService,) {
     this.listaClassificacaoRiscoAlergia = new Array<ClassificacaoRiscoAlergia>();
+
+  
+
   }
 
   ngOnInit() {
@@ -310,15 +313,18 @@ export class ClassificacaoRiscoComponent implements OnInit {
           this.auth.onSessaoInvalida(error);
       });
 
-
+      $C(document).ready(function () {
       // show card : Alergia
       $C('#AlergiaCard').removeClass('oculta');
       $C('#collapseOne3').addClass('show');
       $C('select[name="AlergiaTipo"]').focus();
+    });
 
     } else {
-      $C('#AlergiaCard').addClass('oculta');
-      $C('#collapseOne3').removeClass('show');
+      $C(document).ready(function () {
+        $C('#AlergiaCard').addClass('oculta');
+        $C('#collapseOne3').removeClass('show');
+    });
     }
 
   }
@@ -510,10 +516,10 @@ export class ClassificacaoRiscoComponent implements OnInit {
     if ($C("label[for^=EscalaDor10]").hasClass("active"))
       classificacaorisco.escalaDorId = this.listaEscalasDor.find(x => x.codigoEscalaDor === 10).escalaDorId;
 
-    if (cr.value.SV_Peso !== "")
+    if (cr.value.SV_Peso !== undefined)
       classificacaorisco.peso = cr.value.SV_Peso + " kg";
 
-    if (cr.value.SV_Altura !== "")
+    if (cr.value.SV_Altura !== undefined)
       classificacaorisco.altura = cr.value.SV_Altura + " cm";
 
     if (imc !== undefined)
@@ -528,10 +534,10 @@ export class ClassificacaoRiscoComponent implements OnInit {
     if (cr.value.SV_PreArterialSistolica !== "")
       classificacaorisco.pressaoArterialSistolica = cr.value.SV_PreArterialSistolica + " mmHg";
 
-    if (cr.value.Pulso !== "")
+    if (cr.value.Pulso !== undefined)
       classificacaorisco.pulso = cr.value.Pulso + " bpm";
 
-    if (cr.value.FreqRespiratoria !== "")
+    if (cr.value.FreqRespiratoria !== undefined)
       classificacaorisco.frequenciaRespiratoria = cr.value.FreqRespiratoria + " rpm";
 
 
@@ -540,7 +546,7 @@ export class ClassificacaoRiscoComponent implements OnInit {
 
     classificacaorisco.sutura = cr.value.Sutura !== "" ? true : false;
 
-    if (cr.value.Saturacao !== "")
+    if (cr.value.Saturacao !== undefined)
       classificacaorisco.saturacao = cr.value.Saturacao + " %";
 
     classificacaorisco.hipertensao = cr.value.DPE_Hipertensao !== "" ? true : false;
@@ -636,7 +642,7 @@ export class ClassificacaoRiscoComponent implements OnInit {
     if (cr.value.DO_Procedencia !== "")
       classificacaorisco.procedencia = cr.value.DO_Procedencia.toUpperCase();
 
-    if (this.listaTipoOcorrencia !== null)
+    if (this.TipoOcorrencia !== undefined)
       classificacaorisco.tipoOcorrenciaId = this.TipoOcorrencia.tipoOcorrenciaId;
 
 
@@ -667,10 +673,10 @@ export class ClassificacaoRiscoComponent implements OnInit {
     if (cr.value.DO_Complemento !== "")
       classificacaorisco.complemento = cr.value.DO_Complemento.toUpperCase();
 
-    if (this.Estado !== null)
+    if (this.Estado !== undefined)
       classificacaorisco.estadoId = this.Estado.estadoId;
 
-    if (this.Cidade !== null)
+    if (this.Cidade !== undefined)
       classificacaorisco.cidadeId = this.Cidade.cidadeId;
 
     if (cr.value.DO_Bairro !== "")
@@ -681,7 +687,7 @@ export class ClassificacaoRiscoComponent implements OnInit {
     this.classificacaoriscoservice.SalvarClassificacaoRisco(classificacaorisco).subscribe(async (data: Return) => {
       this.listaSeveridadeAlergia = data.result;
 
-      Toastr.success("Classificação de Risco salvo com sucesso");
+      Toastr.success("Classificação de Risco salva com sucesso");
 
       this.onLimpaFormClassificacaoRisco(cr);
 
