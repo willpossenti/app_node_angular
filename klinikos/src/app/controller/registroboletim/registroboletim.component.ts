@@ -46,7 +46,24 @@ export class RegistroBoletimComponent implements OnInit {
     private pessoaService: PessoaService, private cpfService: CpfService, private router: Router, 
     private dataService: DataService, private auth: AuthGuard) {
 
-
+      Toastr.options = {
+        "closeButton": true,
+        "debug": false,
+        "newestOnTop": false,
+        "progressBar": false,
+        "positionClass": "toast-bottom-right",
+        "preventDuplicates": false,
+        "onclick": null,
+        "showDuration": "300",
+        "hideDuration": "1000",
+        "timeOut": "5000",
+        "extendedTimeOut": "1000",
+        "showEasing": "swing",
+        "hideEasing": "linear",
+        "showMethod": "fadeIn",
+        "hideMethod": "fadeOut"
+      };
+    
   }
 
 
@@ -268,9 +285,6 @@ export class RegistroBoletimComponent implements OnInit {
 
     var dataBoletim = $("input[name^=IB_Data]").val();
     var horaBoletim = $("input[name^=IB_Hora]").val();
-    var dataOcorrencia = $("input[name^=DO_Data]").val();
-    var horaOcorrencia = $("input[name^=DO_Hora]").val();
-    var cepOcorrencia = $("input[name^=DO_CEP]").val();
     var telefoneInformante = $("input[name^=IN_Telefone]").val();
 
     if (dataBoletim !== "") {

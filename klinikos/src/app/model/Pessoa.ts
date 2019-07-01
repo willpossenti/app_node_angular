@@ -56,6 +56,7 @@ export interface Pessoa  {
   login?: string;
   senha?: string;
   foto?: string;
+  pessoaStatusId?: string;
   ativo?: boolean;
 
 
