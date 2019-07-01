@@ -16,6 +16,9 @@ import { AuthGuard } from '../../controller/auth/auth.guard';
 import * as swal from '../../../assets/vendors/general/sweetalert2/dist/sweetalert2.js';
 import { ImcService } from '../util/imc.service';
 import { SinaisVitais } from '../util/sinaisvitais.service';
+import { FilaRegistro } from '../../model/FilaRegistro';
+import { PessoaProfissional } from 'src/app/model/PessoaProfissional';
+import { User } from 'src/app/model/User';
 
 
 @Component({
@@ -27,6 +30,7 @@ export class AcolhimentoComponent implements OnInit {
   listaEspecialidade: Array<Especialidade>;
   listaPreferencial: Array<Preferencial>;
   listaPessoaPaciente: Array<PessoaPaciente>;
+  Profissional : any;
   Especialidade: Especialidade;
   Preferencial: Preferencial;
   orderNome: string = 'nome';
@@ -35,7 +39,7 @@ export class AcolhimentoComponent implements OnInit {
 
   constructor(private AcolhimentoService: AcolhimentoService, private route: ActivatedRoute,
     private pessoaService: PessoaService, private cpfService: CpfService, private imcService: ImcService,
-    private sinaisvitaisService: SinaisVitais, private router: Router, private auth: AuthGuard,) {
+    private sinaisvitaisService: SinaisVitais, private router: Router, private auth: AuthGuard) {
 
     this.listaPreferencial = new Array<Preferencial>();
     this.listaEspecialidade = new Array<Especialidade>();
@@ -45,7 +49,7 @@ export class AcolhimentoComponent implements OnInit {
       "debug": false,
       "newestOnTop": false,
       "progressBar": false,
-      "positionClass": "toast-top-right",
+      "positionClass": "toast-bottom-right",
       "preventDuplicates": false,
       "onclick": null,
       "showDuration": "300",
@@ -212,13 +216,32 @@ export class AcolhimentoComponent implements OnInit {
 
     $("#k_scrolltop").trigger("click");
 
-    var acolhimento: Acolhimento = {};
+    var date = new Date();
+ 
+    let user = JSON.parse(localStorage.getItem('user'));
+
+    this.pessoaService.ConsultaProfissional(user.userId).subscribe(async (data: Return) => {
+     this.Profissional = data.result;
+
+    }, (error: HttpErrorResponse) => {
+      console.log(`Error. ${error.message}.`);
+    });
+
+    var acolhimento: Acolhimento = {
+
+      dataAcolhimento: new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate(), date.getHours(), date.getMinutes())),
+      PessoaProfissional: this.Profissional
+    };
 
 
 
     var pessoa: PessoaPaciente = {};
 
-    pessoa.ativo = true;
+    var filaRegistro: FilaRegistro = {
+      Acolhimento: acolhimento,
+      dataEntradaFilaRegistro: acolhimento.dataAcolhimento
+       
+    };
 
 
     var imc = $("input[name^=SV_IMC]").val();
@@ -227,23 +250,29 @@ export class AcolhimentoComponent implements OnInit {
       pessoa.nomeCompleto = a.value.IdentificacaoPacienteAcolhimento.toUpperCase();
 
 
-    if (a.value.NomeSocial !== "" && a.value.NomeSocial !== undefined)
+    if (a.value.NomeSocial !== "" && a.value.NomeSocial !== undefined && a.value.NomeSocial !== null)
       pessoa.nomeSocial = a.value.NomeSocial.toUpperCase();
 
     if (this.Especialidade != null)
       acolhimento.especialidadeId = this.Especialidade.especialidadeId;
 
-    if ($("label[for^=Cadeirante]").hasClass("active"))
+    if ($("#preferencial").hasClass("active"))
       acolhimento.preferencialId = this.listaPreferencial.find(x => x.nome === "DEFICIENTE FISICO").preferencialId;
 
-    if ($("label[for^=Gestante]").hasClass("active"))
+    if ($("#gestante").hasClass("active"))
       acolhimento.preferencialId = this.listaPreferencial.find(x => x.nome === "GESTANTE").preferencialId;
 
-    if ($("label[for^=Idoso60]").hasClass("active"))
+    if ($("#idoso-a").hasClass("active"))
       acolhimento.preferencialId = this.listaPreferencial.find(x => x.nome === "IDOSO 60 ANOS: PESSOA COM IDADE ENTRE 60 E 79 ANOS").preferencialId;
 
-    if ($("label[for^=Idoso80]").hasClass("active"))
+    if ($("#idoso-b").hasClass("active")){
       acolhimento.preferencialId = this.listaPreferencial.find(x => x.nome === "IDOSO 80 ANOS: PESSOA COM IDADE IGUAL OU SUPERIOR A 80 ANOS").preferencialId;
+      filaRegistro.idoso80 = true;
+    }
+
+
+    if(acolhimento.preferencialId !== undefined)
+      filaRegistro.preferencial = true;
 
     if (a.value.SV_Peso !== "" && a.value.SV_Peso !== undefined)
       acolhimento.peso = a.value.SV_Peso + " kg";
@@ -254,29 +283,32 @@ export class AcolhimentoComponent implements OnInit {
     if (imc !== "")
       acolhimento.imc = imc;
 
-    if (a.value.SV_Temperatura !== "" && a.value.SV_Temperatura !== undefined)
+      
+    acolhimento.risco = (a.value.PacienteRisco !== "")? true: false
+
+    if (a.value.SV_Temperatura !== "" && a.value.SV_Temperatura !== undefined && a.value.SV_Temperatura !== null)
       acolhimento.temperatura = a.value.SV_Temperatura + " °C";
 
-    if (a.value.SV_PressaoArterial_Sistolica !== "" && a.value.SV_PressaoArterial_Sistolica !== undefined)
+    if (a.value.SV_PressaoArterial_Sistolica !== "" && a.value.SV_PressaoArterial_Sistolica !== undefined && a.value.SV_PressaoArterial_Sistolica !== null)
       acolhimento.PressaoArterialSistolica = a.value.SV_PressaoArterial_Sistolica + " mmHg";
 
-    if (a.value.SV_PressaoArterial_Diastolica !== "" && a.value.SV_PressaoArterial_Diastolica !== undefined)
+    if (a.value.SV_PressaoArterial_Diastolica !== "" && a.value.SV_PressaoArterial_Diastolica !== undefined && a.value.SV_PressaoArterial_Diastolica !== null)
       acolhimento.PressaoArterialDiastolica = a.value.SV_PressaoArterial_Diastolica + " mmHg";
 
-    if (a.value.SV_Pulso !== "" && a.value.SV_Pulso !== undefined)
+    if (a.value.SV_Pulso !== "" && a.value.SV_Pulso !== undefined && a.value.SV_Pulso !== null)
       acolhimento.pulso = a.value.SV_Pulso + " bpm";
 
-    if (a.value.SV_FreqResp !== "" && a.value.SV_FreqResp !== undefined)
+    if (a.value.SV_FreqResp !== "" && a.value.SV_FreqResp !== undefined  && a.value.SV_FreqResp !== null)
       acolhimento.frequenciaRespiratoria = a.value.SV_FreqResp + " rpm";
 
-    if (a.value.SV_Saturacao !== "" && a.value.SV_Saturacao !== undefined)
+    if (a.value.SV_Saturacao !== "" && a.value.SV_Saturacao !== undefined  && a.value.SV_Saturacao !== null)
       acolhimento.saturacao = a.value.SV_Saturacao + " %";
 
-    if ($("label[for^=PacienteRisco]").hasClass("active"))
-      acolhimento.risco = true;
-    else
-      acolhimento.risco = false;
 
+      this.AcolhimentoService.ConsultaPessoaStatus("AGUARDANDO REGISTRO BOLETIM").subscribe(data => {
+        
+        pessoa.pessoaStatusId = data.result.pessoaStatusId;
+      });
   
    
 
@@ -300,18 +332,29 @@ export class AcolhimentoComponent implements OnInit {
       return;
     }
 
-    this.AcolhimentoService.SalvarAcolhimento(acolhimento).subscribe(data => {
+    // this.AcolhimentoService.SalvarAcolhimento(acolhimento).subscribe(data => {
 
       
 
-      Toastr.success("Acolhimento salvo com sucesso");
+     
+      this.AcolhimentoService.IncluirFilaRegistro(filaRegistro).subscribe(subdata => {
+
+        Toastr.success("Acolhimento salvo com sucesso");
+        Toastr.success("Paciente salvo com sucesso");
+        Toastr.success("Paciente Incluído na Fila");
+
+      }, (error: HttpErrorResponse) => {
+        this.auth.onSessaoInvalida(error);
+      });
 
       this.onLimpaFormAcolhimento(a);
+      $("#btnLimparAcolhimento").trigger("click");
+      
 
-    }, (error: HttpErrorResponse) => {
-      this.auth.onSessaoInvalida(error);
-    },
-    );
+    // }, (error: HttpErrorResponse) => {
+    //   this.auth.onSessaoInvalida(error);
+    // },
+    // );
 
   }
 
@@ -370,7 +413,7 @@ export class AcolhimentoComponent implements OnInit {
     form.reset();
     this.Pessoa = undefined;
     form.value.IdentificacaoPacienteAcolhimento = "";
-    form.value.DP_NomeSocial = "";
+    form.value.NomeSocial = "";
     form.value.SV_Peso = "";
     form.value.SV_Altura = "";
     form.value.SV_Temperatura = "";
@@ -379,6 +422,7 @@ export class AcolhimentoComponent implements OnInit {
     form.value.SV_Pulso = "";
     form.value.SV_FreqResp = "";
     form.value.SV_Saturacao = "";
+    form.value.PacienteRisco = "";
   
   }
 

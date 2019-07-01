@@ -15,6 +15,7 @@ import { AcolhimentoService } from './controller/acolhimento/acolhimento.service
 import { ClassificaoRiscoService } from './controller/classificacaorisco/classificacaorisco.service';
 
 import { OrderModule } from 'ngx-order-pipe';
+import { Ng2SearchPipeModule } from 'ng2-search-filter';
 import { CpfService } from './controller/util/cpf.service';
 import { LoginComponent } from './controller/login/login.component';
 import { MasterComponent } from './controller/master/master.component';
@@ -27,6 +28,11 @@ import { NgxMaskModule, IConfig } from 'ngx-mask'
 import { AtendimentoMedicoComponent } from './controller/atendimentomedico/atendimentomedico.component';
 import { AtendimentoMedicoService } from './controller/atendimentomedico/atendimentomedico.service';
 import { FilaatendimentoComponent } from './controller/filaatendimento/filaatendimento.component';
+import { FilaregistroComponent } from './controller/filaregistro/filaregistro.component';
+import { FilaclassificacaoriscoComponent } from './controller/filaclassificacaorisco/filaclassificacaorisco.component';
+import { FilaRegistroService } from './controller/filaregistro/filaregistro.service';
+import { registerLocaleData } from '@angular/common';
+import localePt from '@angular/common/locales/pt'
 
 
 const appRoutes: Routes = [
@@ -40,7 +46,9 @@ const appRoutes: Routes = [
       { path: 'acolhimento', component: AcolhimentoComponent },
       { path: 'classificacaorisco', component: ClassificacaoRiscoComponent },
       { path: 'atendimentomedico', component: AtendimentoMedicoComponent },
-      { path: 'filaatendimento', component: FilaatendimentoComponent }
+      { path: 'filaatendimento', component: FilaatendimentoComponent },
+      { path: 'filaregistro', component: FilaregistroComponent },
+      { path: 'filaclassificacao', component: FilaclassificacaoriscoComponent }
     ]
   },
 
@@ -48,6 +56,7 @@ const appRoutes: Routes = [
   { path: '**', redirectTo: '/login' },
 ];
 
+registerLocaleData(localePt);
 
 export const options: Partial<IConfig> | (() => Partial<IConfig>) = {};
 
@@ -64,11 +73,14 @@ export const options: Partial<IConfig> | (() => Partial<IConfig>) = {};
     ClassificacaoRiscoComponent,
     ClassificacaoRiscoPipe,
     AtendimentoMedicoComponent,
-    FilaatendimentoComponent
+    FilaatendimentoComponent,
+    FilaregistroComponent,
+    FilaclassificacaoriscoComponent
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),
     OrderModule,
+    Ng2SearchPipeModule,
     HttpClientModule,
     FormsModule,
     BrowserAnimationsModule,
@@ -84,7 +96,8 @@ export const options: Partial<IConfig> | (() => Partial<IConfig>) = {};
     CpfService,
     AcolhimentoService,
     ClassificaoRiscoService,
-    AtendimentoMedicoService
+    AtendimentoMedicoService,
+    FilaRegistroService
   ],
   bootstrap: [AppComponent]
 })

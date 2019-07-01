@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { Return } from '../../model/Return';
 import { Acolhimento } from '../../model/Acolhimento';
 import { PessoaPaciente } from '../../model/PessoaPaciente';
-import { Preferencial } from '../../model/Preferencial';
+import { FilaRegistro } from 'src/app/model/FilaRegistro';
 
 
 @Injectable({
@@ -31,10 +31,16 @@ export class AcolhimentoService {
 
   BindEspecialidade() { return this.http.get<Return>(`${this.baseUrl}especialidade`, this.httpOptions); }
   BindPreferencial() { return this.http.get<Return>(`${this.baseUrl}preferencial`, this.httpOptions); }
+  ConsultaPessoaStatus(descricao: string) { return this.http.get<Return>(`${this.baseUrl}pessoastatus/getbynome/`+descricao, this.httpOptions); }
   ConsultaPacienteAcolhimento(pesquisa: string) {
     return this.http.get<Return>(`${this.baseUrl}pessoa/pessoapaciente/consultapacienteacolhimento/` + pesquisa, this.httpOptions);
   }
 
+
+  IncluirFilaRegistro(filaregistro: FilaRegistro) {
+
+    return this.http.post<Return>(`${this.baseUrl}filaregistro/incluir`, filaregistro, this.httpOptions);
+  }
 
   SalvarAcolhimento(acolhimento: Acolhimento) {
 

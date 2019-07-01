@@ -96,6 +96,23 @@ export class ClassificacaoRiscoComponent implements OnInit {
     private sinaisvitaisService: SinaisVitais, private dataService: DataService,) {
     this.listaClassificacaoRiscoAlergia = new Array<ClassificacaoRiscoAlergia>();
 
+    Toastr.options = {
+      "closeButton": true,
+      "debug": false,
+      "newestOnTop": false,
+      "progressBar": false,
+      "positionClass": "toast-bottom-right",
+      "preventDuplicates": false,
+      "onclick": null,
+      "showDuration": "300",
+      "hideDuration": "1000",
+      "timeOut": "5000",
+      "extendedTimeOut": "1000",
+      "showEasing": "swing",
+      "hideEasing": "linear",
+      "showMethod": "fadeIn",
+      "hideMethod": "fadeOut"
+    };
   
 
   }
