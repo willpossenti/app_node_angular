@@ -15,6 +15,7 @@ import { ModeloAtestado } from '../../model/ModeloAtestado';
 import { GrupoExame } from '../../model/GrupoExame';
 import { Exame } from '../../model/Exame';
 import { GrupoMedicamento } from '../../model/GrupoMedicamento';
+import { GrupoExameDetalhe } from '../../model/GrupoExameDetalhe';
 import { Medicamento } from '../../model/Medicamento';
 import { ViaAdministracaoMedicamento } from '../../model/ViaAdministracaoMedicamento';
 import { UnidadeMedicamento } from '../../model/UnidadeMedicamento';
@@ -59,6 +60,7 @@ export class AtendimentoMedicoComponent implements OnInit {
   listaGrupoExame: Array<GrupoExame>;
   listaExame: Array<Exame>;
   listaGrupoMedicamento: Array<GrupoMedicamento>;
+  listaGrupoExameDetalhe: Array<GrupoExameDetalhe>;
   listaMedicamento: Array<Medicamento>;
   listaViaAdministracaoMedicamento: Array<ViaAdministracaoMedicamento>;
   listaUnidadeMedicamento: Array<UnidadeMedicamento>;
@@ -80,6 +82,7 @@ export class AtendimentoMedicoComponent implements OnInit {
   SeveridadeAlergia: SeveridadeAlergia;
   AtendimentoMedicoPrescricaoReceita: AtendimentoMedicoPrescricaoReceitaDetalhe;
   ModeloAtestado: ModeloAtestado;
+  GrupoExameDetalhe: GrupoExameDetalhe;
   GrupoExame: GrupoExame;
   Exame: Exame;
   GrupoMedicamento: GrupoMedicamento;
@@ -105,10 +108,9 @@ export class AtendimentoMedicoComponent implements OnInit {
   ngOnInit() {
 
     let user = JSON.parse(localStorage.getItem('user'));
-
     this.pessoaService.ConsultaProfissional(user.userId).subscribe(async (data: Return) => {
+      console.log(data.result)
      this.Profissional = data.result;
-    
 
     }, (error: HttpErrorResponse) => {
       Toastr.error("Falha ao carregar o profissional");
@@ -204,7 +206,7 @@ export class AtendimentoMedicoComponent implements OnInit {
 
 this.atendimentomedicoservice.BindCapituloCID().subscribe(async (data: Return) => {
       this.listaCapituloCID = data.result;
-
+      
 
       $(document).ready(function () { $("select[name^=CapituloCID]").val($("select[name^=CapituloCID] option:first").val()); });
 
@@ -244,7 +246,7 @@ this.atendimentomedicoservice.BindCapituloCID().subscribe(async (data: Return) =
     $(document).ready(function () { $("select[name^=PossuiAlergia]").val($("select[name^=PossuiAlergia] option:first").val()); });
 
 
-    this.atendimentomedicoservice.BindModeloPrescricaoReceitaDetalhe().subscribe(async (data: Return) => {
+    this.atendimentomedicoservice.BindModeloPrescricaoReceita().subscribe(async (data: Return) => {
       this.listaModeloPrescricaoReceitaDetalhe = data.result;
       $(document).ready(function () { $("select[name^=PR_Modelo]").val($("select[name^=PR_Modelo] option:first").val()); });
     }, (error: HttpErrorResponse) => {
@@ -273,8 +275,8 @@ this.atendimentomedicoservice.BindCapituloCID().subscribe(async (data: Return) =
       console.log(`Error. ${error.message}.`);
     });
 
-    this.atendimentomedicoservice.BindUnidadeMedicamento().subscribe(async (data: Return) => {
-      this.listaUnidadeMedicamento = data.result;
+    this.atendimentomedicoservice.BindUnidadeMedicamento().subscribe(async (data: Return) => { 
+      this.listaUnidadeMedicamento = data.result; 
       $(document).ready(function () { $("select[name^=M_Unidade]").val($("select[name^=M_Unidade] option:first").val()); });
 
     }, (error: HttpErrorResponse) => {
@@ -461,7 +463,7 @@ this.atendimentomedicoservice.BindCapituloCID().subscribe(async (data: Return) =
       
     if (rb.value.AtestadoObservacao != "")
     {
-      atendimentomedico.atestado = rb.value.AtestadoObservacao();
+      atendimentomedico.atestado = rb.value.AtestadoObservacao.toUpperCase();
       if (rb.value.AtestadoValidade != "")
         atendimentomedico.validadeatestado = rb.value.AtestadoValidade;
     }
@@ -541,11 +543,11 @@ this.atendimentomedicoservice.BindCapituloCID().subscribe(async (data: Return) =
 
       var atendimentomedicoExame: any = {};
 
-      atendimentomedicoExame.GrupoExame = this.GrupoExame.GrupoExameDetalhe.nome;
+      atendimentomedicoExame.GrupoExame = this.GrupoExame.nome;
       atendimentomedicoExame.Exame = this.Exame.nome;
       atendimentomedicoExame.observacaoExame = observacaoexame.toUpperCase();
       atendimentomedicoExame.dataExame = new Date();
-      atendimentomedicoExame.Profissional = this.Profissional.nomeCompleto;
+      // atendimentomedicoExame.Profissional = this.Profissional.nomeCompleto;
       
     
 
@@ -617,7 +619,7 @@ this.atendimentomedicoservice.BindCapituloCID().subscribe(async (data: Return) =
   onEditarExame(atendimentomedicoExame: AtendimentoMedicoExame) {
 
     this.GrupoExame = atendimentomedicoExame.GrupoExame;
-    this.Exame.exameId = atendimentomedicoExame.exameId;
+    this.Exame.exameId = atendimentomedicoExame.Exame.exameId;
 
 
     // if (atendimentomedicoExame.dataExame != null) {
@@ -662,7 +664,7 @@ this.atendimentomedicoservice.BindCapituloCID().subscribe(async (data: Return) =
   //begin:: Exclui lotacao Profissional / Alerta o usuário da confirmação da exclusão na aba profissional
   onExcluirExame(atendimentomedicoExame: AtendimentoMedicoExame) {
 
-    var index = this.listaAtendimentoMedicoExame.findIndex(x => x.exameId === atendimentomedicoExame.exameId);
+    var index = this.listaAtendimentoMedicoExame.findIndex(x => x.exameId === atendimentomedicoExame.Exame.exameId && x.grupoExame === atendimentomedicoExame.GrupoExame);
     this.listaAtendimentoMedicoExame.splice(index, 1);
   }
   //end:: Exibe Mensagem Excluir
@@ -1009,7 +1011,6 @@ console.log( this.listaAtendimentoMedicoPrescricaoReceitaDetalhe);
   //begin:: Consulta o exame/ Consulta e monta um grid com as opções
   onConsultaExame() {
 
-
     var dp_exame = $("input[name^=Exames]").val().trim().toUpperCase();
 
 
@@ -1031,6 +1032,32 @@ console.log( this.listaAtendimentoMedicoPrescricaoReceitaDetalhe);
 
 
     }
+    // if (event.target.value.length > 3) {
+
+    //   var consultaFiltro: GrupoExame = {
+
+    //     grupoExameId: this.GrupoExame.grupoExameId,
+    //     nome : event.target.value,
+    //     ativo: true
+    //  };
+    //  console.log(consultaFiltro);
+
+    //   $('#divPesquisaExame').addClass('show');
+
+    //   this.atendimentomedicoservice.GetDetalheByGrupo(consultaFiltro)
+    //     .subscribe(async (data: Return) => {
+
+    //       console.log(data.result);
+
+    //       this.listaGrupoExameDetalhe = data.result;
+
+    //     }, (error: HttpErrorResponse) => {
+    //       Toastr.error("Falha ao consultar o Exame");
+    //       console.log(`Error. ${error.message}.`);
+    //     });
+
+
+    // }
 
   }
   //end:: Consulta o exame
@@ -1055,7 +1082,32 @@ console.log( this.listaAtendimentoMedicoPrescricaoReceitaDetalhe);
     $("#divPesquisaExame").removeClass('show');
 
   }
+
+  onSelectedGrupoExame(grupoExame: GrupoExame) {
+
+    this.GrupoExame = grupoExame;
+
+    $("input[name^=GrupoExame]").val(grupoExame.nome);
+
+  }
   //end::  Carregamento do Exame pela Busca
+  // onSelectedGrupoExame(grupoExame: GrupoExame) {
+  //   console.log(grupoExame);
+ 
+  //   this.atendimentomedicoservice.GetDetalheByGrupo(grupoExame)
+  //   .subscribe(async (data: Return) => {
+  //     console.log(data.result);
+  //     this.listaGrupoExameDetalhe = data.result;
+      
+
+  //   }, (error: HttpErrorResponse) => {
+  //     Toastr.error("Falha ao consultar o CID");
+  //     console.log(`Error. ${error.message}.`);
+  //   });
+
+  // }
+
+
 
   //begin:: consulta CID/ Consulta e monta um grid com as opções
   onConsultaCIDs(event: any) {
@@ -1107,7 +1159,7 @@ console.log( this.listaAtendimentoMedicoPrescricaoReceitaDetalhe);
   onSelectedCID(cid: CID) {
   
     Toastr.info("CID carregado");
-    this.CarregaMedicamento(cid);
+    this.CarregaCID(cid);
   
     $("#divPesquisaCID").removeClass('show');
       

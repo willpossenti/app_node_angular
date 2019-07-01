@@ -477,7 +477,7 @@
                               <label>Grupo de Exames</label>
                               <select class="form-control" name="GrupoExame" [(ngModel)]="GrupoExame" >
                                 <option value="">-- Selecione --</option>
-                                <option *ngFor="let grupoexame of listaGrupoExame | orderBy: orderNome" [ngValue]="grupoexame">{{grupoexame.nome}}</option>
+                                <option *ngFor="let grupoexame of listaGrupoExame | orderBy: orderNome" [ngValue]="grupoexame" (click)="onSelectedGrupoExame(grupoexame)">{{grupoexame.nome}}</option>
                               </select>
                               <span class="form-text text-danger cm oculta">Message Error</span>
                             </div>

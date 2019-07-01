@@ -21,8 +21,8 @@ export class RegistroBoletimService {
   
 
   constructor(private http: HttpClient) {
-    //this.baseUrl = 'https://localhost:44307/api/';
-    this.baseUrl = 'https://apinew.ecosistemas.com.br/api/';
+    this.baseUrl = 'https://localhost:44307/api/';
+    //this.baseUrl = 'https://apinew.ecosistemas.com.br/api/';
 
   }
 

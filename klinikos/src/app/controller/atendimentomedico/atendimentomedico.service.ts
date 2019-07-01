@@ -4,6 +4,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Return } from '../../model/Return';
 import { AtendimentoMedico } from '../../model/AtendimentoMedico';
 import { CID } from 'src/app/model/CID';
+import { GrupoExameDetalhe } from '../../model/GrupoExameDetalhe';
 
 
 @Injectable({
@@ -22,13 +23,15 @@ export class AtendimentoMedicoService {
 
 
   constructor(private http: HttpClient) {
-    //this.baseUrl = 'https://localhost:44307/api/';
-    this.baseUrl = 'https://apinew.ecosistemas.com.br/api/';
+     this.baseUrl = 'https://localhost:44307/api/';
+    //this.baseUrl = 'https://apinew.ecosistemas.com.br/api/';
   }
 
   ConsultarCIDByCapitulo(cid: CID) { return this.http.post<Return>(`${this.baseUrl}cid/GetCIDByCapitulo`, cid, this.httpOptions); }
+  GetDetalheByGrupo(grupoExameDetalhe: GrupoExameDetalhe) { return this.http.post<Return>(`${this.baseUrl}grupoexamedetalhe/GetDetalheByGrupo`, grupoExameDetalhe, this.httpOptions); }
   BindCapituloCID() { return this.http.get<Return>(`${this.baseUrl}capitulocid`, this.httpOptions); }
   BindGrupoExame() { return this.http.get<Return>(`${this.baseUrl}grupoexame`, this.httpOptions); }
+  BindGrupoExameDetalhe() { return this.http.get<Return>(`${this.baseUrl}grupoexamedetalhe`, this.httpOptions); }
   BindExame() { return this.http.get<Return>(`${this.baseUrl}exame`, this.httpOptions); }
   BindModeloPrescricaoReceita() { return this.http.get<Return>(`${this.baseUrl}ModeloPrescricaoReceita`, this.httpOptions); }
   BindTipoAlergia() { return this.http.get<Return>(`${this.baseUrl}tipoalergia`, this.httpOptions); }

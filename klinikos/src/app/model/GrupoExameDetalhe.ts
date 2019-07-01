@@ -1,10 +1,13 @@
 
+import { GrupoExame } from './GrupoExame';
+import { Exame } from './Exame';
 
 export interface GrupoExameDetalhe {
 
-    grupoExameDetalheId?: string;
-    nome?: string;
-    ativo?: boolean;
-  }
-  
+  grupoExameDetalheId?: string;
+  GrupoExame?: GrupoExame
+  Exame?: Exame
+  ativo?: boolean;
+
+}
   
