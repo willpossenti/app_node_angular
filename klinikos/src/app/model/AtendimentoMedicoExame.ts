@@ -10,7 +10,7 @@ export interface AtendimentoMedicoExame {
   AtendimentoMedico?: AtendimentoMedico;
   // GrupoExameDetalhe?: GrupoExameDetalhe;
   GrupoExame?: GrupoExame;
-  Exame?: Exame;
+  exameId?: string;
   observacaoExame?: string;
   dataExame?: Date;
   Profissional?: PessoaProfissional;

@@ -557,7 +557,7 @@
 
                                   <tr class="text-center" id="row{{i}}">
                                     <td>{{ item.observacaoExame }}</td>
-                                    <td>{{ item.GrupoExame.substr(0,50) }}</td>
+                                    <td>{{ item.GrupoExame.nome.substr(0,50) }}</td>
                                     <td>{{ item.Exame.substr(0,50) }}</td>
                                     <td>{{ item.dataExame | date: 'dd/MM/yyyy' }}</td>
                                     <td>{{ item.Profissional }}</td>
@@ -839,9 +839,9 @@
                                     </div>
                                   </form>
                                 </div>
-                                <div class="modal-footer">
+                                <div class="modal-footer" >
                                   <button type="button" class="btn btn-metal" data-dismiss="modal">Fechar</button>
-                                  <button type="button" class="btn btn-brand">Salvar</button>
+                                  <button type="button" class="btn btn-brand"(click)="onAdicionaModeloPrecrisaoReceita()">Salvar</button>
                                 </div>
                               </div>
                             </div>
@@ -954,13 +954,13 @@
                         </div>
                         <div class="col-lg-6" id="colModalFinAlta" >
                           <label>Data / Hora</label>
-                          <input type="datetime-local" class="form-control" name="DataHora" id="dataFinalizarAM" ngModel>                          
+                          <input type="datetime-local" class="form-control" name="DataHora" id="dataFinalizarA" ngModel>                          
                           <span class="form-text text-danger oculta">Message Error</span>
                         </div>
                         <!--Saída por Óbito-->
                         <div class="col-lg-6 oculta" id="colModalFinObito">
                           <label>Data / Hora Óbito</label>
-                          <input type="datetime-local" class="form-control" name="DataHoraObito" ngModel>
+                          <input type="datetime-local" class="form-control" name="DataHoraObito" id="dataFinalizarO" ngModel>
 
                           <span class="form-text text-danger oculta">Message Error</span>
                         </div>
