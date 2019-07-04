@@ -30,12 +30,13 @@ export class AcolhimentoComponent implements OnInit {
   listaEspecialidade: Array<Especialidade>;
   listaPreferencial: Array<Preferencial>;
   listaPessoaPaciente: Array<PessoaPaciente>;
-  Profissional : any;
+  Profissional : PessoaProfissional;
   Especialidade: Especialidade;
   Preferencial: Preferencial;
   orderNome: string = 'nome';
   orderDescricao: string = 'descricao';
   Pessoa: any;
+  
 
   constructor(private AcolhimentoService: AcolhimentoService, private route: ActivatedRoute,
     private pessoaService: PessoaService, private cpfService: CpfService, private imcService: ImcService,
@@ -218,18 +219,9 @@ export class AcolhimentoComponent implements OnInit {
 
     var date = new Date();
  
-    let user = JSON.parse(localStorage.getItem('user'));
-
-    this.pessoaService.ConsultaProfissional(user.userId).subscribe(async (data: Return) => {
-     this.Profissional = data.result;
-
-    }, (error: HttpErrorResponse) => {
-      console.log(`Error. ${error.message}.`);
-    });
-
     var acolhimento: Acolhimento = {
 
-      dataAcolhimento: new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate(), date.getHours(), date.getMinutes())),
+      dataAcolhimento: new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate(), date.getHours(), date.getMinutes(), date.getSeconds(), date.getMilliseconds())),
       PessoaProfissional: this.Profissional
     };
 
@@ -239,8 +231,8 @@ export class AcolhimentoComponent implements OnInit {
 
     var filaRegistro: FilaRegistro = {
       Acolhimento: acolhimento,
-      dataEntradaFilaRegistro: acolhimento.dataAcolhimento
-       
+      dataEntradaFilaRegistro: acolhimento.dataAcolhimento,
+
     };
 
 
@@ -283,8 +275,8 @@ export class AcolhimentoComponent implements OnInit {
     if (imc !== "")
       acolhimento.imc = imc;
 
-      
-    acolhimento.risco = (a.value.PacienteRisco !== "")? true: false
+
+    acolhimento.risco = a.value.PacienteRisco === true? true: false;
 
     if (a.value.SV_Temperatura !== "" && a.value.SV_Temperatura !== undefined && a.value.SV_Temperatura !== null)
       acolhimento.temperatura = a.value.SV_Temperatura + " °C";
@@ -305,18 +297,9 @@ export class AcolhimentoComponent implements OnInit {
       acolhimento.saturacao = a.value.SV_Saturacao + " %";
 
 
-      this.AcolhimentoService.ConsultaPessoaStatus("AGUARDANDO REGISTRO BOLETIM").subscribe(data => {
-        
-        pessoa.pessoaStatusId = data.result.pessoaStatusId;
-      });
-  
-   
-
     acolhimento.PessoaPaciente = pessoa;
 
     var msgCamposObrigatorios = "";
-
-
 
     if (a.value.IdentificacaoPacienteAcolhimento === "")
     msgCamposObrigatorios = "Informe o nome\n";
@@ -332,11 +315,10 @@ export class AcolhimentoComponent implements OnInit {
       return;
     }
 
-    // this.AcolhimentoService.SalvarAcolhimento(acolhimento).subscribe(data => {
+    this.AcolhimentoService.ConsultaPessoaStatus("AGUARDANDO REGISTRO BOLETIM").subscribe(data => {
 
-      
+      acolhimento.PessoaPaciente.pessoaStatusId = data.result.pessoaStatusId;
 
-     
       this.AcolhimentoService.IncluirFilaRegistro(filaRegistro).subscribe(subdata => {
 
         Toastr.success("Acolhimento salvo com sucesso");
@@ -350,12 +332,7 @@ export class AcolhimentoComponent implements OnInit {
       this.onLimpaFormAcolhimento(a);
       $("#btnLimparAcolhimento").trigger("click");
       
-
-    // }, (error: HttpErrorResponse) => {
-    //   this.auth.onSessaoInvalida(error);
-    // },
-    // );
-
+    });
   }
 
 
@@ -423,7 +400,6 @@ export class AcolhimentoComponent implements OnInit {
     form.value.SV_FreqResp = "";
     form.value.SV_Saturacao = "";
     form.value.PacienteRisco = "";
-  
   }
 
   onCalculaImc(){

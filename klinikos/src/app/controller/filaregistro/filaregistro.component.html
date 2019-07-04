@@ -107,9 +107,9 @@
                                       <div class="dropdown dropdown-inline">
                                           <a title="Ações" href="javascript:void(0);" class="fa fa-edit i-s1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></a>
                                           <div class="dropdown-menu dropdown-menu-right" x-placement="bottom-end" style="position: absolute; will-change:transform; top: 0px; left: 0px; transform: translate3d(-143px, 39px, 0px);">
-                                              <a class="dropdown-item" href="#"><i class="la la-plus"></i> Adicionar</a>
-                                              <a class="dropdown-item" href="#"><i class="la la-user-times"></i> Retornar para Fila</a>
-                                              <a class="dropdown-item" href="#"><i class="la la-sign-out"></i> Evasão sem Atendimento</a>
+                                              <!-- <a class="dropdown-item" href="#"><i class="la la-plus"></i> Adicionar</a>
+                                              <a class="dropdown-item" href="#"><i class="la la-user-times"></i> Retornar para Fila</a> -->
+                                              <a class="dropdown-item" style="cursor: pointer" (click)="onEvasaoSemAtendimento(filaregistro.filaRegistroId)"><i class="la la-sign-out"></i> Evasão sem Atendimento</a>
                                               <div class="dropdown-divider"></div>
                                               <a class="dropdown-item" href="#"><i class="la la-cog"></i> Ações</a>
                                           </div>
@@ -135,7 +135,7 @@
                           <ul class="pagination" id="paginacaoGrid" >
                               
                             <li [id]="item" [className]="i == 1 && (item != 'Anterior' || item != 'Próximo') ? 'page-item active' : 'page-item' && item ==  'Anterior' ? 'page-item2': 'page-item' && item ==  'Próximo' ? 'page-item2': 'page-item'" *ngFor="let item of listaPaginas; let i = index; ">
-                             <a  style="cursor: pointer" [className]="item == 'Anterior' || item == 'Próximo'? 'page-link2': 'page-link' " (click)="onBindPaginacao(item)">{{item}}</a></li>
+                             <a  style="cursor: pointer" [id]="item" [className]="item == 'Anterior' || item == 'Próximo'? 'page-link2': 'page-link' " (click)="onBindPaginacao(item)">{{item}}</a></li>
                           </ul>
                       </div>
                   </div>
@@ -150,5 +150,4 @@
   </div>
   
 </div>
-<button type="button" class="btn btn-outline-brand btn-bold btn-font-sm btn-upper" id="k_blockui_1_5">Custom text 2</button>
 <!-- end:: Content -->
