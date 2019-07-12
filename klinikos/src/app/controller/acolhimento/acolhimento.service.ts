@@ -28,7 +28,7 @@ export class AcolhimentoService {
 
   BindEspecialidade() { return this.http.get<Return>(`${this.baseUrl}especialidade`, this.httpOptions); }
   BindPreferencial() { return this.http.get<Return>(`${this.baseUrl}preferencial`, this.httpOptions); }
-  ConsultaPessoaStatus(descricao: string) { return this.http.get<Return>(`${this.baseUrl}pessoastatus/getbynome/`+descricao, this.httpOptions); }
+
   ConsultaPacienteAcolhimento(pesquisa: string) {
     return this.http.get<Return>(`${this.baseUrl}pessoa/pessoapaciente/consultapacienteacolhimento/` + pesquisa, this.httpOptions);
   }

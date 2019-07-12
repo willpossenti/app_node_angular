@@ -1,16 +1,14 @@
-import { Pessoa } from './Pessoa';
-import { TipoChegada } from './TipoChegada';
-import { Especialidade } from './Especialidade';
-import { TipoOcorrencia } from './TipoOcorrencia';
-import { Estado } from './Estado';
-import { Cidade } from './Cidade';
+
+import { PessoaPaciente } from './PessoaPaciente';
+import { PessoaProfissional } from './PessoaProfissional';
 
 export interface RegistroBoletim {
 
   registroBoletimId?: string;
   numeroBoletim?: string;
   dataBoletim?: Date;
-  Pessoa?: Pessoa;
+  PessoaPaciente?: PessoaPaciente;
+  PessoaProfissional?: PessoaProfissional;
   tipoChegadaId?: string;
   especialidadeId?: string;
   nomeInformante?: string;

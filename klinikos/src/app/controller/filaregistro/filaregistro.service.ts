@@ -25,12 +25,16 @@ export class FilaRegistroService {
   }
 
   BuscarFilaRegistro() { return this.http.get<Return>(`${this.baseUrl}filaregistro`, this.httpOptions); }
+  BuscarFilaRegistroPorId(filaRegistroId: string) { return this.http.get<Return>(`${this.baseUrl}filaregistro/`+filaRegistroId, this.httpOptions); }
   BindPreferencial() { return this.http.get<Return>(`${this.baseUrl}preferencial`, this.httpOptions); }
   ConsultarRegistrosNovos(filaregistroevento: FilaRegistroEvento) { return this.http.post<Return>(`${this.baseUrl}filaregistroevento/consultarregistrosnovos`, filaregistroevento, this.httpOptions); }
   ConsultarRegistrosRetirados(filaregistroevento: FilaRegistroEvento) { return this.http.post<Return>(`${this.baseUrl}filaregistroevento/consultarregistrosretirados`, filaregistroevento, this.httpOptions); }
-  RetirarFila(filaregistro: FilaRegistro) { return this.http.put<Return>(`${this.baseUrl}filaregistro`, filaregistro, this.httpOptions); }
-  AdicionarFilaEvento(filaRegistroEvento: FilaRegistroEvento) { return this.http.put<Return>(`${this.baseUrl}filaregistroevento`, filaRegistroEvento, this.httpOptions); }
-  ConsultarEvento(descricao: string) { return this.http.get<Return>(`${this.baseUrl}evento/getbydescricao/`+descricao, this.httpOptions); }
+  ConsultarRegistrosChamadosAoPainel(filaregistroevento: FilaRegistroEvento) { return this.http.post<Return>(`${this.baseUrl}filaregistroevento/consultarregistroschamadosaopainel`, filaregistroevento, this.httpOptions); }
+  ConsultarRegistrosCancelados(filaregistroevento: FilaRegistroEvento) { return this.http.post<Return>(`${this.baseUrl}filaregistroevento/consultarregistroscancelados`, filaregistroevento, this.httpOptions); }
+  ConsultarRegistrosConfirmados(filaregistroevento: FilaRegistroEvento) { return this.http.post<Return>(`${this.baseUrl}filaregistroevento/consultarregistrosconfirmados`, filaregistroevento, this.httpOptions); }
+  RetirarFila(filaregistro: FilaRegistro) { return this.http.put<Return>(`${this.baseUrl}filaregistro/retirarpacientefila`, filaregistro, this.httpOptions); }
+  AdicionarFilaEvento(filaRegistroEvento: FilaRegistroEvento) { return this.http.post<Return>(`${this.baseUrl}filaregistroevento/incluir`, filaRegistroEvento, this.httpOptions); }
+  ConsultarEvento(sigla: string) { return this.http.get<Return>(`${this.baseUrl}evento/getbysigla/`+sigla, this.httpOptions); }
   
 
 }

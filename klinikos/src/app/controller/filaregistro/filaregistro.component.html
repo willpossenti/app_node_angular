@@ -66,41 +66,41 @@
                           </thead>
                           <tbody class="tblsearch_grid">
                               <tr class="text-center data" *ngFor="let filaregistro of listaFila| filter:searchText | slice:inicioGrid:finalGrid ; let i = index; "  >
-                                  <td style="cursor: pointer" (click)="SelecionarPaciente()">{{filaregistro.idlinha}}</td>
+                                  <td style="cursor: pointer" (click)="SelecionarPaciente(filaregistro)">{{filaregistro.idlinha}}</td>
                                   <td class="justify-content-center border-top-0" *ngIf="filaregistro.risco === true" style="cursor: pointer" (click)="SelecionarPaciente()">
                                        <i  class="fa fa-user-check fa-fw i-s1 c-cinza mr-1 ch" title="Com Risco (Não Classificado)" data-toggle="k-tooltip" data-placement="top" data-trigger="hover"></i>
                                  </td>
-                                  <td class="justify-content-center border-top-0" *ngIf="filaregistro.idoso80 === true && filaregistro.risco === false" style="cursor: pointer" (click)="SelecionarPaciente()">
+                                  <td class="justify-content-center border-top-0" *ngIf="filaregistro.idoso80 === true && filaregistro.risco === false" style="cursor: pointer" (click)="SelecionarPaciente(filaregistro)">
                                     <img src="../../../assets/media/icons/icon-prioridade-elderly-80.svg"  class="mr-1 ch" style="height:20px;" title="Idoso acima de 80 anos" data-toggle="k-tooltip" data-placement="top" data-trigger="hover">
                                 </td>
-                                <td class="justify-content-center border-top-0" *ngIf="filaregistro.descricaoPreferencial === 'IDOSO 60 ANOS: PESSOA COM IDADE ENTRE 60 E 79 ANOS' && filaregistro.risco === false" style="cursor: pointer" (click)="SelecionarPaciente()">
+                                <td class="justify-content-center border-top-0" *ngIf="filaregistro.descricaoPreferencial === 'IDOSO 60 ANOS: PESSOA COM IDADE ENTRE 60 E 79 ANOS' && filaregistro.risco === false" style="cursor: pointer" (click)="SelecionarPaciente(filaregistro)">
                                     <img src="../../../assets/media/icons/icon-prioridade-elderly-60.svg" class="mr-1 ch" style="height:20px;" title="Idoso acima de 60 anos" data-toggle="k-tooltip" data-placement="top" data-trigger="hover">
                                 </td> 
                                 <td class="justify-content-center border-top-0" *ngIf="filaregistro.risco === false && filaregistro.idoso80 === false && 
                                 filaregistro.descricaoPreferencial !== 'IDOSO 60 ANOS: PESSOA COM IDADE ENTRE 60 E 79 ANOS' &&
-                                filaregistro.descricaoPreferencial === 'GESTANTE'  " style="cursor: pointer" (click)="SelecionarPaciente()">
+                                filaregistro.descricaoPreferencial === 'GESTANTE'  " style="cursor: pointer" (click)="SelecionarPaciente(filaregistro)">
                                     <img src="../../../assets/media/icons/icon-prioridade-pregnant.svg" class="mr-1 ch" style="height:20px;" title="Gestante" data-toggle="k-tooltip" data-placement="top" data-trigger="hover">
                                     
                                 </td>
                                 <td class="justify-content-center border-top-0" *ngIf="filaregistro.risco === false && filaregistro.idoso80 === false && 
                                 filaregistro.descricaoPreferencial !== 'IDOSO 60 ANOS: PESSOA COM IDADE ENTRE 60 E 79 ANOS' &&
-                                filaregistro.descricaoPreferencial !== 'GESTANTE' && filaregistro.descricaoPreferencial === 'DEFICIENTE FISICO' " style="cursor: pointer" (click)="SelecionarPaciente()">
+                                filaregistro.descricaoPreferencial !== 'GESTANTE' && filaregistro.descricaoPreferencial === 'DEFICIENTE FISICO' " style="cursor: pointer" (click)="SelecionarPaciente(filaregistro)">
                                 <i class="fa fa-wheelchair fa-fw i-s1 mr-1 ch" title="Cadeirante" data-toggle="k-tooltip" data-placement="top" data-trigger="hover"></i>
                                     
                                 </td>
                                   <td class="justify-content-center border-top-0" *ngIf="filaregistro.risco === false && filaregistro.idoso80 === false && 
                                   filaregistro.descricaoPreferencial !== 'IDOSO 60 ANOS: PESSOA COM IDADE ENTRE 60 E 79 ANOS' &&
-                                  filaregistro.descricaoPreferencial !== 'GESTANTE' && filaregistro.descricaoPreferencial !== 'DEFICIENTE FISICO'" style="cursor: pointer" (click)="SelecionarPaciente()">
+                                  filaregistro.descricaoPreferencial !== 'GESTANTE' && filaregistro.descricaoPreferencial !== 'DEFICIENTE FISICO'" style="cursor: pointer" (click)="SelecionarPaciente(filaregistro)">
                                     <i class="fa fa-user fa-fw i-s1 mr-1 ch c-cinza" title="(Não Classificado)" data-toggle="k-tooltip"  data-placement="top" data-trigger="hover"></i>
                                 </td>
-                                  <td class="text-left" style="cursor: pointer" (click)="SelecionarPaciente()">{{filaregistro.nomepaciente}}</td>
+                                  <td class="text-left" style="cursor: pointer" (click)="SelecionarPaciente(filaregistro)">{{filaregistro.nomepaciente}}</td>
                                   <td style="cursor: pointer" (click)="SelecionarPaciente()">{{filaregistro.especialidade}}</td>
                                   <td style="cursor: pointer" (click)="SelecionarPaciente()">{{filaregistro.dataEntradaFilaRegistro}}</td>
                                   <td style="cursor: pointer" (click)="SelecionarPaciente()">{{filaregistro.tempoEspera}}</td>
                                   <!-- <td>01h 16min</td> -->
                                   <td class="d-flex justify-content-center border-top-0" >
-                                      <a class="gai-painel mr-2" href="javascript:void(0);" id="btnChamarPainel{{i}}" title="Chamar paciente" (click)="onExibeBotoesPainel(i)"><i id="icon_microfone{{i}}" class="fas fa-microphone-alt i-s1"></i></a>
-                                      <a class="gai-checkin oculta" href="javascript:void(0);" id="btnCancelarChamadaPainel{{i}}" title="Confirmar chegada" ><i class="fa fa-check-circle i-s1 c-verde"></i></a>
+                                      <a class="gai-painel mr-2" href="javascript:void(0);" id="btnChamarPainel{{i}}" title="Chamar paciente" (click)="onExibeBotoesPainel(i, 'chamada')"><i id="icon_microfone{{i}}" class="fas fa-microphone-alt i-s1"></i></a>
+                                      <a class="gai-checkin oculta" href="javascript:void(0);" id="btnCancelarChamadaPainel{{i}}" title="Confirmar chegada" (click)="onExibeBotoesPainel(i,'confirma')"><i class="fa fa-check-circle i-s1 c-verde"></i></a>
                                   </td>
                                   <td>
                                       <!--Options-->

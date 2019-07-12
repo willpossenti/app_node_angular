@@ -6,13 +6,10 @@ import { Especialidade } from '../../model/Especialidade';
 import { TipoChegada } from '../../model/TipoChegada';
 import { TipoOcorrencia } from 'src/app/model/TipoOcorrencia';
 import { HttpErrorResponse } from '@angular/common/http';
-import { Cep } from '../../model/Cep';
 import { PessoaService } from '../cadastro/pessoa/pessoa.service';
-
 import { CpfService } from '../util/cpf.service';
 import { NgForm } from '@angular/forms';
 import { RegistroBoletim } from '../../model/RegistroBoletim';
-import { Pessoa } from '../../model/Pessoa';
 import { PessoaPaciente } from '../../model/PessoaPaciente';
 import { PessoaProfissional } from '../../model/PessoaProfissional';
 import * as moment from 'moment';
@@ -21,6 +18,9 @@ import * as Toastr from 'toastr';
 import { AuthGuard } from '../../controller/auth/auth.guard';
 import * as swal from '../../../assets/vendors/general/sweetalert2/dist/sweetalert2.js';
 import { DataService } from '../util/data.service';
+import { FilaRegistroService } from '../filaregistro/filaregistro.service';
+import { FilaClassificacao } from 'src/app/model/FilaClassificacao';
+import { Acolhimento } from 'src/app/model/Acolhimento';
 
 @Component({
   selector: 'app-registroboletim',
@@ -32,7 +32,6 @@ export class RegistroBoletimComponent implements OnInit {
   listaTipoChegada: Array<TipoChegada>;
   listaPessoaProfissional: Array<PessoaProfissional>;
   listaPessoaPaciente: Array<PessoaPaciente>;
-
   Especialidade: Especialidade;
   TipoChegada: TipoChegada;
   TipoOcorrencia: TipoOcorrencia;
@@ -41,9 +40,12 @@ export class RegistroBoletimComponent implements OnInit {
   orderUf: string = 'uf';
   Pessoa: any;
   customMask: string;
+  Profissional : PessoaProfissional;
+  Acolhimento: Acolhimento;
 
-  constructor(private registroBoletimService: RegistroBoletimService, private route: ActivatedRoute,
-    private pessoaService: PessoaService, private cpfService: CpfService, private router: Router, 
+
+  constructor(private filaRegistroService: FilaRegistroService, private registroBoletimService: RegistroBoletimService,
+    private route: ActivatedRoute, private pessoaService: PessoaService, private cpfService: CpfService, private router: Router, 
     private dataService: DataService, private auth: AuthGuard) {
 
       Toastr.options = {
@@ -68,6 +70,37 @@ export class RegistroBoletimComponent implements OnInit {
 
 
   public ngOnInit() {
+
+    let user = JSON.parse(localStorage.getItem('user'));
+    this.pessoaService.ConsultaProfissional(user.userId).subscribe(async (data: Return) => {
+     this.Profissional = data.result;
+
+    }, (error: HttpErrorResponse) => {
+      Toastr.error("Falha ao carregar o profissional");
+      console.log(`Error. ${error.message}.`);
+    });
+
+
+
+   var filaRegistroId = this.route
+    .snapshot.queryParamMap.get('filaRegistroId');
+
+
+if(filaRegistroId !== null)
+  this.filaRegistroService.BuscarFilaRegistroPorId(filaRegistroId).subscribe(async (data: Return) => {
+
+  if(data.result !== null){
+
+    this.Especialidade = this.listaEspecialidade.find(x=>x.especialidadeId === data.result.acolhimento.especialidadeId);
+    this.Pessoa = data.result.acolhimento.pessoaPaciente;
+    this.Acolhimento = data.result.acolhimento;
+
+    setTimeout( () => { this.CarregaPessoa(data.result.acolhimento.pessoaPaciente);}, 500);
+
+  }
+  }, (error: HttpErrorResponse) => {
+    this.auth.onSessaoInvalida(error);
+  });
 
 
     this.customMask = '(00) 00000-0000';
@@ -281,11 +314,14 @@ export class RegistroBoletimComponent implements OnInit {
 
     $("#k_scrolltop").trigger("click");
 
-    var registroboletim: RegistroBoletim = {};
+    var registroboletim: RegistroBoletim = {
+
+      PessoaPaciente: {},
+      PessoaProfissional: this.Profissional
+    };
 
     var dataBoletim = $("input[name^=IB_Data]").val();
     var horaBoletim = $("input[name^=IB_Hora]").val();
-    var telefoneInformante = $("input[name^=IN_Telefone]").val();
 
     if (dataBoletim !== "") {
       var data = dataBoletim.split("/");
@@ -302,9 +338,7 @@ export class RegistroBoletimComponent implements OnInit {
 
     var pessoa: PessoaPaciente = {};
 
-    pessoa.ativo = true;
-
-
+   
     var cpf = $("input[name^=P_CPF]").val();
     var nascimento = $("input[name^=IB_Nascimento]").val();
     var telefone = $("input[name^=DP_Telefone]").val();
@@ -348,19 +382,6 @@ export class RegistroBoletimComponent implements OnInit {
     if (this.Especialidade !== undefined)
       registroboletim.especialidadeId = this.Especialidade.especialidadeId;
 
-    if (rb.value.IN_NomeDoInformante !== "")
-      registroboletim.nomeInformante = rb.value.IN_NomeDoInformante.toUpperCase();
-
-    if (rb.value.IN_Endereco !== "")
-      registroboletim.enderecoInformante = rb.value.IN_Endereco.toUpperCase();
-
-    if (telefoneInformante !== "")
-      registroboletim.telefoneInformante = telefoneInformante.replace('(', '').replace(')', '').replace('-', '');
-
-    if (rb.value.IN_GrauParentesco !== "")
-      registroboletim.grauParentesco = rb.value.IN_GrauParentesco.toUpperCase();
-
-
     var msgCamposObrigatorios = "";
 
     if (nome === "")
@@ -377,32 +398,89 @@ export class RegistroBoletimComponent implements OnInit {
       return;
     }
 
+    registroboletim.PessoaPaciente = pessoa;
 
-    if (this.Pessoa === undefined)
-      registroboletim.Pessoa = pessoa;
-    else {
+    if (this.Pessoa !== undefined){
 
-      pessoa.pessoaId = this.Pessoa.pessoaId;
+      registroboletim.PessoaPaciente.pessoaId = this.Pessoa.pessoaId;
 
-      this.registroBoletimService.AlterarRegistroPessoa(pessoa).subscribe(data => {
 
-        registroboletim.Pessoa = pessoa;
+      this.pessoaService.ConsultaPessoaStatus("ACR").subscribe(data => {
 
-      }, (error: HttpErrorResponse) => {
-        this.auth.onSessaoInvalida(error);
-      },
-      );
+        if(data.result !== null){
+  
+          registroboletim.PessoaPaciente.pessoaStatusId = data.result.pessoaStatusId;
+  
+          var filaClassificacao: FilaClassificacao = {
+            RegistroBoletim: registroboletim,
+            dataEntradaFilaClassificacao: registroboletim.dataBoletim
+          };
+  
+          if(this.Acolhimento !== undefined)
+            filaClassificacao.Acolhimento = this.Acolhimento;
+  
+        
+          this.onSalvar(filaClassificacao);
+        }
+      });
 
+
+    }else {
+
+      var statusArray = [];
+      statusArray.push("AB");
+      statusArray.push("ACR");
+
+      
+      this.pessoaService.ConsultaPessoaStatusArray(statusArray).subscribe(data => {
+
+        if(data.result !== null){
+
+
+          registroboletim.PessoaPaciente.pessoaStatusId = data.result.find(x=>x.sigla === "AB").pessoaStatusId;
+
+
+          this.pessoaService.SalvarPessoaPaciente(registroboletim.PessoaPaciente).subscribe(subdata => {
+
+            if(subdata.result !== null){
+
+              registroboletim.PessoaPaciente = subdata.result;
+              registroboletim.PessoaPaciente.pessoaStatusId = data.result.find(x=>x.sigla === "ACR").pessoaStatusId;
+
+              var filaClassificacao: FilaClassificacao = {
+                RegistroBoletim: registroboletim,
+                dataEntradaFilaClassificacao: registroboletim.dataBoletim
+              };
+      
+              if(this.Acolhimento !== undefined)
+                filaClassificacao.Acolhimento = this.Acolhimento;
+
+                this.onSalvar(filaClassificacao);
+             }
+            
+    
+          }, (error: HttpErrorResponse) => {
+            this.auth.onSessaoInvalida(error);
+          });
+    
+
+
+        }
+
+      });
     }
 
+  }
 
 
-    this.registroBoletimService.SalvarRegistroBoletim(registroboletim).subscribe(data => {
+  onSalvar(filaClassificacao: FilaClassificacao){
+
+    this.registroBoletimService.IncluirFilaClassificacao(filaClassificacao).subscribe(subdata => {
 
       Toastr.success("Registro Boletim salvo com sucesso");
-
-      $("input[name^=IB_NumeroBoletim]").val(data.result.numeroBoletim);
-
+      Toastr.success("Paciente incluído na fila");
+      this.Pessoa = undefined;
+      $("input[name^=IB_NumeroBoletim]").val(subdata.result.numeroBoletim);
 
     }, (error: HttpErrorResponse) => {
       this.auth.onSessaoInvalida(error);
@@ -492,7 +570,6 @@ export class RegistroBoletimComponent implements OnInit {
       this.auth.onSessaoAcrescimoTempo();
 
     Toastr.info("Paciente carregado");
-    console.log(paciente);
     this.CarregaPessoa(paciente);
 
     $("#divPesquisaNomeCompleto").removeClass('show');

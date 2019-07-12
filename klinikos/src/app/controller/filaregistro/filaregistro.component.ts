@@ -10,8 +10,10 @@ import * as moment from 'moment';
 import { Preferencial } from 'src/app/model/Preferencial';
 import { FilaRegistroEvento } from 'src/app/model/FilaRegistroEvento';
 import * as swal from '../../../assets/vendors/general/sweetalert2/dist/sweetalert2.js';
-import { FilaRegistro } from 'src/app/model/FilaRegistro';
 import * as Toastr from 'toastr';
+import { PessoaService } from '../cadastro/pessoa/pessoa.service';
+import { PessoaProfissional } from 'src/app/model/PessoaProfissional';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-filaregistro',
@@ -35,12 +37,21 @@ export class FilaregistroComponent implements OnInit, OnDestroy {
   totalPaginas: any;
   interval: any;
   dataUltimaRemocao: Date;
+  dataUltimaChamadaPainel: Date;
+  dataUltimaChamadaCancelada: Date;
+  dataUltimaChamadaConfirmado: Date;
+  idUltimaChamadaPainel: string;
+  idUltimaChamadaCancelada: string;
+  idUltimaChamadaConfirmado: string;
+  itemRemovido: boolean;
+  Profissional : PessoaProfissional;
 
-  constructor(private FilaRegistroService: FilaRegistroService, private AcolhimentoService: AcolhimentoService,private auth: AuthGuard) {
+  constructor(private route: Router, private FilaRegistroService: FilaRegistroService, private AcolhimentoService: AcolhimentoService, private pessoaService: PessoaService, 
+    private auth: AuthGuard) {
 
     this.listaEspecialidade = new Array<Especialidade>();
     this.listaPreferencial = new Array<Preferencial>();
-   
+
     Toastr.options = {
       "closeButton": true,
       "debug": false,
@@ -68,6 +79,17 @@ export class FilaregistroComponent implements OnInit, OnDestroy {
     this.inicioGrid = "0";
     this.NumeroRegistrosGrid = this.finalGrid = "10";
     this.paginaAtual = 1;
+    this.itemRemovido = false;    
+    
+
+    let user = JSON.parse(localStorage.getItem('user'));
+    this.pessoaService.ConsultaProfissional(user.userId).subscribe(async (data: Return) => {
+     this.Profissional = data.result;
+
+    }, (error: HttpErrorResponse) => {
+      Toastr.error("Falha ao carregar o profissional");
+      console.log(`Error. ${error.message}.`);
+    });
 
     $(document).ready(function () {
  
@@ -88,23 +110,24 @@ export class FilaregistroComponent implements OnInit, OnDestroy {
     this.AcolhimentoService.BindEspecialidade().subscribe(async (data: Return) => {
       this.listaEspecialidade = data.result;
 
+    }, (error: HttpErrorResponse) => {
+      this.auth.onSessaoInvalida(error);
+    });
+
+    this.FilaRegistroService.BindPreferencial().subscribe(async (subdata: Return) => {
+      this.listaPreferencial = subdata.result;
+    }, (error: HttpErrorResponse) => {
+      this.auth.onSessaoInvalida(error);
+    });
+
+    setTimeout( () => {
+      this.ConsultaFila();
+  }, 1000);
   
-    }, (error: HttpErrorResponse) => {
-      this.auth.onSessaoInvalida(error);
-    });
 
-    this.FilaRegistroService.BindPreferencial().subscribe(async (data: Return) => {
-      this.listaPreferencial = data.result;
-    }, (error: HttpErrorResponse) => {
-      this.auth.onSessaoInvalida(error);
-    });
-
-    this.ConsultaFila(); 
-
-this.interval = setInterval(() => { 
-  this.ConsultarNovosRegistros();
-}, 2000);
-
+    this.interval = setInterval(() => { 
+      this.ConsultarNovosRegistros();
+    }, 5000);
 
   }
 
@@ -114,15 +137,11 @@ this.interval = setInterval(() => {
 
     this.listaFila = [];
     this.FilaRegistroService.BuscarFilaRegistro().subscribe(async (data: Return) => {
-      console.log('2');
-      console.log(this.listaFilaRegistro);
-      console.log(data.result);
-
-      //  if(this.listaFilaRegistro.length === 0 && data.result !== null)
-      //    Toastr.info("Fila atualizada");
-
       this.listaFilaRegistro = data.result;
       this.onBindGrid(this.listaFilaRegistro);
+
+      if(this.listaFilaRegistro.length === 1)
+        Toastr.info("Fila atualizada");
 
     }, (error: HttpErrorResponse) => {
       this.auth.onSessaoInvalida(error);
@@ -168,114 +187,197 @@ this.interval = setInterval(() => {
           idlinha: idlinha,
           nomepaciente: itemFila.acolhimento.pessoaPaciente.nomeSocial != null? 
           itemFila.acolhimento.pessoaPaciente.nomeSocial +' ['+itemFila.acolhimento.pessoaPaciente.nomeCompleto+']':itemFila.acolhimento.pessoaPaciente.nomeCompleto,
-          
-          especialidade: itemFila.acolhimento.especialidadeId !== "00000000-0000-0000-0000-000000000000"? 
-          this.GetEspecialidade(itemFila.acolhimento.especialidadeId): "",
-          
-          descricaoPreferencial: itemFila.acolhimento.preferencialId !== "00000000-0000-0000-0000-000000000000"? 
-          this.GetPreferencial(itemFila.acolhimento.preferencialId):"",
-          
+          especialidade: this.GetEspecialidade(itemFila.acolhimento.especialidadeId),
+          descricaoPreferencial: this.GetPreferencial(itemFila.acolhimento.preferencialId),
           dataEntradaFilaRegistro: moment(itemFila.dataEntradaFilaRegistro).format("DD/MM/YYYY HH:mm"),
           tempoEspera: this.GetTempoEspera(itemFila.dataEntradaFilaRegistro),
           risco: itemFila.acolhimento.risco,
           idoso80: itemFila.idoso80,
           preferencial: itemFila.preferencial,
-          filaRegistroId: itemFila.filaRegistroId
+          filaRegistroId: itemFila.filaRegistroId,
+          pessoaId: itemFila.acolhimento.pessoaPaciente.pessoaId
       };
 
       this.listaFila.push(item);
       idlinha++;
-
+      
+    
     });
-  
 
     this.onBindPaginacao("inicial");
 
   }
 
 
-
   ConsultarNovosRegistros(){
-  
-    if(this.listaFilaRegistro !== undefined){
 
-    var filaRegistro = this.listaFilaRegistro.sort((a, b) => 
-    {
-    if(a.dataEntradaFilaRegistro > b.dataEntradaFilaRegistro)
-      return -1;
-    if(a.dataEntradaFilaRegistro < b.dataEntradaFilaRegistro)
-      return 1;
-    return 0;
-    })[0];
+    var filaregistroevento: FilaRegistroEvento = {};
 
-    var filaregistroevento: FilaRegistroEvento = {
-        filaRegistro: filaRegistro
-    };
+        if(this.listaFilaRegistro !== undefined){
+          var filaRegistro = this.listaFilaRegistro.sort((a, b) =>  {
+            if(a.dataEntradaFilaRegistro > b.dataEntradaFilaRegistro)
+              return -1;
+            if(a.dataEntradaFilaRegistro < b.dataEntradaFilaRegistro)
+              return 1;
+            return 0;
+            })[0];
 
-    this.FilaRegistroService.ConsultarRegistrosNovos(filaregistroevento).subscribe(async (data: Return) => {
-    
-      if(data.result !== null){
-        if(data.result.filaRegistro !== null){
-            this.listaFila = [];
-            this.listaFilaRegistro.push(data.result.filaRegistro);
-            this.onBindGrid(this.listaFilaRegistro);
-
-            Toastr.info("Fila atualizada");
-        }
-      } else {
-  
-
-        if(this.dataUltimaRemocao === undefined)
-            filaregistroevento.dataFilaRegistroEvento = filaRegistro.dataEntradaFilaRegistro;
-        else
-            filaregistroevento.dataFilaRegistroEvento = this.dataUltimaRemocao;
-
-
-            console.log(this.dataUltimaRemocao);
-
-        this.FilaRegistroService.ConsultarRegistrosRetirados(filaregistroevento).subscribe(async (subdata: Return) => {
-
-
-          if(subdata.result !== null)
-            if(subdata.result.filaRegistro !== null){
-
-              var index = this.listaFilaRegistro.findIndex(x => x.filaRegistroId === subdata.result.filaRegistro.filaRegistroId);
-
-              if(index >= 0){
-    
-              this.listaFilaRegistro.splice(index, 1);
-              this.listaFila = [];
-              this.onBindGrid(this.listaFilaRegistro);
-              this.dataUltimaRemocao = subdata.result.dataFilaRegistroEvento;
-              Toastr.info("Fila atualizada");
-              }
-         
+            filaregistroevento.filaRegistro = filaRegistro;
           }
-     
-        }, (error: HttpErrorResponse) => {
-          this.auth.onSessaoInvalida(error);
+
+
+            this.FilaRegistroService.ConsultarRegistrosNovos(filaregistroevento).subscribe(async (data: Return) => {
     
-        });
+            if(data.result !== null){
+              if(data.result.filaRegistro !== null){
+                  this.listaFila = [];
+                  this.listaFilaRegistro.push(data.result.filaRegistro);
+                  this.onBindGrid(this.listaFilaRegistro);
 
-      }
-    }, (error: HttpErrorResponse) => {
-      this.auth.onSessaoInvalida(error);
+                    Toastr.info("Fila atualizada");
+              }
+            } else {
+  
+            if(this.listaFilaRegistro.length > 0){
 
-    });
-  }
-  else{
-    this.ConsultaFila();
+              if(this.dataUltimaRemocao === undefined)
+                filaregistroevento.dataFilaRegistroEvento = filaRegistro.dataEntradaFilaRegistro;
+              else
+                filaregistroevento.dataFilaRegistroEvento = this.dataUltimaRemocao;         
+         
 
-  }
-  }
+
+              this.FilaRegistroService.ConsultarRegistrosRetirados(filaregistroevento).subscribe(async (subdata: Return) => {
+                    
+
+                  if(subdata.result !== null){
+                    if(subdata.result.filaRegistro !== null){
+
+                      var index = this.listaFilaRegistro.findIndex(x => x.filaRegistroId === subdata.result.filaRegistro.filaRegistroId);
+
+                      if(index >= 0){
+            
+                        this.listaFilaRegistro.splice(index, 1);
+                        this.listaFila = [];
+                        this.onBindGrid(this.listaFilaRegistro);
+                        this.dataUltimaRemocao = subdata.result.dataFilaRegistroEvento;
+          
+                        if(!this.itemRemovido)
+                          Toastr.info("Fila atualizada");
+                      }
+                    }
+                  }else{
+
+                  if(this.idUltimaChamadaPainel !== undefined)
+                    filaregistroevento.filaRegistroEventosId = this.idUltimaChamadaPainel;
+
+                  if(this.dataUltimaChamadaPainel === undefined)
+                    filaregistroevento.dataFilaRegistroEvento = filaRegistro.dataEntradaFilaRegistro;
+                  else{
+                    filaregistroevento.dataFilaRegistroEvento = this.dataUltimaChamadaPainel;         
+                    this.idUltimaChamadaPainel = filaregistroevento.filaRegistroEventosId;
+                  }
+
+                        this.FilaRegistroService.ConsultarRegistrosChamadosAoPainel(filaregistroevento).subscribe(async (subdata2: Return) => {
+
+                          if(subdata2.result !== null){
+                            if(Number(moment(new Date()).diff(subdata2.result.dataFilaRegistroEvento,'minutes')) <= 5){
+                              this.dataUltimaChamadaPainel = subdata2.result.dataFilaRegistroEvento;
+                              this.idUltimaChamadaPainel = subdata2.result.filaRegistroEventosId;
+                              Toastr.info("Paciente "+subdata2.result.filaRegistro.acolhimento.pessoaPaciente.nomeCompleto+" foi enviado ao Painel");
+                            }
+                          }else{
+
+                            if(this.idUltimaChamadaCancelada !== undefined)
+                            filaregistroevento.filaRegistroEventosId = this.idUltimaChamadaCancelada;
+        
+                            if(this.dataUltimaChamadaCancelada === undefined)
+                              filaregistroevento.dataFilaRegistroEvento = filaRegistro.dataEntradaFilaRegistro;
+                            else{
+                              filaregistroevento.dataFilaRegistroEvento = this.dataUltimaChamadaCancelada;    
+                              this.idUltimaChamadaCancelada = filaregistroevento.filaRegistroEventosId;
+                            }
+
+                            this.FilaRegistroService.ConsultarRegistrosCancelados(filaregistroevento).subscribe(async (subdata3: Return) => {
+
+                              if(subdata3.result !== null){
+                                if(Number(moment(new Date()).diff(subdata3.result.dataFilaRegistroEvento,'minutes')) <= 5){
+                                  this.dataUltimaChamadaCancelada = subdata3.result.dataFilaRegistroEvento;
+                                  this.idUltimaChamadaCancelada = subdata3.result.filaRegistroEventosId;
+                                  Toastr.error("Paciente "+subdata3.result.filaRegistro.acolhimento.pessoaPaciente.nomeCompleto+" foi cancelado");
+                                }
+                              }else{
+
+
+                                if(this.idUltimaChamadaConfirmado !== undefined)
+                                filaregistroevento.filaRegistroEventosId = this.idUltimaChamadaConfirmado;
+            
+                                if(this.dataUltimaChamadaConfirmado === undefined)
+                                  filaregistroevento.dataFilaRegistroEvento = filaRegistro.dataEntradaFilaRegistro;
+                                else{
+                                  filaregistroevento.dataFilaRegistroEvento = this.dataUltimaChamadaConfirmado;    
+                                  this.idUltimaChamadaConfirmado = filaregistroevento.filaRegistroEventosId;
+                                }
+
+                                this.FilaRegistroService.ConsultarRegistrosConfirmados(filaregistroevento).subscribe(async (subdata4: Return) => {
+
+                                 
+                                  if(subdata4.result !== null){
+                                    if(Number(moment(new Date()).diff(subdata4.result.dataFilaRegistroEvento,'minutes')) <= 5){
+
+                                      this.dataUltimaChamadaConfirmado = subdata4.result.dataFilaRegistroEvento;
+                                      this.idUltimaChamadaConfirmado = subdata4.result.filaRegistroEventosId;
+                                      Toastr.success("Paciente "+subdata4.result.filaRegistro.acolhimento.pessoaPaciente.nomeCompleto+" foi confirmado");
+                                    }
+                                  }
+
+
+                                }, (error: HttpErrorResponse) => {
+                                  this.auth.onSessaoInvalida(error);
+                              });
+
+
+                              }
+
+
+                            }, (error: HttpErrorResponse) => {
+                              this.auth.onSessaoInvalida(error);
+                          });
+
+                          }
+                        }, (error: HttpErrorResponse) => {
+                          this.auth.onSessaoInvalida(error);
+                      });
+                      
+                    }
+
+                  }, (error: HttpErrorResponse) => {
+                    this.auth.onSessaoInvalida(error);
+                });
+              }
+            }
+          }, (error: HttpErrorResponse) => {
+            this.auth.onSessaoInvalida(error);
+          });
+
+
+}
 
   GetEspecialidade(especialidadeId: string){
 
-     if(this.listaEspecialidade.length > 0)
-     return this.listaEspecialidade.find(x=>x.especialidadeId === especialidadeId).descricao;
+    if(especialidadeId !=='00000000-0000-0000-0000-000000000000' )
+    return this.listaEspecialidade.find(x=>x.especialidadeId === especialidadeId).descricao;
+    return '';
   }
+
+
+
+
   GetPreferencial(preferencialId: string){
-       return this.listaPreferencial.find(x=>x.preferencialId === preferencialId).nome;
+    if(preferencialId !=='00000000-0000-0000-0000-000000000000' )
+         return this.listaPreferencial.find(x=>x.preferencialId === preferencialId).nome;
+    return '';
+        
   }
 
   GetTempoEspera(dataEntradaFilaRegistro: Date){
@@ -295,9 +397,28 @@ this.interval = setInterval(() => {
   }
 
 
-  SelecionarPaciente(){
+  SelecionarPaciente(item: any){
+    
+    
+    this.pessoaService.ConsultaPessoaStatus("AB").subscribe(data => {
 
-    alert('teste');
+      var pessoa = this.listaFilaRegistro.find(x=>x.acolhimento.pessoaPaciente.pessoaId === item.pessoaId).acolhimento.pessoaPaciente;
+      pessoa.pessoaStatusId = data.result.pessoaStatusId;
+
+      this.pessoaService.AlterarPessoaPaciente(pessoa).subscribe(subdata => {
+
+
+      }, (error: HttpErrorResponse) => {
+        this.auth.onSessaoInvalida(error);
+      });
+
+    }, (error: HttpErrorResponse) => {
+      this.auth.onSessaoInvalida(error);
+    });
+
+    this.route.navigate(['klinikos/registroboletim'], {queryParams: {filaRegistroId: item.filaRegistroId}});
+
+  
 
   }
 
@@ -445,22 +566,76 @@ this.interval = setInterval(() => {
     clearInterval(this.interval);
   }
 
-  onExibeBotoesPainel(id: any){
+  onExibeBotoesPainel(index: any, tipo: any){
 
-    $(document).ready(function () {
-
-      if(!$("#icon_microfone"+id).hasClass('c-vermelho')){
-
-        $("#icon_microfone"+id).attr("class", "fas fa-microphone-alt-slash c-vermelho i-s1");
-        $("#btnCancelarChamadaPainel"+id).removeClass('oculta');
+    var tipoBotao: any;
+ 
+      if(!$("#icon_microfone"+index).hasClass('c-vermelho') && tipo === "chamada"){
+        //realiza chamada
+        $("#icon_microfone"+index).attr("class", "fas fa-microphone-alt-slash c-vermelho i-s1");
+        $("#btnCancelarChamadaPainel"+index).removeClass('oculta');
+        tipoBotao = "P";
 
       }else{
+        //cancela chamada
+        $("#icon_microfone"+index).attr("class", "fas fa-microphone-alt i-s1");
+        $("#btnCancelarChamadaPainel"+index).addClass('oculta');
+       
+       if(tipo === "chamada")
+          tipoBotao = "C";
+        else
+          tipoBotao = "O";
+        
+      
+    }
 
-        $("#icon_microfone"+id).attr("class", "fas fa-microphone-alt i-s1");
-        $("#btnCancelarChamadaPainel"+id).addClass('oculta');
+      this.FilaRegistroService.ConsultarEvento(tipoBotao).subscribe(async (data: Return) => {
+  
+        if(data.result !== null){
+  
+          var date = new Date();
+          var filaregistroevento: FilaRegistroEvento = {
+            filaRegistro: this.listaFila[index],
+            dataFilaRegistroEvento: new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate(), date.getHours(), date.getMinutes(), date.getSeconds(), date.getMilliseconds())),
+            eventoId: data.result.eventoId,
+            PessoaProfissional:  this.Profissional
+        };
+  
+  
+        this.FilaRegistroService.AdicionarFilaEvento(filaregistroevento).subscribe(async (subdata: Return) => {
 
+
+          if(tipoBotao === "P"){
+            this.idUltimaChamadaPainel = subdata.result.filaRegistroEventosId;
+            Toastr.info("Paciente "+this.listaFila[index].nomepaciente+" enviada ao Painel");
+          }
+         if(tipoBotao=== "C"){
+            this.idUltimaChamadaCancelada = subdata.result.filaRegistroEventosId;
+            Toastr.error("Paciente "+this.listaFila[index].nomepaciente+" cancelada");
+          }
+           if(tipoBotao=== "O"){
+            this.idUltimaChamadaConfirmado = subdata.result.filaRegistroEventosId;
+            Toastr.success("Paciente "+this.listaFila[index].nomepaciente+" confirmado");
+
+            var filaRegistro = this.listaFila[index];
+            this.SelecionarPaciente(filaRegistro);
+           
+          }
+        }, (error: HttpErrorResponse) => {
+          this.auth.onSessaoInvalida(error);
+    
+
+        });
+  
       }
-    });
+     
+        }, (error: HttpErrorResponse) => {
+        this.auth.onSessaoInvalida(error);
+  
+      });
+
+
+  
   }
 
   onEvasaoSemAtendimento(filaRegistroId: any){
@@ -492,7 +667,7 @@ this.interval = setInterval(() => {
 
  
 
-      this.FilaRegistroService.ConsultarEvento("REMOVER FILA").subscribe(async (subdata: Return) => {
+      this.FilaRegistroService.ConsultarEvento("R").subscribe(async (subdata: Return) => {
 
         if(subdata.result !== null){
 
@@ -500,17 +675,19 @@ this.interval = setInterval(() => {
           var filaregistroevento: FilaRegistroEvento = {
             filaRegistro: item,
             dataFilaRegistroEvento: new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate(), date.getHours(), date.getMinutes(), date.getSeconds(), date.getMilliseconds())),
-            eventoId: subdata.result.eventoId
+            eventoId: subdata.result.eventoId,
+            PessoaProfissional:  this.Profissional
         };
 
 
         this.FilaRegistroService.AdicionarFilaEvento(filaregistroevento).subscribe(async (subdata2: Return) => {
-
+          this.itemRemovido = true;
           Toastr.success("Paciente retirado da fila");
         }, (error: HttpErrorResponse) => {
           this.auth.onSessaoInvalida(error);
     
         });
+
 
       }
 

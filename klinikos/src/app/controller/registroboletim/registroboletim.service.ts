@@ -4,6 +4,7 @@ import { Return } from '../../model/Return';
 import { Estado } from '../../model/Estado';
 import { RegistroBoletim } from '../../model/RegistroBoletim';
 import { PessoaPaciente } from '../../model/PessoaPaciente';
+import { FilaClassificacao } from 'src/app/model/FilaClassificacao';
 
 @Injectable({
   providedIn: 'root',
@@ -38,5 +39,10 @@ export class RegistroBoletimService {
   AlterarRegistroPessoa(paciente: PessoaPaciente) {
 
     return this.http.put<Return>(`${this.baseUrl}pessoa/pessoapaciente/alterar`, paciente, this.httpOptions);
+  }
+
+  IncluirFilaClassificacao(filaClassificacao: FilaClassificacao) {
+
+    return this.http.post<Return>(`${this.baseUrl}filaclassificacao/incluir`, filaClassificacao, this.httpOptions);
   }
 }

@@ -138,8 +138,16 @@ export class PessoaService {
   }
 
 
+  ConsultaPaciente(pessoaId: string) {
+    return this.http.get<Return>(`${this.baseUrl}pessoa/pessoapaciente/` + pessoaId, this.httpOptions);
+  }
 
+  AlterarPessoaPaciente(pessoapaciente: PessoaPaciente) {
 
-
+    return this.http.put<Return>(`${this.baseUrl}pessoa/pessoapaciente/alterar`, pessoapaciente, this.httpOptions);
+  }
+  ConsultaPessoaStatus(sigla: string) { return this.http.get<Return>(`${this.baseUrl}pessoastatus/getbynome/`+sigla, this.httpOptions); }
+  
+  ConsultaPessoaStatusArray(siglas: string[]) { return this.http.post<Return>(`${this.baseUrl}pessoastatus/getbynomeandarray`,siglas, this.httpOptions); }
 
 }
