@@ -311,15 +311,15 @@ this.atendimentomedicoservice.BindCapituloCID().subscribe(async (data: Return) =
       console.log(`Error. ${error.message}.`);
     });
 
-    // this.atendimentomedicoservice.BindModeloAtestado().subscribe(async (data: Return) => {
-    //   this.listaModeloAtestado = data.result;
-    //   $(document).ready(function () { $("select[name^=ModeloAtestado]").val($("select[name^=ModeloAtestado] option:first").val()); });
+    this.atendimentomedicoservice.BindModeloAtestado().subscribe(async (data: Return) => {
+      this.listaModeloAtestado = data.result;
+      $(document).ready(function () { $("select[name^=ModeloAtestado]").val($("select[name^=ModeloAtestado] option:first").val()); });
 
 
-    // }, (error: HttpErrorResponse) => {
-    //   Toastr.error("Falha ao carregar Modelo Atestado na aba Prescrição Receita");
-    //   console.log(`Error. ${error.message}.`);
-    // });
+    }, (error: HttpErrorResponse) => {
+      Toastr.error("Falha ao carregar Modelo Atestado na aba Prescrição Receita");
+      console.log(`Error. ${error.message}.`);
+    });
 
    
 
@@ -485,14 +485,11 @@ this.atendimentomedicoservice.BindCapituloCID().subscribe(async (data: Return) =
       if (rb.value.AtestadoValidade != "")
         atendimentomedico.validadeatestado = rb.value.AtestadoValidade;
     }
-    if($("#AtendMedTipoSaida").val("1")){
-      atendimentomedico.tipoSaida = "A";
-    }
-    if($("#AtendMedTipoSaida").val("2")){
+    if($("#AtendMedTipoSaida").val()=="1"){
       atendimentomedico.tipoSaida = "O";
     }
-    if($("#AtendMedTipoSaida").val("")){
-      atendimentomedico.tipoSaida = "";
+    if($("#AtendMedTipoSaida").val()=="2"){
+      atendimentomedico.tipoSaida = "A";
     }
     // if (rb.value.TipoSaida != "")
     // {
@@ -507,11 +504,11 @@ this.atendimentomedicoservice.BindCapituloCID().subscribe(async (data: Return) =
     //   atendimentomedico.tipoSaida = "";
     // }
 
-    if (rb.value.colModalFinAlta != "")
-      atendimentomedico.dataSaida = rb.value.colModalFinAlta;
+    if ($("#dataFinalizarA").val()!="")
+      atendimentomedico.dataSaida = $("#dataFinalizarA").val();
 
-    if (rb.value.colModalFinObito != "")
-      atendimentomedico.dataSaida = rb.value.colModalFinObito;
+    if ($("#dataFinalizarO").val()=="")
+      atendimentomedico.dataSaida = $("#dataFinalizarO").val();
 
     if (this.listaAtendimentoMedicoAlergia.length > 0) {
 
@@ -561,15 +558,15 @@ this.atendimentomedicoservice.BindCapituloCID().subscribe(async (data: Return) =
 
       var atendimentomedicoExame: any = {};
 
-      atendimentomedicoExame.GrupoExame = this.GrupoExame.nome;
-      atendimentomedicoExame.Exame = this.Exame.nome;
+      atendimentomedicoExame.GrupoExame = this.GrupoExame;
+      atendimentomedicoExame.Exame = this.Exame.exameId;
       atendimentomedicoExame.observacaoExame = observacaoexame.toUpperCase();
       atendimentomedicoExame.dataExame = new Date();
-      // atendimentomedicoExame.Profissional = this.Profissional.nomeCompleto;
+      atendimentomedicoExame.Profissional = this.Profissional.nomeCompleto;
       
     
 
-      //atendimentomedicoExame.Profissional = localStorage.getItem('user');
+      // atendimentomedicoExame.Profissional = localStorage.getItem('user');
 
  //this.pessoaService.ConsultaCpfProfissional()
 
@@ -637,7 +634,7 @@ this.atendimentomedicoservice.BindCapituloCID().subscribe(async (data: Return) =
   onEditarExame(atendimentomedicoExame: AtendimentoMedicoExame) {
 
     this.GrupoExame = atendimentomedicoExame.GrupoExame;
-    this.Exame.exameId = atendimentomedicoExame.Exame.exameId;
+    this.Exame.exameId = atendimentomedicoExame.exameId;
 
 
     // if (atendimentomedicoExame.dataExame != null) {
@@ -682,10 +679,63 @@ this.atendimentomedicoservice.BindCapituloCID().subscribe(async (data: Return) =
   //begin:: Exclui lotacao Profissional / Alerta o usuário da confirmação da exclusão na aba profissional
   onExcluirExame(atendimentomedicoExame: AtendimentoMedicoExame) {
 
-    var index = this.listaAtendimentoMedicoExame.findIndex(x => x.exameId === atendimentomedicoExame.Exame.exameId && x.grupoExame === atendimentomedicoExame.GrupoExame);
+    var index = this.listaAtendimentoMedicoExame.findIndex(x => x.exameId === atendimentomedicoExame.exameId && x.grupoExame === atendimentomedicoExame.GrupoExame);
     this.listaAtendimentoMedicoExame.splice(index, 1);
   }
   //end:: Exibe Mensagem Excluir
+  onAdicionaModeloPrecrisaoReceita() {
+
+    if (this.Medicamento !== null && $('input[name^=ModeloPrescricao]').val() !== null) {
+
+     
+
+      var observacao = $('input[name^=ObservacaoMedicamento]').val();
+
+      
+
+      var modeloPrescricaoReceitaDetalhe: any = {};
+      var modeloPrescricaoReceita: any = {};
+
+      modeloPrescricaoReceita.nome = $('input[name^=ModeloPrescricao]').val();
+      modeloPrescricaoReceita.Profissional = this.Profissional.nomeCompleto;
+
+      if (this.Medicamento !== null)
+       modeloPrescricaoReceitaDetalhe.Medicamento = this.Medicamento.nome;
+
+      if (this.UnidadeMedicamento !== null)
+       modeloPrescricaoReceitaDetalhe.UnidadeMedicamento = this.UnidadeMedicamento.descricao;
+
+      if (this.ViaAdministracaoMedicamento !== null)
+       modeloPrescricaoReceitaDetalhe.ViaAdministracaoMedicamento = this.ViaAdministracaoMedicamento.descricao;
+
+      if (this.GrupoMedicamento !== null)
+        modeloPrescricaoReceitaDetalhe.GrupoMedicamento = this.GrupoMedicamento;
+
+
+        modeloPrescricaoReceitaDetalhe.observacao = observacao;
+
+
+        modeloPrescricaoReceitaDetalhe.prescricao = $("#btnPrescricao").hasClass("active");
+        modeloPrescricaoReceitaDetalhe.receita = $("#btnReceita").hasClass("active");
+
+      console.log(modeloPrescricaoReceitaDetalhe);
+
+
+      this.listaModeloPrescricaoReceita.push(modeloPrescricaoReceita);
+      modeloPrescricaoReceitaDetalhe.ModeloPrescricaoReceita = this.ModeloPrescricaoReceita;
+      this.listaModeloPrescricaoReceitaDetalhe.push(modeloPrescricaoReceitaDetalhe);
+
+
+      console.log( this.listaModeloPrescricaoReceitaDetalhe);
+
+
+      $(document).ready(function () {
+
+        
+      });
+
+    }
+  }
 
   onAdicionaMedicamento() {
 
