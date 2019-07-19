@@ -34,6 +34,10 @@ import { ActivatedRoute } from '@angular/router';
 import { ImcService } from '../util/imc.service';
 import { SinaisVitais } from '../util/sinaisvitais.service';
 import { DataService } from '../util/data.service';
+import { FilaClassificacaoRiscoService } from '../filaclassificacaorisco/filaclassificacaorisco.service';
+import { FilaClassificacao } from 'src/app/model/FilaClassificacao';
+import { FilaAtendimento } from 'src/app/model/FilaAtendimento';
+import { PessoaProfissional } from 'src/app/model/PessoaProfissional';
 
 
 @Component({
@@ -67,8 +71,8 @@ export class ClassificacaoRiscoComponent implements OnInit {
   listaCep: Array<Cep>;
   listaRisco: Array<Risco>;
  // listaClassificacaoRiscoAlergia: Array<ClassificacaoRiscoAlergia>;
- listaClassificacaoRiscoAlergia: any;
-
+  listaClassificacaoRiscoAlergia: any;
+  filaClassificacao: any;
   CausaExterna: CausaExterna;
   NivelConsciencia: NivelConsciencia;
   TipoChegada: TipoChegada;
@@ -86,14 +90,15 @@ export class ClassificacaoRiscoComponent implements OnInit {
   Estado: Estado;
   Cidade: Cidade;
   ClassificacaoRiscoAlergia: ClassificacaoRiscoAlergia;
+  Profissional : PessoaProfissional;
   orderDescricao: string = 'descricao';
   orderNome: string = 'nome';
   orderGlasgow: string = 'ordem';
 
-  constructor(private classificacaoriscoservice: ClassificaoRiscoService, 
+  constructor(private classificacaoRiscoService: ClassificaoRiscoService, 
     private pessoaService: PessoaService, private auth: AuthGuard, 
     private route: ActivatedRoute, private imcService: ImcService, 
-    private sinaisvitaisService: SinaisVitais, private dataService: DataService,) {
+    private sinaisvitaisService: SinaisVitais, private dataService: DataService, private FilaclassificacaoRiscoService: FilaClassificacaoRiscoService) {
     this.listaClassificacaoRiscoAlergia = new Array<ClassificacaoRiscoAlergia>();
 
     Toastr.options = {
@@ -169,7 +174,40 @@ export class ClassificacaoRiscoComponent implements OnInit {
     if (this.auth.canActivate())
       this.auth.onSessaoAcrescimoTempo();
 
-    this.classificacaoriscoservice.BindCausaExterna().subscribe(async (data: Return) => {
+      let user = JSON.parse(localStorage.getItem('user'));
+      this.pessoaService.ConsultaProfissional(user.userId).subscribe(async (data: Return) => {
+       this.Profissional = data.result;
+  
+      }, (error: HttpErrorResponse) => {
+        Toastr.error("Falha ao carregar o profissional");
+        console.log(`Error. ${error.message}.`);
+      });
+
+
+      var filaClassificacaoId = this.route
+      .snapshot.queryParamMap.get('filaClassificacaoId');
+  
+  
+  if(filaClassificacaoId !== null)
+     this.FilaclassificacaoRiscoService.BuscarFilaClassificacaoRiscoPorId(filaClassificacaoId).subscribe(async (data: Return) => {
+  
+    if(data.result !== null){
+      this.filaClassificacao = data.result;
+
+
+       setTimeout( () => { 
+         this.Especialidade = this.listaEspecialidade.find(x=>x.especialidadeId === data.result.acolhimento.especialidadeId);
+      }, 500);
+  
+    }
+    }, (error: HttpErrorResponse) => {
+      this.auth.onSessaoInvalida(error);
+    });
+
+
+
+
+    this.classificacaoRiscoService.BindCausaExterna().subscribe(async (data: Return) => {
       this.listaCausasExterna = data.result;
 
 
@@ -180,7 +218,7 @@ export class ClassificacaoRiscoComponent implements OnInit {
         this.auth.onSessaoInvalida(error);
     });
 
-    this.classificacaoriscoservice.BindEscalaDor().subscribe(async (data: Return) => {
+    this.classificacaoRiscoService.BindEscalaDor().subscribe(async (data: Return) => {
       this.listaEscalasDor = data.result;
 
 
@@ -189,7 +227,7 @@ export class ClassificacaoRiscoComponent implements OnInit {
         this.auth.onSessaoInvalida(error);
     });
 
-    this.classificacaoriscoservice.BindNivelConsciencia().subscribe(async (data: Return) => {
+    this.classificacaoRiscoService.BindNivelConsciencia().subscribe(async (data: Return) => {
       this.listaNiveisConsciencia = data.result;
 
 
@@ -198,7 +236,7 @@ export class ClassificacaoRiscoComponent implements OnInit {
     });
 
 
-    this.classificacaoriscoservice.BindTipoChegada().subscribe(async (data: Return) => {
+    this.classificacaoRiscoService.BindTipoChegada().subscribe(async (data: Return) => {
       this.listaTiposChegada = data.result;
       $C(document).ready(function () { $C("select[name^=TipoChegada]").val($C("select[name^=TipoChegada] option:first").val()); });
 
@@ -208,7 +246,7 @@ export class ClassificacaoRiscoComponent implements OnInit {
 
 
 
-    this.classificacaoriscoservice.BindEspecialidade().subscribe(async (data: Return) => {
+    this.classificacaoRiscoService.BindEspecialidade().subscribe(async (data: Return) => {
       this.listaEspecialidade = data.result;
       $C(document).ready(function () { $C("select[name^=Especialidade]").val($C("select[name^=Especialidade] option:first").val()); });
 
@@ -221,7 +259,7 @@ export class ClassificacaoRiscoComponent implements OnInit {
     $C(document).ready(function () { $C("select[name^=PossuiAlergia]").val($C("select[name^=PossuiAlergia] option:first").val()); });
 
 
-    this.classificacaoriscoservice.BindAberturaOcular().subscribe(async (data: Return) => {
+    this.classificacaoRiscoService.BindAberturaOcular().subscribe(async (data: Return) => {
       this.listaAberturaOcular = data.result;
       $C(document).ready(function () { $C("select[name^=AberturaOcular]").val($C("select[name^=AberturaOcular] option:first").val()); });
 
@@ -229,7 +267,7 @@ export class ClassificacaoRiscoComponent implements OnInit {
         this.auth.onSessaoInvalida(error);
     });
 
-    this.classificacaoriscoservice.BindRespostaVerbal().subscribe(async (data: Return) => {
+    this.classificacaoRiscoService.BindRespostaVerbal().subscribe(async (data: Return) => {
       this.listaRespostaVerbal = data.result;
       $C(document).ready(function () { $C("select[name^=RespostaVerbal]").val($C("select[name^=RespostaVerbal] option:first").val()); });
 
@@ -237,7 +275,7 @@ export class ClassificacaoRiscoComponent implements OnInit {
         this.auth.onSessaoInvalida(error);
     });
 
-    this.classificacaoriscoservice.BindRespostaVerbal().subscribe(async (data: Return) => {
+    this.classificacaoRiscoService.BindRespostaVerbal().subscribe(async (data: Return) => {
       this.listaRespostaVerbal = data.result;
       $C(document).ready(function () { $C("select[name^=RespostaVerbal]").val($C("select[name^=RespostaVerbal] option:first").val()); });
 
@@ -246,7 +284,7 @@ export class ClassificacaoRiscoComponent implements OnInit {
     });
 
 
-    this.classificacaoriscoservice.BindRespostaMotora().subscribe(async (data: Return) => {
+    this.classificacaoRiscoService.BindRespostaMotora().subscribe(async (data: Return) => {
       this.listaRespostaMotora = data.result;
       $C(document).ready(function () { $C("select[name^=RespostaMotora]").val($C("select[name^=RespostaMotora] option:first").val()); });
 
@@ -254,7 +292,7 @@ export class ClassificacaoRiscoComponent implements OnInit {
         this.auth.onSessaoInvalida(error);
     });
 
-    this.classificacaoriscoservice.BindTipoOcorrencia().subscribe(async (data: Return) => {
+    this.classificacaoRiscoService.BindTipoOcorrencia().subscribe(async (data: Return) => {
       this.listaTipoOcorrencia = data.result;
       console.log(data.result);
 
@@ -271,7 +309,7 @@ export class ClassificacaoRiscoComponent implements OnInit {
         this.auth.onSessaoInvalida(error);
     });
 
-    this.classificacaoriscoservice.BindRisco().subscribe(async (data: Return) => {
+    this.classificacaoRiscoService.BindRisco().subscribe(async (data: Return) => {
       this.listaRisco = data.result;
 
     }, (error: HttpErrorResponse) => {
@@ -289,7 +327,7 @@ export class ClassificacaoRiscoComponent implements OnInit {
 
     if (this.PossuiAlergia.id == 0) {
 
-      this.classificacaoriscoservice.BindTipoAlergia().subscribe(async (data: Return) => {
+      this.classificacaoRiscoService.BindTipoAlergia().subscribe(async (data: Return) => {
         this.listaTipoAlergia = data.result;
         $C(document).ready(function () { $C("select[name^=TipoAlergia]").val($C("select[name^=TipoAlergia] option:first").val()); });
 
@@ -297,7 +335,7 @@ export class ClassificacaoRiscoComponent implements OnInit {
           this.auth.onSessaoInvalida(error);
       });
 
-      this.classificacaoriscoservice.BindAlergia().subscribe(async (data: Return) => {
+      this.classificacaoRiscoService.BindAlergia().subscribe(async (data: Return) => {
         this.listaAlergia = data.result;
         $C(document).ready(function () { $C("select[name^=Alergia]").val($C("select[name^=Alergia] option:first").val()); });
 
@@ -306,7 +344,7 @@ export class ClassificacaoRiscoComponent implements OnInit {
       });
 
 
-      this.classificacaoriscoservice.BindLocalizacaoAlergia().subscribe(async (data: Return) => {
+      this.classificacaoRiscoService.BindLocalizacaoAlergia().subscribe(async (data: Return) => {
         this.listaLocalizacaoAlergia = data.result;
         $C(document).ready(function () { $C("select[name^=LocalizacaoAlergia]").val($C("select[name^=LocalizacaoAlergia] option:first").val()); });
 
@@ -314,7 +352,7 @@ export class ClassificacaoRiscoComponent implements OnInit {
           this.auth.onSessaoInvalida(error);
       });
 
-      this.classificacaoriscoservice.BindReacaoAlergia().subscribe(async (data: Return) => {
+      this.classificacaoRiscoService.BindReacaoAlergia().subscribe(async (data: Return) => {
         this.listaReacaoAlergia = data.result;
         $C(document).ready(function () { $C("select[name^=ReacaoAlergia]").val($C("select[name^=ReacaoAlergia] option:first").val()); });
 
@@ -322,7 +360,7 @@ export class ClassificacaoRiscoComponent implements OnInit {
           this.auth.onSessaoInvalida(error);
       });
 
-      this.classificacaoriscoservice.BindSeveridade().subscribe(async (data: Return) => {
+      this.classificacaoRiscoService.BindSeveridade().subscribe(async (data: Return) => {
         this.listaSeveridadeAlergia = data.result;
         $C(document).ready(function () { $C("select[name^=SeveridadeAlergia]").val($C("select[name^=SeveridadeAlergia] option:first").val()); });
 
@@ -489,7 +527,13 @@ export class ClassificacaoRiscoComponent implements OnInit {
     var horaOcorrencia = $C("input[name^=DO_Hora]").val();
     var cep = $C("input[name^=DO_CEP]").val();
 
-    var classificacaorisco: ClassificacaoRisco = {};
+    var date = new Date();
+
+    var classificacaorisco: ClassificacaoRisco = {
+
+      dataClassificaoRisco:  new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate(), date.getHours(), date.getMinutes(), date.getSeconds(), date.getMilliseconds())),
+
+    };
 
 
     if (cr.value.DescricaoQueixa !== "")
@@ -699,18 +743,50 @@ export class ClassificacaoRiscoComponent implements OnInit {
     if (cr.value.DO_Bairro !== "")
       classificacaorisco.bairro = cr.value.DO_Bairro.toUpperCase();
 
-    console.log(JSON.stringify(classificacaorisco));
+      classificacaorisco.PessoaProfissional = this.Profissional;
+      classificacaorisco.PessoaPaciente =  this.filaClassificacao.acolhimento.pessoaPaciente;
 
-    this.classificacaoriscoservice.SalvarClassificacaoRisco(classificacaorisco).subscribe(async (data: Return) => {
-      this.listaSeveridadeAlergia = data.result;
+      this.pessoaService.ConsultaPessoaStatusNome("ATM").subscribe(data => {
 
-      Toastr.success("Classificação de Risco salva com sucesso");
+        this.filaClassificacao.acolhimento.pessoaPaciente.pessoaStatusId = data.result.pessoaStatusId;
 
-      this.onLimpaFormClassificacaoRisco(cr);
 
-    }, (error: HttpErrorResponse) => {
+        this.pessoaService.AlterarPessoaPaciente(this.filaClassificacao.acolhimento.pessoaPaciente).subscribe(subdata => {
+
+
+        }, (error: HttpErrorResponse) => {
+          this.auth.onSessaoInvalida(error);
+        });
+
+
+      });
+
+      var filaAtendimento: FilaAtendimento = {
+        ClassificacaoRisco: classificacaorisco,
+        Acolhimento: this.filaClassificacao.acolhimento,
+        dataEntradaFilaAtendimento: classificacaorisco.dataClassificaoRisco,
+        idoso80: this.filaClassificacao !== undefined? this.filaClassificacao.idoso80: false,
+        preferencial: this.filaClassificacao !== undefined? this.filaClassificacao.preferencial: false,
+      };
+
+     
+
+      this.classificacaoRiscoService.IncluirFilaAtendimento(filaAtendimento).subscribe(subdata => {
+
+        if(subdata.statusCode != "409"){
+          Toastr.success("Classificação salva com sucesso");
+          Toastr.success("Paciente incluído na fila");
+         
+        }
+
+  
+        
+  
+      }, (error: HttpErrorResponse) => {
         this.auth.onSessaoInvalida(error);
-    });
+      },
+      );
+  
 
 
   }
@@ -768,14 +844,9 @@ export class ClassificacaoRiscoComponent implements OnInit {
         this.listaClassificacaoRiscoAlergia[index] = classificacaoriscoAlergia;
 
       }
-    } else {
-
+    } else
         $C('select').val($C("select option:first").val());
-      
-
-
-    }
-
+    
 
     this.onLimparCamposAlergia();
   }
@@ -1087,7 +1158,6 @@ export class ClassificacaoRiscoComponent implements OnInit {
       }
 
 
-      
 
 
 }

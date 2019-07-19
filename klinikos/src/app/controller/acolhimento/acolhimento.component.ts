@@ -18,7 +18,6 @@ import { ImcService } from '../util/imc.service';
 import { SinaisVitais } from '../util/sinaisvitais.service';
 import { FilaRegistro } from '../../model/FilaRegistro';
 import { PessoaProfissional } from 'src/app/model/PessoaProfissional';
-import { User } from 'src/app/model/User';
 
 
 @Component({
@@ -30,12 +29,13 @@ export class AcolhimentoComponent implements OnInit {
   listaEspecialidade: Array<Especialidade>;
   listaPreferencial: Array<Preferencial>;
   listaPessoaPaciente: Array<PessoaPaciente>;
-  Profissional : any;
+  Profissional : PessoaProfissional;
   Especialidade: Especialidade;
   Preferencial: Preferencial;
   orderNome: string = 'nome';
   orderDescricao: string = 'descricao';
   Pessoa: any;
+  
 
   constructor(private AcolhimentoService: AcolhimentoService, private route: ActivatedRoute,
     private pessoaService: PessoaService, private cpfService: CpfService, private imcService: ImcService,
@@ -66,6 +66,15 @@ export class AcolhimentoComponent implements OnInit {
 
   public ngOnInit() {
 
+
+    let user = JSON.parse(localStorage.getItem('user'));
+    this.pessoaService.ConsultaProfissional(user.userId).subscribe(async (data: Return) => {
+     this.Profissional = data.result;
+
+    }, (error: HttpErrorResponse) => {
+      Toastr.error("Falha ao carregar o profissional");
+      console.log(`Error. ${error.message}.`);
+    });
  
     $(document).ready(function () {
 
@@ -218,33 +227,25 @@ export class AcolhimentoComponent implements OnInit {
 
     var date = new Date();
  
-    let user = JSON.parse(localStorage.getItem('user'));
-
-    this.pessoaService.ConsultaProfissional(user.userId).subscribe(async (data: Return) => {
-     this.Profissional = data.result;
-
-    }, (error: HttpErrorResponse) => {
-      console.log(`Error. ${error.message}.`);
-    });
-
     var acolhimento: Acolhimento = {
 
-      dataAcolhimento: new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate(), date.getHours(), date.getMinutes())),
+      dataAcolhimento: new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate(), date.getHours(), date.getMinutes(), date.getSeconds(), date.getMilliseconds())),
       PessoaProfissional: this.Profissional
     };
 
 
-
     var pessoa: PessoaPaciente = {};
+
+    if(this.Pessoa != null || this.Pessoa != undefined)
+      pessoa.pessoaId =   this.Pessoa.pessoaId;
 
     var filaRegistro: FilaRegistro = {
       Acolhimento: acolhimento,
       dataEntradaFilaRegistro: acolhimento.dataAcolhimento
-       
     };
 
 
-    var imc = $("input[name^=SV_IMC]").val();
+    var imc = $("input[name^=IMC]").val();
 
     if (a.value.IdentificacaoPacienteAcolhimento !== undefined)
       pessoa.nomeCompleto = a.value.IdentificacaoPacienteAcolhimento.toUpperCase();
@@ -252,6 +253,7 @@ export class AcolhimentoComponent implements OnInit {
 
     if (a.value.NomeSocial !== "" && a.value.NomeSocial !== undefined && a.value.NomeSocial !== null)
       pessoa.nomeSocial = a.value.NomeSocial.toUpperCase();
+
 
     if (this.Especialidade != null)
       acolhimento.especialidadeId = this.Especialidade.especialidadeId;
@@ -274,17 +276,17 @@ export class AcolhimentoComponent implements OnInit {
     if(acolhimento.preferencialId !== undefined)
       filaRegistro.preferencial = true;
 
-    if (a.value.SV_Peso !== "" && a.value.SV_Peso !== undefined)
-      acolhimento.peso = a.value.SV_Peso + " kg";
+    if (a.value.Peso !== "" && a.value.Peso !== undefined)
+      acolhimento.peso = a.value.Peso + " kg";
 
-    if (a.value.SV_Altura !== "" && a.value.SV_Altura !== undefined)
-      acolhimento.altura = a.value.SV_Altura + " cm";
+    if (a.value.Altura !== "" && a.value.Altura !== undefined)
+      acolhimento.altura = a.value.Altura + " cm";
 
     if (imc !== "")
       acolhimento.imc = imc;
 
-      
-    acolhimento.risco = (a.value.PacienteRisco !== "")? true: false
+
+    acolhimento.risco = a.value.PacienteRisco === true? true: false;
 
     if (a.value.SV_Temperatura !== "" && a.value.SV_Temperatura !== undefined && a.value.SV_Temperatura !== null)
       acolhimento.temperatura = a.value.SV_Temperatura + " °C";
@@ -305,18 +307,9 @@ export class AcolhimentoComponent implements OnInit {
       acolhimento.saturacao = a.value.SV_Saturacao + " %";
 
 
-      this.AcolhimentoService.ConsultaPessoaStatus("AGUARDANDO REGISTRO BOLETIM").subscribe(data => {
-        
-        pessoa.pessoaStatusId = data.result.pessoaStatusId;
-      });
-  
-   
-
     acolhimento.PessoaPaciente = pessoa;
 
     var msgCamposObrigatorios = "";
-
-
 
     if (a.value.IdentificacaoPacienteAcolhimento === "")
     msgCamposObrigatorios = "Informe o nome\n";
@@ -332,29 +325,54 @@ export class AcolhimentoComponent implements OnInit {
       return;
     }
 
-    // this.AcolhimentoService.SalvarAcolhimento(acolhimento).subscribe(data => {
+    var statusArray = [];
+    statusArray.push("ACO");
+    statusArray.push("ARB");
 
+    this.pessoaService.ConsultaPessoaStatusArray(statusArray).subscribe(data => {
+
+      if(data.result !== null){
+
+        acolhimento.PessoaPaciente.pessoaStatusId = data.result.find(x=>x.sigla === "ACO").pessoaStatusId;
+
+        this.pessoaService.SalvarPessoaPaciente(acolhimento.PessoaPaciente).subscribe(subdata => {
+
+          if(subdata.result !== null){
+
+            acolhimento.PessoaPaciente = subdata.result;
+            acolhimento.PessoaPaciente.pessoaStatusId = data.result.find(x=>x.sigla === "ARB").pessoaStatusId;
+
+            this.AcolhimentoService.IncluirFilaRegistro(filaRegistro).subscribe(subdata => {
+
+              if(subdata.statusCode != "409"){
       
-
-     
-      this.AcolhimentoService.IncluirFilaRegistro(filaRegistro).subscribe(subdata => {
-
-        Toastr.success("Acolhimento salvo com sucesso");
-        Toastr.success("Paciente salvo com sucesso");
-        Toastr.success("Paciente Incluído na Fila");
-
-      }, (error: HttpErrorResponse) => {
-        this.auth.onSessaoInvalida(error);
-      });
-
-      this.onLimpaFormAcolhimento(a);
-      $("#btnLimparAcolhimento").trigger("click");
+              Toastr.success("Acolhimento salvo com sucesso");
+              Toastr.success("Paciente salvo com sucesso");
+              Toastr.success("Paciente Incluído na Fila");
       
+              }else{
+      
+      
+                swal("O paciente já foi acolhido!", "Nome: "+filaRegistro.Acolhimento.PessoaPaciente.nomeCompleto, "error");
+      
+              }
+      
+            }, (error: HttpErrorResponse) => {
+              this.auth.onSessaoInvalida(error);
+            });
+      
+            this.onLimpaFormAcolhimento(a);
+            $("#btnLimparAcolhimento").trigger("click");
 
-    // }, (error: HttpErrorResponse) => {
-    //   this.auth.onSessaoInvalida(error);
-    // },
-    // );
+          
+          }
+        }, (error: HttpErrorResponse) => {
+          this.auth.onSessaoInvalida(error);
+        });
+
+      }
+    });
+
 
   }
 
@@ -423,7 +441,6 @@ export class AcolhimentoComponent implements OnInit {
     form.value.SV_FreqResp = "";
     form.value.SV_Saturacao = "";
     form.value.PacienteRisco = "";
-  
   }
 
   onCalculaImc(){

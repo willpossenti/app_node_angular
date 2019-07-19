@@ -22,18 +22,19 @@ export class AcolhimentoService {
 
   constructor(private http: HttpClient) {
     this.baseUrl = 'https://localhost:44307/api/';
-<<<<<<< HEAD
     // this.baseUrl = 'https://apinew.ecosistemas.com.br/api/';
-=======
-    //this.baseUrl = 'https://apinew.ecosistemas.com.br/api/';
->>>>>>> sprint_wp_28062019_2
+
   }
 
   BindEspecialidade() { return this.http.get<Return>(`${this.baseUrl}especialidade`, this.httpOptions); }
   BindPreferencial() { return this.http.get<Return>(`${this.baseUrl}preferencial`, this.httpOptions); }
-  ConsultaPessoaStatus(descricao: string) { return this.http.get<Return>(`${this.baseUrl}pessoastatus/getbynome/`+descricao, this.httpOptions); }
+
   ConsultaPacienteAcolhimento(pesquisa: string) {
     return this.http.get<Return>(`${this.baseUrl}pessoa/pessoapaciente/consultapacienteacolhimento/` + pesquisa, this.httpOptions);
+  }
+
+  ConsultaAcolhimentoPorPessoaId(pessoaId: string) {
+    return this.http.get<Return>(`${this.baseUrl}acolhimento/consultaacolhimentoporpessoaId/` + pessoaId, this.httpOptions);
   }
 
 

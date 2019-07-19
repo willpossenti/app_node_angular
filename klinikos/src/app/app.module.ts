@@ -42,7 +42,7 @@ const appRoutes: Routes = [
   {
     path: 'klinikos', component: MasterComponent, canActivate: [AuthGuard], runGuardsAndResolvers: 'always', children: [
       { path: 'cadastro', component: PessoaComponent },
-      { path: 'registroboletim', component: RegistroBoletimComponent },
+      { path: 'registroboletim', component: RegistroBoletimComponent, data : { data: {}} },
       { path: 'acolhimento', component: AcolhimentoComponent },
       { path: 'classificacaorisco', component: ClassificacaoRiscoComponent },
       { path: 'atendimentomedico', component: AtendimentoMedicoComponent },

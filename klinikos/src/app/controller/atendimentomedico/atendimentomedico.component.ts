@@ -634,7 +634,11 @@ this.atendimentomedicoservice.BindCapituloCID().subscribe(async (data: Return) =
   onEditarExame(atendimentomedicoExame: AtendimentoMedicoExame) {
 
     this.GrupoExame = atendimentomedicoExame.GrupoExame;
+<<<<<<< HEAD
     this.Exame.exameId = atendimentomedicoExame.exameId;
+=======
+    //this.Exame.exameId = atendimentomedicoExame.Exame.exameId;
+>>>>>>> 5ce15c91af11444c30822b66c05356e35ed34676
 
 
     // if (atendimentomedicoExame.dataExame != null) {
@@ -679,8 +683,13 @@ this.atendimentomedicoservice.BindCapituloCID().subscribe(async (data: Return) =
   //begin:: Exclui lotacao Profissional / Alerta o usuário da confirmação da exclusão na aba profissional
   onExcluirExame(atendimentomedicoExame: AtendimentoMedicoExame) {
 
+<<<<<<< HEAD
     var index = this.listaAtendimentoMedicoExame.findIndex(x => x.exameId === atendimentomedicoExame.exameId && x.grupoExame === atendimentomedicoExame.GrupoExame);
     this.listaAtendimentoMedicoExame.splice(index, 1);
+=======
+    // var index = this.listaAtendimentoMedicoExame.findIndex(x => x.exameId === atendimentomedicoExame.Exame.exameId && x.grupoExame === atendimentomedicoExame.GrupoExame);
+    // this.listaAtendimentoMedicoExame.splice(index, 1);
+>>>>>>> 5ce15c91af11444c30822b66c05356e35ed34676
   }
   //end:: Exibe Mensagem Excluir
   onAdicionaModeloPrecrisaoReceita() {
