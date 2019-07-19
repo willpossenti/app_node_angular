@@ -1,10 +1,15 @@
 
 import { ClassificacaoRiscoAlergia } from './ClassificacaoRiscoAlergia';
+import { PessoaProfissional } from './PessoaProfissional';
+import { PessoaPaciente } from './PessoaPaciente';
 
 
 export interface ClassificacaoRisco {
 
   classificacaoRiscoId?: string;
+  dataClassificaoRisco?: Date;
+  PessoaPaciente?: PessoaPaciente;
+  PessoaProfissional?: PessoaProfissional;
   descricaoQueixa?: string;
   causaExternaId?: string;
   nivelConscienciaId?: string;

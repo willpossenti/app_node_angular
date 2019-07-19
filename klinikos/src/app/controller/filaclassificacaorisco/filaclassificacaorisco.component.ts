@@ -13,6 +13,8 @@ import { FilaClassificacaoEvento } from 'src/app/model/FilaClassificacaoEvento';
 import { PessoaService } from '../cadastro/pessoa/pessoa.service';
 import { PessoaProfissional } from 'src/app/model/PessoaProfissional';
 import * as swal from '../../../assets/vendors/general/sweetalert2/dist/sweetalert2.js';
+import { Preferencial } from 'src/app/model/Preferencial';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-filaclassificacaorisco',
@@ -25,6 +27,7 @@ export class FilaclassificacaoriscoComponent implements OnInit {
   listaPaginas: Array<any> = [];
   listaFilaClassificacao: any;
   listaEspecialidade: Array<Especialidade>;
+  listaPreferencial: Array<Preferencial>;
   NumeroRegistrosGrid: any;
   totalPaginas: any;
   inicioGrid: any;
@@ -32,12 +35,18 @@ export class FilaclassificacaoriscoComponent implements OnInit {
   paginaAtual: any;
   searchText: any;
   Profissional : PessoaProfissional;
+  dataUltimaRemocao: Date;
+  dataUltimaChamadaPainel: Date;
+  dataUltimaChamadaCancelada: Date;
+  dataUltimaChamadaConfirmado: Date;
   idUltimaChamadaPainel: string;
   idUltimaChamadaCancelada: string;
   idUltimaChamadaConfirmado: string;
+  itemRemovido: boolean;
+  interval: any;
 
-  constructor(private FilaClassificacaoRiscoService: FilaClassificacaoRiscoService, private auth: AuthGuard, private AcolhimentoService: AcolhimentoService,
-    private FilaRegistroService: FilaRegistroService, private pessoaService: PessoaService) {
+  constructor(private route: Router, private FilaClassificacaoRiscoService: FilaClassificacaoRiscoService, private auth: AuthGuard, 
+    private AcolhimentoService: AcolhimentoService, private FilaRegistroService: FilaRegistroService, private pessoaService: PessoaService) {
 
     Toastr.options = {
       "closeButton": true,
@@ -84,6 +93,7 @@ export class FilaclassificacaoriscoComponent implements OnInit {
       });
 
     });
+
     this.AcolhimentoService.BindEspecialidade().subscribe(async (data: Return) => {
       this.listaEspecialidade = data.result;
 
@@ -91,9 +101,20 @@ export class FilaclassificacaoriscoComponent implements OnInit {
       this.auth.onSessaoInvalida(error);
     });
 
+    this.FilaRegistroService.BindPreferencial().subscribe(async (subdata: Return) => {
+      this.listaPreferencial = subdata.result;
+    }, (error: HttpErrorResponse) => {
+      this.auth.onSessaoInvalida(error);
+    });
+
     setTimeout( () => {
       this.ConsultaFila();
   }, 1000);
+  
+
+    this.interval = setInterval(() => { 
+      this.ConsultarNovosRegistros();
+    }, 5000);
   }
 
   ConsultaFila(){
@@ -117,41 +138,125 @@ export class FilaclassificacaoriscoComponent implements OnInit {
   onBindGrid(lista: any){
 
     var idlinha = 1;
-    lista.sort((g, h) => 
-    {
-    if(g.dataEntradaFilaRegistro > h.dataEntradaFilaRegistro)
-      return 1;
-    if(g.dataEntradaFilaRegistro < h.dataEntradaFilaRegistro)
-      return -1;
-    return 0;
-    }).forEach(itemFila => {
 
-      let item = {
-          idlinha: idlinha,
-          nomepaciente: itemFila.registroBoletim.pessoaPaciente.nomeSocial != null? 
-          itemFila.registroBoletim.pessoaPaciente.nomeSocial +' ['+itemFila.registroBoletim.pessoaPaciente.nomeCompleto+']':itemFila.registroBoletim.pessoaPaciente.nomeCompleto,
-          especialidade: this.GetEspecialidade(itemFila.registroBoletim.especialidadeId),
-          dataEntradaFilaClassificacao: moment(itemFila.dataEntradaFilaClassificacao).format("DD/MM/YYYY HH:mm"),
-          tempoEspera: this.GetTempoEspera(itemFila.dataEntradaFilaClassificacao),
-          filaClassificacaoId: itemFila.filaClassificacaoId,
-          pessoaId: itemFila.registroBoletim.pessoaPaciente.pessoaId,
-          peso: itemFila.acolhimento !== null? itemFila.acolhimento.peso !== null? itemFila.acolhimento.peso: '':'',
-          altura: itemFila.acolhimento !== null? itemFila.acolhimento.altura !== null? itemFila.acolhimento.altura: '':'',
-          imc: itemFila.acolhimento !== null? itemFila.acolhimento.imc !== null? itemFila.acolhimento.imc: '':'',
-          temperatura: itemFila.acolhimento !== null? itemFila.acolhimento.temperatura !== null? itemFila.acolhimento.temperatura: '':'',
-          pressaoArterialSistolica: itemFila.acolhimento !== null? itemFila.acolhimento.pressaoArterialSistolica !== null? itemFila.acolhimento.pressaoArterialSistolica: '':'',
-          pressaoArterialDiastolica: itemFila.acolhimento !== null? itemFila.acolhimento.pressaoArterialDiastolica !== null? itemFila.acolhimento.pressaoArterialDiastolica: '':'',
-          pulso: itemFila.acolhimento !== null? itemFila.acolhimento.pulso !== null? itemFila.acolhimento.pulso: '':'',
-          frequenciaRespiratoria: itemFila.acolhimento !== null? itemFila.acolhimento.frequenciaRespiratoria !== null? itemFila.acolhimento.frequenciaRespiratoria: '':'',
-          saturacao: itemFila.acolhimento !== null? itemFila.acolhimento.saturacao !== null? itemFila.acolhimento.saturacao: '':''
-      };
+    // if(lista.acolhimento !== undefined)
+      lista.sort((g, h) => 
+        {
+        if(g.dataEntradaFilaClassificacao > h.dataEntradaFilaClassificacao)
+          return 1;
+        if(g.dataEntradaFilaClassificacao < h.dataEntradaFilaClassificacao)
+          return -1;
+        return 0;
+        }).sort((e, f) => 
+        {
+        if(e.idoso80 > f.idoso80)
+          return -1;
+        if(e.idoso80 < f.idoso80)
+          return 1;
+        return 0;
+        })
+        .sort((c, d) => 
+        {
+        if(c.preferencial > d.preferencial)
+          return -1;
+        if(c.preferencial < d.preferencial)
+          return 1;
+        return 0;
+        }).sort((a, b) => 
+        {
+          if(a.acolhimento !== undefined){
+            if(a.acolhimento.risco > b.acolhimento.risco)
+              return -1;
+            if(a.acolhimento.risco < b.acolhimento.risco)
+              return 1;
+          }
+        return 0; 
+        }).forEach(itemFila => {
 
-     
-      this.listaFila.push(item);
-      idlinha++;
-      
-    
-    });
+          let item = {
+            idlinha: idlinha,
+            nomepaciente: itemFila.registroBoletim.pessoaPaciente.nomeSocial != null? 
+            itemFila.registroBoletim.pessoaPaciente.nomeSocial +' ['+itemFila.registroBoletim.pessoaPaciente.nomeCompleto+']':itemFila.registroBoletim.pessoaPaciente.nomeCompleto,
+            especialidade: this.GetEspecialidade(itemFila.registroBoletim.especialidadeId),
+            dataEntradaFilaClassificacao: moment(itemFila.dataEntradaFilaClassificacao).format("DD/MM/YYYY HH:mm"),
+            tempoEspera: this.GetTempoEspera(itemFila.dataEntradaFilaClassificacao),
+            filaClassificacaoId: itemFila.filaClassificacaoId,
+            pessoaId: itemFila.registroBoletim.pessoaPaciente.pessoaId,
+            peso: itemFila.acolhimento !== null? itemFila.acolhimento.peso !== null? itemFila.acolhimento.peso: '':'',
+            altura: itemFila.acolhimento !== null? itemFila.acolhimento.altura !== null? itemFila.acolhimento.altura: '':'',
+            imc: itemFila.acolhimento !== null? itemFila.acolhimento.imc !== null? itemFila.acolhimento.imc: '':'',
+            temperatura: itemFila.acolhimento !== null? itemFila.acolhimento.temperatura !== null? itemFila.acolhimento.temperatura: '':'',
+            pressaoArterialSistolica: itemFila.acolhimento !== null? itemFila.acolhimento.pressaoArterialSistolica !== null? itemFila.acolhimento.pressaoArterialSistolica: '':'',
+            pressaoArterialDiastolica: itemFila.acolhimento !== null? itemFila.acolhimento.pressaoArterialDiastolica !== null? itemFila.acolhimento.pressaoArterialDiastolica: '':'',
+            pulso: itemFila.acolhimento !== null? itemFila.acolhimento.pulso !== null? itemFila.acolhimento.pulso: '':'',
+            frequenciaRespiratoria: itemFila.acolhimento !== null? itemFila.acolhimento.frequenciaRespiratoria !== null? itemFila.acolhimento.frequenciaRespiratoria: '':'',
+            saturacao: itemFila.acolhimento !== null? itemFila.acolhimento.saturacao !== null? itemFila.acolhimento.saturacao: '':'',
+            idoso80: itemFila.idoso80,
+            preferencial: itemFila.preferencial,
+            risco: itemFila.acolhimento.risco,
+            descricaoPreferencial: this.GetPreferencial(itemFila.acolhimento.preferencialId)
+        };
+        
+          this.listaFila.push(item);
+          idlinha++;
+          
+        
+        });
+        // else
+        //     lista.sort((g, h) => 
+        //     {
+        //     if(g.dataEntradaFilaClassificacao > h.dataEntradaFilaClassificacao)
+        //       return 1;
+        //     if(g.dataEntradaFilaClassificacao < h.dataEntradaFilaClassificacao)
+        //       return -1;
+        //     return 0;
+        //     }).sort((e, f) => 
+        //     {
+        //     if(e.idoso80 > f.idoso80)
+        //       return -1;
+        //     if(e.idoso80 < f.idoso80)
+        //       return 1;
+        //     return 0;
+        //     })
+        //     .sort((c, d) => 
+        //     {
+        //     if(c.preferencial > d.preferencial)
+        //       return -1;
+        //     if(c.preferencial < d.preferencial)
+        //       return 1;
+        //     return 0;
+        //     }).forEach(itemFila => {
+
+              
+        //       let item = {
+        //         idlinha: idlinha,
+        //         nomepaciente: itemFila.registroBoletim.pessoaPaciente.nomeSocial != null? 
+        //         itemFila.registroBoletim.pessoaPaciente.nomeSocial +' ['+itemFila.registroBoletim.pessoaPaciente.nomeCompleto+']':itemFila.registroBoletim.pessoaPaciente.nomeCompleto,
+        //         especialidade: this.GetEspecialidade(itemFila.registroBoletim.especialidadeId),
+        //         dataEntradaFilaClassificacao: moment(itemFila.dataEntradaFilaClassificacao).format("DD/MM/YYYY HH:mm"),
+        //         tempoEspera: this.GetTempoEspera(itemFila.dataEntradaFilaClassificacao),
+        //         filaClassificacaoId: itemFila.filaClassificacaoId,
+        //         pessoaId: itemFila.registroBoletim.pessoaPaciente.pessoaId,
+        //         peso: '',
+        //         altura: '',
+        //         imc: '',
+        //         temperatura: '',
+        //         pressaoArterialSistolica: '',
+        //         pressaoArterialDiastolica: '',
+        //         pulso: '',
+        //         frequenciaRespiratoria: '',
+        //         saturacao: '',
+        //         idoso80: false,
+        //         preferencial: false,
+        //         risco: false,
+        //         descricaoPreferencial: ''
+        //     };
+            
+        //       this.listaFila.push(item);
+        //       idlinha++;
+              
+            
+        //     });
 
     this.onBindPaginacao("inicial");
 
@@ -185,10 +290,9 @@ export class FilaclassificacaoriscoComponent implements OnInit {
   onExibeDetalhes(index: any){
 
     if(!$("#btnDetalhes"+index).hasClass('oculta')){
-
-          $(document).ready(function () { $("#btnDetalhes"+index).addClass("oculta");});
+      $(document).ready(function () { $("#btnDetalhes"+index).addClass("oculta");  $("#icon_detalhes"+index).attr("class", "la la-plus-circle i-s2"); });
     }else{
-      $(document).ready(function () { $("#btnDetalhes"+index).removeClass("oculta");});
+      $(document).ready(function () { $("#btnDetalhes"+index).removeClass("oculta"); $("#icon_detalhes"+index).attr("class", "la la-minus-circle i-s2");});
     }
     
   }
@@ -361,30 +465,38 @@ export class FilaclassificacaoriscoComponent implements OnInit {
       this.FilaRegistroService.ConsultarEvento(tipoBotao).subscribe(async (data: Return) => {
   
         if(data.result !== null){
-  
+
+          var filaClassificacao = this.listaFilaClassificacao.find(x=>x.filaClassificacaoId === this.listaFila[index].filaClassificacaoId);
+
+          // filaClassificacao.acolhimento = null;
+          // filaClassificacao.registroBoletim = null;
+
           var date = new Date();
           var filaclassificacaoevento: FilaClassificacaoEvento = {
-            FilaClassificacao: this.listaFila[index],
+            FilaClassificacao: filaClassificacao,
             dataFilaClassificacaoEvento: new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate(), date.getHours(), date.getMinutes(), date.getSeconds(), date.getMilliseconds())),
             eventoId: data.result.eventoId,
             PessoaProfissional:  this.Profissional
         };
   
-  
+
          this.FilaClassificacaoRiscoService.AdicionarFilaEvento(filaclassificacaoevento).subscribe(async (subdata: Return) => {
 
 
           if(tipoBotao === "P"){
-            this.idUltimaChamadaPainel = subdata.result.filaRegistroEventosId;
+            this.idUltimaChamadaPainel = subdata.result.filaClassificacaoEventoId;
             Toastr.info("Paciente "+this.listaFila[index].nomepaciente+" enviada ao Painel");
           }
          if(tipoBotao=== "C"){
-            this.idUltimaChamadaCancelada = subdata.result.filaRegistroEventosId;
+            this.idUltimaChamadaCancelada = subdata.result.filaClassificacaoEventoId;
             Toastr.error("Paciente "+this.listaFila[index].nomepaciente+" cancelada");
           }
            if(tipoBotao=== "O"){
-            this.idUltimaChamadaConfirmado = subdata.result.filaRegistroEventosId;
+            this.idUltimaChamadaConfirmado = subdata.result.filaClassificacaoEventoId;
             Toastr.success("Paciente "+this.listaFila[index].nomepaciente+" confirmado");
+
+            var filaClassificacao = this.listaFila[index];
+            this.SelecionarPaciente(filaClassificacao);
           }
         }, (error: HttpErrorResponse) => {
           this.auth.onSessaoInvalida(error);
@@ -426,42 +538,53 @@ export class FilaclassificacaoriscoComponent implements OnInit {
     var index = this.listaFila.findIndex(x => x.filaClassificacaoId === filaClassificacaoId);
     this.listaFila.splice(index, 1);
 
+    //buscar o objeto
     var item = this.listaFilaClassificacao.find(x => x.filaClassificacaoId === filaClassificacaoId);
      item.ativo = false;
 
-     this.FilaRegistroService.RetirarFila(item).subscribe(async (data: Return) => {
+    //buscar o index
+    var index2 = this.listaFilaClassificacao.findIndex(x => x.filaClassificacaoId === filaClassificacaoId);
+    this.listaFilaClassificacao.splice(index2, 1);
+    this.listaFila = [];
+    this.onBindGrid(this.listaFilaClassificacao);
+
+    if(item.acolhimento !== null)
+      item.acolhimento.pessoaPaciente = {};
+
+     this.FilaClassificacaoRiscoService.RetirarFila(item).subscribe(async (data: Return) => {
+
+      if(data.result !== null){
+
+          this.FilaRegistroService.ConsultarEvento("R").subscribe(async (subdata: Return) => {
+
+            if(subdata.result !== null){
+
+            var date = new Date();
+            var filaclassificacaoevento: FilaClassificacaoEvento = {
+              FilaClassificacao: item,
+              dataFilaClassificacaoEvento: new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate(), date.getHours(), date.getMinutes(), date.getSeconds(), date.getMilliseconds())),
+              eventoId: subdata.result.eventoId,
+              PessoaProfissional:  this.Profissional
+          };
 
 
-
-    //  this.FilaRegistroService.ConsultarEvento("R").subscribe(async (subdata: Return) => {
-
-    //    if(subdata.result !== null){
-
-    //      var date = new Date();
-    //      var filaregistroevento: FilaRegistroEvento = {
-    //        filaRegistro: item,
-    //        dataFilaRegistroEvento: new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate(), date.getHours(), date.getMinutes(), date.getSeconds(), date.getMilliseconds())),
-    //        eventoId: subdata.result.eventoId,
-    //        PessoaProfissional:  this.Profissional
-    //    };
+          this.FilaClassificacaoRiscoService.AdicionarFilaEvento(filaclassificacaoevento).subscribe(async (subdata2: Return) => {
+            this.itemRemovido = true;
+            this.ConsultaFila();
+            Toastr.success("Paciente retirado da fila");
+          }, (error: HttpErrorResponse) => {
+            this.auth.onSessaoInvalida(error);
+      
+          });
 
 
-    //    this.FilaRegistroService.AdicionarFilaEvento(filaregistroevento).subscribe(async (subdata2: Return) => {
-    //      this.itemRemovido = true;
-    //      Toastr.success("Paciente retirado da fila");
-    //    }, (error: HttpErrorResponse) => {
-    //      this.auth.onSessaoInvalida(error);
+     }
+
+       }, (error: HttpErrorResponse) => {
+         this.auth.onSessaoInvalida(error);
    
-    //    });
-
-
-    //  }
-
-    //    }, (error: HttpErrorResponse) => {
-    //      this.auth.onSessaoInvalida(error);
-   
-    //    });
-
+       });
+      }
      
    }, (error: HttpErrorResponse) => {
      this.auth.onSessaoInvalida(error);
@@ -469,5 +592,198 @@ export class FilaclassificacaoriscoComponent implements OnInit {
    });
 
  }
+
+ GetPreferencial(preferencialId: string){
+  if(preferencialId !=='00000000-0000-0000-0000-000000000000' )
+       return this.listaPreferencial.find(x=>x.preferencialId === preferencialId).nome;
+  return '';
+      
+}
+
+
+ConsultarNovosRegistros(){
+
+  var filaclassificacaoevento: FilaClassificacaoEvento = {};
+
+      if(this.listaFilaClassificacao !== undefined){
+        var filaClassificacao = this.listaFilaClassificacao.sort((a, b) =>  {
+          if(a.dataEntradaFilaClassificacao > b.dataEntradaFilaClassificacao)
+            return -1;
+          if(a.dataEntradaFilaClassificacao < b.dataEntradaFilaClassificacao)
+            return 1;
+          return 0;
+          })[0];
+
+          filaclassificacaoevento.FilaClassificacao = filaClassificacao;
+        }
+
+
+          this.FilaClassificacaoRiscoService.ConsultarRegistrosNovos(filaclassificacaoevento).subscribe(async (data: Return) => {
+  
+          if(data.result !== null){
+            if(data.result.filaClassificacao !== null){
+                this.listaFila = [];
+                this.listaFilaClassificacao.push(data.result.filaClassificacao);
+                this.onBindGrid(this.listaFilaClassificacao);
+
+                  Toastr.info("Fila atualizada");
+            }
+          } else {
+
+          if(this.listaFilaClassificacao.length > 0){
+
+            if(this.dataUltimaRemocao === undefined)
+              filaclassificacaoevento.dataFilaClassificacaoEvento = filaClassificacao.dataEntradaFilaClassificacao;
+            else
+              filaclassificacaoevento.dataFilaClassificacaoEvento = this.dataUltimaRemocao;         
+       
+
+
+            this.FilaClassificacaoRiscoService.ConsultarRegistrosRetirados(filaclassificacaoevento).subscribe(async (subdata: Return) => {
+                  
+
+                if(subdata.result !== null){
+                  if(subdata.result.filaClassificacao !== null){
+
+                    var index = this.listaFilaClassificacao.findIndex(x => x.filaClassificacaoId === subdata.result.filaClassificacao.filaClassificacaoId);
+
+                    if(index >= 0){
+          
+                      this.listaFilaClassificacao.splice(index, 1);
+                      this.listaFila = [];
+                      this.onBindGrid(this.listaFilaClassificacao);
+                      this.dataUltimaRemocao = subdata.result.dataFilaClassificacaoEvento;
+        
+                      if(!this.itemRemovido)
+                        Toastr.info("Fila atualizada");
+                    }
+                  }
+                }else{
+
+                if(this.idUltimaChamadaPainel !== undefined)
+                  filaclassificacaoevento.filaClassificacaoEventoId = this.idUltimaChamadaPainel;
+
+                if(this.dataUltimaChamadaPainel === undefined)
+                  filaclassificacaoevento.dataFilaClassificacaoEvento = filaClassificacao.dataEntradaFilaClassificacao;
+                else{
+                  filaclassificacaoevento.dataFilaClassificacaoEvento = this.dataUltimaChamadaPainel;         
+                  this.idUltimaChamadaPainel = filaclassificacaoevento.filaClassificacaoEventoId;
+                }
+
+                      this.FilaClassificacaoRiscoService.ConsultarRegistrosChamadosAoPainel(filaclassificacaoevento).subscribe(async (subdata2: Return) => {
+
+                        if(subdata2.result !== null){
+                          if(Number(moment(new Date()).diff(subdata2.result.dataFilaClassificacaoEvento,'minutes')) <= 5){
+                            this.dataUltimaChamadaPainel = subdata2.result.dataFilaClassificacaoEvento;
+                            this.idUltimaChamadaPainel = subdata2.result.filaClassificacaoEventoId;
+                            Toastr.info("Paciente "+subdata2.result.filaClassificacao.registroBoletim.pessoaPaciente.nomeCompleto+" foi enviado ao Painel");
+                          }
+                        }else{
+
+                          if(this.idUltimaChamadaCancelada !== undefined)
+                          filaclassificacaoevento.filaClassificacaoEventoId = this.idUltimaChamadaCancelada;
+      
+                          if(this.dataUltimaChamadaCancelada === undefined)
+                            filaclassificacaoevento.dataFilaClassificacaoEvento = filaClassificacao.dataEntradaFilaClassificacao;
+                          else{
+                            filaclassificacaoevento.dataFilaClassificacaoEvento = this.dataUltimaChamadaCancelada;    
+                            this.idUltimaChamadaCancelada = filaclassificacaoevento.filaClassificacaoEventoId;
+                          }
+
+                          this.FilaClassificacaoRiscoService.ConsultarRegistrosCancelados(filaclassificacaoevento).subscribe(async (subdata3: Return) => {
+
+                            if(subdata3.result !== null){
+                              if(Number(moment(new Date()).diff(subdata3.result.dataFilaClassificacaoEvento,'minutes')) <= 5){
+                                this.dataUltimaChamadaCancelada = subdata3.result.dataFilaClassificacaoEvento;
+                                this.idUltimaChamadaCancelada = subdata3.result.filaClassificacaoEventoId;
+                                Toastr.error("Paciente "+subdata3.result.filaClassificacao.registroBoletim.pessoaPaciente.nomeCompleto+" foi cancelado");
+                              }
+                            }else{
+
+
+                              if(this.idUltimaChamadaConfirmado !== undefined)
+                                filaclassificacaoevento.filaClassificacaoEventoId = this.idUltimaChamadaConfirmado;
+          
+                              if(this.dataUltimaChamadaConfirmado === undefined)
+                                filaclassificacaoevento.dataFilaClassificacaoEvento = filaClassificacao.dataEntradaFilaClassificacao;
+                              else{
+                                filaclassificacaoevento.dataFilaClassificacaoEvento = this.dataUltimaChamadaConfirmado;    
+                                this.idUltimaChamadaConfirmado = filaclassificacaoevento.filaClassificacaoEventoId;
+                              }
+
+                              this.FilaClassificacaoRiscoService.ConsultarRegistrosConfirmados(filaclassificacaoevento).subscribe(async (subdata4: Return) => {
+
+                               
+                                if(subdata4.result !== null){
+                                  if(Number(moment(new Date()).diff(subdata4.result.dataFilaClassificacaoEvento,'minutes')) <= 5){
+
+                                    this.dataUltimaChamadaConfirmado = subdata4.result.dataFilaClassificacaoEvento;
+                                    this.idUltimaChamadaConfirmado = subdata4.result.filaClassificacaoEventoId;
+                                    Toastr.success("Paciente "+subdata4.result.filaClassificacao.registroBoletim.pessoaPaciente.nomeCompleto+" foi confirmado");
+                                  }
+                                }
+
+
+                              }, (error: HttpErrorResponse) => {
+                                this.auth.onSessaoInvalida(error);
+                            });
+
+
+                            }
+
+
+                          }, (error: HttpErrorResponse) => {
+                            this.auth.onSessaoInvalida(error);
+                        });
+
+                        }
+                      }, (error: HttpErrorResponse) => {
+                        this.auth.onSessaoInvalida(error);
+                    });
+                    
+                  }
+
+                }, (error: HttpErrorResponse) => {
+                  this.auth.onSessaoInvalida(error);
+              });
+            }
+          }
+        }, (error: HttpErrorResponse) => {
+          this.auth.onSessaoInvalida(error);
+        });
+
+
+}
+
+SelecionarPaciente(item: any){
+    
+    
+  this.pessoaService.ConsultaPessoaStatusNome("CR").subscribe(data => {
+
+    if(data.result !== null){
+     var pessoa = this.listaFilaClassificacao.find(x=>x.acolhimento.pessoaPaciente.pessoaId === item.pessoaId).acolhimento.pessoaPaciente;
+      pessoa.pessoaStatusId = data.result.pessoaStatusId;
+
+     this.pessoaService.AlterarPessoaPaciente(pessoa).subscribe(subdata => {
+
+
+    }, (error: HttpErrorResponse) => {
+      this.auth.onSessaoInvalida(error);
+    });
+     
+  }
+  }, (error: HttpErrorResponse) => {
+    this.auth.onSessaoInvalida(error);
+  });
+    
+   this.route.navigate(['klinikos/classificacaorisco'], {queryParams: {filaClassificacaoId: item.filaClassificacaoId}});
+
+
+
+}
+
+ngOnDestroy(): void {
+  clearInterval(this.interval);
+}
 
 }

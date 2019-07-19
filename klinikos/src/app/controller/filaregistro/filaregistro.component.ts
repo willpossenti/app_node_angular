@@ -400,21 +400,28 @@ export class FilaregistroComponent implements OnInit, OnDestroy {
   SelecionarPaciente(item: any){
     
     
-    this.pessoaService.ConsultaPessoaStatus("AB").subscribe(data => {
+    this.pessoaService.ConsultaPessoaStatusNome("AB").subscribe(data => {
 
-      var pessoa = this.listaFilaRegistro.find(x=>x.acolhimento.pessoaPaciente.pessoaId === item.pessoaId).acolhimento.pessoaPaciente;
-      pessoa.pessoaStatusId = data.result.pessoaStatusId;
+      if(data.result !== null){
 
-      this.pessoaService.AlterarPessoaPaciente(pessoa).subscribe(subdata => {
+          var pessoa = this.listaFilaRegistro.find(x=>x.acolhimento.pessoaPaciente.pessoaId === item.pessoaId).acolhimento.pessoaPaciente;
+          pessoa.pessoaStatusId = data.result.pessoaStatusId;
+          
+          this.pessoaService.AlterarPessoaPaciente(pessoa).subscribe(subdata => {
 
 
-      }, (error: HttpErrorResponse) => {
-        this.auth.onSessaoInvalida(error);
-      });
+          }, (error: HttpErrorResponse) => {
+            this.auth.onSessaoInvalida(error);
+          });
+      }
 
     }, (error: HttpErrorResponse) => {
       this.auth.onSessaoInvalida(error);
     });
+
+    var filaRegistro = this.listaFilaRegistro.find(x=>x.filaRegistroId === item.filaRegistroId);
+
+    
 
     this.route.navigate(['klinikos/registroboletim'], {queryParams: {filaRegistroId: item.filaRegistroId}});
 
@@ -593,9 +600,13 @@ export class FilaregistroComponent implements OnInit, OnDestroy {
   
         if(data.result !== null){
   
+          var filaRegistro = this.listaFilaRegistro.find(x=>x.filaRegistroId === this.listaFila[index].filaRegistroId);
+          
+          filaRegistro.acolhimento = null;
+
           var date = new Date();
           var filaregistroevento: FilaRegistroEvento = {
-            filaRegistro: this.listaFila[index],
+            filaRegistro: filaRegistro,
             dataFilaRegistroEvento: new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate(), date.getHours(), date.getMinutes(), date.getSeconds(), date.getMilliseconds())),
             eventoId: data.result.eventoId,
             PessoaProfissional:  this.Profissional
@@ -660,8 +671,15 @@ export class FilaregistroComponent implements OnInit, OnDestroy {
      var index = this.listaFila.findIndex(x => x.filaRegistroId === filaRegistroId);
      this.listaFila.splice(index, 1);
 
+     //buscar o objeto
      var item = this.listaFilaRegistro.find(x => x.filaRegistroId === filaRegistroId);
       item.ativo = false;
+
+      //buscar o index
+      var index2 = this.listaFilaRegistro.findIndex(x => x.filaRegistroId === filaRegistroId);
+      this.listaFilaRegistro.splice(index2, 1);
+      this.listaFila = [];
+      this.onBindGrid(this.listaFilaRegistro);
 
       this.FilaRegistroService.RetirarFila(item).subscribe(async (data: Return) => {
 
@@ -678,10 +696,11 @@ export class FilaregistroComponent implements OnInit, OnDestroy {
             eventoId: subdata.result.eventoId,
             PessoaProfissional:  this.Profissional
         };
-
+  
 
         this.FilaRegistroService.AdicionarFilaEvento(filaregistroevento).subscribe(async (subdata2: Return) => {
           this.itemRemovido = true;
+          console.log(this.listaFilaRegistro);
           Toastr.success("Paciente retirado da fila");
         }, (error: HttpErrorResponse) => {
           this.auth.onSessaoInvalida(error);

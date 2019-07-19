@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders  } from '@angular/common/http';
 import { Return } from '../../model/Return';
 import { ClassificacaoRisco } from '../../model/ClassificacaoRisco';
+import { FilaAtendimento } from 'src/app/model/FilaAtendimento';
 
 
 @Injectable({
@@ -46,5 +47,14 @@ export class ClassificaoRiscoService {
   SalvarClassificacaoRisco(classificacaorisco: ClassificacaoRisco) {
 
     return this.http.post<Return>(`${this.baseUrl}classificacaorisco/incluir`, classificacaorisco, this.httpOptions);
+  }
+
+  IncluirFilaAtendimento(filaAtendimento: FilaAtendimento) {
+
+    return this.http.post<Return>(`${this.baseUrl}filaatendimento/incluir`, filaAtendimento, this.httpOptions);
+  }
+
+  ConsultaClassificacaoRiscoPorPessoaId(pessoaId: string) {
+    return this.http.get<Return>(`${this.baseUrl}acolhimento/consultaclassificacaoriscoporpessoaid/` + pessoaId, this.httpOptions);
   }
 }

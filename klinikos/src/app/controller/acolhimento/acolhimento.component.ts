@@ -325,33 +325,55 @@ export class AcolhimentoComponent implements OnInit {
       return;
     }
 
-    this.pessoaService.ConsultaPessoaStatus("ARB").subscribe(data => {
+    var statusArray = [];
+    statusArray.push("ACO");
+    statusArray.push("ARB");
 
-      acolhimento.PessoaPaciente.pessoaStatusId = data.result.pessoaStatusId;
+    this.pessoaService.ConsultaPessoaStatusArray(statusArray).subscribe(data => {
 
-      this.AcolhimentoService.IncluirFilaRegistro(filaRegistro).subscribe(subdata => {
+      if(data.result !== null){
 
-        if(subdata.statusCode != "409"){
+        acolhimento.PessoaPaciente.pessoaStatusId = data.result.find(x=>x.sigla === "ACO").pessoaStatusId;
 
-        Toastr.success("Acolhimento salvo com sucesso");
-        Toastr.success("Paciente salvo com sucesso");
-        Toastr.success("Paciente Incluído na Fila");
+        this.pessoaService.SalvarPessoaPaciente(acolhimento.PessoaPaciente).subscribe(subdata => {
 
-        }else{
+          if(subdata.result !== null){
 
+            acolhimento.PessoaPaciente = subdata.result;
+            acolhimento.PessoaPaciente.pessoaStatusId = data.result.find(x=>x.sigla === "ARB").pessoaStatusId;
 
-          swal("O paciente já foi acolhido!", "Nome: "+filaRegistro.Acolhimento.PessoaPaciente.nomeCompleto, "error");
+            this.AcolhimentoService.IncluirFilaRegistro(filaRegistro).subscribe(subdata => {
 
-        }
-
-      }, (error: HttpErrorResponse) => {
-        this.auth.onSessaoInvalida(error);
-      });
-
-      this.onLimpaFormAcolhimento(a);
-      $("#btnLimparAcolhimento").trigger("click");
+              if(subdata.statusCode != "409"){
       
+              Toastr.success("Acolhimento salvo com sucesso");
+              Toastr.success("Paciente salvo com sucesso");
+              Toastr.success("Paciente Incluído na Fila");
+      
+              }else{
+      
+      
+                swal("O paciente já foi acolhido!", "Nome: "+filaRegistro.Acolhimento.PessoaPaciente.nomeCompleto, "error");
+      
+              }
+      
+            }, (error: HttpErrorResponse) => {
+              this.auth.onSessaoInvalida(error);
+            });
+      
+            this.onLimpaFormAcolhimento(a);
+            $("#btnLimparAcolhimento").trigger("click");
+
+          
+          }
+        }, (error: HttpErrorResponse) => {
+          this.auth.onSessaoInvalida(error);
+        });
+
+      }
     });
+
+
   }
 
 

@@ -5,7 +5,7 @@ import { PessoaProfissional } from './PessoaProfissional';
 
 export interface FilaClassificacaoEvento {
 
-  filaClassificacaoEventoEventosId?: string;
+  filaClassificacaoEventoId?: string;
   dataFilaClassificacaoEvento?: Date;
   FilaClassificacao?: FilaClassificacao;
   PessoaProfissional?: PessoaProfissional;

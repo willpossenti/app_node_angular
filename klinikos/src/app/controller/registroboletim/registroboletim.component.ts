@@ -21,6 +21,7 @@ import { DataService } from '../util/data.service';
 import { FilaRegistroService } from '../filaregistro/filaregistro.service';
 import { FilaClassificacao } from 'src/app/model/FilaClassificacao';
 import { Acolhimento } from 'src/app/model/Acolhimento';
+import { FilaRegistro } from 'src/app/model/FilaRegistro';
 
 @Component({
   selector: 'app-registroboletim',
@@ -42,6 +43,7 @@ export class RegistroBoletimComponent implements OnInit {
   customMask: string;
   Profissional : PessoaProfissional;
   Acolhimento: Acolhimento;
+  filaRegistro: FilaRegistro;
 
 
   constructor(private filaRegistroService: FilaRegistroService, private registroBoletimService: RegistroBoletimService,
@@ -90,7 +92,7 @@ if(filaRegistroId !== null)
   this.filaRegistroService.BuscarFilaRegistroPorId(filaRegistroId).subscribe(async (data: Return) => {
 
   if(data.result !== null){
-
+    this.filaRegistro = data.result;
     this.Especialidade = this.listaEspecialidade.find(x=>x.especialidadeId === data.result.acolhimento.especialidadeId);
     this.Pessoa = data.result.acolhimento.pessoaPaciente;
     this.Acolhimento = data.result.acolhimento;
@@ -191,8 +193,7 @@ if(filaRegistroId !== null)
       $("input[name^=IB_Hora]").val(horaAtual);
       $("select[name^=DP_Endereco_Cidade]").val($("select[name^=DP_Endereco_Cidade] option:first").val());
 
-      $.getScript("../../../assets/app/custom/general/interface.js", function (data: any, textStatus: any, jqxhr: any) {
-      });
+      $.getScript("../../../assets/app/custom/general/interface.js", function (data: any, textStatus: any, jqxhr: any) {});
     });
 
 
@@ -405,7 +406,7 @@ if(filaRegistroId !== null)
       registroboletim.PessoaPaciente.pessoaId = this.Pessoa.pessoaId;
 
 
-      this.pessoaService.ConsultaPessoaStatus("ACR").subscribe(data => {
+      this.pessoaService.ConsultaPessoaStatusNome("ACR").subscribe(data => {
 
         if(data.result !== null){
   
@@ -413,12 +414,13 @@ if(filaRegistroId !== null)
   
           var filaClassificacao: FilaClassificacao = {
             RegistroBoletim: registroboletim,
-            dataEntradaFilaClassificacao: registroboletim.dataBoletim
+            dataEntradaFilaClassificacao: registroboletim.dataBoletim,
+            idoso80: this.filaRegistro !== undefined? this.filaRegistro.idoso80: false,
+            preferencial: this.filaRegistro !== undefined? this.filaRegistro.preferencial: false,
           };
   
           if(this.Acolhimento !== undefined)
             filaClassificacao.Acolhimento = this.Acolhimento;
-  
         
           this.onSalvar(filaClassificacao);
         }
@@ -446,10 +448,11 @@ if(filaRegistroId !== null)
 
               registroboletim.PessoaPaciente = subdata.result;
               registroboletim.PessoaPaciente.pessoaStatusId = data.result.find(x=>x.sigla === "ACR").pessoaStatusId;
-
               var filaClassificacao: FilaClassificacao = {
                 RegistroBoletim: registroboletim,
-                dataEntradaFilaClassificacao: registroboletim.dataBoletim
+                dataEntradaFilaClassificacao: registroboletim.dataBoletim,
+                idoso80: this.filaRegistro !== undefined? this.filaRegistro.idoso80: false,
+                preferencial: this.filaRegistro !== undefined? this.filaRegistro.preferencial: false,
               };
       
               if(this.Acolhimento !== undefined)
@@ -477,10 +480,16 @@ if(filaRegistroId !== null)
 
     this.registroBoletimService.IncluirFilaClassificacao(filaClassificacao).subscribe(subdata => {
 
-      Toastr.success("Registro Boletim salvo com sucesso");
-      Toastr.success("Paciente incluído na fila");
-      this.Pessoa = undefined;
-      $("input[name^=IB_NumeroBoletim]").val(subdata.result.numeroBoletim);
+      if(subdata.statusCode != "409"){
+        Toastr.success("Registro Boletim salvo com sucesso");
+        Toastr.success("Paciente incluído na fila");
+        this.Pessoa = undefined;
+        $("input[name^=IB_NumeroBoletim]").val(subdata.result.registroBoletim.numeroBoletim);
+      }
+      else
+        swal("O paciente já foi registado!", "Nome: "+subdata.result.registroBoletim.pessoaPaciente.nomeCompleto, "error");
+
+      
 
     }, (error: HttpErrorResponse) => {
       this.auth.onSessaoInvalida(error);

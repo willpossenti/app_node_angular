@@ -35,6 +35,6 @@ export class FilaRegistroService {
   RetirarFila(filaregistro: FilaRegistro) { return this.http.put<Return>(`${this.baseUrl}filaregistro/retirarpacientefila`, filaregistro, this.httpOptions); }
   AdicionarFilaEvento(filaRegistroEvento: FilaRegistroEvento) { return this.http.post<Return>(`${this.baseUrl}filaregistroevento/incluir`, filaRegistroEvento, this.httpOptions); }
   ConsultarEvento(sigla: string) { return this.http.get<Return>(`${this.baseUrl}evento/getbysigla/`+sigla, this.httpOptions); }
-  
+  RetirarPacienteFilaRegistroAberturaBoletim(filaregistro: FilaRegistro) { return this.http.put<Return>(`${this.baseUrl}filaregistro/aberturaboletim`, filaregistro, this.httpOptions); }
 
 }

@@ -33,6 +33,10 @@ export class AcolhimentoService {
     return this.http.get<Return>(`${this.baseUrl}pessoa/pessoapaciente/consultapacienteacolhimento/` + pesquisa, this.httpOptions);
   }
 
+  ConsultaAcolhimentoPorPessoaId(pessoaId: string) {
+    return this.http.get<Return>(`${this.baseUrl}acolhimento/consultaacolhimentoporpessoaId/` + pessoaId, this.httpOptions);
+  }
+
 
   IncluirFilaRegistro(filaregistro: FilaRegistro) {
 

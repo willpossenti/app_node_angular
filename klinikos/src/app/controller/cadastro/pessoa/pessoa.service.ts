@@ -146,7 +146,10 @@ export class PessoaService {
 
     return this.http.put<Return>(`${this.baseUrl}pessoa/pessoapaciente/alterar`, pessoapaciente, this.httpOptions);
   }
-  ConsultaPessoaStatus(sigla: string) { return this.http.get<Return>(`${this.baseUrl}pessoastatus/getbynome/`+sigla, this.httpOptions); }
+
+  ConsultaPessoaStatus() { return this.http.get<Return>(`${this.baseUrl}pessoastatus`, this.httpOptions); }
+  
+  ConsultaPessoaStatusNome(sigla: string) { return this.http.get<Return>(`${this.baseUrl}pessoastatus/getbynome/`+sigla, this.httpOptions); }
   
   ConsultaPessoaStatusArray(siglas: string[]) { return this.http.post<Return>(`${this.baseUrl}pessoastatus/getbynomeandarray`,siglas, this.httpOptions); }
 
