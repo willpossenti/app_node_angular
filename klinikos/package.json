@@ -67,7 +67,7 @@
     "date-diff": "^0.2.1",
     "dates-between": "^1.1.0",
     "datetime-difference": "^1.0.2",
-    "dompurify": "^1.0.8",
+    "dompurify": "^2.0.14",
     "dropzone": "^5.2.0",
     "emailjs": "^2.2.0",
     "es6-promise-polyfill": "^1.2.0",
